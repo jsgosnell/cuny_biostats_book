@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>NOAA quarto simple - Summarizing data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../content/getting_started.html" rel="prev">
+<link href="../images/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../content/summarizing_data.html">Summarizing data</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="https://raw.githubusercontent.com/nmfs-opensci/assets/main/logo/nmfs-opensci-logo3.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main tools-wide">
+    <a href="https://nmfs-opensci.github.io" rel="" title="NMFS Open Science" class="quarto-navigation-tool px-1" aria-label="NMFS Open Science"><i class="bi bi-globe"></i></a>
+    <a href="https://github.com/nmfs-opensci" rel="" title="NMFS OpenSci" class="quarto-navigation-tool px-1" aria-label="NMFS OpenSci"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/add-content.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Add content</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/customizing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Customizing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/rendering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Rendering</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/rmarkdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R Markdown files</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Code in your files</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/acknowledgements.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acknowledgements</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/getting_started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting started</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/summarizing_data.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Summarizing data</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#long-form-vegetation-survey-data-from" id="toc-long-form-vegetation-survey-data-from" class="nav-link active" data-scroll-target="#long-form-vegetation-survey-data-from">long-form vegetation survey data from</a></li>
+  <li><a href="#httpluisdva.github.iorstatsdiverging-bar-plots" id="toc-httpluisdva.github.iorstatsdiverging-bar-plots" class="nav-link" data-scroll-target="#httpluisdva.github.iorstatsdiverging-bar-plots">http://luisdva.github.io/rstats/Diverging-bar-plots/</a></li>
+  <li><a href="#these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile" id="toc-these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile" class="nav-link" data-scroll-target="#these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile">these data should more or less reflect the vegetation patterns at “Quebrada de Cordoba”, Chile</a></li>
+  <li><a href="#divergent-plot" id="toc-divergent-plot" class="nav-link" data-scroll-target="#divergent-plot">divergent plot</a></li>
+  <li><a href="#divergent-plot-with-facetting-by-slope" id="toc-divergent-plot-with-facetting-by-slope" class="nav-link" data-scroll-target="#divergent-plot-with-facetting-by-slope">divergent plot with facetting by slope</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/nmfs-opensci/NOAA-quarto-simple/edit/main/content/summarizing_data.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/nmfs-opensci/NOAA-quarto-simple/blob/main/content/summarizing_data.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/nmfs-opensci/NOAA-quarto-simple/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Summarizing data</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>#plots from 1. Intro.ppt#### iris</p>
+<p>#base histograms#### #note hist is odd with cex label_size &lt;- 2 title_size &lt;- 2.5</p>
+<p>par(mar = c(7,7,7,7)) #if you get an error about “figure margins too large”, reset this to par(mar = c(rep(5,4))) #this is just issue with trying to size figures for lecture slides #may also have issues with some images…</p>
+<p>hist(iris$Sepal.Length, main = “Sepal Lengths”, xlab = “Sepal Length (cm)”, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = “blue”)</p>
+<p>#skewed left#### birds &lt;- rbeta(10000,70,5) hist(birds, main=“Weight of Westchester cardinals”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “red”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
+<p>#normal data#### putnam &lt;- c(rnorm(1000,20,4)) hist(putnam, main=“Weight of Westchester parrots”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “green”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
+<p>#uniform data#### putnam &lt;- c(runif(1000,.1,8)) hist(putnam, main=“Weight of Westchester Robins”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “Pink”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
+<p>#skewed right#### birds &lt;- rbeta(10000,2,12) hist(birds, main=“Weight of Westchester Blue Jays”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “blue”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
+<p>#bimodal data#### putnam &lt;- c(rnorm(100,20,4),rnorm(100,40,4)) hist(putnam, main=“Weight of Westchester woodpeckers”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “orange”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
+<p>#add density overlay to histograms#### hist(iris<span class="math inline">\(Sepal.Length, main = "Sepal Lengths",  xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size,  cex.main=title_size, cex.sub=label_size, col = "blue", prob = T) lines(density(iris\)</span>Sepal.Length), col = “red”) # add a density estimate with defaults</p>
+<p>#normal data with density overly and true normal##### putnam &lt;- c(rnorm(1000,20,4)) hist(putnam, main=“Weight of Westchester parrots”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “green”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size, probability = T) lines(density(putnam), col = “black”) # add a density estimate with defaults curve(dnorm(x, mean=20, sd=4), col=“darkblue”, lwd=2, add=TRUE, yaxt=“n”)</p>
+<p>#bar charts for categorical data#### head(USArrests) names(USArrests) USArrests<span class="math inline">\(State &lt;- as.factor(rownames(USArrests)) par(las=2) barplot(USArrests\)</span>Murder, names.arg = USArrests$State, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = “blue”, main = “Murder Arrests per 100,000 since 1973”) write.csv(USArrests, “USArrests.csv”, row.names = F)</p>
+<p>write.csv(iris, “iris.csv”, row.names = F)</p>
+<p>#bar chart issues#### #auto breaks#### hist(iris<span class="math inline">\(Sepal.Length, main = "Sepal Lengths, auto breaks with R",  xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size,  cex.main=title_size, cex.sub=label_size, col = "blue") #counts of auto breaks#### x =hist(iris\)</span>Sepal.Length, main = “Sepal Lengths, auto breaks with R”, xlab = “Sepal Length (cm)”, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size) plot(x<span class="math inline">\(breaks[-9], x\)</span>counts, main = “Sepal Lengths, auto breaks with R”, xlab = “Sepal Length (cm)”, ylab = “Frequency”, cex.lab=label_size, cex.axis=1.5, cex.main=title_size, cex.sub=label_size, col=“blue”, pch = 16, cex = 3) #setting own breaks#### hist(iris<span class="math inline">\(Sepal.Length, breaks=3, main = "Sepal length histogram, 3 breaks",  xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size,  cex.main=title_size, cex.sub=label_size, col = "blue") hist(iris\)</span>Sepal.Length, breaks=10, main = “Sepal length histogram, 10 breaks”, xlab = “Sepal Length (cm)”, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = “blue”)</p>
+<p>#boxplot versicolor#### #need to use ggplot2 for ease (will get to this later and typically use it) library(ggplot2) ggplot(iris[iris$Species == “versicolor”,], aes(Species,Sepal.Length)) + geom_boxplot(aes(colour=Species), size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(“Sepal Length of Iris versicolor”)+ xlab(““) + theme(axis.title.x = element_text(face=”bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=0), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#data from multiple groups#### #barchart #### # #load function from Rmisc library(Rmisc)</p>
+<p>#now use function_output &lt;- summarySE(iris, measurevar=“Sepal.Length”, groupvars = c(“Species”))</p>
+<p>ggplot(function_output, aes(x=Species, y=Sepal.Length)) + geom_col(aes(fill=Species), size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(“Sepal Length of various iris species”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#scatterplot all species#### ggplot(iris, aes(Species,Sepal.Length)) + geom_point(aes(colour=Species), size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(“Sepal Length of various iris species”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#stacked histogram#### ggplot(iris, aes(Sepal.Length)) + geom_histogram(aes(fill=Species), size=3) + xlab(“Sepal Length (cm)”)+ ylab(“Frequency”)+ ggtitle(“Sepal Length of various iris species”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#facetted stacked histogram#### ggplot(iris, aes(Sepal.Length)) + geom_histogram(aes(fill=Species), size=3) + xlab(“Sepal Length (cm)”)+ ylab(“Frequency”)+ ggtitle(“Sepal Length of various iris species”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), legend.position = “bottom”, plot.title = element_text(hjust = 0.5, face=“bold”, size=32))+ facet_wrap(~Species, ncol = 1)</p>
+<p>#boxplot all species#### ggplot(iris, aes(Species,Sepal.Length)) + geom_boxplot(aes(colour=Species), size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(“Sepal Length of various iris species”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#cdf all species#### par(cex = 2) versi &lt;- ecdf(iris[iris<span class="math inline">\(Species == "versicolor","Sepal.Length"]) plot(versi, verticals = T, col = "red",  main = "Cumulative frequency distribution of Sepal Length (cm)",  xlab = "Sepal length (cm)", ylab = "Cumulative relative frequencey") seto &lt;- ecdf(iris[iris\)</span>Species == “setosa”,“Sepal.Length”]) plot(seto, add = T, col = “blue”, verticals = T) virg &lt;- ecdf(iris[iris$Species == “virginica”,“Sepal.Length”]) plot(virg, add = T, col = “orange”, verticals = T)</p>
+<p>#example of diverging, stacked, and mosaic graphs#### library(dplyr)</p>
+<section id="long-form-vegetation-survey-data-from" class="level1">
+<h1>long-form vegetation survey data from</h1>
+</section>
+<section id="httpluisdva.github.iorstatsdiverging-bar-plots" class="level1">
+<h1>http://luisdva.github.io/rstats/Diverging-bar-plots/</h1>
+</section>
+<section id="these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile" class="level1">
+<h1>these data should more or less reflect the vegetation patterns at “Quebrada de Cordoba”, Chile</h1>
+<p>vegSurvey &lt;- data.frame(sampling_point=rep(c(1:5),4), slope=c(rep(“North”,10),rep(“South”,10)), veg_Type=rep(c(rep(“native”,5),rep(“introduced”,5)),2), spp=as.integer(abs(rnorm(20,5,2)))) vegSurvey<span class="math inline">\(spp &lt;- ifelse(vegSurvey\)</span>veg_Type ==“introduced”,vegSurvey<span class="math inline">\(spp+1,vegSurvey\)</span>spp)</p>
+<p>vegSurvey &lt;- vegSurvey %&gt;% mutate(sppInv= ifelse(veg_Type ==“native”,spp,spp*-1))</p>
+<p>#grouped bar plot#### ggplot(vegSurvey, aes(x=sampling_point, y=spp)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”, position = position_dodge(width=0.5)) + ylab(“Frequency”) + xlab(“Sampling point”) + ggtitle(“Invasive and native species based on site”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#stacked bar plot#### ggplot(vegSurvey, aes(x=sampling_point, y=spp)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Frequency”)+ xlab(“Sampling point”)+ ggtitle(“Invasive and native species based on site”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#facetted stacked#### ggplot(vegSurvey, aes(x=sampling_point, y=spp)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Frequency”)+ xlab(“Sampling point”)+ ggtitle(“Invasive and native species based on site”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32)) + facet_wrap(~slope, nrow = 1)</p>
+</section>
+<section id="divergent-plot" class="level1">
+<h1>divergent plot</h1>
+<p>ggplot(vegSurvey, aes(x=sampling_point, y=sppInv, fill=veg_Type))+ geom_bar(stat=“identity”,position=“identity”)+ xlab(“sampling point”)+ylab(“number of species”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”))+ coord_flip()+ geom_hline(yintercept=0)+ xlab(“Sampling Points”)+ ylab(“Species number”)+ scale_y_continuous(breaks = pretty(vegSurvey<span class="math inline">\(sppInv),labels = abs(pretty(vegSurvey\)</span>sppInv)))+ theme(strip.text.x = element_text(face = “bold”))</p>
+</section>
+<section id="divergent-plot-with-facetting-by-slope" class="level1">
+<h1>divergent plot with facetting by slope</h1>
+<p>ggplot(vegSurvey, aes(x=sampling_point, y=sppInv, fill=veg_Type))+ geom_bar(stat=“identity”,position=“identity”)+ facet_wrap(~slope)+xlab(“sampling point”)+ylab(“number of species”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”))+ coord_flip()+ geom_hline(yintercept=0)+ xlab(“Sampling Points”)+ ylab(“Species number”)+ scale_y_continuous(breaks = pretty(vegSurvey<span class="math inline">\(sppInv),labels = abs(pretty(vegSurvey\)</span>sppInv)))+ theme(strip.text.x = element_text(face = “bold”))</p>
+<p>#mosaic plot#### #for mosaic plots, need to use other package (ggmosaic) or add frequency column #for your choice variable</p>
+<p>library(reshape2)</p>
+<p>#get total native/invasive per site vegSurvey_veg_per_site &lt;- dcast(vegSurvey, sampling_point+veg_Type~ “total_veg_per_site”, sum, value.var = “spp”) vegSurvey_per_site &lt;- dcast(vegSurvey, sampling_point ~ “total_per_site”, sum, value.var = “spp”) vegSurvey_veg_per_site &lt;- merge(vegSurvey_veg_per_site, vegSurvey_per_site) vegSurvey_veg_per_site<span class="math inline">\(Proportion &lt;- vegSurvey_veg_per_site\)</span>total_veg_per_site/ vegSurvey_veg_per_site$total_per_site</p>
+<p>ggplot(vegSurvey_veg_per_site, aes(x=sampling_point, y=Proportion)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Percent”) + xlab(“Sampling point”) + ggtitle(“Invasive and native species based on site”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#turn this into pie chart#### vegSurvey_veg_per_site<span class="math inline">\(sampling_point &lt;- factor(vegSurvey_per_site\)</span>sampling_point) #have to make weird empty factor else you get concentric circles vegSurvey_veg_per_site$Share &lt;- “” ggplot(vegSurvey_veg_per_site, aes(x=Share, y=Proportion)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Frequency”) + xlab(“Sampling point”) + ggtitle(“Invasive and native species based on site”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32)) + coord_polar(theta=“y”) + facet_wrap(~sampling_point)</p>
+<p>#or (not in slides) cast to get single plot/split#### vegSurvey_veg_per_site_cast &lt;- dcast(vegSurvey_veg_per_site, veg_Type ~ “Proportion”, value.var = “Proportion”, mean)</p>
+<p>vegSurvey_veg_per_site_cast$Site &lt;- “”</p>
+<p>ggplot(vegSurvey_veg_per_site_cast, aes(x=Site, y=Proportion)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Frequency”) + xlab(““) + ggtitle(”Overall composition of invasive and native species across sites”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32)) + coord_polar(theta=“y”)</p>
+<p>#mosaic plot facetted by slope#### vegSurvey_per_slope &lt;- dcast(vegSurvey, sampling_point + slope~ “total_per_slope”, sum, value.var = “spp”) vegSurvey &lt;- merge(vegSurvey, vegSurvey_per_slope) vegSurvey<span class="math inline">\(Proportion &lt;- vegSurvey\)</span>spp/vegSurvey$total_per_slope</p>
+<p>ggplot(vegSurvey, aes(x=sampling_point, y=Proportion)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Frequency”) + xlab(“Sampling point”) + ggtitle(“Invasive and native species based on slope”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32)) + facet_wrap(~slope, ncol=1)</p>
+<p>#numerical, numerical relationships #### # #scatter#### ggplot(iris, aes(y =Petal.Length,x =Sepal.Length)) + geom_point(aes(colour=Species), size = 3) + xlab(“Sepal Length (cm)”) + ylab(“Petal Length (cm)”) + ggtitle(“Relationship between sepal and petal lengths in irises”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#data over time#### #use airquality dataset for time series # airquality<span class="math inline">\(Date &lt;- as.Date(paste(airquality\)</span>Month, airquality$Day, sep=“/”), format =“%m/%d” )</p>
+<p>#just points#### ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(size = 3, col = “orange”) + xlab(“Date”) + ylab(“Temperature (C)”) + ggtitle(“Temperature over time”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#points and line#### ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(size = 3, col = “orange”) + geom_line() + xlab(“Date”) + ylab(“Temperature (C)”) + ggtitle(“Temperature over time”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#more than one axis#### #for 1:1 transformation data (anything you can use a function to make on a similar #scale) #can add easily but not get scale ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(size = 3, col = “orange”) + geom_line() + geom_point(aes(y=Wind)) + xlab(“Date”) + ylab(“Temperature (C)”) + ggtitle(“Temperature over time”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#manually scale data and get secondary axis #have to aes to make tranformation (not aes_string) #put colour in quotes in aes to force legend ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(aes(col =“Temp”), size = 3) + geom_line(col=“orange”) + geom_point(aes(y=Wind+50, col = “Wind speed”)) + scale_y_continuous(sec.axis = sec_axis(~.-50, name = “Wind (mph)”)) + xlab(“Date”) + ylab(“Temperature (C)”) + ggtitle(“Environmental measurements over time”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#outliers and bad fits####</p>
+<p>good_fit_x &lt;- runif(100, 1, 50) good_fit_y &lt;- rnorm(100,25,2) good_data &lt;- data.frame(source = “good”, x=good_fit_x, y=good_fit_y) bad_fit_x &lt;- runif(10, 20, 30) bad_fit_y &lt;- rnorm(10,95,1) bad_data &lt;- data.frame(source = “outlier”, x=bad_fit_x, y=bad_fit_y) all_data &lt;- rbind (good_data, bad_data)</p>
+<p>#just points#### ggplot(all_data, aes(x =x,y =y)) + geom_point(aes(color=source), size = 3) + xlab(“x”) + ylab(“y”) + ggtitle(“Outliers can impact data”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#curve and scatter#### ggplot(all_data, aes(x =x,y =y)) + geom_point(aes(color=source), size = 3) + geom_smooth(se = F) + xlab(“x”) + ylab(“y”) + ggtitle(“Outliers can impact data”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#just curve#### ggplot(all_data, aes(x =x,y =y)) + geom_smooth(se = F) + xlab(“x”) + ylab(“y”) + ggtitle(“Outliers can impact data”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#skewed left with measures of central tendency#### ##weird issues with margins and legends par(mar = c(rep(4,4))) birds &lt;- rbeta(10000,70,5) hist(birds, main=“Weight of Westchester cardinals”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “red”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size) abline(v=mean(birds), col=“yellow”, lwd = 4) abline(v=median(birds), col=“green”, lwd = 4) #no built in mode function…. # Create the function. getmode &lt;- function(v) { uniqv &lt;- unique(v) uniqv[which.max(tabulate(match(v, uniqv)))] }</p>
+<p>abline(v=(getmode(birds)), col=“blue”, lwd = 4) legend(“topleft”, legend = c(“mean”, “median”, “mode”), fill=c(“yellow”, “green”,“blue”), cex = 1.5, bty = “n”, x.intersp = .1, y.intersp = .5)</p>
+<p>#bimodal data with measures of central tendency##### par(mar = c(rep(2,4))) putnam &lt;- c(rnorm(100,20,4),rnorm(100,40,4)) hist(putnam, main=“Weight of Westchester woodpeckers”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “orange”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size, probability = T) lines(density(putnam), col = “black”, lwd = 4) # add a density estimate with defaults abline(v=mean(putnam), col=“red”, lwd = 4) abline(v=median(putnam), col=“green”, lwd = 4) abline(v=(getmode(putnam)), col=“blue”, lwd = 4) legend(“bottomright”, legend = c(“mean”, “median”, “mode”), fill=c(“red”,“green”,</p>
+<pre><code>                                                                "blue"), cex = 1.5,
+   bty="n", x.intersp = .1, y.intersp = .5)</code></pre>
+<p>#illustrate variance#### #add sample # iris$sample &lt;- 1:nrow(iris)</p>
+<p>#just scatter plot</p>
+<p>ggplot(iris[iris$Species == “setosa”,], aes(sample,Sepal.Length)) + geom_point(size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(expression(paste(“Sepal Length in”, italic(“Iris setosa”))))+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#add mean ggplot(iris[iris<span class="math inline">\(Species == "setosa",], aes(sample,Sepal.Length)) +  geom_point(size = 3) +  ylab("Sepal Length (cm)")+ggtitle(expression(paste("Sepal Length in ", italic("Iris setosa"))))+  geom_hline(yintercept = mean(iris[iris\)</span>Species == “setosa”, “Sepal.Length”]), color = “blue”, size = 2) + annotate(“text”, label = “mean”, x = 20, y = 4.9 , size = 8, color = “blue”) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#add segment for each point segment_data = data.frame( x = 1:50, xend = 1:50, y = iris[iris<span class="math inline">\(Species == "setosa", "Sepal.Length"],  yend = mean(iris[iris\)</span>Species == “setosa”, “Sepal.Length”]) )</p>
+<p>ggplot(iris[iris<span class="math inline">\(Species == "setosa",], aes(sample,Sepal.Length)) +  geom_point(size = 3) +  ylab("Sepal Length (cm)")+ggtitle(expression(paste("Sepal Length in ", italic("Iris setosa"))))+  geom_hline(yintercept = mean(iris[iris\)</span>Species == “setosa”, “Sepal.Length”]), color = “blue”, size = 2) + annotate(“text”, label = “mean”, x = 20, y = 4.9 , size = 8, color = “blue”) + annotate(“text”, label = “square each red line and find average”, x = 25, y = 5.5 , size = 8, color = “red”) + geom_segment(data = segment_data, aes(x = x, y = y, xend = xend, yend = yend), color= “red”, size = 1.1) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#transformations####</p>
+<p>sample_data &lt;- data.frame(x = rnorm (1000, 1, 1)) sample_data<span class="math inline">\(x_add &lt;- sample_data\)</span>x+5</p>
+<p>ggplot(sample_data) + geom_histogram(aes(x =x, fill=“x”), se = F) + geom_histogram(aes(x = x_add, fill=“x+5”), se = F)+ labs(fill=“Data”)+ xlab(“x”) + ylab(“y”) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=30), axis.text.x = element_text(size=30), legend.text =element_text(size=30), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>sample_data<span class="math inline">\(x_multiply &lt;- sample_data\)</span>x*5</p>
+<p>ggplot(sample_data) + geom_histogram(aes(x =x, fill=“x”), se = F) + geom_histogram(aes(x = x_multiply, fill=“x*5”), se = F)+ labs(fill=“Data”)+ xlab(“x”) + ylab(“y”) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=30), axis.text.x = element_text(size=30), legend.text =element_text(size=30), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#shift them left summary(birds) length(birds[birds &lt; .9]) birds[birds &lt; .9] &lt;- birds[birds &lt; .9] - .2 hist(birds, main=“Weight of Westchester cardinals”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “red”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size) abline(v=mean(birds), col=“yellow”, lwd = 4) abline(v=median(birds), col=“green”, lwd = 4) abline(v=(getmode(birds)), col=“blue”, lwd = 4) legend(x=.75, y= 1000, legend = c(“mean”, “median”, “mode”), fill=c(“yellow”,“green”,</p>
+<pre><code>                                                                "blue"), cex = 1.5,
+   bty="n", x.intersp = .1, y.intersp = .5)</code></pre>
+<p>#categorical data#### head(iris) iris<span class="math inline">\(random &lt;- runif(1:nrow(iris)) iris\)</span>LL &lt;- 0 iris<span class="math inline">\(LL[iris\)</span>random &gt; .7] &lt;- 1</p>
+<p>ggplot(iris[iris<span class="math inline">\(Species == "setosa", ], aes(LL)) +  geom_histogram(size=3) +  xlab("Genotype score")+  ylab("Frequency")+  ggtitle("Genotype score in an iris species")+  geom_vline(xintercept = mean(iris[iris\)</span>Species == “setosa”, “LL”]), color = “blue”) + annotate(“text”, label = “proportion”, x = .25, y = 20 , size = 8, color = “blue”) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../content/getting_started.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Getting started</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© CC-1.0</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a>.</div>
+  </div>
+</footer>
+
+
+
+</body></html>
