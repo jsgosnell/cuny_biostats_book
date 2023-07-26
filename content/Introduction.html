@@ -20,7 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -64,8 +83,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -177,24 +194,19 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Code in your files</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/references.bib" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#long-form-vegetation-survey-data-from" id="toc-long-form-vegetation-survey-data-from" class="nav-link active" data-scroll-target="#long-form-vegetation-survey-data-from">long-form vegetation survey data from</a></li>
-  <li><a href="#httpluisdva.github.iorstatsdiverging-bar-plots" id="toc-httpluisdva.github.iorstatsdiverging-bar-plots" class="nav-link" data-scroll-target="#httpluisdva.github.iorstatsdiverging-bar-plots">http://luisdva.github.io/rstats/Diverging-bar-plots/</a></li>
-  <li><a href="#these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile" id="toc-these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile" class="nav-link" data-scroll-target="#these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile">these data should more or less reflect the vegetation patterns at “Quebrada de Cordoba”, Chile</a></li>
-  <li><a href="#divergent-plot" id="toc-divergent-plot" class="nav-link" data-scroll-target="#divergent-plot">divergent plot</a></li>
-  <li><a href="#divergent-plot-with-facetting-by-slope" id="toc-divergent-plot-with-facetting-by-slope" class="nav-link" data-scroll-target="#divergent-plot-with-facetting-by-slope">divergent plot with facetting by slope</a></li>
-  <li><a href="#add-segment-for-each-point-segment_data-data.frame-x-150-xend-150-y" id="toc-add-segment-for-each-point-segment_data-data.frame-x-150-xend-150-y" class="nav-link" data-scroll-target="#add-segment-for-each-point-segment_data-data.frame-x-150-xend-150-y">#add segment for each point segment_data = data.frame( x = 1:50, xend = 1:50, y</a></li>
-  </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/Introduction.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/Introduction.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -220,138 +232,46 @@ ul.task-list li input[type="checkbox"] {
 <p>“Why is statistics a required course for someone who wants to be a dentist/doctor/ nurse?”</p>
 <p>This is a common question (or at least thought) for many students. I hope to convince you this semester you at least need to understand statistics as part of the scientific method (and you should realize the scientific process informs all those jobs - in fact it can inform any job or task where you are searching for an answer or better method).</p>
 <p>For example, doctors prescribe medicine to patients, but how do they know these medicines work? Some doctors carry out research, but many rely on published guidelines, which themselves rely on research. So a new drug or treatment is proposed- but who decides it’s worth using? Researchers carry out trials to determine the efficacy of the treatment. In doing this they have to consider how to design an experiment (what do they collect? from whom?) and analyze the resulting data so they can trust the results.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://xkcd.com/2576/"><img src="https://imgs.xkcd.com/comics/control_group_2x.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">XKCD: Control Group</figcaption>
+</figure>
+</div>
 <p>Other students in our class may be interested in a more environment- or resource management- focused career (e.g., wildlife rehabilitation, carbon mitigation expert, researcher). Regardless of your goal, any question should be informed by this approach. For example,</p>
 <ul>
-<li>Does an environmental factor cause cancer?<br>
-</li>
+<li>Does an environmental factor cause cancer?</li>
 <li>Do potential toxins really harm the enviroment?</li>
 <li>Is organic food really healthier?</li>
-<li>Does exposing organisms reared in captivity to predator cues lead to more successful releases?</li>
+<li>Does exposing organisms reared in captivity to predator cues lead to more successful releases?
+<ul>
+<li><span class="citation" data-cites="zhu2023">Zhu et al. (<a href="#ref-zhu2023" role="doc-biblioref">2023</a>)</span></li>
+</ul></li>
 </ul>
 <!--
 may add some papers/references here when I figure out zotero integration
 -->
-<p>At its heart, statistics is about turning data into information that we can use to make decisions or better understand the world around us. Statistics generally give us estimates about how the real world works. Put another way, if we knew everything about the world, we wouldn’t need to use statistics because we wouldn’t need estimates.</p>
+<p>At its heart, statistics is about turning data into information that we can use to make decisions or better understand the world around us. Data can come from experiments we are running. This offers a clear connection to field and lab science, and its what we will focus on for most of this class. Data and theories can also be used to develop models that produce output ; this isn’t real-world data, but it offers very useful insight on what we think will happen if something occurs (and something we can test with other field data!). For example, restoration projects may focus on small-scale plots that undergo different restoration protocols. Data produced from monitoring these plots may be used to develop models to predict large-scale impacts (and maybe benefits and costs) of different restoration scenarios for larger regions.</p>
+<p>Above I used words like <em>know</em> (how do they know these medicines work? )and <em>predict (</em>develop models to predict large-scale impacts (and maybe benefits and costs) of different restoration scenarios for larger regions). While we may use words like these that are related our findings interchangeably at times, its important to note the different. Statistics (and related models) generally give us estimates about how the real world works. Put another way, if we knew everything about the world, we wouldn’t need to use statistics because we wouldn’t need estimates.</p>
 <p>The reasons we don’t usually know everything include</p>
 <ul>
 <li>the world is complicated (some questions can’t be directly tested)</li>
 <li>it’s not possible to measure everything</li>
 </ul>
-<p>Think about it this way. We want to know if several species of iris (<em>Iris versicolor</em> and *Iris setosa)</p>
-<p>We generally want to know something about a population. Since measuring the entire population may not be possible (too expensive, or in ecology you may not know if you measured the whole population), we generally sample the population. This means we measure a trait/characteristic (or multiple traits/characteristics)</p>
-<p>Over the course of the semester, our (ambitious) goals are to</p>
-<ul>
-<li>convince you statistics and data science is a vital component of biological, ecological, evolutionary, and medical research</li>
-<li>help you understand the concepts and linkages among basic tests, so you know what they are and when to use each
-<ul>
-<li>for undergrad students, that means getting right answers on exams. For graduates, this means you’ll know how to make decisions about your data and communicate/discuss/defend them when talking to advisors and reviewers</li>
-</ul></li>
-<li>introduce you to tools that are commonly used in the field (and will add to your CV)</li>
-</ul>
-<p><a href="about.qmd">about</a></p>
-<p>At its heart, statistics is about turning data into information that we can use to make decisions or better understand the world around us. Statistics generally give us estimates about how the real world works. Put another way, if we knew everything about the world, we wouldn’t need to use statistics because we wouldn’t need estimates.</p>
-<p>The reasons we don’t usually know everything include</p>
-<ul>
-<li>the world is complicated (some questions can’t be directly tested)</li>
-<li>it’s not possible to measure everything</li>
-</ul>
-<p>Think about it this way. We want to know if several species of iris (<em>Iris versicolor</em> and *Iris setosa)</p>
-<p>We generally want to know something about a population. Since measuring the entire population may not be possible (too expensive, or in ecology you may not know if you measured the whole population), we generally sample the population. This means we measure a trait/characteristic (or multiple traits/characteristics)</p>
-<p>#plots from 1. Intro.ppt#### iris</p>
-<p>#base histograms#### #note hist is odd with cex label_size &lt;- 2 title_size &lt;- 2.5</p>
-<p>par(mar = c(7,7,7,7)) #if you get an error about “figure margins too large”, reset this to par(mar = c(rep(5,4))) #this is just issue with trying to size figures for lecture slides #may also have issues with some images…</p>
-<p>hist(iris$Sepal.Length, main = “Sepal Lengths”, xlab = “Sepal Length (cm)”, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = “blue”)</p>
-<p>#skewed left#### birds &lt;- rbeta(10000,70,5) hist(birds, main=“Weight of Westchester cardinals”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “red”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
-<p>#normal data#### putnam &lt;- c(rnorm(1000,20,4)) hist(putnam, main=“Weight of Westchester parrots”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “green”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
-<p>#uniform data#### putnam &lt;- c(runif(1000,.1,8)) hist(putnam, main=“Weight of Westchester Robins”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “Pink”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
-<p>#skewed right#### birds &lt;- rbeta(10000,2,12) hist(birds, main=“Weight of Westchester Blue Jays”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “blue”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
-<p>#bimodal data#### putnam &lt;- c(rnorm(100,20,4),rnorm(100,40,4)) hist(putnam, main=“Weight of Westchester woodpeckers”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “orange”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
-<p>#add density overlay to histograms#### hist(iris<span class="math inline">\(Sepal.Length, main = "Sepal Lengths", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue", prob = T) lines(density(iris\)</span>Sepal.Length), col = “red”) # add a density estimate with defaults</p>
-<p>#normal data with density overly and true normal##### putnam &lt;- c(rnorm(1000,20,4)) hist(putnam, main=“Weight of Westchester parrots”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “green”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size, probability = T) lines(density(putnam), col = “black”) # add a density estimate with defaults curve(dnorm(x, mean=20, sd=4), col=“darkblue”, lwd=2, add=TRUE, yaxt=“n”)</p>
-<p>#bar charts for categorical data#### head(USArrests) names(USArrests) USArrests<span class="math inline">\(State &lt;- as.factor(rownames(USArrests)) par(las=2) barplot(USArrests\)</span>Murder, names.arg = USArrests$State, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = “blue”, main = “Murder Arrests per 100,000 since 1973”) write.csv(USArrests, “USArrests.csv”, row.names = F)</p>
-<p>write.csv(iris, “iris.csv”, row.names = F)</p>
-<p>#bar chart issues#### #auto breaks#### hist(iris<span class="math inline">\(Sepal.Length, main = "Sepal Lengths, auto breaks with R", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue") #counts of auto breaks#### x =hist(iris\)</span>Sepal.Length, main = “Sepal Lengths, auto breaks with R”, xlab = “Sepal Length (cm)”, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size) plot(x<span class="math inline">\(breaks[-9], x\)</span>counts, main = “Sepal Lengths, auto breaks with R”, xlab = “Sepal Length (cm)”, ylab = “Frequency”, cex.lab=label_size, cex.axis=1.5, cex.main=title_size, cex.sub=label_size, col=“blue”, pch = 16, cex = 3) #setting own breaks#### hist(iris<span class="math inline">\(Sepal.Length, breaks=3, main = "Sepal length histogram, 3 breaks", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue") hist(iris\)</span>Sepal.Length, breaks=10, main = “Sepal length histogram, 10 breaks”, xlab = “Sepal Length (cm)”, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = “blue”)</p>
-<p>#boxplot versicolor#### #need to use ggplot2 for ease (will get to this later and typically use it) library(ggplot2) ggplot(iris[iris$Species == “versicolor”,], aes(Species,Sepal.Length)) + geom_boxplot(aes(colour=Species), size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(“Sepal Length of Iris versicolor”)+ xlab(““) + theme(axis.title.x = element_text(face=”bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=0), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#data from multiple groups#### #barchart #### # #load function from Rmisc library(Rmisc)</p>
-<p>#now use function_output &lt;- summarySE(iris, measurevar=“Sepal.Length”, groupvars = c(“Species”))</p>
-<p>ggplot(function_output, aes(x=Species, y=Sepal.Length)) + geom_col(aes(fill=Species), size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(“Sepal Length of various iris species”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#scatterplot all species#### ggplot(iris, aes(Species,Sepal.Length)) + geom_point(aes(colour=Species), size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(“Sepal Length of various iris species”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#stacked histogram#### ggplot(iris, aes(Sepal.Length)) + geom_histogram(aes(fill=Species), size=3) + xlab(“Sepal Length (cm)”)+ ylab(“Frequency”)+ ggtitle(“Sepal Length of various iris species”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#facetted stacked histogram#### ggplot(iris, aes(Sepal.Length)) + geom_histogram(aes(fill=Species), size=3) + xlab(“Sepal Length (cm)”)+ ylab(“Frequency”)+ ggtitle(“Sepal Length of various iris species”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), legend.position = “bottom”, plot.title = element_text(hjust = 0.5, face=“bold”, size=32))+ facet_wrap(~Species, ncol = 1)</p>
-<p>#boxplot all species#### ggplot(iris, aes(Species,Sepal.Length)) + geom_boxplot(aes(colour=Species), size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(“Sepal Length of various iris species”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#cdf all species#### par(cex = 2) versi &lt;- ecdf(iris[iris<span class="math inline">\(Species == "versicolor","Sepal.Length"]) plot(versi, verticals = T, col = "red", main = "Cumulative frequency distribution of Sepal Length (cm)", xlab = "Sepal length (cm)", ylab = "Cumulative relative frequencey") seto &lt;- ecdf(iris[iris\)</span>Species == “setosa”,“Sepal.Length”]) plot(seto, add = T, col = “blue”, verticals = T) virg &lt;- ecdf(iris[iris$Species == “virginica”,“Sepal.Length”]) plot(virg, add = T, col = “orange”, verticals = T)</p>
-<p>#example of diverging, stacked, and mosaic graphs#### library(dplyr)</p>
-<section id="long-form-vegetation-survey-data-from" class="level1">
-<h1>long-form vegetation survey data from</h1>
-</section>
-<section id="httpluisdva.github.iorstatsdiverging-bar-plots" class="level1">
-<h1>http://luisdva.github.io/rstats/Diverging-bar-plots/</h1>
-</section>
-<section id="these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile" class="level1">
-<h1>these data should more or less reflect the vegetation patterns at “Quebrada de Cordoba”, Chile</h1>
-<p>vegSurvey &lt;- data.frame(sampling_point=rep(c(1:5),4), slope=c(rep(“North”,10),rep(“South”,10)), veg_Type=rep(c(rep(“native”,5),rep(“introduced”,5)),2), spp=as.integer(abs(rnorm(20,5,2)))) vegSurvey<span class="math inline">\(spp &lt;- ifelse(vegSurvey\)</span>veg_Type ==“introduced”,vegSurvey<span class="math inline">\(spp+1,vegSurvey\)</span>spp)</p>
-<p>vegSurvey &lt;- vegSurvey %&gt;% mutate(sppInv= ifelse(veg_Type ==“native”,spp,spp*-1))</p>
-<p>#grouped bar plot#### ggplot(vegSurvey, aes(x=sampling_point, y=spp)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”, position = position_dodge(width=0.5)) + ylab(“Frequency”) + xlab(“Sampling point”) + ggtitle(“Invasive and native species based on site”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#stacked bar plot#### ggplot(vegSurvey, aes(x=sampling_point, y=spp)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Frequency”)+ xlab(“Sampling point”)+ ggtitle(“Invasive and native species based on site”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#facetted stacked#### ggplot(vegSurvey, aes(x=sampling_point, y=spp)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Frequency”)+ xlab(“Sampling point”)+ ggtitle(“Invasive and native species based on site”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32)) + facet_wrap(~slope, nrow = 1)</p>
-</section>
-<section id="divergent-plot" class="level1">
-<h1>divergent plot</h1>
-<p>ggplot(vegSurvey, aes(x=sampling_point, y=sppInv, fill=veg_Type))+ geom_bar(stat=“identity”,position=“identity”)+ xlab(“sampling point”)+ylab(“number of species”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”))+ coord_flip()+ geom_hline(yintercept=0)+ xlab(“Sampling Points”)+ ylab(“Species number”)+ scale_y_continuous(breaks = pretty(vegSurvey<span class="math inline">\(sppInv),labels = abs(pretty(vegSurvey\)</span>sppInv)))+ theme(strip.text.x = element_text(face = “bold”))</p>
-</section>
-<section id="divergent-plot-with-facetting-by-slope" class="level1">
-<h1>divergent plot with facetting by slope</h1>
-<p>ggplot(vegSurvey, aes(x=sampling_point, y=sppInv, fill=veg_Type))+ geom_bar(stat=“identity”,position=“identity”)+ facet_wrap(~slope)+xlab(“sampling point”)+ylab(“number of species”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”))+ coord_flip()+ geom_hline(yintercept=0)+ xlab(“Sampling Points”)+ ylab(“Species number”)+ scale_y_continuous(breaks = pretty(vegSurvey<span class="math inline">\(sppInv),labels = abs(pretty(vegSurvey\)</span>sppInv)))+ theme(strip.text.x = element_text(face = “bold”))</p>
-<p>#mosaic plot#### #for mosaic plots, need to use other package (ggmosaic) or add frequency column #for your choice variable</p>
-<p>library(reshape2)</p>
-<p>#get total native/invasive per site vegSurvey_veg_per_site &lt;- dcast(vegSurvey, sampling_point+veg_Type~ “total_veg_per_site”, sum, value.var = “spp”) vegSurvey_per_site &lt;- dcast(vegSurvey, sampling_point ~ “total_per_site”, sum, value.var = “spp”) vegSurvey_veg_per_site &lt;- merge(vegSurvey_veg_per_site, vegSurvey_per_site) vegSurvey_veg_per_site<span class="math inline">\(Proportion &lt;- vegSurvey_veg_per_site\)</span>total_veg_per_site/ vegSurvey_veg_per_site$total_per_site</p>
-<p>ggplot(vegSurvey_veg_per_site, aes(x=sampling_point, y=Proportion)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Percent”) + xlab(“Sampling point”) + ggtitle(“Invasive and native species based on site”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#turn this into pie chart#### vegSurvey_veg_per_site<span class="math inline">\(sampling_point &lt;- factor(vegSurvey_per_site\)</span>sampling_point) #have to make weird empty factor else you get concentric circles vegSurvey_veg_per_site$Share &lt;- “” ggplot(vegSurvey_veg_per_site, aes(x=Share, y=Proportion)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Frequency”) + xlab(“Sampling point”) + ggtitle(“Invasive and native species based on site”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32)) + coord_polar(theta=“y”) + facet_wrap(~sampling_point)</p>
-<p>#or (not in slides) cast to get single plot/split#### vegSurvey_veg_per_site_cast &lt;- dcast(vegSurvey_veg_per_site, veg_Type ~ “Proportion”, value.var = “Proportion”, mean)</p>
-<p>vegSurvey_veg_per_site_cast$Site &lt;- “”</p>
-<p>ggplot(vegSurvey_veg_per_site_cast, aes(x=Site, y=Proportion)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Frequency”) + xlab(““) + ggtitle(”Overall composition of invasive and native species across sites”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32)) + coord_polar(theta=“y”)</p>
-<p>#mosaic plot facetted by slope#### vegSurvey_per_slope &lt;- dcast(vegSurvey, sampling_point + slope~ “total_per_slope”, sum, value.var = “spp”) vegSurvey &lt;- merge(vegSurvey, vegSurvey_per_slope) vegSurvey<span class="math inline">\(Proportion &lt;- vegSurvey\)</span>spp/vegSurvey$total_per_slope</p>
-<p>ggplot(vegSurvey, aes(x=sampling_point, y=Proportion)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Frequency”) + xlab(“Sampling point”) + ggtitle(“Invasive and native species based on slope”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32)) + facet_wrap(~slope, ncol=1)</p>
-<p>#numerical, numerical relationships #### # #scatter#### ggplot(iris, aes(y =Petal.Length,x =Sepal.Length)) + geom_point(aes(colour=Species), size = 3) + xlab(“Sepal Length (cm)”) + ylab(“Petal Length (cm)”) + ggtitle(“Relationship between sepal and petal lengths in irises”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#data over time#### #use airquality dataset for time series # airquality<span class="math inline">\(Date &lt;- as.Date(paste(airquality\)</span>Month, airquality$Day, sep=“/”), format =“%m/%d” )</p>
-<p>#just points#### ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(size = 3, col = “orange”) + xlab(“Date”) + ylab(“Temperature (C)”) + ggtitle(“Temperature over time”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#points and line#### ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(size = 3, col = “orange”) + geom_line() + xlab(“Date”) + ylab(“Temperature (C)”) + ggtitle(“Temperature over time”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#more than one axis#### #for 1:1 transformation data (anything you can use a function to make on a similar #scale) #can add easily but not get scale ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(size = 3, col = “orange”) + geom_line() + geom_point(aes(y=Wind)) + xlab(“Date”) + ylab(“Temperature (C)”) + ggtitle(“Temperature over time”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#manually scale data and get secondary axis #have to aes to make tranformation (not aes_string) #put colour in quotes in aes to force legend ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(aes(col =“Temp”), size = 3) + geom_line(col=“orange”) + geom_point(aes(y=Wind+50, col = “Wind speed”)) + scale_y_continuous(sec.axis = sec_axis(~.-50, name = “Wind (mph)”)) + xlab(“Date”) + ylab(“Temperature (C)”) + ggtitle(“Environmental measurements over time”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#outliers and bad fits####</p>
-<p>good_fit_x &lt;- runif(100, 1, 50) good_fit_y &lt;- rnorm(100,25,2) good_data &lt;- data.frame(source = “good”, x=good_fit_x, y=good_fit_y) bad_fit_x &lt;- runif(10, 20, 30) bad_fit_y &lt;- rnorm(10,95,1) bad_data &lt;- data.frame(source = “outlier”, x=bad_fit_x, y=bad_fit_y) all_data &lt;- rbind (good_data, bad_data)</p>
-<p>#just points#### ggplot(all_data, aes(x =x,y =y)) + geom_point(aes(color=source), size = 3) + xlab(“x”) + ylab(“y”) + ggtitle(“Outliers can impact data”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#curve and scatter#### ggplot(all_data, aes(x =x,y =y)) + geom_point(aes(color=source), size = 3) + geom_smooth(se = F) + xlab(“x”) + ylab(“y”) + ggtitle(“Outliers can impact data”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#just curve#### ggplot(all_data, aes(x =x,y =y)) + geom_smooth(se = F) + xlab(“x”) + ylab(“y”) + ggtitle(“Outliers can impact data”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#skewed left with measures of central tendency#### ##weird issues with margins and legends par(mar = c(rep(4,4))) birds &lt;- rbeta(10000,70,5) hist(birds, main=“Weight of Westchester cardinals”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “red”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size) abline(v=mean(birds), col=“yellow”, lwd = 4) abline(v=median(birds), col=“green”, lwd = 4) #no built in mode function…. # Create the function. getmode &lt;- function(v) { uniqv &lt;- unique(v) uniqv[which.max(tabulate(match(v, uniqv)))] }</p>
-<p>abline(v=(getmode(birds)), col=“blue”, lwd = 4) legend(“topleft”, legend = c(“mean”, “median”, “mode”), fill=c(“yellow”, “green”,“blue”), cex = 1.5, bty = “n”, x.intersp = .1, y.intersp = .5)</p>
-<p>#bimodal data with measures of central tendency##### par(mar = c(rep(2,4))) putnam &lt;- c(rnorm(100,20,4),rnorm(100,40,4)) hist(putnam, main=“Weight of Westchester woodpeckers”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “orange”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size, probability = T) lines(density(putnam), col = “black”, lwd = 4) # add a density estimate with defaults abline(v=mean(putnam), col=“red”, lwd = 4) abline(v=median(putnam), col=“green”, lwd = 4) abline(v=(getmode(putnam)), col=“blue”, lwd = 4) legend(“bottomright”, legend = c(“mean”, “median”, “mode”), fill=c(“red”,“green”,</p>
-<pre><code>                                                                "blue"), cex = 1.5,
-   bty="n", x.intersp = .1, y.intersp = .5)</code></pre>
-<p>#illustrate variance#### #add sample # iris$sample &lt;- 1:nrow(iris)</p>
-<p>#just scatter plot</p>
-<p>ggplot(iris[iris$Species == “setosa”,], aes(sample,Sepal.Length)) + geom_point(size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(expression(paste(“Sepal Length in”, italic(“Iris setosa”))))+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#add mean ggplot(iris[iris<span class="math inline">\(Species == "setosa",], aes(sample,Sepal.Length)) + geom_point(size = 3) + ylab("Sepal Length (cm)")+ggtitle(expression(paste("Sepal Length in ", italic("Iris setosa"))))+ geom_hline(yintercept = mean(iris[iris\)</span>Species == “setosa”, “Sepal.Length”]), color = “blue”, size = 2) + annotate(“text”, label = “mean”, x = 20, y = 4.9 , size = 8, color = “blue”) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-</section>
-<section id="add-segment-for-each-point-segment_data-data.frame-x-150-xend-150-y" class="level1">
-<h1>#add segment for each point segment_data = data.frame( x = 1:50, xend = 1:50, y</h1>
-<p>iris[iris<span class="math inline">\(Species == "setosa", "Sepal.Length"], yend = mean(iris[iris\)</span>Species == “setosa”, “Sepal.Length”]) )</p>
-<p>ggplot(iris[iris<span class="math inline">\(Species == "setosa",], aes(sample,Sepal.Length)) + geom_point(size = 3) + ylab("Sepal Length (cm)")+ggtitle(expression(paste("Sepal Length in ", italic("Iris setosa"))))+ geom_hline(yintercept = mean(iris[iris\)</span>Species == “setosa”, “Sepal.Length”]), color = “blue”, size = 2) + annotate(“text”, label = “mean”, x = 20, y = 4.9 , size = 8, color = “blue”) + annotate(“text”, label = “square each red line and find average”, x = 25, y = 5.5 , size = 8, color = “red”) + geom_segment(data = segment_data, aes(x = x, y = y, xend = xend, yend = yend), color= “red”, size = 1.1) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#transformations####</p>
-<p>sample_data &lt;- data.frame(x = rnorm (1000, 1, 1)) sample_data<span class="math inline">\(x_add &lt;- sample_data\)</span>x+5</p>
-<p>ggplot(sample_data) + geom_histogram(aes(x =x, fill=“x”), se = F) + geom_histogram(aes(x = x_add, fill=“x+5”), se = F)+ labs(fill=“Data”)+ xlab(“x”) + ylab(“y”) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=30), axis.text.x = element_text(size=30), legend.text =element_text(size=30), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>sample_data<span class="math inline">\(x_multiply &lt;- sample_data\)</span>x*5</p>
-<p>ggplot(sample_data) + geom_histogram(aes(x =x, fill=“x”), se = F) + geom_histogram(aes(x = x_multiply, fill=“x*5”), se = F)+ labs(fill=“Data”)+ xlab(“x”) + ylab(“y”) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=30), axis.text.x = element_text(size=30), legend.text =element_text(size=30), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#shift them left summary(birds) length(birds[birds &lt; .9]) birds[birds &lt; .9] &lt;- birds[birds &lt; .9] - .2 hist(birds, main=“Weight of Westchester cardinals”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “red”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size) abline(v=mean(birds), col=“yellow”, lwd = 4) abline(v=median(birds), col=“green”, lwd = 4) abline(v=(getmode(birds)), col=“blue”, lwd = 4) legend(x=.75, y= 1000, legend = c(“mean”, “median”, “mode”), fill=c(“yellow”,“green”,</p>
-<pre><code>                                                                "blue"), cex = 1.5,
-   bty="n", x.intersp = .1, y.intersp = .5)</code></pre>
-<p>#categorical data#### head(iris) iris<span class="math inline">\(random &lt;- runif(1:nrow(iris)) iris\)</span>LL &lt;- 0 iris<span class="math inline">\(LL[iris\)</span>random &gt; .7] &lt;- 1</p>
-<p>ggplot(iris[iris<span class="math inline">\(Species == "setosa", ], aes(LL)) + geom_histogram(size=3) + xlab("Genotype score")+ ylab("Frequency")+ ggtitle("Genotype score in an iris species")+ geom_vline(xintercept = mean(iris[iris\)</span>Species == “setosa”, “LL”]), color = “blue”) + annotate(“text”, label = “proportion”, x = .25, y = 20 , size = 8, color = “blue”) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>Because of this, statistics is also focused on trying to describe populations of interest or find signals (impacts of treatments, medicines, or restoration practices, for example) amidst the noise (variation in outcomes that are always common!). When considering relationships among variables, noise may occur because there are lots of things impacting the outcome of interest. For example, restoration protocol may impact the trajectory of an oyster reef, but so too may local factors like temperature an and salinity. Noise can also occur because of sampling error - since we don’t measure everything, our estimate of relationship or population traits may be imperfect.</p>
+<p>In the next session we’ll start to discuss how we can use data to make estimates about a population (and answer questions like what is a population and what are we trying to estimate). However, a final aside to finish this section - we often think about statistics happening after an experiment, survey, or other thing we get data from is finished. <strong>However, part of statistics is experimental design!</strong> Statistics should inform how you setup an experiment. In fact, the best idea (which seldom happens!) is that you simulate the type of data you expect to get from your experiment and then analyze that before you actually run the experiment. This ensures you are measuring what you need to measure and setting things up correctly! As the famous quote (to statisticians) states,</p>
+<blockquote class="blockquote">
+<p>To consult the statistician after an experiment is finished is often merely to ask him to conduct a post mortem examination. He can perhaps say what the experiment died of. -<em>Ronald Fisher</em></p>
+</blockquote>
 
 
-</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-zhu2023" class="csl-entry" role="listitem">
+Zhu, Jennifer, J. Stephen Gosnell, Laila Akallal, and Micah Goltsman. 2023. <span>“Fear Changes Traits and Increases Survival: A Meta-Analysis Evaluating the Efficacy of Antipredator Training in Captive-Rearing Programs.”</span> <em>Restoration Ecology</em> 31 (3): e13674. <a href="https://doi.org/10.1111/rec.13674">https://doi.org/10.1111/rec.13674</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -718,7 +638,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">© CC BY-NC-SA 4.0</div>   
     <div class="nav-footer-center">
       &nbsp;
-    </div>
+    <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/Introduction.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/Introduction.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></div>
     <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a>.</div>
   </div>
 </footer>
