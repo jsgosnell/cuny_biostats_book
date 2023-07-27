@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Biostatistics! - Introduction</title>
+<title>Biostatistics! - Acquiring data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -48,8 +82,8 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../content/Acquiring_data.html" rel="next">
-<link href="../content/getting_started.html" rel="prev">
+<link href="../content/summaring_data.qmd" rel="next">
+<link href="../content/Introduction.html" rel="prev">
 <link href="../images/favicon.ico" rel="icon">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -95,7 +129,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../content/Introduction.html">Introduction</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../content/Acquiring_data.html">Acquiring data</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -142,13 +176,13 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../content/Introduction.html" class="sidebar-item-text sidebar-link active">
+  <a href="../content/Introduction.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../content/Acquiring_data.html" class="sidebar-item-text sidebar-link">
+  <a href="../content/Acquiring_data.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Acquiring data</span></a>
   </div>
 </li>
@@ -189,8 +223,8 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Introduction</h1>
-<p class="subtitle lead">Why are we forced to take this class?</p>
+<h1 class="title">Acquiring data</h1>
+<p class="subtitle lead">Sampling and related issues</p>
 </div>
 
 
@@ -205,47 +239,68 @@ div.csl-indent {
 
 </header>
 
-<p>“Why is statistics a required course for someone who wants to be a dentist/doctor/ nurse?”</p>
-<p>This is a common question (or at least thought) for many students. I hope to convince you this semester you at least need to understand statistics as part of the scientific method (and you should realize the scientific process informs all those jobs - in fact it can inform any job or task where you are searching for an answer or better method).</p>
-<p>For example, doctors prescribe medicine to patients, but how do they know these medicines work? Some doctors carry out research, but many rely on published guidelines, which themselves rely on research. So a new drug or treatment is proposed- but who decides it’s worth using? Researchers carry out trials to determine the efficacy of the treatment. In doing this they have to consider how to design an experiment (what do they collect? from whom?) and analyze the resulting data so they can trust the results.</p>
+<p>Let’s start our statistics journey by thinking about the simplest scenario: We want to know something about a group. An example might be the average (or mean, we will define later if needed!) value for some trait, the minimum value, or the maximum value. We could also wish to know about the distribution of values for that trait in the group. These traits of the group are called <em>statistics:</em></p>
+<blockquote class="blockquote">
+<p>the numerical facts or data themselves - <em>Dictionary.com</em></p>
+</blockquote>
+<p>This means we have a target trait we are focused on, and we have defined a group of interest. We can call this group of interest a <em>population</em>. Note that while the term <em>population</em> may have specific meanings in some fields (such as ecology), here population is just the group of interest. It could be a population of Goliath grouper in Florida, a population of flowers in Virginia, or people from a certain country or demographic group. We could want to know something about all of these groups!</p>
+<p>As we’ve already noted, in a perfect world we know everything (or at least our trait value) for every member of the focal population. However, we often don’t or can’t measure every member of a population. It may be too difficult or expensive to measure every member of the population. In fact, we may not even know how large the population is!</p>
+<p>In the cases where we can’t measure every member of the population, we collect data on the focal trait(s) from a <em>sample</em>. A sample is the subset of the population of interest. Data can be collected from samples used in experimental studies, where researchers manipulate something to see how it impacts the focal trait. Researchers may expose organisms to different stimuli in a controlled lab, field, or mesocosm study to see what happens. For example, researchers interested in impacts of an invasive crayfish (<em>Pacifastacus leniusculus</em>) on Mazama newts (<em>Taricha granulosa mazamae</em>) collected newts and crayfish.; they then placed either just newts or newts and crayfish in in large tanks to observe interactions <span class="citation" data-cites="girdner2018">Girdner et al. (<a href="#ref-girdner2018" role="doc-biblioref">2018</a>)</span>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://xkcd.com/2576/"><img src="https://imgs.xkcd.com/comics/control_group_2x.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">XKCD: Control Group</figcaption>
+<p><a href="https://www.nps.gov/articles/parkscience32_1_5-12_buktenica_et_al_3815.htm"><img src="https://www.nps.gov/common/uploads/stories/images/nri/20160414/articles/E3D75BF5-1DD8-B71B-0BAA0D9A58F1307A/E3D75BF5-1DD8-B71B-0BAA0D9A58F1307A.jpg" class="img-fluid figure-img" alt="Image of people filling large black tanks on dock near lake."></a></p>
+<figcaption class="figure-caption">Experimental mesocosms used to evaluate Mazama newt and signal crayfish behavior on Wizard Island, Crater Lake, Oregon. A team of NPS scientists observed the interaction between newts and crayfish in tanks designed to mimic natural habitat.</figcaption>
 </figure>
 </div>
-<p>Other students in our class may be interested in a more environment- or resource management- focused career (e.g., wildlife rehabilitation, carbon mitigation expert, researcher). Regardless of your goal, any question should be informed by this approach. For example,</p>
-<ul>
-<li>Does an environmental factor cause cancer?</li>
-<li>Do potential toxins really harm the enviroment?</li>
-<li>Is organic food really healthier?</li>
-<li>Does exposing organisms reared in captivity to predator cues lead to more successful releases?
-<ul>
-<li><span class="citation" data-cites="zhu2023">Zhu et al. (<a href="#ref-zhu2023" role="doc-biblioref">2023</a>)</span></li>
-</ul></li>
-</ul>
-<!--
-may add some papers/references here when I figure out zotero integration
--->
-<p>At its heart, statistics is about turning data into information that we can use to make decisions or better understand the world around us. Data can come from experiments we are running. This offers a clear connection to field and lab science, and its what we will focus on for most of this class. Data and theories can also be used to develop models that produce output ; this isn’t real-world data, but it offers very useful insight on what we think will happen if something occurs (and something we can test with other field data!). For example, restoration projects may focus on small-scale plots that undergo different restoration protocols. Data produced from monitoring these plots may be used to develop models to predict large-scale impacts (and maybe benefits and costs) of different restoration scenarios for larger regions.</p>
-<p>Above I used words like <em>know</em> (how do they know these medicines work? )and <em>predict (</em>develop models to predict large-scale impacts (and maybe benefits and costs) of different restoration scenarios for larger regions). While we may use words like these that are related our findings interchangeably at times, its important to note the different. Statistics (and related models) generally give us estimates about how the real world works. Put another way, if we knew everything about the world, we wouldn’t need to use statistics because we wouldn’t need estimates.</p>
-<p>The reasons we don’t usually know everything include</p>
-<ul>
-<li>the world is complicated (some questions can’t be directly tested)</li>
-<li>it’s not possible to measure everything</li>
-</ul>
-<p>Because of this, statistics is also focused on trying to describe populations of interest or find signals (impacts of treatments, medicines, or restoration practices, for example) amidst the noise (variation in outcomes that are always common!). When considering relationships among variables, noise may occur because there are lots of things impacting the outcome of interest. For example, restoration protocol may impact the trajectory of an oyster reef, but so too may local factors like temperature an and salinity. Noise can also occur because of sampling error - since we don’t measure everything, our estimate of relationship or population traits may be imperfect.</p>
-<p>In the next session we’ll start to discuss how we can use data to make estimates about a population (and answer questions like what is a population and what are we trying to estimate). However, a final aside to finish this section - we often think about statistics happening after an experiment, survey, or other thing we get data from is finished. <strong>However, part of statistics is experimental design!</strong> Statistics should inform how you setup an experiment. In fact, the best idea (which seldom happens!) is that you simulate the type of data you expect to get from your experiment and then analyze that before you actually run the experiment. This ensures you are measuring what you need to measure and setting things up correctly! As the famous quote (to statisticians) states,</p>
+<p>Data can also be collected from observational studies, where researchers simply measure outcomes and other traits without manipulating anything. For example, scientists interested in impacts of climate change on species ranges surveyed sites for species presence and abundance and compared it to historical data (<span class="citation" data-cites="sagarin1999">Sagarin et al. (<a href="#ref-sagarin1999" role="doc-biblioref">1999</a>)</span>).</p>
+<p>Different types of studies change what we can use the data for. In general, experimental studies are more commonly used to ascertain causation (something makes something happen), whereas observational studies are used to assess correlation (something happens when something else happens). However, these can be hard to disentangle, especially since studies can only be observational since experiments would be unethical or impossible to carry out. As XKCD puts it</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://xkcd.com/552/"><img src="https://www.explainxkcd.com/wiki/images/9/9c/correlation.png" class="img-fluid figure-img" alt="Picture of two stick figures chatting.  One says, &quot;I used to think correlation implied causation. Then I took a statistics course. Now I don't.&quot; The other figure responds &quot;Sounds like the class helped.&quot;, To which the first figure responds, &quot;Maybe.&quot;"></a></p>
+<figcaption class="figure-caption">XKCD: Correlation. Title text (text that pops up when you hover over the comic): Correlation doesn’t imply causation, but it does waggle its eyebrows suggestively and gesture furtively while mouthing ‘look over there’.</figcaption>
+</figure>
+</div>
 <blockquote class="blockquote">
-<p>To consult the statistician after an experiment is finished is often merely to ask him to conduct a post mortem examination. He can perhaps say what the experiment died of. -<em>Ronald Fisher</em></p>
+<p>Correlation doesn’t imply causation, but it does waggle its eyebrows suggestively and gesture furtively while mouthing ‘look over there’ - XKCD #552</p>
 </blockquote>
+<p>Once we have the sample, we can measure the trait of interest in it, and use that to estimate the statistic of interest for the actual population. This is the science of statistics, which can actually be defined as</p>
+<blockquote class="blockquote">
+<p>the practice or science of collecting and analyzing numerical data in large quantities, especially for the purpose of inferring proportions in a whole from those in a representative sample. - <em>Oxford English Dictionary</em></p>
+</blockquote>
+<p>If the whole idea of statistics is to infer something about the population from our sample, we need to make sure the sample is <em>representative</em> of the population. That means it should not be <em>biased</em>. <em>Bias</em> occurs if the trait values we measure in our sample differ from the population in a consistent way. This can happen with samples of convenience, or when researchers select samples that are easy to measure but may not be representative of the population. Classic examples include estimating the amount of time students spend studying by surveying students at a campus library.</p>
+<p>Bias may also be related to issues of independence. In a good sampling design, every member of the population has the same chance of being included in a sample. Samples of convenience violate this premise, and often the underlying issue is that the samples are not independent. A perfect solution is to randomly choose members of the population to be in the sample, but that is often not possible. Again, it requires knowing every member of the population! Indepence also means each data point is not related to any others!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://xkcd.com/2533/"><img src="https://imgs.xkcd.com/comics/slope_hypothesis_testing_2x.png" class="img-fluid figure-img" alt="Comic strip where 2 figures discuss relationship between how loud students scream and exam grades."></a></p>
+<figcaption class="figure-caption">XKCD: Slope Hypothesis Testing. Don't worry, we'll come back to significance - but what is the independence issue?</figcaption>
+</figure>
+</div>
+<p>In some cases linkages among samples are impossible to avoid. We will cover ways to address that using blocking factors or random effects later.</p>
+<p>Notice in discussing bias we are not directly focusing on the quality of the measurements! For that, we could discuss accuracy (how well we measure the underlying trait in regards to its true value, which we typically don’t know) and precision (how repeatable our measurement technique is). Obviously we need good data to make good estimates, but these ideas are different from our current focus on picking a good sample.</p>
+<p>Even if we have a proper way to measure a trait (accurate and precise) in a good sample (not biased), we will still be producing an estimate of the population statistic! This is due to *sampling error*. Sampling error refers to the fact that every sample will produce a slightly different estimate of the statistic. Imagine this - there a 1000 fish in a lake. We sample 50 of them, measure their length, and use it calculate the average fish length. If we took a different sample, do you think it would have exactly the same average?</p>
+<p>We can demonstrate this in R - you won’t understand the code below yet, so just trust me for now, but this will let you start seeing code and thinking about how to use it.</p>
+<p>Let’s generate a population of fish. We’ll store their lengths in a vector called *lengths* .</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>lengths <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n=</span><span class="dv">1000</span>, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The average length of fish in this population is 9.9986312 cm. We can then simulate a sample from this population. In fact, let’s simulate 2 and compare the means of each.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sample_1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(lengths,<span class="dv">50</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sample_2 <span class="ot">&lt;-</span><span class="fu">sample</span>(lengths, <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The mean length for fish in sample 1 is 9.6530789 cm, while that in sample 2 is 9.9800588 cm (Note: if you view this on the webpage you will see a number, but in the actual qmd file you see R code here - this is an example of merging code and text!). These are both close to the true value, but they are also both slightly different - this is sampling error!</p>
+<p>Sampling error always exists, and a major part of statistics is to quantify it. One thing that reduces sampling error is to have large samples! Remember, if we measure every member of the population we don’t even need statistics, so the closer we get to that (implying larger samples) the better!</p>
+<p>Now that we have data, we’ll discuss summarizing it in the next section (and actually define <em>mean</em> and some of the other terms we’ve started to use!).</p>
 
 
 
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-zhu2023" class="csl-entry" role="listitem">
-Zhu, Jennifer, J. Stephen Gosnell, Laila Akallal, and Micah Goltsman. 2023. <span>“Fear Changes Traits and Increases Survival: A Meta-Analysis Evaluating the Efficacy of Antipredator Training in Captive-Rearing Programs.”</span> <em>Restoration Ecology</em> 31 (3): e13674. <a href="https://doi.org/10.1111/rec.13674">https://doi.org/10.1111/rec.13674</a>.
+<div id="ref-girdner2018" class="csl-entry" role="listitem">
+Girdner, Scott F., Andrew M. Ray, Mark W. Buktenica, David K. Hering, Jeremy A. Mack, and John W. Umek. 2018. <span>“Replacement of a Unique Population of Newts (Taricha Granulosa Mazamae) by Introduced Signal Crayfish (Pacifastacus Leniusculus) in Crater Lake, Oregon.”</span> <em>Biological Invasions</em> 20 (3): 721–40. <a href="https://doi.org/10.1007/s10530-017-1570-6">https://doi.org/10.1007/s10530-017-1570-6</a>.
+</div>
+<div id="ref-sagarin1999" class="csl-entry" role="listitem">
+Sagarin, Raphael D., James P. Barry, Sarah E. Gilman, and Charles H. Baxter. 1999. <span>“Climate-Related Change in an Intertidal Community over Short and Long Time Scales.”</span> <em>Ecological Monographs</em> 69 (4): 465–90. <a href="https://doi.org/10.2307/2657226">https://doi.org/10.2307/2657226</a>.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -598,13 +653,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../content/getting_started.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Before the first class</span>
+      <a href="../content/Introduction.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Introduction</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../content/Acquiring_data.html" class="pagination-link">
-        <span class="nav-page-text">Acquiring data</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../content/summaring_data.qmd" class="pagination-link">
+        <span class="nav-page-text">Summarizing data</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -614,7 +669,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">© CC BY-NC-SA 4.0</div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/Introduction.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/Introduction.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></div>
+    <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/Acquiring_data.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/Acquiring_data.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></div>
     <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a>.</div>
   </div>
 </footer>
