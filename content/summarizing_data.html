@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -169,7 +203,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#long-form-vegetation-survey-data-from" id="toc-long-form-vegetation-survey-data-from" class="nav-link active" data-scroll-target="#long-form-vegetation-survey-data-from">long-form vegetation survey data from</a></li>
+  <li><a href="#types-of-data" id="toc-types-of-data" class="nav-link active" data-scroll-target="#types-of-data">Types of data</a>
+  <ul class="collapse">
+  <li><a href="#categorical-variables" id="toc-categorical-variables" class="nav-link" data-scroll-target="#categorical-variables">Categorical variables</a></li>
+  <li><a href="#numeric-variables" id="toc-numeric-variables" class="nav-link" data-scroll-target="#numeric-variables">Numeric variables</a></li>
+  </ul></li>
+  <li><a href="#graphical-summaries" id="toc-graphical-summaries" class="nav-link" data-scroll-target="#graphical-summaries">Graphical summaries</a></li>
+  <li><a href="#long-form-vegetation-survey-data-from" id="toc-long-form-vegetation-survey-data-from" class="nav-link" data-scroll-target="#long-form-vegetation-survey-data-from">long-form vegetation survey data from</a></li>
   <li><a href="#httpluisdva.github.iorstatsdiverging-bar-plots" id="toc-httpluisdva.github.iorstatsdiverging-bar-plots" class="nav-link" data-scroll-target="#httpluisdva.github.iorstatsdiverging-bar-plots">http://luisdva.github.io/rstats/Diverging-bar-plots/</a></li>
   <li><a href="#these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile" id="toc-these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile" class="nav-link" data-scroll-target="#these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile">these data should more or less reflect the vegetation patterns at “Quebrada de Cordoba”, Chile</a></li>
   <li><a href="#divergent-plot" id="toc-divergent-plot" class="nav-link" data-scroll-target="#divergent-plot">divergent plot</a></li>
@@ -199,8 +239,202 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>Think about it this way. We want to know if several species of iris (<em>Iris versicolor</em> and *Iris setosa)</p>
-<p>We generally want to know something about a population. Since measuring the entire population may not be possible (too expensive, or in ecology you may not know if you measured the whole population), we generally sample the population. This means we measure a trait/characteristic (or multiple traits/characteristics)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://imgs.xkcd.com/comics/data_trap_2x.png" class="img-fluid figure-img" alt="Two stick figures in single panel. One sitting at desk states &quot;Hey, look, we have a bunch of data! I'm gonna analyze it&quot;.  The other responds, &quot;No, you fool! That will only create more data!&quot;"></p>
+<figcaption class="figure-caption">XKCD: Data Trap. It’s important to make sure your analysis destroys as much information as it produces.</figcaption>
+</figure>
+</div>
+<p>Once we have some data, the next step is often to summarize it. In fact, we’ve already done that in some ways. Some statistics like the mean may be considered a summary of the data. This may be useful because we prefer large datasets (remember good sampling!), but making sense of a list of numbers can be really hard! Summaries help us describe, and eventually compare, datasets, which we are using to infer something about a population.</p>
+<p>Think about it this way. We want to know if several species of iris (<em>Iris versicolor</em>, <em>setosa</em> and <em>virginica</em>) have similarly-shaped flowers. Since we can’t measure every flower on every plant from these species, we sample several sites and come up with the following data (using R’s built-in iris dataset).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>iris</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+1            5.1         3.5          1.4         0.2     setosa
+2            4.9         3.0          1.4         0.2     setosa
+3            4.7         3.2          1.3         0.2     setosa
+4            4.6         3.1          1.5         0.2     setosa
+5            5.0         3.6          1.4         0.2     setosa
+6            5.4         3.9          1.7         0.4     setosa
+7            4.6         3.4          1.4         0.3     setosa
+8            5.0         3.4          1.5         0.2     setosa
+9            4.4         2.9          1.4         0.2     setosa
+10           4.9         3.1          1.5         0.1     setosa
+11           5.4         3.7          1.5         0.2     setosa
+12           4.8         3.4          1.6         0.2     setosa
+13           4.8         3.0          1.4         0.1     setosa
+14           4.3         3.0          1.1         0.1     setosa
+15           5.8         4.0          1.2         0.2     setosa
+16           5.7         4.4          1.5         0.4     setosa
+17           5.4         3.9          1.3         0.4     setosa
+18           5.1         3.5          1.4         0.3     setosa
+19           5.7         3.8          1.7         0.3     setosa
+20           5.1         3.8          1.5         0.3     setosa
+21           5.4         3.4          1.7         0.2     setosa
+22           5.1         3.7          1.5         0.4     setosa
+23           4.6         3.6          1.0         0.2     setosa
+24           5.1         3.3          1.7         0.5     setosa
+25           4.8         3.4          1.9         0.2     setosa
+26           5.0         3.0          1.6         0.2     setosa
+27           5.0         3.4          1.6         0.4     setosa
+28           5.2         3.5          1.5         0.2     setosa
+29           5.2         3.4          1.4         0.2     setosa
+30           4.7         3.2          1.6         0.2     setosa
+31           4.8         3.1          1.6         0.2     setosa
+32           5.4         3.4          1.5         0.4     setosa
+33           5.2         4.1          1.5         0.1     setosa
+34           5.5         4.2          1.4         0.2     setosa
+35           4.9         3.1          1.5         0.2     setosa
+36           5.0         3.2          1.2         0.2     setosa
+37           5.5         3.5          1.3         0.2     setosa
+38           4.9         3.6          1.4         0.1     setosa
+39           4.4         3.0          1.3         0.2     setosa
+40           5.1         3.4          1.5         0.2     setosa
+41           5.0         3.5          1.3         0.3     setosa
+42           4.5         2.3          1.3         0.3     setosa
+43           4.4         3.2          1.3         0.2     setosa
+44           5.0         3.5          1.6         0.6     setosa
+45           5.1         3.8          1.9         0.4     setosa
+46           4.8         3.0          1.4         0.3     setosa
+47           5.1         3.8          1.6         0.2     setosa
+48           4.6         3.2          1.4         0.2     setosa
+49           5.3         3.7          1.5         0.2     setosa
+50           5.0         3.3          1.4         0.2     setosa
+51           7.0         3.2          4.7         1.4 versicolor
+52           6.4         3.2          4.5         1.5 versicolor
+53           6.9         3.1          4.9         1.5 versicolor
+54           5.5         2.3          4.0         1.3 versicolor
+55           6.5         2.8          4.6         1.5 versicolor
+56           5.7         2.8          4.5         1.3 versicolor
+57           6.3         3.3          4.7         1.6 versicolor
+58           4.9         2.4          3.3         1.0 versicolor
+59           6.6         2.9          4.6         1.3 versicolor
+60           5.2         2.7          3.9         1.4 versicolor
+61           5.0         2.0          3.5         1.0 versicolor
+62           5.9         3.0          4.2         1.5 versicolor
+63           6.0         2.2          4.0         1.0 versicolor
+64           6.1         2.9          4.7         1.4 versicolor
+65           5.6         2.9          3.6         1.3 versicolor
+66           6.7         3.1          4.4         1.4 versicolor
+67           5.6         3.0          4.5         1.5 versicolor
+68           5.8         2.7          4.1         1.0 versicolor
+69           6.2         2.2          4.5         1.5 versicolor
+70           5.6         2.5          3.9         1.1 versicolor
+71           5.9         3.2          4.8         1.8 versicolor
+72           6.1         2.8          4.0         1.3 versicolor
+73           6.3         2.5          4.9         1.5 versicolor
+74           6.1         2.8          4.7         1.2 versicolor
+75           6.4         2.9          4.3         1.3 versicolor
+76           6.6         3.0          4.4         1.4 versicolor
+77           6.8         2.8          4.8         1.4 versicolor
+78           6.7         3.0          5.0         1.7 versicolor
+79           6.0         2.9          4.5         1.5 versicolor
+80           5.7         2.6          3.5         1.0 versicolor
+81           5.5         2.4          3.8         1.1 versicolor
+82           5.5         2.4          3.7         1.0 versicolor
+83           5.8         2.7          3.9         1.2 versicolor
+84           6.0         2.7          5.1         1.6 versicolor
+85           5.4         3.0          4.5         1.5 versicolor
+86           6.0         3.4          4.5         1.6 versicolor
+87           6.7         3.1          4.7         1.5 versicolor
+88           6.3         2.3          4.4         1.3 versicolor
+89           5.6         3.0          4.1         1.3 versicolor
+90           5.5         2.5          4.0         1.3 versicolor
+91           5.5         2.6          4.4         1.2 versicolor
+92           6.1         3.0          4.6         1.4 versicolor
+93           5.8         2.6          4.0         1.2 versicolor
+94           5.0         2.3          3.3         1.0 versicolor
+95           5.6         2.7          4.2         1.3 versicolor
+96           5.7         3.0          4.2         1.2 versicolor
+97           5.7         2.9          4.2         1.3 versicolor
+98           6.2         2.9          4.3         1.3 versicolor
+99           5.1         2.5          3.0         1.1 versicolor
+100          5.7         2.8          4.1         1.3 versicolor
+101          6.3         3.3          6.0         2.5  virginica
+102          5.8         2.7          5.1         1.9  virginica
+103          7.1         3.0          5.9         2.1  virginica
+104          6.3         2.9          5.6         1.8  virginica
+105          6.5         3.0          5.8         2.2  virginica
+106          7.6         3.0          6.6         2.1  virginica
+107          4.9         2.5          4.5         1.7  virginica
+108          7.3         2.9          6.3         1.8  virginica
+109          6.7         2.5          5.8         1.8  virginica
+110          7.2         3.6          6.1         2.5  virginica
+111          6.5         3.2          5.1         2.0  virginica
+112          6.4         2.7          5.3         1.9  virginica
+113          6.8         3.0          5.5         2.1  virginica
+114          5.7         2.5          5.0         2.0  virginica
+115          5.8         2.8          5.1         2.4  virginica
+116          6.4         3.2          5.3         2.3  virginica
+117          6.5         3.0          5.5         1.8  virginica
+118          7.7         3.8          6.7         2.2  virginica
+119          7.7         2.6          6.9         2.3  virginica
+120          6.0         2.2          5.0         1.5  virginica
+121          6.9         3.2          5.7         2.3  virginica
+122          5.6         2.8          4.9         2.0  virginica
+123          7.7         2.8          6.7         2.0  virginica
+124          6.3         2.7          4.9         1.8  virginica
+125          6.7         3.3          5.7         2.1  virginica
+126          7.2         3.2          6.0         1.8  virginica
+127          6.2         2.8          4.8         1.8  virginica
+128          6.1         3.0          4.9         1.8  virginica
+129          6.4         2.8          5.6         2.1  virginica
+130          7.2         3.0          5.8         1.6  virginica
+131          7.4         2.8          6.1         1.9  virginica
+132          7.9         3.8          6.4         2.0  virginica
+133          6.4         2.8          5.6         2.2  virginica
+134          6.3         2.8          5.1         1.5  virginica
+135          6.1         2.6          5.6         1.4  virginica
+136          7.7         3.0          6.1         2.3  virginica
+137          6.3         3.4          5.6         2.4  virginica
+138          6.4         3.1          5.5         1.8  virginica
+139          6.0         3.0          4.8         1.8  virginica
+140          6.9         3.1          5.4         2.1  virginica
+141          6.7         3.1          5.6         2.4  virginica
+142          6.9         3.1          5.1         2.3  virginica
+143          5.8         2.7          5.1         1.9  virginica
+144          6.8         3.2          5.9         2.3  virginica
+145          6.7         3.3          5.7         2.5  virginica
+146          6.7         3.0          5.2         2.3  virginica
+147          6.3         2.5          5.0         1.9  virginica
+148          6.5         3.0          5.2         2.0  virginica
+149          6.2         3.4          5.4         2.3  virginica
+150          5.9         3.0          5.1         1.8  virginica</code></pre>
+</div>
+</div>
+<p>Notice there are multiple (150, to be exact) rows of data, and several measurements for each flower. This isn’t a botany class, but in case you are interested, here’s some flower morphology.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://commons.wikimedia.org/wiki/File:Sepal2_(PSF).png"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Sepal2_%28PSF%29.png/1079px-Sepal2_%28PSF%29.png?20100516143615" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">Flower morphology. Pearson Scott Foresman, Public domain, via Wikimedia Commons</figcaption>
+</figure>
+</div>
+<p>It’s really hard (or impossible) to just look at these numbers and infer anything about the population. Summary statistics help us get a better mental image of the distribution of the sample data.</p>
+<blockquote class="blockquote">
+<p><strong>Aside</strong>: While summaries can help make sense of data, and eventually we’ll add p-values to think about things like significance, in best case scenarios we don’t need this! We are going to focus on graphing (visual summaries) and numerical summaries in this section, but sometimes the data speaks for itself.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://xkcd.com/2400"><img src="https://imgs.xkcd.com/comics/statistics_2x.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">XKCD: Statistics</figcaption>
+</figure>
+</div>
+<p>Don’t let complicated approaches confuse you! If your findings disagree with your (mental or actual) visualization of the data, something is likely wrong!</p>
+</blockquote>
+<section id="types-of-data" class="level2">
+<h2 class="anchored" data-anchor-id="types-of-data">Types of data</h2>
+<p>We can summarize data using visual (i.e., graphs) or numerical (e.g., summary statistics like the mean) approaches. The specific way we summarize the data also depends on the type of data. Note, the trait we are collecting data on may also be called a <em>variable</em> (since it varies across the population and thus sample).</p>
+<section id="categorical-variables" class="level3">
+<h3 class="anchored" data-anchor-id="categorical-variables">Categorical variables</h3>
+<p>Variables can be categorical (e.g., eye color). If categorical variables have no clear hierarchical relationship (again, like eye color - one isn’t better than the other), then they are nominal variables. If the categories imply a rank or order (e.g., freshmen, sophomore, junior, senior; egg, larvae, pupae, adult) then they are ordinal variables).</p>
+</section>
+<section id="numeric-variables" class="level3">
+<h3 class="anchored" data-anchor-id="numeric-variables">Numeric variables</h3>
+<p>If data values are based on numbers instead of categories, they are numeric variables. These can be divided into those are count-based (no fractions) - we call these discrete data- and those that can take on values between whole numbers - like height. We call these continuous variables.</p>
+</section>
+</section>
+<section id="graphical-summaries" class="level2">
+<h2 class="anchored" data-anchor-id="graphical-summaries">Graphical summaries</h2>
 <p>#plots from 1. Intro.ppt#### iris</p>
 <p>#base histograms#### #note hist is odd with cex label_size &lt;- 2 title_size &lt;- 2.5</p>
 <p>par(mar = c(7,7,7,7)) #if you get an error about “figure margins too large”, reset this to par(mar = c(rep(5,4))) #this is just issue with trying to size figures for lecture slides #may also have issues with some images…</p>
@@ -225,6 +459,7 @@ ul.task-list li input[type="checkbox"] {
 <p>#boxplot all species#### ggplot(iris, aes(Species,Sepal.Length)) + geom_boxplot(aes(colour=Species), size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(“Sepal Length of various iris species”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
 <p>#cdf all species#### par(cex = 2) versi &lt;- ecdf(iris[iris<span class="math inline">\(Species == "versicolor","Sepal.Length"]) plot(versi, verticals = T, col = "red", main = "Cumulative frequency distribution of Sepal Length (cm)", xlab = "Sepal length (cm)", ylab = "Cumulative relative frequencey") seto &lt;- ecdf(iris[iris\)</span>Species == “setosa”,“Sepal.Length”]) plot(seto, add = T, col = “blue”, verticals = T) virg &lt;- ecdf(iris[iris$Species == “virginica”,“Sepal.Length”]) plot(virg, add = T, col = “orange”, verticals = T)</p>
 <p>#example of diverging, stacked, and mosaic graphs#### library(dplyr)</p>
+</section>
 <section id="long-form-vegetation-survey-data-from" class="level1">
 <h1>long-form vegetation survey data from</h1>
 </section>
