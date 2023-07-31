@@ -4,10 +4,9 @@ subtitle: Working with a sample
 bibliography: references.bib
 ---
 
-![XKCD: Data Trap. It\'s important to make sure your analysis destroys as much
+![XKCD: Data Trap. It's important to make sure your analysis destroys as much
 information as it
-produces.](https://imgs.xkcd.com/comics/data_trap_2x.png){alt="XKCD: Data Trap. It’s important to make sure your analysis destroys as much information as it produces."
-fig-alt="Two stick figures in single panel. One sitting at desk states \"Hey, look, we have a bunch of data! I'm gonna analyze it\".  The other responds, \"No, you fool! That will only create more data!\""
+produces.](https://imgs.xkcd.com/comics/data_trap_2x.png){fig-alt="Two stick figures in single panel. One sitting at desk states \"Hey, look, we have a bunch of data! I'm gonna analyze it\".  The other responds, \"No, you fool! That will only create more data!\""
 fig-align="center"}
 
 Once we have some data, the next step is often to summarize it. In fact, we've
@@ -73,43 +72,174 @@ numbers - like height. We call these continuous variables.
 
 ## Graphical summaries
 
-#plots from 1. Intro.ppt#### iris
+Visual interpretations or displays of your data are an excellent way to let
+patterns, trends, and distributions easier to see. In this section we'll go over
+a number of graphs. Consider this is a resource. I don't expect you to know how
+to make each of these on your own immediately. We will actually introduce the
+software we are using to make these in later sections. Instead, you can return
+here later when you are actually making a graph for ideas (and code!).
 
-#base histograms#### #note hist is odd with cex label_size \<- 2 title_size \<-
-2.5
+While the type of graph you should use will depend on the data (and you may have
+several options!) all graphs should have
 
-par(mar = c(7,7,7,7)) #if you get an error about "figure margins too large",
-reset this to par(mar = c(rep(5,4))) #this is just issue with trying to size
-figures for lecture slides #may also have issues with some images...
+-   Descriptive title
 
-hist(iris\$Sepal.Length, main = "Sepal Lengths", xlab = "Sepal Length (cm)",
-cex.lab=label_size, cex.axis=label_size, cex.main=title_size,
-cex.sub=label_size, col = "blue")
+    -   Move beyond *Y vs. X*. State any patterns you see in the title to help
+        the viewer know what they are looking for! Honest interpretation of data
+        is always paramount, but in producing a graph you will already be making
+        visualization decisions.
 
-#skewed left#### birds \<- rbeta(10000,70,5) hist(birds, main="Weight of
-Westchester cardinals", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col =
-"red", cex.lab=label_size, cex.axis=1.25, cex.main=title_size,
-cex.sub=label_size)
+-   Labeled axes (measure and unit)
 
-#normal data#### putnam \<- c(rnorm(1000,20,4)) hist(putnam, main="Weight of
-Westchester parrots", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col =
-"green", cex.lab=label_size, cex.axis=1.25, cex.main=title_size,
-cex.sub=label_size)
+    -   What did you measure, and using what (e.g. Sepal length (cm)
 
-#uniform data#### putnam \<- c(runif(1000,.1,8)) hist(putnam, main="Weight of
-Westchester Robins", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col =
-"Pink", cex.lab=label_size, cex.axis=1.25, cex.main=title_size,
-cex.sub=label_size)
+-   Data points
 
-#skewed right#### birds \<- rbeta(10000,2,12) hist(birds, main="Weight of
-Westchester Blue Jays", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col =
-"blue", cex.lab=label_size, cex.axis=1.25, cex.main=title_size,
-cex.sub=label_size)
+Other parts should only be included when needed.
 
-#bimodal data#### putnam \<- c(rnorm(100,20,4),rnorm(100,40,4)) hist(putnam,
-main="Weight of Westchester woodpeckers", xlab = "\n Weight (g)", ylab =
-"Frequency (#)\n", col = "orange", cex.lab=label_size, cex.axis=1.25,
-cex.main=title_size, cex.sub=label_size)
+-   Legends
+
+    -   Only needed for graphs with multiple datasets where color, shape, or
+        some other visual cue indicates something to the viewer.
+
+-   Trendlines
+
+    -   Can be used to show the general/overall relationship between variables.
+        If you use these, make sure to use the right ones! Don't fit a straight
+        line to a curved relationship!
+
+### Single variable
+
+Occasionally you only want to show the distribution for a single variable (or
+how the data themselves are distributed). For example, we could want to display
+sepal lengths for all the *Iris virginica* we sampled. We could do this using a
+**histogram**.
+
+```{r}
+label_size <- 2
+title_size <-2.5
+hist(iris[iris$Species == "virginica", "Sepal.Length"], 
+     main = expression(paste("Sepal lengths of ",italic("I. virginica"))), 
+     xlab = "Sepal Length (cm)", 
+     cex.lab=label_size, cex.axis=label_size, cex.main=title_size, 
+     cex.sub=label_size, col = "blue")
+```
+
+The above plot is produced using functions available in all R installs. Many
+plots now use *ggplot2*, a package you have to install (don't worry we'll get
+there!). However, since you may come back to this later, I'll also show how to
+make each of these graphs using ggplot2.
+
+```{r}
+#| label: fig-normal_virginica
+#| fig-cap: "Example of approximately normal data"
+
+library(ggplot2)
+virginica <- iris[iris$Species == "virginica",] # only made to deal with ggplot2 histogram oddity
+ggplot(virginica, 
+       aes(x=Sepal.Length)) +
+  geom_histogram( fill="blue", color="black") +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"))),
+       x= "Sepal length (cm)",
+       y= "Frequency")
+
+```
+
+Histograms put the data in bins (usually automatically set by software, but you
+can update!) and then show the number of samples that fell into each bin. This
+allows a quick estimate (look at the y, or vertical, axis) of how many samples
+were taken. The above image also allows us to begin to consider the bounds/range
+of the data (\~4.5-8 cm), which gives information on the minimum and maximum
+values. We can also see lengths around 6-7 cm are most common.
+
+This distribution of this data is approximately normal. We will define normality
+more later (equations!), but for now note the distribution is roughly symmetric,
+with tails on either side. Values near the middle of the range are more common,
+with the chance of getting smaller or larger values declining at an increasing
+rate...
+
+Comparing the above graph to other distributions may be an easier approach.
+Consider these graphs.
+
+```{r}
+#| label: fig-cardinals
+#| fig-cap: "Example of left-skewed data"
+birds <- rbeta(10000,70,5) 
+
+hist(birds, main="Weight of Westchester cardinals", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "red", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
+
+```
+
+```{r}
+#| label: fig-parrots
+#| fig-cap: "Example of normal data"
+putnam <- c(rnorm(1000,20,4)) 
+hist(putnam, main="Weight of Westchester parrots", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "green", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
+```
+
+```{r}
+#| label: fig-blue_jays
+#| fig-cap: "Example of right-skewed data"
+blue_jays <- rbeta(10000,2,12)
+hist(blue_jays, main="Weight of Westchester Blue Jays", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "blue", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
+```
+
+The cardinal @fig-cardinals data has a longer left tail and is not symmetric. We
+call this left- or negatively-skewed data (since it's going lower on the
+x-axis). Compare that to the blue jay @fig-blue_jays data; it has a longer
+right-tail and is positively- or right-skewed. Again, note this is all relative
+to symmetric data like you see with the parrots @fig-parrots, which is
+normally-distributed data.
+
+All symmetric data is not normal, however. Look at the data on robin and
+woodpecker weights.
+
+```{r}
+#| label: fig-robins
+#| fig-cap: "Example of uniform data"
+rochester <- c(runif(1000,.1,8)) 
+hist(rochester, main="Weight of Rochester robins", 
+xlab = "\n Weight (g)", 
+ylab = "Frequency (#)\n", col = "Pink", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
+```
+
+```{r}
+#| label: fig-woodpeckers
+#| fig-cap: "Example of bimodal data"
+woodpeckers <- c(rnorm(100,20,4),rnorm(100,40,4)) 
+hist(woodpeckers, main="Weight of Westchester woodpeckers", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "orange", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
+```
+
+Both these are roughly symmetric but clearly different from normally-distributed
+data. The robin data is what we call *uniformly* distributed. There are really
+no tails, as it appears you are just as likely to see any number within the
+bounds as any other. *Kurtosis* is the statistical term for what proportion of
+the data points are in the tails. High kurtosis distributions have heavy tails
+with multiple outliers. The uniform distibution is an example of a low kurtosis
+distribution (it has no tails!).
+
+This figure may also help.
+
+[![English: Plot of several symmetric unimodal probability densities with unit
+variance. From highest to lowest peak: red, kurtosis 3, Laplace (D)ouble
+exponential distribution; orange, kurtosis 2, hyperbolic (S)ecant distribution;
+green, kurtosis 1.2, (L)ogistic distribution; black, kurtosis 0, (N)ormal
+distribution; cyan, kurtosis −0.593762..., raised (C)osine distribution; blue,
+kurtosis −1, (W)igner semicircle distribution; magenta, kurtosis −1.2, (U)niform
+distribution.](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Standard_symmetric_pdfs.png/1200px-Standard_symmetric_pdfs.png?20061206071924){#fig-comparison
+fig-align="center"}](https://commons.wikimedia.org/wiki/File:Standard_symmetric_pdfs.png)
+
+If we consider the normal distribution (shown in black) to have 0 kurtosis, the
+uniform (pink) has less, and the double-exponential (red) has more.
+
+@fig-comparison
+
+Finally, the woodpecker data is what we call bimodal. It is symmetric in this
+case (not always true!), but it has a two clear peaks instead of a single
+central or skewed high point in the distribution.
+
+These distributions helps us think about what we would expect to find in future
+samples.
 
 #add density overlay to histograms####
 hist(iris$Sepal.Length, main = "Sepal Lengths", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue", prob = T) lines(density(iris$Sepal.Length),
