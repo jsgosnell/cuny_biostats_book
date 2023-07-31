@@ -208,7 +208,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#categorical-variables" id="toc-categorical-variables" class="nav-link" data-scroll-target="#categorical-variables">Categorical variables</a></li>
   <li><a href="#numeric-variables" id="toc-numeric-variables" class="nav-link" data-scroll-target="#numeric-variables">Numeric variables</a></li>
   </ul></li>
-  <li><a href="#graphical-summaries" id="toc-graphical-summaries" class="nav-link" data-scroll-target="#graphical-summaries">Graphical summaries</a></li>
+  <li><a href="#graphical-summaries" id="toc-graphical-summaries" class="nav-link" data-scroll-target="#graphical-summaries">Graphical summaries</a>
+  <ul class="collapse">
+  <li><a href="#single-variable" id="toc-single-variable" class="nav-link" data-scroll-target="#single-variable">Single variable</a></li>
+  </ul></li>
   <li><a href="#long-form-vegetation-survey-data-from" id="toc-long-form-vegetation-survey-data-from" class="nav-link" data-scroll-target="#long-form-vegetation-survey-data-from">long-form vegetation survey data from</a></li>
   <li><a href="#httpluisdva.github.iorstatsdiverging-bar-plots" id="toc-httpluisdva.github.iorstatsdiverging-bar-plots" class="nav-link" data-scroll-target="#httpluisdva.github.iorstatsdiverging-bar-plots">http://luisdva.github.io/rstats/Diverging-bar-plots/</a></li>
   <li><a href="#these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile" id="toc-these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile" class="nav-link" data-scroll-target="#these-data-should-more-or-less-reflect-the-vegetation-patterns-at-quebrada-de-cordoba-chile">these data should more or less reflect the vegetation patterns at “Quebrada de Cordoba”, Chile</a></li>
@@ -435,15 +438,147 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="graphical-summaries" class="level2">
 <h2 class="anchored" data-anchor-id="graphical-summaries">Graphical summaries</h2>
-<p>#plots from 1. Intro.ppt#### iris</p>
-<p>#base histograms#### #note hist is odd with cex label_size &lt;- 2 title_size &lt;- 2.5</p>
-<p>par(mar = c(7,7,7,7)) #if you get an error about “figure margins too large”, reset this to par(mar = c(rep(5,4))) #this is just issue with trying to size figures for lecture slides #may also have issues with some images…</p>
-<p>hist(iris$Sepal.Length, main = “Sepal Lengths”, xlab = “Sepal Length (cm)”, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = “blue”)</p>
-<p>#skewed left#### birds &lt;- rbeta(10000,70,5) hist(birds, main=“Weight of Westchester cardinals”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “red”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
-<p>#normal data#### putnam &lt;- c(rnorm(1000,20,4)) hist(putnam, main=“Weight of Westchester parrots”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “green”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
-<p>#uniform data#### putnam &lt;- c(runif(1000,.1,8)) hist(putnam, main=“Weight of Westchester Robins”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “Pink”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
-<p>#skewed right#### birds &lt;- rbeta(10000,2,12) hist(birds, main=“Weight of Westchester Blue Jays”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “blue”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
-<p>#bimodal data#### putnam &lt;- c(rnorm(100,20,4),rnorm(100,40,4)) hist(putnam, main=“Weight of Westchester woodpeckers”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “orange”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)</p>
+<p>Visual interpretations or displays of your data are an excellent way to let patterns, trends, and distributions easier to see. In this section we’ll go over a number of graphs. Consider this is a resource. I don’t expect you to know how to make each of these on your own immediately. We will actually introduce the software we are using to make these in later sections. Instead, you can return here later when you are actually making a graph for ideas (and code!).</p>
+<p>While the type of graph you should use will depend on the data (and you may have several options!) all graphs should have</p>
+<ul>
+<li><p>Descriptive title</p>
+<ul>
+<li>Move beyond <em>Y vs.&nbsp;X</em>. State any patterns you see in the title to help the viewer know what they are looking for! Honest interpretation of data is always paramount, but in producing a graph you will already be making visualization decisions.</li>
+</ul></li>
+<li><p>Labeled axes (measure and unit)</p>
+<ul>
+<li>What did you measure, and using what (e.g.&nbsp;Sepal length (cm)</li>
+</ul></li>
+<li><p>Data points</p></li>
+</ul>
+<p>Other parts should only be included when needed.</p>
+<ul>
+<li><p>Legends</p>
+<ul>
+<li>Only needed for graphs with multiple datasets where color, shape, or some other visual cue indicates something to the viewer.</li>
+</ul></li>
+<li><p>Trendlines</p>
+<ul>
+<li>Can be used to show the general/overall relationship between variables. If you use these, make sure to use the right ones! Don’t fit a straight line to a curved relationship!</li>
+</ul></li>
+</ul>
+<section id="single-variable" class="level3">
+<h3 class="anchored" data-anchor-id="single-variable">Single variable</h3>
+<p>Occasionally you only want to show the distribution for a single variable (or how the data themselves are distributed). For example, we could want to display sepal lengths for all the <em>Iris virginica</em> we sampled. We could do this using a <strong>histogram</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>label_size <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>title_size <span class="ot">&lt;-</span><span class="fl">2.5</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>], </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))), </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Sepal Length (cm)"</span>, </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span>label_size, <span class="at">cex.main=</span>title_size, </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.sub=</span>label_size, <span class="at">col =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="summarizing_data_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The above plot is produced using functions available in all R installs. Many plots now use <em>ggplot2</em>, a package you have to install (don’t worry we’ll get there!). However, since you may come back to this later, I’ll also show how to make each of these graphs using ggplot2.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>virginica <span class="ot">&lt;-</span> iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,] <span class="co"># only made to deal with ggplot2 histogram oddity</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(virginica, </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length)) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-normal_virginica" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-normal_virginica-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Example of approximately normal data</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Histograms put the data in bins (usually automatically set by software, but you can update!) and then show the number of samples that fell into each bin. This allows a quick estimate (look at the y, or vertical, axis) of how many samples were taken. The above image also allows us to begin to consider the bounds/range of the data (~4.5-8 cm), which gives information on the minimum and maximum values. We can also see lengths around 6-7 cm are most common.</p>
+<p>This distribution of this data is approximately normal. We will define normality more later (equations!), but for now note the distribution is roughly symmetric, with tails on either side. Values near the middle of the range are more common, with the chance of getting smaller or larger values declining at an increasing rate…</p>
+<p>Comparing the above graph to other distributions may be an easier approach. Consider these graphs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>birds <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">70</span>,<span class="dv">5</span>) </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(birds, <span class="at">main=</span><span class="st">"Weight of Westchester cardinals"</span>, <span class="at">xlab =</span> <span class="st">"</span><span class="sc">\n</span><span class="st"> Weight (g)"</span>, <span class="at">ylab =</span> <span class="st">"Frequency (#)</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span><span class="fl">1.25</span>, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-cardinals" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-cardinals-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Example of left-skewed data</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>putnam <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">1000</span>,<span class="dv">20</span>,<span class="dv">4</span>)) </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(putnam, <span class="at">main=</span><span class="st">"Weight of Westchester parrots"</span>, <span class="at">xlab =</span> <span class="st">"</span><span class="sc">\n</span><span class="st"> Weight (g)"</span>, <span class="at">ylab =</span> <span class="st">"Frequency (#)</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">col =</span> <span class="st">"green"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span><span class="fl">1.25</span>, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-parrots" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-parrots-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;3: Example of normal data</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>blue_jays <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">2</span>,<span class="dv">12</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(blue_jays, <span class="at">main=</span><span class="st">"Weight of Westchester Blue Jays"</span>, <span class="at">xlab =</span> <span class="st">"</span><span class="sc">\n</span><span class="st"> Weight (g)"</span>, <span class="at">ylab =</span> <span class="st">"Frequency (#)</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span><span class="fl">1.25</span>, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-blue_jays" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-blue_jays-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;4: Example of right-skewed data</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The cardinal <a href="#fig-cardinals">Figure&nbsp;2</a> data has a longer left tail and is not symmetric. We call this left- or negatively-skewed data (since it’s going lower on the x-axis). Compare that to the blue jay <a href="#fig-blue_jays">Figure&nbsp;4</a> data; it has a longer right-tail and is positively- or right-skewed. Again, note this is all relative to symmetric data like you see with the parrots <a href="#fig-parrots">Figure&nbsp;3</a>, which is normally-distributed data.</p>
+<p>All symmetric data is not normal, however. Look at the data on robin and woodpecker weights.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rochester <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">runif</span>(<span class="dv">1000</span>,.<span class="dv">1</span>,<span class="dv">8</span>)) </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(rochester, <span class="at">main=</span><span class="st">"Weight of Rochester robins"</span>, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="at">xlab =</span> <span class="st">"</span><span class="sc">\n</span><span class="st"> Weight (g)"</span>, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="at">ylab =</span> <span class="st">"Frequency (#)</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">col =</span> <span class="st">"Pink"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span><span class="fl">1.25</span>, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-robins" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-robins-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;5: Example of uniform data</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>woodpeckers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">20</span>,<span class="dv">4</span>),<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">40</span>,<span class="dv">4</span>)) </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(woodpeckers, <span class="at">main=</span><span class="st">"Weight of Westchester woodpeckers"</span>, <span class="at">xlab =</span> <span class="st">"</span><span class="sc">\n</span><span class="st"> Weight (g)"</span>, <span class="at">ylab =</span> <span class="st">"Frequency (#)</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">col =</span> <span class="st">"orange"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span><span class="fl">1.25</span>, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-woodpeckers" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-woodpeckers-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;6: Example of bimodal data</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Both these are roughly symmetric but clearly different from normally-distributed data. The robin data is what we call <em>uniformly</em> distributed. There are really no tails, as it appears you are just as likely to see any number within the bounds as any other. <em>Kurtosis</em> is the statistical term for what proportion of the data points are in the tails. High kurtosis distributions have heavy tails with multiple outliers. The uniform distibution is an example of a low kurtosis distribution (it has no tails!).</p>
+<p>This figure may also help.</p>
+<div id="fig-comparison" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><a href="https://commons.wikimedia.org/wiki/File:Standard_symmetric_pdfs.png"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Standard_symmetric_pdfs.png/1200px-Standard_symmetric_pdfs.png?20061206071924" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">Figure&nbsp;7: English: Plot of several symmetric unimodal probability densities with unit variance. From highest to lowest peak: red, kurtosis 3, Laplace (D)ouble exponential distribution; orange, kurtosis 2, hyperbolic (S)ecant distribution; green, kurtosis 1.2, (L)ogistic distribution; black, kurtosis 0, (N)ormal distribution; cyan, kurtosis −0.593762…, raised (C)osine distribution; blue, kurtosis −1, (W)igner semicircle distribution; magenta, kurtosis −1.2, (U)niform distribution.</figcaption>
+</figure>
+</div>
+<p>If we consider the normal distribution (shown in black) to have 0 kurtosis, the uniform (pink) has less, and the double-exponential (red) has more.</p>
+<p><a href="#fig-comparison">Figure&nbsp;7</a></p>
+<p>Finally, the woodpecker data is what we call bimodal. It is symmetric in this case (not always true!), but it has a two clear peaks instead of a single central or skewed high point in the distribution.</p>
+<p>These distributions helps us think about what we would expect to find in future samples.</p>
 <p>#add density overlay to histograms#### hist(iris<span class="math inline">\(Sepal.Length, main = "Sepal Lengths", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue", prob = T) lines(density(iris\)</span>Sepal.Length), col = “red”) # add a density estimate with defaults</p>
 <p>#normal data with density overly and true normal##### putnam &lt;- c(rnorm(1000,20,4)) hist(putnam, main=“Weight of Westchester parrots”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “green”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size, probability = T) lines(density(putnam), col = “black”) # add a density estimate with defaults curve(dnorm(x, mean=20, sd=4), col=“darkblue”, lwd=2, add=TRUE, yaxt=“n”)</p>
 <p>#bar charts for categorical data#### head(USArrests) names(USArrests) USArrests<span class="math inline">\(State &lt;- as.factor(rownames(USArrests)) par(las=2) barplot(USArrests\)</span>Murder, names.arg = USArrests$State, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = “blue”, main = “Murder Arrests per 100,000 since 1973”) write.csv(USArrests, “USArrests.csv”, row.names = F)</p>
@@ -459,6 +594,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>#boxplot all species#### ggplot(iris, aes(Species,Sepal.Length)) + geom_boxplot(aes(colour=Species), size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(“Sepal Length of various iris species”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
 <p>#cdf all species#### par(cex = 2) versi &lt;- ecdf(iris[iris<span class="math inline">\(Species == "versicolor","Sepal.Length"]) plot(versi, verticals = T, col = "red", main = "Cumulative frequency distribution of Sepal Length (cm)", xlab = "Sepal length (cm)", ylab = "Cumulative relative frequencey") seto &lt;- ecdf(iris[iris\)</span>Species == “setosa”,“Sepal.Length”]) plot(seto, add = T, col = “blue”, verticals = T) virg &lt;- ecdf(iris[iris$Species == “virginica”,“Sepal.Length”]) plot(virg, add = T, col = “orange”, verticals = T)</p>
 <p>#example of diverging, stacked, and mosaic graphs#### library(dplyr)</p>
+</section>
 </section>
 <section id="long-form-vegetation-survey-data-from" class="level1">
 <h1>long-form vegetation survey data from</h1>
