@@ -344,16 +344,24 @@ barplot(I_viriginica_colors$N,
 > Note all of the graphs above share a similar problem. People tend to like
 > bars, but they are actually just using a lot of ink! We could get the same
 > information about sepal lengths, for example, using
->
-> ```{r, eval=F}
-> plot(iris[iris$Species == "virginica", "Sepal.Length"], 
->      main = expression(paste("Sepal lengths of ",italic("I. virginica"))), 
->      xlab = "Sepal Length (cm)", 
->      cex.lab=label_size, cex.axis=label_size, cex.main=title_size, 
->      cex.sub=label_size, col = "blue")
-> ```
 
-#bar chart issues#### #auto breaks####
+```{r}
+hist_data <- hist(iris[iris$Species == "virginica", "Sepal.Length"], 
+     main = expression(paste("Sepal lengths of ",italic("I. virginica"))), 
+     xlab = "Sepal Length (cm)", 
+     cex.lab=label_size, cex.axis=label_size, cex.main=title_size, 
+     cex.sub=label_size, col = "blue")
+plot(hist_data$breaks[-8], hist_data$counts,  
+      main = expression(paste("Sepal lengths of ",italic("I. virginica"))), 
+      xlab = "Sepal Length (cm)", 
+      cex.lab=label_size, cex.axis=label_size, cex.main=title_size, 
+      cex.sub=label_size, col = "blue",
+      pch = 16, cex = 3)
+```
+
+> so the bars don't add much.
+
+chart issues#### #auto breaks####
 
 hist(iris, Sepal.Length, main = "Sepal Lengths, auto breaks with R", xlab =
 "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size,
