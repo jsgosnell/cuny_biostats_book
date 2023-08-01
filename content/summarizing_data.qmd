@@ -6,7 +6,8 @@ bibliography: references.bib
 
 ![XKCD: Data Trap. It's important to make sure your analysis destroys as much
 information as it
-produces.](https://imgs.xkcd.com/comics/data_trap_2x.png){fig-alt="Two stick figures in single panel. One sitting at desk states \"Hey, look, we have a bunch of data! I'm gonna analyze it\".  The other responds, \"No, you fool! That will only create more data!\""
+produces.](https://imgs.xkcd.com/comics/data_trap_2x.png){#fig-XKDC2582
+fig-alt="Two stick figures in single panel. One sitting at desk states \"Hey, look, we have a bunch of data! I'm gonna analyze it\".  The other responds, \"No, you fool! That will only create more data!\""
 fig-align="center"}
 
 Once we have some data, the next step is often to summarize it. In fact, we've
@@ -30,7 +31,8 @@ measurements for each flower. This isn't a botany class, but in case you are
 interested, here's some flower morphology.
 
 [![Flower morphology. Pearson Scott Foresman, Public domain, via Wikimedia
-Commons](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Sepal2_%28PSF%29.png/1079px-Sepal2_%28PSF%29.png?20100516143615){fig-align="center"}](https://commons.wikimedia.org/wiki/File:Sepal2_(PSF).png)
+Commons](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Sepal2_%28PSF%29.png/1079px-Sepal2_%28PSF%29.png?20100516143615){#fig-flower_morphology
+fig-align="center"}](https://commons.wikimedia.org/wiki/File:Sepal2_(PSF).png)
 
 It's really hard (or impossible) to just look at these numbers and infer
 anything about the population. Summary statistics help us get a better mental
@@ -42,7 +44,8 @@ image of the distribution of the sample data.
 > numerical summaries in this section, but sometimes the data speaks for itself.
 >
 > [![XKCD:
-> Statistics](https://imgs.xkcd.com/comics/statistics_2x.png){fig-align="center"}](https://xkcd.com/2400)
+> Statistics](https://imgs.xkcd.com/comics/statistics_2x.png){#fig-XKCD2400
+> fig-align="center"}](https://xkcd.com/2400)
 >
 > Don't let complicated approaches confuse you! If your findings disagree with
 > your (mental or actual) visualization of the data, something is likely wrong!
@@ -110,10 +113,12 @@ Other parts should only be included when needed.
 
 ### Single variable
 
-Occasionally you only want to show the distribution for a single variable (or
-how the data themselves are distributed). For example, we could want to display
-sepal lengths for all the *Iris virginica* we sampled. We could do this using a
-**histogram**.
+#### Numerical data
+
+Occasionally you only want to show the distribution for a single numerical
+variable (or how the data themselves are distributed). For example, we could
+want to display sepal lengths for all the *Iris virginica* we sampled. We could
+do this using a **histogram**.
 
 ```{r}
 label_size <- 2
@@ -164,17 +169,16 @@ Consider these graphs.
 ```{r}
 #| label: fig-cardinals
 #| fig-cap: "Example of left-skewed data"
-birds <- rbeta(10000,70,5) 
-
-hist(birds, main="Weight of Westchester cardinals", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "red", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
+cardinals <- rbeta(10000,70,5) 
+hist(cardinals, main="Weight of Westchester cardinals", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "red", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
 
 ```
 
 ```{r}
 #| label: fig-parrots
 #| fig-cap: "Example of normal data"
-putnam <- c(rnorm(1000,20,4)) 
-hist(putnam, main="Weight of Westchester parrots", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "green", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
+parrots<- c(rnorm(1000,20,4)) 
+hist(parrots, main="Weight of Westchester parrots", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "green", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
 ```
 
 ```{r}
@@ -239,35 +243,129 @@ case (not always true!), but it has a two clear peaks instead of a single
 central or skewed high point in the distribution.
 
 These distributions helps us think about what we would expect to find in future
-samples.
+samples (remember, we assume we have good samples!). To think about future
+sampling, we can change our y-axis from what we saw (frequency) to a probability
+density.
 
-#add density overlay to histograms####
-hist(iris$Sepal.Length, main = "Sepal Lengths", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue", prob = T) lines(density(iris$Sepal.Length),
-col = "red") \# add a density estimate with defaults
+```{r}
+#| label: fig-normal_virginica_overlay
+#| fig-cap: "Probability density distribution"
+hist(iris[iris$Species == "virginica", "Sepal.Length"], 
+     main = expression(paste("Sepal lengths of ",italic("I. virginica"))), 
+     xlab = "Sepal Length (cm)", 
+     cex.lab=label_size, cex.axis=label_size, cex.main=title_size, 
+     cex.sub=label_size, col = "blue", prob = T) 
+lines(density(iris[iris$Species == "virginica", "Sepal.Length"]), col = "red") 
+```
 
-#normal data with density overly and true normal##### putnam \<-
-c(rnorm(1000,20,4)) hist(putnam, main="Weight of Westchester parrots", xlab =
-"\n Weight (g)", ylab = "Frequency (#)\n", col = "green", cex.lab=label_size,
-cex.axis=1.25, cex.main=title_size, cex.sub=label_size, probability = T)
-lines(density(putnam), col = "black") \# add a density estimate with defaults
-curve(dnorm(x, mean=20, sd=4), col="darkblue", lwd=2, add=TRUE, yaxt="n")
+These probability density distributions can be calculated from data (as seen
+above), but they can also be developed from equations. The benefits of using a
+distribution derived from an equation is that it is consistent and easy to
+describe (standardized). This is why many common tests we will learn rely upon
+the data (or some derivative of it) following a known distribution. For example,
+many parametric tests will rely upon the data (or means of the data, or
+errors...we'll get there) following a normal distribution. We can see our parrot
+data (which came from a normal distribution!) is very close to a "perfect"
+normal distribution as define by an equation.
 
-#bar charts for categorical data#### head(USArrests) names(USArrests)
-USArrests$State <- as.factor(rownames(USArrests)) par(las=2) barplot(USArrests$Murder,
-names.arg = USArrests\$State, cex.lab=label_size, cex.axis=label_size,
-cex.main=title_size, cex.sub=label_size, col = "blue", main = "Murder Arrests
-per 100,000 since 1973") write.csv(USArrests, "USArrests.csv", row.names = F)
+```{r}
+#| label: fig-parrots_with_overlay
+#| fig-cap: "Comparing the distribution of the data to a perfect normal distribution"
+hist(parrots, main="Weight of Westchester parrots", xlab = "\n Weight (g)", 
+     col = "green", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size,
+     prob = T) 
+lines(density(parrots), col = "black") 
+curve(dnorm(x, mean=20, sd=4), col="red", lwd=2, add=TRUE, yaxt="n")
+legend("bottom", legend=c("PDF from data", "normal curve"), col=c("black", "red"), lty=1:2)
+```
 
-write.csv(iris, "iris.csv", row.names = F)
+<details>
+
+<summary>Bonus question: Why isn't it perfect? (Click the grey triangle to see
+the answer!)</summary>
+
+This is an easy example of sampling error!
+
+</details>
+
+#### Categorical data
+
+For categorical data, a bar chart fills a very similar role. Note, however, we
+don't bin the data., and there is inherent order for some examples (nominal
+data). For example, we could examine the colors of our *I. virginica*. To do
+this, we'll need to add some data to our iris data (notice this produces no
+output...)...
+
+```{r}
+colors <- c("blue", "orange", "purple")
+iris$Color <- factor(sample(colors, size = nrow(iris),replace = T))
+
+```
+
+and then summarize it...
+
+```{r}
+library(Rmisc)
+I_viriginica_colors <- summarySE(iris[iris$Species == "virginica",], measurevar = "Sepal.Length",
+                                 groupvars = "Color", na.rm = T)
+```
+
+before we graph it.
+
+```{r}
+#| label: fig-bar_chart_flowers
+#| fig-cap: "Distribution of flower colors"
+barplot(I_viriginica_colors$N, 
+        names.arg = I_viriginica_colors$Color, 
+        xlab="Colors",
+        ylab="Frequency",
+        cex.lab=label_size, cex.axis=label_size, 
+        cex.main=title_size, cex.sub=label_size, 
+        main = expression(paste("Color of ",italic("I. virginica "), "flowers")))
+```
+
+Or better
+
+```{r}
+#| label: fig-bar_chart_flowers_with_colors
+#| fig-cap: "Distribution of flower colors"
+barplot(I_viriginica_colors$N, 
+        names.arg = I_viriginica_colors$Color, 
+        cex.lab=label_size, cex.axis=label_size, 
+        cex.main=title_size, cex.sub=label_size, 
+        main = expression(paste("Color of ",italic("I. virginica "), "flowers")),
+        xlab="Colors",
+        ylab="Frequency",
+        col = colors)
+```
+
+> #### Graphing issues
+>
+> Note all of the graphs above share a similar problem. People tend to like
+> bars, but they are actually just using a lot of ink! We could get the same
+> information about sepal lengths, for example, using
+>
+> ```{r, eval=F}
+> plot(iris[iris$Species == "virginica", "Sepal.Length"], 
+>      main = expression(paste("Sepal lengths of ",italic("I. virginica"))), 
+>      xlab = "Sepal Length (cm)", 
+>      cex.lab=label_size, cex.axis=label_size, cex.main=title_size, 
+>      cex.sub=label_size, col = "blue")
+> ```
 
 #bar chart issues#### #auto breaks####
-hist(iris$Sepal.Length, main = "Sepal Lengths, auto breaks with R", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue") #counts of auto breaks#### x =hist(iris$Sepal.Length,
-main = "Sepal Lengths, auto breaks with R", xlab = "Sepal Length (cm)",
-cex.lab=label_size, cex.axis=label_size, cex.main=title_size,
-cex.sub=label_size) plot(x$breaks[-9], x$counts, main = "Sepal Lengths, auto
-breaks with R", xlab = "\n Sepal Length (cm)", ylab = "Frequency",
-cex.lab=label_size, cex.axis=1.5, cex.main=title_size, cex.sub=label_size,
-col="blue", pch = 16, cex = 3) #setting own breaks####
+
+hist(iris, Sepal.Length, main = "Sepal Lengths, auto breaks with R", xlab =
+"Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size,
+cex.main=title_size, cex.sub=label_size, col = "blue") #counts of auto
+breaks#### x =hist(iris\$Sepal.Length, main = "Sepal Lengths, auto breaks with
+R", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size,
+cex.main=title_size, cex.sub=label_size)
+
+plot(x$breaks[-9], x$counts, main = "Sepal Lengths, auto breaks with R", xlab =
+"\n Sepal Length (cm)", ylab = "Frequency", cex.lab=label_size, cex.axis=1.5,
+cex.main=title_size, cex.sub=label_size, col="blue", pch = 16, cex = 3) #setting
+own breaks####
 hist(iris$Sepal.Length, breaks=3, main = "Sepal length histogram, 3 breaks", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue") hist(iris$Sepal.Length,
 breaks=10, main = "Sepal length histogram, 10 breaks", xlab = "Sepal Length
 (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size,
