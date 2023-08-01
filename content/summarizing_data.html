@@ -242,10 +242,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<div class="quarto-figure quarto-figure-center">
+<div id="fig-XKDC2582" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="https://imgs.xkcd.com/comics/data_trap_2x.png" class="img-fluid figure-img" alt="Two stick figures in single panel. One sitting at desk states &quot;Hey, look, we have a bunch of data! I'm gonna analyze it&quot;.  The other responds, &quot;No, you fool! That will only create more data!&quot;"></p>
-<figcaption class="figure-caption">XKCD: Data Trap. It’s important to make sure your analysis destroys as much information as it produces.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;1: XKCD: Data Trap. It’s important to make sure your analysis destroys as much information as it produces.</figcaption>
 </figure>
 </div>
 <p>Once we have some data, the next step is often to summarize it. In fact, we’ve already done that in some ways. Some statistics like the mean may be considered a summary of the data. This may be useful because we prefer large datasets (remember good sampling!), but making sense of a list of numbers can be really hard! Summaries help us describe, and eventually compare, datasets, which we are using to infer something about a population.</p>
@@ -407,19 +407,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Notice there are multiple (150, to be exact) rows of data, and several measurements for each flower. This isn’t a botany class, but in case you are interested, here’s some flower morphology.</p>
-<div class="quarto-figure quarto-figure-center">
+<div id="fig-flower_morphology" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><a href="https://commons.wikimedia.org/wiki/File:Sepal2_(PSF).png"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Sepal2_%28PSF%29.png/1079px-Sepal2_%28PSF%29.png?20100516143615" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Flower morphology. Pearson Scott Foresman, Public domain, via Wikimedia Commons</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;2: Flower morphology. Pearson Scott Foresman, Public domain, via Wikimedia Commons</figcaption>
 </figure>
 </div>
 <p>It’s really hard (or impossible) to just look at these numbers and infer anything about the population. Summary statistics help us get a better mental image of the distribution of the sample data.</p>
 <blockquote class="blockquote">
 <p><strong>Aside</strong>: While summaries can help make sense of data, and eventually we’ll add p-values to think about things like significance, in best case scenarios we don’t need this! We are going to focus on graphing (visual summaries) and numerical summaries in this section, but sometimes the data speaks for itself.</p>
-<div class="quarto-figure quarto-figure-center">
+<div id="fig-XKCD2400" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><a href="https://xkcd.com/2400"><img src="https://imgs.xkcd.com/comics/statistics_2x.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">XKCD: Statistics</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3: XKCD: Statistics</figcaption>
 </figure>
 </div>
 <p>Don’t let complicated approaches confuse you! If your findings disagree with your (mental or actual) visualization of the data, something is likely wrong!</p>
@@ -464,7 +464,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <section id="single-variable" class="level3">
 <h3 class="anchored" data-anchor-id="single-variable">Single variable</h3>
-<p>Occasionally you only want to show the distribution for a single variable (or how the data themselves are distributed). For example, we could want to display sepal lengths for all the <em>Iris virginica</em> we sampled. We could do this using a <strong>histogram</strong>.</p>
+<section id="numerical-data" class="level4">
+<h4 class="anchored" data-anchor-id="numerical-data">Numerical data</h4>
+<p>Occasionally you only want to show the distribution for a single numerical variable (or how the data themselves are distributed). For example, we could want to display sepal lengths for all the <em>Iris virginica</em> we sampled. We could do this using a <strong>histogram</strong>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>label_size <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>title_size <span class="ot">&lt;-</span><span class="fl">2.5</span></span>
@@ -494,7 +496,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="fig-normal_virginica" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-normal_virginica-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: Example of approximately normal data</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4: Example of approximately normal data</figcaption>
 </figure>
 </div>
 </div>
@@ -503,26 +505,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This distribution of this data is approximately normal. We will define normality more later (equations!), but for now note the distribution is roughly symmetric, with tails on either side. Values near the middle of the range are more common, with the chance of getting smaller or larger values declining at an increasing rate…</p>
 <p>Comparing the above graph to other distributions may be an easier approach. Consider these graphs.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>birds <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">70</span>,<span class="dv">5</span>) </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(birds, <span class="at">main=</span><span class="st">"Weight of Westchester cardinals"</span>, <span class="at">xlab =</span> <span class="st">"</span><span class="sc">\n</span><span class="st"> Weight (g)"</span>, <span class="at">ylab =</span> <span class="st">"Frequency (#)</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span><span class="fl">1.25</span>, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cardinals <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">70</span>,<span class="dv">5</span>) </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(cardinals, <span class="at">main=</span><span class="st">"Weight of Westchester cardinals"</span>, <span class="at">xlab =</span> <span class="st">"</span><span class="sc">\n</span><span class="st"> Weight (g)"</span>, <span class="at">ylab =</span> <span class="st">"Frequency (#)</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span><span class="fl">1.25</span>, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-cardinals" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-cardinals-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;2: Example of left-skewed data</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;5: Example of left-skewed data</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>putnam <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">1000</span>,<span class="dv">20</span>,<span class="dv">4</span>)) </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(putnam, <span class="at">main=</span><span class="st">"Weight of Westchester parrots"</span>, <span class="at">xlab =</span> <span class="st">"</span><span class="sc">\n</span><span class="st"> Weight (g)"</span>, <span class="at">ylab =</span> <span class="st">"Frequency (#)</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">col =</span> <span class="st">"green"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span><span class="fl">1.25</span>, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>parrots<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">1000</span>,<span class="dv">20</span>,<span class="dv">4</span>)) </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(parrots, <span class="at">main=</span><span class="st">"Weight of Westchester parrots"</span>, <span class="at">xlab =</span> <span class="st">"</span><span class="sc">\n</span><span class="st"> Weight (g)"</span>, <span class="at">ylab =</span> <span class="st">"Frequency (#)</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">col =</span> <span class="st">"green"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span><span class="fl">1.25</span>, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-parrots" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-parrots-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;3: Example of normal data</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;6: Example of normal data</figcaption>
 </figure>
 </div>
 </div>
@@ -534,12 +535,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="fig-blue_jays" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-blue_jays-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;4: Example of right-skewed data</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;7: Example of right-skewed data</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>The cardinal <a href="#fig-cardinals">Figure&nbsp;2</a> data has a longer left tail and is not symmetric. We call this left- or negatively-skewed data (since it’s going lower on the x-axis). Compare that to the blue jay <a href="#fig-blue_jays">Figure&nbsp;4</a> data; it has a longer right-tail and is positively- or right-skewed. Again, note this is all relative to symmetric data like you see with the parrots <a href="#fig-parrots">Figure&nbsp;3</a>, which is normally-distributed data.</p>
+<p>The cardinal <a href="#fig-cardinals">Figure&nbsp;5</a> data has a longer left tail and is not symmetric. We call this left- or negatively-skewed data (since it’s going lower on the x-axis). Compare that to the blue jay <a href="#fig-blue_jays">Figure&nbsp;7</a> data; it has a longer right-tail and is positively- or right-skewed. Again, note this is all relative to symmetric data like you see with the parrots <a href="#fig-parrots">Figure&nbsp;6</a>, which is normally-distributed data.</p>
 <p>All symmetric data is not normal, however. Look at the data on robin and woodpecker weights.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rochester <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">runif</span>(<span class="dv">1000</span>,.<span class="dv">1</span>,<span class="dv">8</span>)) </span>
@@ -550,7 +551,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="fig-robins" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-robins-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5: Example of uniform data</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;8: Example of uniform data</figcaption>
 </figure>
 </div>
 </div>
@@ -562,7 +563,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="fig-woodpeckers" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-woodpeckers-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;6: Example of bimodal data</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;9: Example of bimodal data</figcaption>
 </figure>
 </div>
 </div>
@@ -572,18 +573,138 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="fig-comparison" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><a href="https://commons.wikimedia.org/wiki/File:Standard_symmetric_pdfs.png"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Standard_symmetric_pdfs.png/1200px-Standard_symmetric_pdfs.png?20061206071924" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Figure&nbsp;7: English: Plot of several symmetric unimodal probability densities with unit variance. From highest to lowest peak: red, kurtosis 3, Laplace (D)ouble exponential distribution; orange, kurtosis 2, hyperbolic (S)ecant distribution; green, kurtosis 1.2, (L)ogistic distribution; black, kurtosis 0, (N)ormal distribution; cyan, kurtosis −0.593762…, raised (C)osine distribution; blue, kurtosis −1, (W)igner semicircle distribution; magenta, kurtosis −1.2, (U)niform distribution.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;10: English: Plot of several symmetric unimodal probability densities with unit variance. From highest to lowest peak: red, kurtosis 3, Laplace (D)ouble exponential distribution; orange, kurtosis 2, hyperbolic (S)ecant distribution; green, kurtosis 1.2, (L)ogistic distribution; black, kurtosis 0, (N)ormal distribution; cyan, kurtosis −0.593762…, raised (C)osine distribution; blue, kurtosis −1, (W)igner semicircle distribution; magenta, kurtosis −1.2, (U)niform distribution.</figcaption>
 </figure>
 </div>
 <p>If we consider the normal distribution (shown in black) to have 0 kurtosis, the uniform (pink) has less, and the double-exponential (red) has more.</p>
-<p><a href="#fig-comparison">Figure&nbsp;7</a></p>
+<p><a href="#fig-comparison">Figure&nbsp;10</a></p>
 <p>Finally, the woodpecker data is what we call bimodal. It is symmetric in this case (not always true!), but it has a two clear peaks instead of a single central or skewed high point in the distribution.</p>
-<p>These distributions helps us think about what we would expect to find in future samples.</p>
-<p>#add density overlay to histograms#### hist(iris<span class="math inline">\(Sepal.Length, main = "Sepal Lengths", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue", prob = T) lines(density(iris\)</span>Sepal.Length), col = “red”) # add a density estimate with defaults</p>
-<p>#normal data with density overly and true normal##### putnam &lt;- c(rnorm(1000,20,4)) hist(putnam, main=“Weight of Westchester parrots”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “green”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size, probability = T) lines(density(putnam), col = “black”) # add a density estimate with defaults curve(dnorm(x, mean=20, sd=4), col=“darkblue”, lwd=2, add=TRUE, yaxt=“n”)</p>
-<p>#bar charts for categorical data#### head(USArrests) names(USArrests) USArrests<span class="math inline">\(State &lt;- as.factor(rownames(USArrests)) par(las=2) barplot(USArrests\)</span>Murder, names.arg = USArrests$State, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = “blue”, main = “Murder Arrests per 100,000 since 1973”) write.csv(USArrests, “USArrests.csv”, row.names = F)</p>
-<p>write.csv(iris, “iris.csv”, row.names = F)</p>
-<p>#bar chart issues#### #auto breaks#### hist(iris<span class="math inline">\(Sepal.Length, main = "Sepal Lengths, auto breaks with R", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue") #counts of auto breaks#### x =hist(iris\)</span>Sepal.Length, main = “Sepal Lengths, auto breaks with R”, xlab = “Sepal Length (cm)”, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size) plot(x<span class="math inline">\(breaks[-9], x\)</span>counts, main = “Sepal Lengths, auto breaks with R”, xlab = “Sepal Length (cm)”, ylab = “Frequency”, cex.lab=label_size, cex.axis=1.5, cex.main=title_size, cex.sub=label_size, col=“blue”, pch = 16, cex = 3) #setting own breaks#### hist(iris<span class="math inline">\(Sepal.Length, breaks=3, main = "Sepal length histogram, 3 breaks", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue") hist(iris\)</span>Sepal.Length, breaks=10, main = “Sepal length histogram, 10 breaks”, xlab = “Sepal Length (cm)”, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = “blue”)</p>
+<p>These distributions helps us think about what we would expect to find in future samples (remember, we assume we have good samples!). To think about future sampling, we can change our y-axis from what we saw (frequency) to a probability density.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>], </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))), </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Sepal Length (cm)"</span>, </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span>label_size, <span class="at">cex.main=</span>title_size, </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.sub=</span>label_size, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">prob =</span> T) </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">density</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>]), <span class="at">col =</span> <span class="st">"red"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-normal_virginica_overlay" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-normal_virginica_overlay-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;11: Probability density distribution</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>These probability density distributions can be calculated from data (as seen above), but they can also be developed from equations. The benefits of using a distribution derived from an equation is that it is consistent and easy to describe (standardized). This is why many common tests we will learn rely upon the data (or some derivative of it) following a known distribution. For example, many parametric tests will rely upon the data (or means of the data, or errors…we’ll get there) following a normal distribution. We can see our parrot data (which came from a normal distribution!) is very close to a “perfect” normal distribution as define by an equation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(parrots, <span class="at">main=</span><span class="st">"Weight of Westchester parrots"</span>, <span class="at">xlab =</span> <span class="st">"</span><span class="sc">\n</span><span class="st"> Weight (g)"</span>, </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"green"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span><span class="fl">1.25</span>, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">prob =</span> T) </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">density</span>(parrots), <span class="at">col =</span> <span class="st">"black"</span>) </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dnorm</span>(x, <span class="at">mean=</span><span class="dv">20</span>, <span class="at">sd=</span><span class="dv">4</span>), <span class="at">col=</span><span class="st">"red"</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">yaxt=</span><span class="st">"n"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottom"</span>, <span class="at">legend=</span><span class="fu">c</span>(<span class="st">"PDF from data"</span>, <span class="st">"normal curve"</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"red"</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-parrots_with_overlay" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-parrots_with_overlay-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;12: Comparing the distribution of the data to a perfect normal distribution</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<details>
+<summary>
+Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answer!)
+</summary>
+<p>This is an easy example of sampling error!</p>
+</details>
+</section>
+<section id="categorical-data" class="level4">
+<h4 class="anchored" data-anchor-id="categorical-data">Categorical data</h4>
+<p>For categorical data, a bar chart fills a very similar role. Note, however, we don’t bin the data., and there is inherent order for some examples (nominal data). For example, we could examine the colors of our <em>I. virginica</em>. To do this, we’ll need to add some data to our iris data (notice this produces no output…)…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"orange"</span>, <span class="st">"purple"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>iris<span class="sc">$</span>Color <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">sample</span>(colors, <span class="at">size =</span> <span class="fu">nrow</span>(iris),<span class="at">replace =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>and then summarize it…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lattice</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: plyr</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>I_viriginica_colors <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,], <span class="at">measurevar =</span> <span class="st">"Sepal.Length"</span>,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">groupvars =</span> <span class="st">"Color"</span>, <span class="at">na.rm =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>before we graph it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(I_viriginica_colors<span class="sc">$</span>N, </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">names.arg =</span> I_viriginica_colors<span class="sc">$</span>Color, </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab=</span><span class="st">"Colors"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab=</span><span class="st">"Frequency"</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span>label_size, </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size, </span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Color of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica "</span>), <span class="st">"flowers"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-bar_chart_flowers" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-bar_chart_flowers-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;13: Distribution of flower colors</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Or better</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(I_viriginica_colors<span class="sc">$</span>N, </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">names.arg =</span> I_viriginica_colors<span class="sc">$</span>Color, </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span>label_size, </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size, </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Color of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica "</span>), <span class="st">"flowers"</span>)),</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab=</span><span class="st">"Colors"</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab=</span><span class="st">"Frequency"</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-bar_chart_flowers_with_colors" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-bar_chart_flowers_with_colors-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;14: Distribution of flower colors</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h4 id="graphing-issues" class="anchored">Graphing issues</h4>
+<p>Note all of the graphs above share a similar problem. People tend to like bars, but they are actually just using a lot of ink! We could get the same information about sepal lengths, for example, using</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>hist_data <span class="ot">&lt;-</span> <span class="fu">hist</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>], </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))), </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Sepal Length (cm)"</span>, </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span>label_size, <span class="at">cex.main=</span>title_size, </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.sub=</span>label_size, <span class="at">col =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="summarizing_data_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hist_data<span class="sc">$</span>breaks[<span class="sc">-</span><span class="dv">8</span>], hist_data<span class="sc">$</span>counts,  </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))), </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">xlab =</span> <span class="st">"Sepal Length (cm)"</span>, </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span>label_size, <span class="at">cex.main=</span>title_size, </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">cex.sub=</span>label_size, <span class="at">col =</span> <span class="st">"blue"</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="summarizing_data_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>so the bars don’t add much.</p>
+</blockquote>
+<p>chart issues#### #auto breaks####</p>
+<p>hist(iris, Sepal.Length, main = “Sepal Lengths, auto breaks with R”, xlab = “Sepal Length (cm)”, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = “blue”) #counts of auto breaks#### x =hist(iris$Sepal.Length, main = “Sepal Lengths, auto breaks with R”, xlab = “Sepal Length (cm)”, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size)</p>
+<p>plot(x<span class="math inline">\(breaks[-9], x\)</span>counts, main = “Sepal Lengths, auto breaks with R”, xlab = “Sepal Length (cm)”, ylab = “Frequency”, cex.lab=label_size, cex.axis=1.5, cex.main=title_size, cex.sub=label_size, col=“blue”, pch = 16, cex = 3) #setting own breaks#### hist(iris<span class="math inline">\(Sepal.Length, breaks=3, main = "Sepal length histogram, 3 breaks", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue") hist(iris\)</span>Sepal.Length, breaks=10, main = “Sepal length histogram, 10 breaks”, xlab = “Sepal Length (cm)”, cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = “blue”)</p>
 <p>#boxplot versicolor#### #need to use ggplot2 for ease (will get to this later and typically use it) library(ggplot2) ggplot(iris[iris$Species == “versicolor”,], aes(Species,Sepal.Length)) + geom_boxplot(aes(colour=Species), size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(“Sepal Length of Iris versicolor”)+ xlab(““) + theme(axis.title.x = element_text(face=”bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=0), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
 <p>#data from multiple groups#### #barchart #### # #load function from Rmisc library(Rmisc)</p>
 <p>#now use function_output &lt;- summarySE(iris, measurevar=“Sepal.Length”, groupvars = c(“Species”))</p>
@@ -594,6 +715,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>#boxplot all species#### ggplot(iris, aes(Species,Sepal.Length)) + geom_boxplot(aes(colour=Species), size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(“Sepal Length of various iris species”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
 <p>#cdf all species#### par(cex = 2) versi &lt;- ecdf(iris[iris<span class="math inline">\(Species == "versicolor","Sepal.Length"]) plot(versi, verticals = T, col = "red", main = "Cumulative frequency distribution of Sepal Length (cm)", xlab = "Sepal length (cm)", ylab = "Cumulative relative frequencey") seto &lt;- ecdf(iris[iris\)</span>Species == “setosa”,“Sepal.Length”]) plot(seto, add = T, col = “blue”, verticals = T) virg &lt;- ecdf(iris[iris$Species == “virginica”,“Sepal.Length”]) plot(virg, add = T, col = “orange”, verticals = T)</p>
 <p>#example of diverging, stacked, and mosaic graphs#### library(dplyr)</p>
+</section>
 </section>
 </section>
 <section id="long-form-vegetation-survey-data-from" class="level1">
