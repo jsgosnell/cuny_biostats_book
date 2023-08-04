@@ -546,7 +546,7 @@ the same information about sepal lengths, for example, using just
 points:
 
 ```{r}
-#| label: bar_charts_but_just_points
+#| label: bar_charts_but_lines
 #| fig-cap: "Note you only really "know" the tops of the bar!"
 
 ggplot(iris[iris$Species == "virginica",],
@@ -557,51 +557,60 @@ ggplot(iris[iris$Species == "virginica",],
        y= "Frequency")
 ```
 
+We can also just display the data!
+
+```{r}
+#| label: bar_charts_but_just_points
+#| fig-cap: "Note you only really "know" the tops of the bar!"
+
+ggplot(iris[iris$Species == "virginica",],
+              aes(x=Species, y=Sepal.Length)) +
+  geom_point(color="blue") +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"))),
+       x= "Sepal length (cm)",
+       y= "Frequency")+
+  theme(axis.text.x = element_text(size=0))
+
+```
+
 </details>
 
 ### Numerical variables from multiple groups
 
 When we gather numerical data from various groups and wish to compare,
-we can extend histograms and bar charts to them using shapes, colors, or
-other features to symbolize the groups. We also need to ensure the
-different groups are visible when distributions overlap.
+we can extend our use bar charts and box-whisker plots by using shapes,
+colors, or other features to symbolize the groups. We also need to
+ensure the different groups are visible when distributions overlap.
 
 ```{r}
-
+#| label: bar_charts_all species
+#| fig-cap: "Note the top of the bar is the mean (we'll get there!) for each group!
+ggplot(iris, aes(y=Sepal.Length, x=Species, fill=Species)) +
+  geom_bar(stat = "summary", fun = "mean") +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species")
 ```
 
-#data from multiple groups#### #barchart \#### \# #load function from
-Rmisc library(Rmisc)
+```{r}
+#| label: bar_charts_all species
+#| fig-cap: "We can still just display the data for each group!
+ggplot(iris, aes(y=Sepal.Length, x=Species, color=Species)) +
+  geom_jitter() +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species")
+```
 
-#now use function_output \<- summarySE(iris, measurevar="Sepal.Length",
-groupvars = c("Species"))
-
-ggplot(function_output, aes(x=Species, y=Sepal.Length)) +
-geom_col(aes(fill=Species), size = 3) + ylab("Sepal Length
-(cm)")+ggtitle("Sepal Length of various iris species")+
-theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), plot.title =
-element_text(hjust = 0.5, face="bold", size=32))
-
-#scatterplot all species#### ggplot(iris, aes(Species,Sepal.Length)) +
-geom_point(aes(colour=Species), size = 3) + ylab("Sepal Length
-(cm)")+ggtitle("Sepal Length of various iris species")+
-theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), plot.title =
-element_text(hjust = 0.5, face="bold", size=32))
-
-#stacked histogram#### ggplot(iris, aes(Sepal.Length)) +
-geom_histogram(aes(fill=Species), size=3) + xlab("Sepal Length (cm)")+
-ylab("Frequency")+ ggtitle("Sepal Length of various iris species")+
-theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), plot.title =
-element_text(hjust = 0.5, face="bold", size=32))
+```{r}
+#| label: stacked_histograms_all species
+#| fig-cap: "Note the top of the bar is the mean (we'll get there!) for each group!
+ ggplot(iris, aes(x=Sepal.Length)) + 
+   geom_histogram(aes(fill=Species))+ 
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species")
+```
 
 #facetted stacked histogram#### ggplot(iris, aes(Sepal.Length)) +
 geom_histogram(aes(fill=Species), size=3) + xlab("Sepal Length (cm)")+
