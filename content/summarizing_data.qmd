@@ -4,93 +4,120 @@ subtitle: Working with a sample
 bibliography: references.bib
 ---
 
-![XKCD: Data Trap. It's important to make sure your analysis destroys as much
-information as it
+![XKCD: Data Trap. It's important to make sure your analysis destroys as
+much information as it
 produces.](https://imgs.xkcd.com/comics/data_trap_2x.png){#fig-XKDC2582
 fig-alt="Two stick figures in single panel. One sitting at desk states \"Hey, look, we have a bunch of data! I'm gonna analyze it\".  The other responds, \"No, you fool! That will only create more data!\""
 fig-align="center"}
 
-Once we have some data, the next step is often to summarize it. In fact, we've
-already done that in some ways. Some statistics like the mean may be considered
-a summary of the data. This may be useful because we prefer large datasets
-(remember good sampling!), but making sense of a list of numbers can be really
-hard! Summaries help us describe, and eventually compare, datasets, which we are
-using to infer something about a population.
+Once we have some data, the next step is often to summarize it. In fact,
+we've already done that in some ways. Some statistics like the mean may
+be considered a summary of the data. This may be useful because we
+prefer large datasets (remember good sampling!), but making sense of a
+list of numbers can be really hard! Summaries help us describe, and
+eventually compare, datasets, which we are using to infer something
+about a population.
 
-Think about it this way. We want to know if several species of iris (*Iris
-versicolor*, *setosa* and *virginica*) have similarly-shaped flowers. Since we
-can't measure every flower on every plant from these species, we sample several
-sites and come up with the following data (using R's built-in iris dataset).
+Think about it this way. We want to know if several species of iris
+(*Iris versicolor*, *setosa* and *virginica*) have similarly-shaped
+flowers. Since we can't measure every flower on every plant from these
+species, we sample several sites and come up with the following data
+(using R's built-in iris dataset).
 
 ```{r}
 iris
 ```
 
-Notice there are multiple (150, to be exact) rows of data, and several
-measurements for each flower. This isn't a botany class, but in case you are
-interested, here's some flower morphology.
+Overwhelming, isn't it? And this isn't a huge dataset! There are only
+150 rows, yet some datasets have tens of thousands!
 
-[![Flower morphology. Pearson Scott Foresman, Public domain, via Wikimedia
+Let's just look at the first few rows of the data
+
+```{r}
+head(iris)
+```
+
+It's really hard (or impossible) to just look at these numbers and infer
+anything about the population. Summary statistics help us get a better
+mental image of the distribution of the sample data.
+
+<details>
+
+<summary>What's the data showing? Click on the grey triangle</summary>
+
+We'll use many datasets in class to illustrate points. I don't expect
+you to become an expert on any of them, but I will provide some
+background along the way. For example, this isn't a botany class, but in
+case you are interested, here's some flower morphology.
+
+[![Flower morphology. Pearson Scott Foresman, Public domain, via
+Wikimedia
 Commons](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Sepal2_%28PSF%29.png/1079px-Sepal2_%28PSF%29.png?20100516143615){#fig-flower_morphology
 fig-align="center"}](https://commons.wikimedia.org/wiki/File:Sepal2_(PSF).png)
 
-It's really hard (or impossible) to just look at these numbers and infer
-anything about the population. Summary statistics help us get a better mental
-image of the distribution of the sample data.
+</details>
 
-> **Aside**: While summaries can help make sense of data, and eventually we'll
-> add p-values to think about things like significance, in best case scenarios
-> we don't need this! We are going to focus on graphing (visual summaries) and
-> numerical summaries in this section, but sometimes the data speaks for itself.
+It's really hard (or impossible) to just look at these numbers and infer
+anything about the population. Summary statistics help us get a better
+mental image of the distribution of the sample data.
+
+> **Aside**: While summaries can help make sense of data, and eventually
+> we'll add p-values to think about things like significance, in best
+> case scenarios we don't need this! We are going to focus on graphing
+> (visual summaries) and numerical summaries in this section, but
+> sometimes the data speaks for itself.
 >
 > [![XKCD:
 > Statistics](https://imgs.xkcd.com/comics/statistics_2x.png){#fig-XKCD2400
 > fig-align="center"}](https://xkcd.com/2400)
 >
-> Don't let complicated approaches confuse you! If your findings disagree with
-> your (mental or actual) visualization of the data, something is likely wrong!
+> Don't let complicated approaches confuse you! If your findings
+> disagree with your (mental or actual) visualization of the data,
+> something is likely wrong!
 
 ## Types of data
 
-We can summarize data using visual (i.e., graphs) or numerical (e.g., summary
-statistics like the mean) approaches. The specific way we summarize the data
-also depends on the type of data. Note, the trait we are collecting data on may
-also be called a *variable* (since it varies across the population and thus
-sample).
+We can summarize data using visual (i.e., graphs) or numerical (e.g.,
+summary statistics like the mean) approaches. The specific way we
+summarize the data also depends on the type of data. Note, the trait we
+are collecting data on may also be called a *variable* (since it varies
+across the population and thus sample).
 
 ### Categorical variables
 
-Variables can be categorical (e.g., eye color). If categorical variables have no
-clear hierarchical relationship (again, like eye color - one isn't better than
-the other), then they are nominal variables. If the categories imply a rank or
-order (e.g., freshmen, sophomore, junior, senior; egg, larvae, pupae, adult)
-then they are ordinal variables).
+Variables can be categorical (e.g., eye color). If categorical variables
+have no clear hierarchical relationship (again, like eye color - one
+isn't better than the other), then they are nominal variables. If the
+categories imply a rank or order (e.g., freshmen, sophomore, junior,
+senior; egg, larvae, pupae, adult) then they are ordinal variables).
 
 ### Numeric variables
 
-If data values are based on numbers instead of categories, they are numeric
-variables. These can be divided into those are count-based (no fractions) - we
-call these discrete data- and those that can take on values between whole
-numbers - like height. We call these continuous variables.
+If data values are based on numbers instead of categories, they are
+numeric variables. These can be divided into those are count-based (no
+fractions) - we call these discrete data- and those that can take on
+values between whole numbers - like height. We call these continuous
+variables.
 
 ## Graphical summaries
 
-Visual interpretations or displays of your data are an excellent way to let
-patterns, trends, and distributions easier to see. In this section we'll go over
-a number of graphs. Consider this is a resource. I don't expect you to know how
-to make each of these on your own immediately. We will actually introduce the
-software we are using to make these in later sections. Instead, you can return
-here later when you are actually making a graph for ideas (and code!).
+Visual interpretations or displays of your data are an excellent way to
+let patterns, trends, and distributions easier to see. In this section
+we'll go over a number of graphs. Consider this is a resource. I don't
+expect you to know how to make each of these on your own immediately. We
+will actually introduce the software we are using to make these in later
+sections. Instead, you can return here later when you are actually
+making a graph for ideas (and code!).
 
-While the type of graph you should use will depend on the data (and you may have
-several options!) all graphs should have
+While the type of graph you should use will depend on the data (and you
+may have several options!) all graphs should have
 
 -   Descriptive title
 
-    -   Move beyond *Y vs. X*. State any patterns you see in the title to help
-        the viewer know what they are looking for! Honest interpretation of data
-        is always paramount, but in producing a graph you will already be making
-        visualization decisions.
+    -   Move beyond *Y vs. X*. State any patterns you see in the title
+        to help the viewer know what they are looking for! Honest
+        interpretation of data is always paramount, but in producing a
+        graph you will already be making visualization decisions.
 
 -   Labeled axes (measure and unit)
 
@@ -102,25 +129,30 @@ Other parts should only be included when needed.
 
 -   Legends
 
-    -   Only needed for graphs with multiple datasets where color, shape, or
-        some other visual cue indicates something to the viewer.
+    -   Only needed for graphs with multiple datasets where color,
+        shape, or some other visual cue indicates something to the
+        viewer.
 
 -   Trendlines
 
-    -   Can be used to show the general/overall relationship between variables.
-        If you use these, make sure to use the right ones! Don't fit a straight
-        line to a curved relationship!
+    -   Can be used to show the general/overall relationship between
+        variables. If you use these, make sure to use the right ones!
+        Don't fit a straight line to a curved relationship!
 
 ### Single variable
 
 #### Numerical data
 
-Occasionally you only want to show the distribution for a single numerical
-variable (or how the data themselves are distributed). For example, we could
-want to display sepal lengths for all the *Iris virginica* we sampled. We could
-do this using a **histogram**.
+##### Histograms
+
+Occasionally you only want to show the distribution for a single
+numerical variable (or how the data themselves are distributed). For
+example, we could want to display sepal lengths for all the *Iris
+virginica* we sampled. We could do this using a **histogram**.
 
 ```{r}
+#| label: fig-normal_virginica_plot
+#| fig-cap: "Example of approximately normal data"
 label_size <- 2
 title_size <-2.5
 hist(iris[iris$Species == "virginica", "Sepal.Length"], 
@@ -130,70 +162,120 @@ hist(iris[iris$Species == "virginica", "Sepal.Length"],
      cex.sub=label_size, col = "blue")
 ```
 
-The above plot is produced using functions available in all R installs. Many
-plots now use *ggplot2*, a package you have to install (don't worry we'll get
-there!). However, since you may come back to this later, I'll also show how to
-make each of these graphs using ggplot2.
+The above plot is produced using functions available in all R installs.
+Many plots now use *ggplot2*, a package you have to install (don't worry
+we'll get there!). However, since you may come back to this later, I'll
+also show how to make each of these graphs using ggplot2.
 
 ```{r}
-#| label: fig-normal_virginica
+#| label: fig-normal_virginica_ggplot
 #| fig-cap: "Example of approximately normal data"
 
 library(ggplot2)
-virginica <- iris[iris$Species == "virginica",] # only made to deal with ggplot2 histogram oddity
-ggplot(virginica, 
-       aes(x=Sepal.Length)) +
+ggplot(iris[iris$Species == "virginica",],
+              aes(x=Sepal.Length)) +
   geom_histogram( fill="blue", color="black") +
   labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"))),
        x= "Sepal length (cm)",
        y= "Frequency")
-
 ```
 
-Histograms put the data in bins (usually automatically set by software, but you
-can update!) and then show the number of samples that fell into each bin. This
-allows a quick estimate (look at the y, or vertical, axis) of how many samples
-were taken. The above image also allows us to begin to consider the bounds/range
-of the data (\~4.5-8 cm), which gives information on the minimum and maximum
-values. We can also see lengths around 6-7 cm are most common.
+Histograms put the data in bins (usually automatically set by software,
+but you can update!) and then show the number of samples that fell into
+each bin. This allows a quick estimate (look at the y, or vertical,
+axis) of how many samples were taken. The above images also allows us to
+begin to consider the bounds/range of the data (\~4.5-8 cm), which gives
+information on the minimum and maximum values. We can also see lengths
+around 6-7 cm are most common.
 
-This distribution of this data is approximately normal. We will define normality
-more later (equations!), but for now note the distribution is roughly symmetric,
-with tails on either side. Values near the middle of the range are more common,
-with the chance of getting smaller or larger values declining at an increasing
-rate...
+<details>
 
-Comparing the above graph to other distributions may be an easier approach.
-Consider these graphs.
+<summary>Why do these graphs look slightly different? (Click the grey
+triangle to see the answer</summary>
+
+Most programs, including R, have autobreak functions to separate the
+data into bins. Notice ggplot2 uses a different algorithm to bin the
+data. That also impacts what you see! Users, however, can override
+these, so it's worth noting that differences in bin size can influence
+what distributions look like.
 
 ```{r}
-#| label: fig-cardinals
-#| fig-cap: "Example of left-skewed data"
+#| label: bar_charts_but_just_points 
+#| #| fig-cap: "Note you only really "know" the tops of the bar!" 
+#| #| fig-subcap: 
+#|  #|   - "Auto breaks with R" 
+#|  #|   - "10 breaks" 
+#|  #|   -"3 breaks" 
+#|  #| layout-nrow: 3 
+hist(iris[iris$Species == "virginica", "Sepal.Length"],       main = expression(paste("Sepal lengths of ",italic("I. virginica"))),       xlab = "Sepal Length (cm)",       cex.lab=label_size, cex.axis=label_size, cex.main=title_size,       cex.sub=label_size, col = "blue") 
+hist(iris[iris$Species == "virginica", "Sepal.Length"],        breaks=3, main = "Sepal length histogram, 3 breaks", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue")  
+hist(iris[iris$Species == "virginica", "Sepal.Length"],        breaks=10, main = "Sepal length histogram, 10 breaks", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue")
+```
+
+A similar issue exists for qualitative data in regards to the categories
+that are combined/used.
+
+</details>
+
+This distribution of this data is approximately normal. We will define
+normality more later (equations!), but for now note the distribution is
+roughly symmetric, with tails on either side. Values near the middle of
+the range are more common, with the chance of getting smaller or larger
+values declining at an increasing rate...
+
+Comparing the above graph to other distributions may be an easier
+approach. Consider these graphs.
+
+```{r}
+#| label: fig-cardinals_plot
+#| fig-cap: "Example of left-skewed data (plot)"
 cardinals <- rbeta(10000,70,5) 
 hist(cardinals, main="Weight of Westchester cardinals", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "red", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
 
 ```
 
 ```{r}
+#| label: fig-cardinals_ggplot
+#| fig-cap: "Example of left-skewed data (ggplot2)"
+ggplot(data.frame(cardinals), 
+       aes(x=cardinals)) +
+  geom_histogram( fill="red", color="black") +
+  labs(title="Weight of Westchester cardinals",
+       x= "Weight (g)",
+       y= "Frequency")
+```
+
+```{r}
 #| label: fig-parrots
 #| fig-cap: "Example of normal data"
 parrots<- c(rnorm(1000,20,4)) 
-hist(parrots, main="Weight of Westchester parrots", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "green", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
+ggplot(data.frame(parrots), 
+       aes(x=parrots)) +
+  geom_histogram( fill="green", color="black") +
+  labs(title="Weight of Westchester parrots",
+       x= "Weight (g)",
+       y= "Frequency")
 ```
 
 ```{r}
 #| label: fig-blue_jays
 #| fig-cap: "Example of right-skewed data"
 blue_jays <- rbeta(10000,2,12)
-hist(blue_jays, main="Weight of Westchester Blue Jays", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "blue", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
+ggplot(data.frame(blue_jays), 
+       aes(x=blue_jays)) +
+  geom_histogram( fill="blue", color="black") +
+  labs(title="Weight of Westchester blue jays",
+       x= "Weight (g)",
+       y= "Frequency")
+
 ```
 
-The cardinal @fig-cardinals data has a longer left tail and is not symmetric. We
-call this left- or negatively-skewed data (since it's going lower on the
-x-axis). Compare that to the blue jay @fig-blue_jays data; it has a longer
-right-tail and is positively- or right-skewed. Again, note this is all relative
-to symmetric data like you see with the parrots @fig-parrots, which is
-normally-distributed data.
+The cardinal @fig-cardinals data has a longer left tail and is not
+symmetric. We call this left- or negatively-skewed data (since it's
+going lower on the x-axis). Compare that to the blue jay @fig-blue_jays
+data; it has a longer right-tail and is positively- or right-skewed.
+Again, note this is all relative to symmetric data like you see with the
+parrots @fig-parrots, which is normally-distributed data.
 
 All symmetric data is not normal, however. Look at the data on robin and
 woodpecker weights.
@@ -202,99 +284,185 @@ woodpecker weights.
 #| label: fig-robins
 #| fig-cap: "Example of uniform data"
 rochester <- c(runif(1000,.1,8)) 
-hist(rochester, main="Weight of Rochester robins", 
-xlab = "\n Weight (g)", 
-ylab = "Frequency (#)\n", col = "Pink", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
+ggplot(data.frame(rochester), 
+       aes(x=rochester)) +
+  geom_histogram( fill="pink", color="black") +
+  labs(title="Weight of Rochester robins",
+       x= "Weight (g)",
+       y= "Frequency")
+
 ```
 
 ```{r}
 #| label: fig-woodpeckers
 #| fig-cap: "Example of bimodal data"
 woodpeckers <- c(rnorm(100,20,4),rnorm(100,40,4)) 
-hist(woodpeckers, main="Weight of Westchester woodpeckers", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "orange", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
+ggplot(data.frame(woodpeckers), 
+       aes(x=woodpeckers)) +
+  geom_histogram( fill="orange", color="black") +
+  labs(title="Weight of  Westchester woodpeckers",
+       x= "Weight (g)",
+       y= "Frequency")
 ```
 
-Both these are roughly symmetric but clearly different from normally-distributed
-data. The robin data is what we call *uniformly* distributed. There are really
-no tails, as it appears you are just as likely to see any number within the
-bounds as any other. *Kurtosis* is the statistical term for what proportion of
-the data points are in the tails. High kurtosis distributions have heavy tails
-with multiple outliers. The uniform distibution is an example of a low kurtosis
+Both these are roughly symmetric but clearly different from
+normally-distributed data. The robin data is what we call *uniformly*
+distributed. There are really no tails, as it appears you are just as
+likely to see any number within the bounds as any other. *Kurtosis* is
+the statistical term for what proportion of the data points are in the
+tails. High kurtosis distributions have heavy tails with multiple
+outliers. The uniform distibution is an example of a low kurtosis
 distribution (it has no tails!).
 
 This figure may also help.
 
-[![English: Plot of several symmetric unimodal probability densities with unit
-variance. From highest to lowest peak: red, kurtosis 3, Laplace (D)ouble
-exponential distribution; orange, kurtosis 2, hyperbolic (S)ecant distribution;
-green, kurtosis 1.2, (L)ogistic distribution; black, kurtosis 0, (N)ormal
-distribution; cyan, kurtosis −0.593762..., raised (C)osine distribution; blue,
-kurtosis −1, (W)igner semicircle distribution; magenta, kurtosis −1.2, (U)niform
+[![English: Plot of several symmetric unimodal probability densities
+with unit variance. From highest to lowest peak: red, kurtosis 3,
+Laplace (D)ouble exponential distribution; orange, kurtosis 2,
+hyperbolic (S)ecant distribution; green, kurtosis 1.2, (L)ogistic
+distribution; black, kurtosis 0, (N)ormal distribution; cyan, kurtosis
+−0.593762..., raised (C)osine distribution; blue, kurtosis −1, (W)igner
+semicircle distribution; magenta, kurtosis −1.2, (U)niform
 distribution.](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Standard_symmetric_pdfs.png/1200px-Standard_symmetric_pdfs.png?20061206071924){#fig-comparison
 fig-align="center"}](https://commons.wikimedia.org/wiki/File:Standard_symmetric_pdfs.png)
 
-If we consider the normal distribution (shown in black) to have 0 kurtosis, the
-uniform (pink) has less, and the double-exponential (red) has more.
+If we consider the normal distribution (shown in black) to have 0
+kurtosis, the uniform (pink) has less, and the double-exponential (red)
+has more.
 
 @fig-comparison
 
-Finally, the woodpecker data is what we call bimodal. It is symmetric in this
-case (not always true!), but it has a two clear peaks instead of a single
-central or skewed high point in the distribution.
+Finally, the woodpecker data is what we call bimodal. It is symmetric in
+this case (not always true!), but it has a two clear peaks instead of a
+single central or skewed high point in the distribution.
 
-These distributions helps us think about what we would expect to find in future
-samples (remember, we assume we have good samples!). To think about future
-sampling, we can change our y-axis from what we saw (frequency) to a probability
-density.
+These distributions helps us think about what we would expect to find in
+future samples (remember, we assume we have good samples!). To think
+about future sampling, we can change our y-axis from what we saw
+(frequency) to a probability density.
 
 ```{r}
 #| label: fig-normal_virginica_overlay
 #| fig-cap: "Probability density distribution"
-hist(iris[iris$Species == "virginica", "Sepal.Length"], 
-     main = expression(paste("Sepal lengths of ",italic("I. virginica"))), 
-     xlab = "Sepal Length (cm)", 
-     cex.lab=label_size, cex.axis=label_size, cex.main=title_size, 
-     cex.sub=label_size, col = "blue", prob = T) 
-lines(density(iris[iris$Species == "virginica", "Sepal.Length"]), col = "red") 
+ggplot(iris[iris$Species == "virginica",],
+              aes(x=Sepal.Length)) +
+  geom_histogram(aes(y = ..density..),fill="blue", color="black") +
+  geom_density()+
+  labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"))),
+       x= "Sepal length (cm)",
+       y= "Density")
+
 ```
 
-These probability density distributions can be calculated from data (as seen
-above), but they can also be developed from equations. The benefits of using a
-distribution derived from an equation is that it is consistent and easy to
-describe (standardized). This is why many common tests we will learn rely upon
-the data (or some derivative of it) following a known distribution. For example,
-many parametric tests will rely upon the data (or means of the data, or
-errors...we'll get there) following a normal distribution. We can see our parrot
-data (which came from a normal distribution!) is very close to a "perfect"
-normal distribution as define by an equation.
+These probability density distributions can be calculated from data (as
+seen above), but they can also be developed from equations. The benefits
+of using a distribution derived from an equation is that it is
+consistent and easy to describe (standardized). This is why many common
+tests we will learn rely upon the data (or some derivative of it)
+following a known distribution. For example, many parametric tests will
+rely upon the data (or means of the data, or errors...we'll get there)
+following a normal distribution. We can see our parrot data (which came
+from a normal distribution!) is very close to a "perfect" normal
+distribution as define by an equation.
 
 ```{r}
 #| label: fig-parrots_with_overlay
 #| fig-cap: "Comparing the distribution of the data to a perfect normal distribution"
-hist(parrots, main="Weight of Westchester parrots", xlab = "\n Weight (g)", 
-     col = "green", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size,
-     prob = T) 
-lines(density(parrots), col = "black") 
-curve(dnorm(x, mean=20, sd=4), col="red", lwd=2, add=TRUE, yaxt="n")
-legend("bottom", legend=c("PDF from data", "normal curve"), col=c("black", "red"), lty=1:2)
+parrots_df <- data.frame(parrots)
+colors <- c("PDF from data" = "black", "normal curve" = "red", "Petal Width" = "orange")
+ggplot(parrots_df, 
+       aes(x=parrots)) +
+  geom_histogram(aes(y = ..density..),fill="green", color="black") +
+  geom_density(aes(color="PDF from data"))+
+  labs(title="Weight of Westchester parrots",
+       x= "Weight (g)",
+       y= "Density",
+       color="Legend")+
+stat_function(fun = dnorm, args = list(mean = mean(parrots_df$parrots), sd = sd(parrots_df$parrots)), aes(color="normal curve"))+
+      scale_color_manual(values = colors)
+
+
 ```
 
 <details>
 
-<summary>Bonus question: Why isn't it perfect? (Click the grey triangle to see
-the answer!)</summary>
+<summary>Bonus question: Why isn't it perfect? (Click the grey triangle
+to see the answer!)</summary>
 
 This is an easy example of sampling error!
 
 </details>
 
+##### Box plots (aka, box and whisker plots)
+
+Another way to visualize the distribution of numerical data for a single
+group is using box-and-whisker plots.
+
+```{r}
+#| label: fig-box_plot_virginica_plot
+#| fig-cap: "Example of approximately normal data"
+ggplot(virginica, 
+       aes(Species,Sepal.Length)) + geom_boxplot(size = 3) +
+    labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"))),
+       x= "",
+       y= "Sepal Length (cm)")+
+  theme(axis.text.x = element_text(size=0))
+  
+
+```
+
+These plots show the values of the quartiles of the data. In this way
+they start combining numerical summaries (more to come!) and visual
+summaries. More to come, but for now imagine you had a 99 data points.
+If you arrange the data points from smallest to largest, the **median**
+of the data would be the middle (50th data point). If you took the
+bottom half of the data (first data to median), the first quartile would
+be the middle point (or, in this case, the average of the 25th and 26th
+data points). Similarly, the third quartile is the middle of the top
+half of the data set (or, if not one number, average of 75th and 76th
+data point). Note the median is also the 2nd quartile of the data!
+
+The **box** in the box-and-whisker plot shows the first, second, and
+third quartiles, also known as the inter-quartile range (IQR). The
+**whiskers** extend to the minimum and maximum values of the dataset
+**or**, up to values within a set range. In ggplot, whiskers by default
+can only be as long as 150% of the IQR. This means extreme **outliers**
+are shown as individual dots. Typically, the most extreme values
+(minimum and maximum) plus the first, second, and third quartiles are
+together called the **five number summary**.
+
+<details>
+
+"Easy" examples of five number summaries
+
+</summary>
+
+Assume we have data that goes from 1 to 99. The five number summary
+should be
+
+```{r}
+x <- seq(1:1:99) 
+summary(x)
+```
+
+Note the 1st and 3rd quartiles are averaged!
+
+Similarly, consider the numbers 1-5
+
+```{r}
+x <- seq(1:1:5) 
+summary(x)
+```
+
+</details>
+
 #### Categorical data
 
-For categorical data, a bar chart fills a very similar role. Note, however, we
-don't bin the data., and there is inherent order for some examples (nominal
-data). For example, we could examine the colors of our *I. virginica*. To do
-this, we'll need to add some data to our iris data (notice this produces no
-output...)...
+For categorical data, a bar chart fills a very similar role. Note,
+however, we don't bin the data., and there is inherent order for some
+examples (nominal data). For example, we could examine the colors of our
+*I. virginica*. To do this, we'll need to add some data to our iris data
+(notice this produces no output...)...
 
 ```{r}
 colors <- c("blue", "orange", "purple")
@@ -327,8 +495,8 @@ barplot(I_viriginica_colors$N,
 Or better
 
 ```{r}
-#| label: fig-bar_chart_flowers_with_colors
-#| fig-cap: "Distribution of flower colors"
+#| label: fig-bar_chart_flowers_with_colors_plot
+#| fig-cap: "Distribution of flower colors (plot)"
 barplot(I_viriginica_colors$N, 
         names.arg = I_viriginica_colors$Color, 
         cex.lab=label_size, cex.axis=label_size, 
@@ -339,78 +507,92 @@ barplot(I_viriginica_colors$N,
         col = colors)
 ```
 
-> #### Graphing issues
->
-> Note all of the graphs above share a similar problem. People tend to like
-> bars, but they are actually just using a lot of ink! We could get the same
-> information about sepal lengths, for example, using
+Using ggplot2
 
 ```{r}
-hist_data <- hist(iris[iris$Species == "virginica", "Sepal.Length"], 
-     main = expression(paste("Sepal lengths of ",italic("I. virginica"))), 
-     xlab = "Sepal Length (cm)", 
-     cex.lab=label_size, cex.axis=label_size, cex.main=title_size, 
-     cex.sub=label_size, col = "blue")
-plot(hist_data$breaks[-8], hist_data$counts,  
-      main = expression(paste("Sepal lengths of ",italic("I. virginica"))), 
-      xlab = "Sepal Length (cm)", 
-      cex.lab=label_size, cex.axis=label_size, cex.main=title_size, 
-      cex.sub=label_size, col = "blue",
-      pch = 16, cex = 3)
+#| label: fig-bar_chart_flowers_with_colors_ggplot2
+#| fig-cap: "Distribution of flower colors (ggplot2)"
+ggplot(iris[iris$Species == "virginica",],
+              aes(x=Color,fill=Color)) +
+  geom_bar()+
+  labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
+       x= "Colors",
+       y= "Frequency")+
+  scale_fill_manual("legend", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))
 ```
 
-> so the bars don't add much.
+Note the legend may be superflous here (but consider accessiblity -
+should we add another distinguishing feature?):
 
-chart issues#### #auto breaks####
+```{r}
+ggplot(iris[iris$Species == "virginica",],
+              aes(x=Color,fill=Color)) +
+  geom_bar()+
+  scale_fill_manual("legend", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))+
+  labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
+       x= "Colors",
+       y= "Frequency")+
+  guides(fill = "none")
 
-hist(iris, Sepal.Length, main = "Sepal Lengths, auto breaks with R", xlab =
-"Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size,
-cex.main=title_size, cex.sub=label_size, col = "blue") #counts of auto
-breaks#### x =hist(iris\$Sepal.Length, main = "Sepal Lengths, auto breaks with
-R", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size,
-cex.main=title_size, cex.sub=label_size)
+```
 
-plot(x$breaks[-9], x$counts, main = "Sepal Lengths, auto breaks with R", xlab =
-"\n Sepal Length (cm)", ylab = "Frequency", cex.lab=label_size, cex.axis=1.5,
-cex.main=title_size, cex.sub=label_size, col="blue", pch = 16, cex = 3) #setting
-own breaks####
-hist(iris$Sepal.Length, breaks=3, main = "Sepal length histogram, 3 breaks", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue") hist(iris$Sepal.Length,
-breaks=10, main = "Sepal length histogram, 10 breaks", xlab = "Sepal Length
-(cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size,
-cex.sub=label_size, col = "blue")
+<details>
 
-#boxplot versicolor#### #need to use ggplot2 for ease (will get to this later
-and typically use it) library(ggplot2) ggplot(iris\[iris\$Species ==
-"versicolor",\], aes(Species,Sepal.Length)) + geom_boxplot(aes(colour=Species),
-size = 3) + ylab("Sepal Length (cm)")+ggtitle("Sepal Length of Iris
-versicolor")+ xlab("") + theme(axis.title.x = element_text(face="bold",
-size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y =
-element_text(size=20), axis.text.x = element_text(size=0), legend.text
-=element_text(size=20), legend.title = element_text(size=20, face="bold"),
-plot.title = element_text(hjust = 0.5, face="bold", size=32))
+<summary>\*\*Barchart issues\*\*</summary>
 
-#data from multiple groups#### #barchart \#### \# #load function from Rmisc
-library(Rmisc)
+Note all of the bar graphs above share a similar problem. People tend to
+like bars, but they are actually just using a lot of ink! We could get
+the same information about sepal lengths, for example, using just
+points:
+
+```{r}
+#| label: bar_charts_but_just_points
+#| fig-cap: "Note you only really "know" the tops of the bar!"
+
+ggplot(iris[iris$Species == "virginica",],
+              aes(x=Sepal.Length)) +
+  geom_freqpoly(color="blue") +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"))),
+       x= "Sepal length (cm)",
+       y= "Frequency")
+```
+
+</details>
+
+### Numerical variables from multiple groups
+
+When we gather numerical data from various groups and wish to compare,
+we can extend histograms and bar charts to them using shapes, colors, or
+other features to symbolize the groups. We also need to ensure the
+different groups are visible when distributions overlap.
+
+```{r}
+
+```
+
+#data from multiple groups#### #barchart \#### \# #load function from
+Rmisc library(Rmisc)
 
 #now use function_output \<- summarySE(iris, measurevar="Sepal.Length",
 groupvars = c("Species"))
 
 ggplot(function_output, aes(x=Species, y=Sepal.Length)) +
-geom_col(aes(fill=Species), size = 3) + ylab("Sepal Length (cm)")+ggtitle("Sepal
-Length of various iris species")+ theme(axis.title.x = element_text(face="bold",
-size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y =
-element_text(size=20), axis.text.x = element_text(size=20), legend.text
-=element_text(size=20), legend.title = element_text(size=20, face="bold"),
-plot.title = element_text(hjust = 0.5, face="bold", size=32))
+geom_col(aes(fill=Species), size = 3) + ylab("Sepal Length
+(cm)")+ggtitle("Sepal Length of various iris species")+
+theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32))
 
 #scatterplot all species#### ggplot(iris, aes(Species,Sepal.Length)) +
 geom_point(aes(colour=Species), size = 3) + ylab("Sepal Length
-(cm)")+ggtitle("Sepal Length of various iris species")+ theme(axis.title.x =
-element_text(face="bold", size=28), axis.title.y = element_text(face="bold",
-size=28), axis.text.y = element_text(size=20), axis.text.x =
-element_text(size=20), legend.text =element_text(size=20), legend.title =
-element_text(size=20, face="bold"), plot.title = element_text(hjust = 0.5,
-face="bold", size=32))
+(cm)")+ggtitle("Sepal Length of various iris species")+
+theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32))
 
 #stacked histogram#### ggplot(iris, aes(Sepal.Length)) +
 geom_histogram(aes(fill=Species), size=3) + xlab("Sepal Length (cm)")+
@@ -427,24 +609,25 @@ ylab("Frequency")+ ggtitle("Sepal Length of various iris species")+
 theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
 element_text(face="bold", size=28), axis.text.y = element_text(size=20),
 axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), legend.position = "bottom",
-plot.title = element_text(hjust = 0.5, face="bold", size=32))+
+legend.title = element_text(size=20, face="bold"), legend.position =
+"bottom", plot.title = element_text(hjust = 0.5, face="bold", size=32))+
 facet_wrap(\~Species, ncol = 1)
 
 #boxplot all species#### ggplot(iris, aes(Species,Sepal.Length)) +
 geom_boxplot(aes(colour=Species), size = 3) + ylab("Sepal Length
-(cm)")+ggtitle("Sepal Length of various iris species")+ theme(axis.title.x =
-element_text(face="bold", size=28), axis.title.y = element_text(face="bold",
-size=28), axis.text.y = element_text(size=20), axis.text.x =
-element_text(size=20), legend.text =element_text(size=20), legend.title =
-element_text(size=20, face="bold"), plot.title = element_text(hjust = 0.5,
-face="bold", size=32))
+(cm)")+ggtitle("Sepal Length of various iris species")+
+theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32))
 
 #cdf all species#### par(cex = 2) versi \<-
 ecdf(iris\[iris$Species == "versicolor","Sepal.Length"]) plot(versi, verticals = T, col = "red", main = "Cumulative frequency distribution of Sepal Length (cm)", xlab = "Sepal length (cm)", ylab = "Cumulative relative frequencey") seto <- ecdf(iris[iris$Species
-== "setosa","Sepal.Length"\]) plot(seto, add = T, col = "blue", verticals = T)
-virg \<- ecdf(iris\[iris\$Species == "virginica","Sepal.Length"\]) plot(virg,
-add = T, col = "orange", verticals = T)
+== "setosa","Sepal.Length"\]) plot(seto, add = T, col = "blue",
+verticals = T) virg \<- ecdf(iris\[iris\$Species ==
+"virginica","Sepal.Length"\]) plot(virg, add = T, col = "orange",
+verticals = T)
 
 #example of diverging, stacked, and mosaic graphs#### library(dplyr)
 
@@ -457,7 +640,8 @@ add = T, col = "orange", verticals = T)
 vegSurvey \<- data.frame(sampling_point=rep(c(1:5),4),
 slope=c(rep("North",10),rep("South",10)),
 veg_Type=rep(c(rep("native",5),rep("introduced",5)),2),
-spp=as.integer(abs(rnorm(20,5,2)))) vegSurvey$spp <- ifelse(vegSurvey$veg_Type
+spp=as.integer(abs(rnorm(20,5,2))))
+vegSurvey$spp <- ifelse(vegSurvey$veg_Type
 =="introduced",vegSurvey$spp+1,vegSurvey$spp)
 
 vegSurvey \<- vegSurvey %\>% mutate(sppInv= ifelse(veg_Type
@@ -465,8 +649,8 @@ vegSurvey \<- vegSurvey %\>% mutate(sppInv= ifelse(veg_Type
 
 #grouped bar plot#### ggplot(vegSurvey, aes(x=sampling_point, y=spp)) +
 geom_bar(aes(fill=veg_Type), size = 3, stat = "identity", position =
-position_dodge(width=0.5)) + ylab("Frequency") + xlab("Sampling point") +
-ggtitle("Invasive and native species based on site")+
+position_dodge(width=0.5)) + ylab("Frequency") + xlab("Sampling
+point") + ggtitle("Invasive and native species based on site")+
 scale_fill_manual(name="Plant type",values = c("#FFA373","#50486D")) +
 theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
 element_text(face="bold", size=28), axis.text.y = element_text(size=20),
@@ -475,32 +659,35 @@ legend.title = element_text(size=20, face="bold"), plot.title =
 element_text(hjust = 0.5, face="bold", size=32))
 
 #stacked bar plot#### ggplot(vegSurvey, aes(x=sampling_point, y=spp)) +
-geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") + ylab("Frequency")+
-xlab("Sampling point")+ ggtitle("Invasive and native species based on site")+
-scale_fill_manual(name="Plant type",values = c("#FFA373","#50486D")) +
-theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), plot.title =
-element_text(hjust = 0.5, face="bold", size=32))
+geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") +
+ylab("Frequency")+ xlab("Sampling point")+ ggtitle("Invasive and native
+species based on site")+ scale_fill_manual(name="Plant type",values =
+c("#FFA373","#50486D")) + theme(axis.title.x = element_text(face="bold",
+size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y
+= element_text(size=20), axis.text.x = element_text(size=20),
+legend.text =element_text(size=20), legend.title = element_text(size=20,
+face="bold"), plot.title = element_text(hjust = 0.5, face="bold",
+size=32))
 
 #facetted stacked#### ggplot(vegSurvey, aes(x=sampling_point, y=spp)) +
-geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") + ylab("Frequency")+
-xlab("Sampling point")+ ggtitle("Invasive and native species based on site")+
-scale_fill_manual(name="Plant type",values = c("#FFA373","#50486D")) +
-theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), plot.title =
-element_text(hjust = 0.5, face="bold", size=32)) + facet_wrap(\~slope, nrow = 1)
+geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") +
+ylab("Frequency")+ xlab("Sampling point")+ ggtitle("Invasive and native
+species based on site")+ scale_fill_manual(name="Plant type",values =
+c("#FFA373","#50486D")) + theme(axis.title.x = element_text(face="bold",
+size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y
+= element_text(size=20), axis.text.x = element_text(size=20),
+legend.text =element_text(size=20), legend.title = element_text(size=20,
+face="bold"), plot.title = element_text(hjust = 0.5, face="bold",
+size=32)) + facet_wrap(\~slope, nrow = 1)
 
 # divergent plot
 
 ggplot(vegSurvey, aes(x=sampling_point, y=sppInv, fill=veg_Type))+
 geom_bar(stat="identity",position="identity")+ xlab("sampling
-point")+ylab("number of species")+ scale_fill_manual(name="Plant type",values =
-c("#FFA373","#50486D"))+ coord_flip()+ geom_hline(yintercept=0)+ xlab("Sampling
-Points")+ ylab("Species number")+ scale_y_continuous(breaks =
+point")+ylab("number of species")+ scale_fill_manual(name="Plant
+type",values = c("#FFA373","#50486D"))+ coord_flip()+
+geom_hline(yintercept=0)+ xlab("Sampling Points")+ ylab("Species
+number")+ scale_y_continuous(breaks =
 pretty(vegSurvey$sppInv),labels = abs(pretty(vegSurvey$sppInv)))+
 theme(strip.text.x = element_text(face = "bold"))
 
@@ -510,187 +697,201 @@ ggplot(vegSurvey, aes(x=sampling_point, y=sppInv, fill=veg_Type))+
 geom_bar(stat="identity",position="identity")+
 facet_wrap(\~slope)+xlab("sampling point")+ylab("number of species")+
 scale_fill_manual(name="Plant type",values = c("#FFA373","#50486D"))+
-coord_flip()+ geom_hline(yintercept=0)+ xlab("Sampling Points")+ ylab("Species
-number")+ scale_y_continuous(breaks =
+coord_flip()+ geom_hline(yintercept=0)+ xlab("Sampling Points")+
+ylab("Species number")+ scale_y_continuous(breaks =
 pretty(vegSurvey$sppInv),labels = abs(pretty(vegSurvey$sppInv)))+
 theme(strip.text.x = element_text(face = "bold"))
 
-#mosaic plot#### #for mosaic plots, need to use other package (ggmosaic) or add
-frequency column #for your choice variable
+#mosaic plot#### #for mosaic plots, need to use other package (ggmosaic)
+or add frequency column #for your choice variable
 
 library(reshape2)
 
-#get total native/invasive per site vegSurvey_veg_per_site \<- dcast(vegSurvey,
-sampling_point+veg_Type\~ "total_veg_per_site", sum, value.var = "spp")
-vegSurvey_per_site \<- dcast(vegSurvey, sampling_point \~ "total_per_site", sum,
-value.var = "spp") vegSurvey_veg_per_site \<- merge(vegSurvey_veg_per_site,
+#get total native/invasive per site vegSurvey_veg_per_site \<-
+dcast(vegSurvey, sampling_point+veg_Type\~ "total_veg_per_site", sum,
+value.var = "spp") vegSurvey_per_site \<- dcast(vegSurvey,
+sampling_point \~ "total_per_site", sum, value.var = "spp")
+vegSurvey_veg_per_site \<- merge(vegSurvey_veg_per_site,
 vegSurvey_per_site)
 vegSurvey_veg_per_site$Proportion <- vegSurvey_veg_per_site$total_veg_per_site/
 vegSurvey_veg_per_site\$total_per_site
 
 ggplot(vegSurvey_veg_per_site, aes(x=sampling_point, y=Proportion)) +
-geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") + ylab("Percent") +
-xlab("Sampling point") + ggtitle("Invasive and native species based on site")+
+geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") +
+ylab("Percent") + xlab("Sampling point") + ggtitle("Invasive and native
+species based on site")+ scale_fill_manual(name="Plant type",values =
+c("#FFA373","#50486D")) + theme(axis.title.x = element_text(face="bold",
+size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y
+= element_text(size=20), axis.text.x = element_text(size=20),
+legend.text =element_text(size=20), legend.title = element_text(size=20,
+face="bold"), plot.title = element_text(hjust = 0.5, face="bold",
+size=32))
+
+#turn this into pie chart####
+vegSurvey_veg_per_site$sampling_point <- factor(vegSurvey_per_site$sampling_point)
+#have to make weird empty factor else you get concentric circles
+vegSurvey_veg_per_site\$Share \<- "" ggplot(vegSurvey_veg_per_site,
+aes(x=Share, y=Proportion)) + geom_bar(aes(fill=veg_Type), size = 3,
+stat = "identity") + ylab("Frequency") + xlab("Sampling point") +
+ggtitle("Invasive and native species based on site")+
 scale_fill_manual(name="Plant type",values = c("#FFA373","#50486D")) +
+theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32)) +
+coord_polar(theta="y") + facet_wrap(\~sampling_point)
+
+#or (not in slides) cast to get single plot/split####
+vegSurvey_veg_per_site_cast \<- dcast(vegSurvey_veg_per_site, veg_Type
+\~ "Proportion", value.var = "Proportion", mean)
+
+vegSurvey_veg_per_site_cast\$Site \<- ""
+
+ggplot(vegSurvey_veg_per_site_cast, aes(x=Site, y=Proportion)) +
+geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") +
+ylab("Frequency") + xlab("") + ggtitle("Overall composition of invasive
+and native species across sites")+ scale_fill_manual(name="Plant
+type",values = c("#FFA373","#50486D")) + theme(axis.title.x =
+element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32)) +
+coord_polar(theta="y")
+
+#mosaic plot facetted by slope#### vegSurvey_per_slope \<-
+dcast(vegSurvey, sampling_point + slope\~ "total_per_slope", sum,
+value.var = "spp") vegSurvey \<- merge(vegSurvey, vegSurvey_per_slope)
+vegSurvey$Proportion <- vegSurvey$spp/vegSurvey\$total_per_slope
+
+ggplot(vegSurvey, aes(x=sampling_point, y=Proportion)) +
+geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") +
+ylab("Frequency") + xlab("Sampling point") + ggtitle("Invasive and
+native species based on slope")+ scale_fill_manual(name="Plant
+type",values = c("#FFA373","#50486D")) + theme(axis.title.x =
+element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32)) + facet_wrap(\~slope,
+ncol=1)
+
+#numerical, numerical relationships \#### \# #scatter#### ggplot(iris,
+aes(y =Petal.Length,x =Sepal.Length)) + geom_point(aes(colour=Species),
+size = 3) + xlab("Sepal Length (cm)") + ylab("Petal Length (cm)") +
+ggtitle("Relationship between sepal and petal lengths in irises")+
 theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
 element_text(face="bold", size=28), axis.text.y = element_text(size=20),
 axis.text.x = element_text(size=20), legend.text =element_text(size=20),
 legend.title = element_text(size=20, face="bold"), plot.title =
 element_text(hjust = 0.5, face="bold", size=32))
 
-#turn this into pie chart####
-vegSurvey_veg_per_site$sampling_point <- factor(vegSurvey_per_site$sampling_point)
-#have to make weird empty factor else you get concentric circles
-vegSurvey_veg_per_site\$Share \<- "" ggplot(vegSurvey_veg_per_site, aes(x=Share,
-y=Proportion)) + geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") +
-ylab("Frequency") + xlab("Sampling point") + ggtitle("Invasive and native
-species based on site")+ scale_fill_manual(name="Plant type",values =
-c("#FFA373","#50486D")) + theme(axis.title.x = element_text(face="bold",
-size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y =
-element_text(size=20), axis.text.x = element_text(size=20), legend.text
-=element_text(size=20), legend.title = element_text(size=20, face="bold"),
-plot.title = element_text(hjust = 0.5, face="bold", size=32)) +
-coord_polar(theta="y") + facet_wrap(\~sampling_point)
-
-#or (not in slides) cast to get single plot/split####
-vegSurvey_veg_per_site_cast \<- dcast(vegSurvey_veg_per_site, veg_Type \~
-"Proportion", value.var = "Proportion", mean)
-
-vegSurvey_veg_per_site_cast\$Site \<- ""
-
-ggplot(vegSurvey_veg_per_site_cast, aes(x=Site, y=Proportion)) +
-geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") + ylab("Frequency") +
-xlab("") + ggtitle("Overall composition of invasive and native species across
-sites")+ scale_fill_manual(name="Plant type",values = c("#FFA373","#50486D")) +
-theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), plot.title =
-element_text(hjust = 0.5, face="bold", size=32)) + coord_polar(theta="y")
-
-#mosaic plot facetted by slope#### vegSurvey_per_slope \<- dcast(vegSurvey,
-sampling_point + slope\~ "total_per_slope", sum, value.var = "spp") vegSurvey
-\<- merge(vegSurvey, vegSurvey_per_slope)
-vegSurvey$Proportion <- vegSurvey$spp/vegSurvey\$total_per_slope
-
-ggplot(vegSurvey, aes(x=sampling_point, y=Proportion)) +
-geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") + ylab("Frequency") +
-xlab("Sampling point") + ggtitle("Invasive and native species based on slope")+
-scale_fill_manual(name="Plant type",values = c("#FFA373","#50486D")) +
-theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), plot.title =
-element_text(hjust = 0.5, face="bold", size=32)) + facet_wrap(\~slope, ncol=1)
-
-#numerical, numerical relationships \#### \# #scatter#### ggplot(iris, aes(y
-=Petal.Length,x =Sepal.Length)) + geom_point(aes(colour=Species), size = 3) +
-xlab("Sepal Length (cm)") + ylab("Petal Length (cm)") + ggtitle("Relationship
-between sepal and petal lengths in irises")+ theme(axis.title.x =
-element_text(face="bold", size=28), axis.title.y = element_text(face="bold",
-size=28), axis.text.y = element_text(size=20), axis.text.x =
-element_text(size=20), legend.text =element_text(size=20), legend.title =
-element_text(size=20, face="bold"), plot.title = element_text(hjust = 0.5,
-face="bold", size=32))
-
 #data over time#### #use airquality dataset for time series \#
-airquality$Date <- as.Date(paste(airquality$Month, airquality\$Day, sep="/"),
-format ="%m/%d" )
+airquality$Date <- as.Date(paste(airquality$Month, airquality\$Day,
+sep="/"), format ="%m/%d" )
 
-#just points#### ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(size = 3,
-col = "orange") + xlab("Date") + ylab("Temperature (C)") + ggtitle("Temperature
-over time")+ theme(axis.title.x = element_text(face="bold", size=28),
-axis.title.y = element_text(face="bold", size=28), axis.text.y =
-element_text(size=20), axis.text.x = element_text(size=20), legend.text
-=element_text(size=20), legend.title = element_text(size=20, face="bold"),
-plot.title = element_text(hjust = 0.5, face="bold", size=32))
+#just points#### ggplot(airquality, aes(x =Date,y =Temp)) +
+geom_point(size = 3, col = "orange") + xlab("Date") + ylab("Temperature
+(C)") + ggtitle("Temperature over time")+ theme(axis.title.x =
+element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32))
 
-#points and line#### ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(size
-= 3, col = "orange") + geom_line() + xlab("Date") + ylab("Temperature (C)") +
-ggtitle("Temperature over time")+ theme(axis.title.x = element_text(face="bold",
-size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y =
-element_text(size=20), axis.text.x = element_text(size=20), legend.text
-=element_text(size=20), legend.title = element_text(size=20, face="bold"),
-plot.title = element_text(hjust = 0.5, face="bold", size=32))
+#points and line#### ggplot(airquality, aes(x =Date,y =Temp)) +
+geom_point(size = 3, col = "orange") + geom_line() + xlab("Date") +
+ylab("Temperature (C)") + ggtitle("Temperature over time")+
+theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32))
 
-#more than one axis#### #for 1:1 transformation data (anything you can use a
-function to make on a similar #scale) #can add easily but not get scale
-ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(size = 3, col =
-"orange") + geom_line() + geom_point(aes(y=Wind)) + xlab("Date") +
-ylab("Temperature (C)") + ggtitle("Temperature over time")+ theme(axis.title.x =
-element_text(face="bold", size=28), axis.title.y = element_text(face="bold",
-size=28), axis.text.y = element_text(size=20), axis.text.x =
-element_text(size=20), legend.text =element_text(size=20), legend.title =
-element_text(size=20, face="bold"), plot.title = element_text(hjust = 0.5,
-face="bold", size=32))
+#more than one axis#### #for 1:1 transformation data (anything you can
+use a function to make on a similar #scale) #can add easily but not get
+scale ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(size = 3,
+col = "orange") + geom_line() + geom_point(aes(y=Wind)) + xlab("Date") +
+ylab("Temperature (C)") + ggtitle("Temperature over time")+
+theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32))
 
-#manually scale data and get secondary axis #have to aes to make tranformation
-(not aes_string) #put colour in quotes in aes to force legend ggplot(airquality,
-aes(x =Date,y =Temp)) + geom_point(aes(col ="Temp"), size = 3) +
-geom_line(col="orange") + geom_point(aes(y=Wind+50, col = "Wind speed")) +
+#manually scale data and get secondary axis #have to aes to make
+tranformation (not aes_string) #put colour in quotes in aes to force
+legend ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(aes(col
+="Temp"), size = 3) + geom_line(col="orange") +
+geom_point(aes(y=Wind+50, col = "Wind speed")) +
 scale_y_continuous(sec.axis = sec_axis(\~.-50, name = "Wind (mph)")) +
-xlab("Date") + ylab("Temperature (C)") + ggtitle("Environmental measurements
-over time")+ theme(axis.title.x = element_text(face="bold", size=28),
-axis.title.y = element_text(face="bold", size=28), axis.text.y =
-element_text(size=20), axis.text.x = element_text(size=20), legend.text
-=element_text(size=20), legend.title = element_text(size=20, face="bold"),
-plot.title = element_text(hjust = 0.5, face="bold", size=32))
+xlab("Date") + ylab("Temperature (C)") + ggtitle("Environmental
+measurements over time")+ theme(axis.title.x = element_text(face="bold",
+size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y
+= element_text(size=20), axis.text.x = element_text(size=20),
+legend.text =element_text(size=20), legend.title = element_text(size=20,
+face="bold"), plot.title = element_text(hjust = 0.5, face="bold",
+size=32))
 
 #outliers and bad fits####
 
-good_fit_x \<- runif(100, 1, 50) good_fit_y \<- rnorm(100,25,2) good_data \<-
-data.frame(source = "good", x=good_fit_x, y=good_fit_y) bad_fit_x \<- runif(10,
-20, 30) bad_fit_y \<- rnorm(10,95,1) bad_data \<- data.frame(source = "outlier",
-x=bad_fit_x, y=bad_fit_y) all_data \<- rbind (good_data, bad_data)
+good_fit_x \<- runif(100, 1, 50) good_fit_y \<- rnorm(100,25,2)
+good_data \<- data.frame(source = "good", x=good_fit_x, y=good_fit_y)
+bad_fit_x \<- runif(10, 20, 30) bad_fit_y \<- rnorm(10,95,1) bad_data
+\<- data.frame(source = "outlier", x=bad_fit_x, y=bad_fit_y) all_data
+\<- rbind (good_data, bad_data)
 
 #just points#### ggplot(all_data, aes(x =x,y =y)) +
 geom_point(aes(color=source), size = 3) + xlab("x") + ylab("y") +
 ggtitle("Outliers can impact data")+ theme(axis.title.x =
-element_text(face="bold", size=28), axis.title.y = element_text(face="bold",
-size=28), axis.text.y = element_text(size=20), axis.text.x =
-element_text(size=20), legend.text =element_text(size=20), legend.title =
-element_text(size=20, face="bold"), plot.title = element_text(hjust = 0.5,
-face="bold", size=32))
+element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32))
 
 #curve and scatter#### ggplot(all_data, aes(x =x,y =y)) +
-geom_point(aes(color=source), size = 3) + geom_smooth(se = F) + xlab("x") +
-ylab("y") + ggtitle("Outliers can impact data")+ theme(axis.title.x =
-element_text(face="bold", size=28), axis.title.y = element_text(face="bold",
-size=28), axis.text.y = element_text(size=20), axis.text.x =
-element_text(size=20), legend.text =element_text(size=20), legend.title =
-element_text(size=20, face="bold"), plot.title = element_text(hjust = 0.5,
-face="bold", size=32))
+geom_point(aes(color=source), size = 3) + geom_smooth(se = F) +
+xlab("x") + ylab("y") + ggtitle("Outliers can impact data")+
+theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32))
 
 #just curve#### ggplot(all_data, aes(x =x,y =y)) + geom_smooth(se = F) +
-xlab("x") + ylab("y") + ggtitle("Outliers can impact data")+ theme(axis.title.x
-= element_text(face="bold", size=28), axis.title.y = element_text(face="bold",
-size=28), axis.text.y = element_text(size=20), axis.text.x =
-element_text(size=20), legend.text =element_text(size=20), legend.title =
-element_text(size=20, face="bold"), plot.title = element_text(hjust = 0.5,
-face="bold", size=32))
+xlab("x") + ylab("y") + ggtitle("Outliers can impact data")+
+theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32))
 
-#skewed left with measures of central tendency#### ##weird issues with margins
-and legends par(mar = c(rep(4,4))) birds \<- rbeta(10000,70,5) hist(birds,
-main="Weight of Westchester cardinals", xlab = "\n Weight (g)", ylab =
-"Frequency (#)\n", col = "red", cex.lab=label_size, cex.axis=1.25,
-cex.main=title_size, cex.sub=label_size) abline(v=mean(birds), col="yellow", lwd
-= 4) abline(v=median(birds), col="green", lwd = 4) #no built in mode
-function.... \# Create the function. getmode \<- function(v) { uniqv \<-
-unique(v) uniqv\[which.max(tabulate(match(v, uniqv)))\] }
+#skewed left with measures of central tendency#### ##weird issues with
+margins and legends par(mar = c(rep(4,4))) birds \<- rbeta(10000,70,5)
+hist(birds, main="Weight of Westchester cardinals", xlab = "\n Weight
+(g)", ylab = "Frequency (#)\n", col = "red", cex.lab=label_size,
+cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
+abline(v=mean(birds), col="yellow", lwd = 4) abline(v=median(birds),
+col="green", lwd = 4) #no built in mode function.... \# Create the
+function. getmode \<- function(v) { uniqv \<- unique(v)
+uniqv\[which.max(tabulate(match(v, uniqv)))\] }
 
-abline(v=(getmode(birds)), col="blue", lwd = 4) legend("topleft", legend =
-c("mean", "median", "mode"), fill=c("yellow", "green","blue"), cex = 1.5, bty =
-"n", x.intersp = .1, y.intersp = .5)
+abline(v=(getmode(birds)), col="blue", lwd = 4) legend("topleft", legend
+= c("mean", "median", "mode"), fill=c("yellow", "green","blue"), cex =
+1.5, bty = "n", x.intersp = .1, y.intersp = .5)
 
-#bimodal data with measures of central tendency##### par(mar = c(rep(2,4)))
-putnam \<- c(rnorm(100,20,4),rnorm(100,40,4)) hist(putnam, main="Weight of
-Westchester woodpeckers", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col
-= "orange", cex.lab=label_size, cex.axis=1.25, cex.main=title_size,
-cex.sub=label_size, probability = T) lines(density(putnam), col = "black", lwd =
-4) \# add a density estimate with defaults abline(v=mean(putnam), col="red", lwd
-= 4) abline(v=median(putnam), col="green", lwd = 4) abline(v=(getmode(putnam)),
-col="blue", lwd = 4) legend("bottomright", legend = c("mean", "median", "mode"),
-fill=c("red","green",
+#bimodal data with measures of central tendency##### par(mar =
+c(rep(2,4))) putnam \<- c(rnorm(100,20,4),rnorm(100,40,4)) hist(putnam,
+main="Weight of Westchester woodpeckers", xlab = "\n Weight (g)", ylab =
+"Frequency (#)\n", col = "orange", cex.lab=label_size, cex.axis=1.25,
+cex.main=title_size, cex.sub=label_size, probability = T)
+lines(density(putnam), col = "black", lwd = 4) \# add a density estimate
+with defaults abline(v=mean(putnam), col="red", lwd = 4)
+abline(v=median(putnam), col="green", lwd = 4)
+abline(v=(getmode(putnam)), col="blue", lwd = 4) legend("bottomright",
+legend = c("mean", "median", "mode"), fill=c("red","green",
 
 ```         
                                                                 "blue"), cex = 1.5,
@@ -702,23 +903,25 @@ fill=c("red","green",
 #just scatter plot
 
 ggplot(iris\[iris\$Species == "setosa",\], aes(sample,Sepal.Length)) +
-geom_point(size = 3) + ylab("Sepal Length (cm)")+ggtitle(expression(paste("Sepal
-Length in", italic("Iris setosa"))))+ theme(axis.title.x =
-element_text(face="bold", size=28), axis.title.y = element_text(face="bold",
-size=28), axis.text.y = element_text(size=20), axis.text.x =
-element_text(size=20), legend.text =element_text(size=20), legend.title =
-element_text(size=20, face="bold"), plot.title = element_text(hjust = 0.5,
-face="bold", size=32))
+geom_point(size = 3) + ylab("Sepal Length
+(cm)")+ggtitle(expression(paste("Sepal Length in", italic("Iris
+setosa"))))+ theme(axis.title.x = element_text(face="bold", size=28),
+axis.title.y = element_text(face="bold", size=28), axis.text.y =
+element_text(size=20), axis.text.x = element_text(size=20), legend.text
+=element_text(size=20), legend.title = element_text(size=20,
+face="bold"), plot.title = element_text(hjust = 0.5, face="bold",
+size=32))
 
 #add mean
 ggplot(iris\[iris$Species == "setosa",], aes(sample,Sepal.Length)) + geom_point(size = 3) + ylab("Sepal Length (cm)")+ggtitle(expression(paste("Sepal Length in ", italic("Iris setosa"))))+ geom_hline(yintercept = mean(iris[iris$Species
-== "setosa", "Sepal.Length"\]), color = "blue", size = 2) + annotate("text",
-label = "mean", x = 20, y = 4.9 , size = 8, color = "blue") + theme(axis.title.x
-= element_text(face="bold", size=28), axis.title.y = element_text(face="bold",
-size=28), axis.text.y = element_text(size=20), axis.text.x =
-element_text(size=20), legend.text =element_text(size=20), legend.title =
-element_text(size=20, face="bold"), plot.title = element_text(hjust = 0.5,
-face="bold", size=32))
+== "setosa", "Sepal.Length"\]), color = "blue", size = 2) +
+annotate("text", label = "mean", x = 20, y = 4.9 , size = 8, color =
+"blue") + theme(axis.title.x = element_text(face="bold", size=28),
+axis.title.y = element_text(face="bold", size=28), axis.text.y =
+element_text(size=20), axis.text.x = element_text(size=20), legend.text
+=element_text(size=20), legend.title = element_text(size=20,
+face="bold"), plot.title = element_text(hjust = 0.5, face="bold",
+size=32))
 
 # #add segment for each point segment_data = data.frame( x = 1:50, xend = 1:50, y
 
@@ -726,16 +929,17 @@ iris\[iris$Species == "setosa", "Sepal.Length"], yend = mean(iris[iris$Species
 == "setosa", "Sepal.Length"\]) )
 
 ggplot(iris\[iris$Species == "setosa",], aes(sample,Sepal.Length)) + geom_point(size = 3) + ylab("Sepal Length (cm)")+ggtitle(expression(paste("Sepal Length in ", italic("Iris setosa"))))+ geom_hline(yintercept = mean(iris[iris$Species
-== "setosa", "Sepal.Length"\]), color = "blue", size = 2) + annotate("text",
-label = "mean", x = 20, y = 4.9 , size = 8, color = "blue") + annotate("text",
-label = "square each red line \n and find average", x = 25, y = 5.5 , size = 8,
-color = "red") + geom_segment(data = segment_data, aes(x = x, y = y, xend =
-xend, yend = yend), color= "red", size = 1.1) + theme(axis.title.x =
-element_text(face="bold", size=28), axis.title.y = element_text(face="bold",
-size=28), axis.text.y = element_text(size=20), axis.text.x =
-element_text(size=20), legend.text =element_text(size=20), legend.title =
-element_text(size=20, face="bold"), plot.title = element_text(hjust = 0.5,
-face="bold", size=32))
+== "setosa", "Sepal.Length"\]), color = "blue", size = 2) +
+annotate("text", label = "mean", x = 20, y = 4.9 , size = 8, color =
+"blue") + annotate("text", label = "square each red line \n and find
+average", x = 25, y = 5.5 , size = 8, color = "red") + geom_segment(data
+= segment_data, aes(x = x, y = y, xend = xend, yend = yend), color=
+"red", size = 1.1) + theme(axis.title.x = element_text(face="bold",
+size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y
+= element_text(size=20), axis.text.x = element_text(size=20),
+legend.text =element_text(size=20), legend.title = element_text(size=20,
+face="bold"), plot.title = element_text(hjust = 0.5, face="bold",
+size=32))
 
 #transformations####
 
@@ -744,44 +948,47 @@ sample_data$x_add <- sample_data$x+5
 
 ggplot(sample_data) + geom_histogram(aes(x =x, fill="x"), se = F) +
 geom_histogram(aes(x = x_add, fill="x+5"), se = F)+ labs(fill="Data")+
-xlab("x") + ylab("y") + theme(axis.title.x = element_text(face="bold", size=28),
-axis.title.y = element_text(face="bold", size=28), axis.text.y =
-element_text(size=30), axis.text.x = element_text(size=30), legend.text
-=element_text(size=30), legend.title = element_text(size=20, face="bold"),
-plot.title = element_text(hjust = 0.5, face="bold", size=32))
+xlab("x") + ylab("y") + theme(axis.title.x = element_text(face="bold",
+size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y
+= element_text(size=30), axis.text.x = element_text(size=30),
+legend.text =element_text(size=30), legend.title = element_text(size=20,
+face="bold"), plot.title = element_text(hjust = 0.5, face="bold",
+size=32))
 
 sample_data$x_multiply <- sample_data$x\*5
 
 ggplot(sample_data) + geom_histogram(aes(x =x, fill="x"), se = F) +
-geom_histogram(aes(x = x_multiply, fill="x\*5"), se = F)+ labs(fill="Data")+
-xlab("x") + ylab("y") + theme(axis.title.x = element_text(face="bold", size=28),
-axis.title.y = element_text(face="bold", size=28), axis.text.y =
-element_text(size=30), axis.text.x = element_text(size=30), legend.text
-=element_text(size=30), legend.title = element_text(size=20, face="bold"),
-plot.title = element_text(hjust = 0.5, face="bold", size=32))
+geom_histogram(aes(x = x_multiply, fill="x\*5"), se = F)+
+labs(fill="Data")+ xlab("x") + ylab("y") + theme(axis.title.x =
+element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=30),
+axis.text.x = element_text(size=30), legend.text =element_text(size=30),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32))
 
-#shift them left summary(birds) length(birds\[birds \< .9\]) birds\[birds \<
-.9\] \<- birds\[birds \< .9\] - .2 hist(birds, main="Weight of Westchester
-cardinals", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "red",
-cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
-abline(v=mean(birds), col="yellow", lwd = 4) abline(v=median(birds),
-col="green", lwd = 4) abline(v=(getmode(birds)), col="blue", lwd = 4)
-legend(x=.75, y= 1000, legend = c("mean", "median", "mode"),
-fill=c("yellow","green",
+#shift them left summary(birds) length(birds\[birds \< .9\])
+birds\[birds \< .9\] \<- birds\[birds \< .9\] - .2 hist(birds,
+main="Weight of Westchester cardinals", xlab = "\n Weight (g)", ylab =
+"Frequency (#)\n", col = "red", cex.lab=label_size, cex.axis=1.25,
+cex.main=title_size, cex.sub=label_size) abline(v=mean(birds),
+col="yellow", lwd = 4) abline(v=median(birds), col="green", lwd = 4)
+abline(v=(getmode(birds)), col="blue", lwd = 4) legend(x=.75, y= 1000,
+legend = c("mean", "median", "mode"), fill=c("yellow","green",
 
 ```         
                                                                 "blue"), cex = 1.5,
    bty="n", x.intersp = .1, y.intersp = .5)
 ```
 
-#categorical data#### head(iris) iris$random <- runif(1:nrow(iris)) iris$LL \<-
-0 iris$LL[iris$random \> .7\] \<- 1
+#categorical data#### head(iris)
+iris$random <- runif(1:nrow(iris)) iris$LL \<- 0 iris$LL[iris$random \>
+.7\] \<- 1
 
 ggplot(iris\[iris$Species == "setosa", ], aes(LL)) + geom_histogram(size=3) + xlab("Genotype score")+ ylab("Frequency")+ ggtitle("Genotype score in an iris species")+ geom_vline(xintercept = mean(iris[iris$Species
-== "setosa", "LL"\]), color = "blue") + annotate("text", label = "proportion", x
-= .25, y = 20 , size = 8, color = "blue") + theme(axis.title.x =
-element_text(face="bold", size=28), axis.title.y = element_text(face="bold",
-size=28), axis.text.y = element_text(size=20), axis.text.x =
-element_text(size=20), legend.text =element_text(size=20), legend.title =
-element_text(size=20, face="bold"), plot.title = element_text(hjust = 0.5,
-face="bold", size=32))
+== "setosa", "LL"\]), color = "blue") + annotate("text", label =
+"proportion", x = .25, y = 20 , size = 8, color = "blue") +
+theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32))
