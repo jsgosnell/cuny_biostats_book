@@ -200,8 +200,8 @@ these, so it's worth noting that differences in bin size can influence
 what distributions look like.
 
 ```{r}
-#| label: bar_charts_but_just_points 
-#| #| fig-cap: "Note you only really "know" the tops of the bar!" 
+#| label: impacts_of_breaks 
+#| #| fig-cap: "How you bin the data will impact the visualization." 
 #| #| fig-subcap: 
 #|  #|   - "Auto breaks with R" 
 #|  #|   - "10 breaks" 
@@ -235,7 +235,7 @@ hist(cardinals, main="Weight of Westchester cardinals", xlab = "\n Weight (g)", 
 ```
 
 ```{r}
-#| label: fig-cardinals_ggplot
+#| label: fig-cardinals_ggplot2
 #| fig-cap: "Example of left-skewed data (ggplot2)"
 ggplot(data.frame(cardinals), 
        aes(x=cardinals)) +
@@ -270,7 +270,7 @@ ggplot(data.frame(blue_jays),
 
 ```
 
-The cardinal @fig-cardinals data has a longer left tail and is not
+The cardinal @fig-cardinals_ggplot2 data has a longer left tail and is not
 symmetric. We call this left- or negatively-skewed data (since it's
 going lower on the x-axis). Compare that to the blue jay @fig-blue_jays
 data; it has a longer right-tail and is positively- or right-skewed.
@@ -401,13 +401,12 @@ group is using box-and-whisker plots.
 ```{r}
 #| label: fig-box_plot_virginica_plot
 #| fig-cap: "Example of approximately normal data"
-ggplot(virginica, 
-       aes(Species,Sepal.Length)) + geom_boxplot(size = 3) +
+ggplot(iris[iris$Species == "virginica",],
+            aes(x=Species,y=Sepal.Length)) + geom_boxplot(size = 3) +
     labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"))),
        x= "",
        y= "Sepal Length (cm)")+
   theme(axis.text.x = element_text(size=0))
-  
 
 ```
 
@@ -542,8 +541,7 @@ ggplot(iris[iris$Species == "virginica",],
 
 Note all of the bar graphs above share a similar problem. People tend to
 like bars, but they are actually just using a lot of ink! We could get
-the same information about sepal lengths, for example, using just
-points:
+the same information about sepal lengths focusing on just the "top" of the bar:
 
 ```{r}
 #| label: bar_charts_but_lines
@@ -593,7 +591,7 @@ ggplot(iris, aes(y=Sepal.Length, x=Species, fill=Species)) +
 ```
 
 ```{r}
-#| label: bar_charts_all species
+#| label: point_all species
 #| fig-cap: "We can still just display the data for each group!"
 ggplot(iris, aes(y=Sepal.Length, x=Species, color=Species)) +
   geom_jitter() +
