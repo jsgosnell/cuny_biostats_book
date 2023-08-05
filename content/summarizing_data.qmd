@@ -22,7 +22,7 @@ Think about it this way. We want to know if several species of iris
 (*Iris versicolor*, *setosa* and *virginica*) have similarly-shaped
 flowers. Since we can't measure every flower on every plant from these
 species, we sample several sites and come up with the following data
-(using R's built-in iris dataset).
+(using R's built-in iris dataset, a dataset we will often use).
 
 ```{r}
 iris
@@ -200,7 +200,7 @@ these, so it's worth noting that differences in bin size can influence
 what distributions look like.
 
 ```{r}
-#| label: impacts_of_breaks 
+#| label: fig-impacts_of_breaks 
 #| #| fig-cap: "How you bin the data will impact the visualization." 
 #| #| fig-subcap: 
 #|  #|   - "Auto breaks with R" 
@@ -270,8 +270,8 @@ ggplot(data.frame(blue_jays),
 
 ```
 
-The cardinal @fig-cardinals_ggplot2 data has a longer left tail and is not
-symmetric. We call this left- or negatively-skewed data (since it's
+The cardinal @fig-cardinals_ggplot2 data has a longer left tail and is
+not symmetric. We call this left- or negatively-skewed data (since it's
 going lower on the x-axis). Compare that to the blue jay @fig-blue_jays
 data; it has a longer right-tail and is positively- or right-skewed.
 Again, note this is all relative to symmetric data like you see with the
@@ -541,10 +541,11 @@ ggplot(iris[iris$Species == "virginica",],
 
 Note all of the bar graphs above share a similar problem. People tend to
 like bars, but they are actually just using a lot of ink! We could get
-the same information about sepal lengths focusing on just the "top" of the bar:
+the same information about sepal lengths focusing on just the "top" of
+the bar:
 
 ```{r}
-#| label: bar_charts_but_lines
+#| label: fig-bar_charts_but_lines
 #| fig-cap: "Note you only really *know* the tops of the bar!"
 
 ggplot(iris[iris$Species == "virginica",],
@@ -558,7 +559,7 @@ ggplot(iris[iris$Species == "virginica",],
 We can also just display the data!
 
 ```{r}
-#| label: bar_charts_but_just_points
+#| label: fig-bar_charts_but_just_points
 #| fig-cap: "Displaying the data may be the easiest option for small-ish datasets."
 
 ggplot(iris[iris$Species == "virginica",],
@@ -577,11 +578,12 @@ ggplot(iris[iris$Species == "virginica",],
 
 When we gather numerical data from various groups and wish to compare,
 we can extend our use bar charts and box-whisker plots by using shapes,
-colors, or other features to symbolize the groups. We also need to
-ensure the different groups are visible when distributions overlap.
+colors, or other features to symbolize the groups. For example, we can
+illustrate the mean (comning up in numerical summaries) or other summary
+statistics using bar plots..
 
 ```{r}
-#| label: bar_charts_all species
+#| label: fig-bar_charts_all species
 #| fig-cap: "Note the top of the bar is the mean (we'll get there!) for each group!"
 ggplot(iris, aes(y=Sepal.Length, x=Species, fill=Species)) +
   geom_bar(stat = "summary", fun = "mean") +
@@ -590,8 +592,28 @@ ggplot(iris, aes(y=Sepal.Length, x=Species, fill=Species)) +
        x= "Species")
 ```
 
+or the distribution using stacked histograms...
+
 ```{r}
-#| label: point_all species
+#| label: fig-stacked_histograms_all species 
+#| #| fig-cap: "Individual bars use colors to denote how many of each group fall in a given bin"  
+ggplot(iris, aes(x=Sepal.Length)) +     geom_histogram(aes(fill=Species))+    labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),        y= "Sepal length (cm)",        x= "Species")
+```
+
+or box-and-whisker plots.
+
+```{r}
+#| label: fig-box_whisker_all species 
+#| #| fig-cap: "These display five-number summaries for each group"  
+ggplot(iris, aes(y=Sepal.Length, x=Species, fill=Species)) +
+  geom_boxplot(aes(colour=Species))+
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),        y= "Sepal length (cm)", x= "Species")
+```
+
+We can also still just display the data for each group...
+
+```{r}
+#| label: fig-point_all species
 #| fig-cap: "We can still just display the data for each group!"
 ggplot(iris, aes(y=Sepal.Length, x=Species, color=Species)) +
   geom_jitter() +
@@ -600,41 +622,37 @@ ggplot(iris, aes(y=Sepal.Length, x=Species, color=Species)) +
        x= "Species")
 ```
 
+We also need to ensure the different groups are visible when
+distributions overlap. Sometimes stacked histograms (and similar graphs)
+make it hard to actually visualize each individual group. One option is
+to instead *facet* these graphs. Faceting means we produce different
+graphs for each group, treatment, etc, but they (typically) share axes.
+This makes it easier to compare the groups.
+
 ```{r}
-#| label: stacked_histograms_all species
-#| fig-cap: "Note the top of the bar is the mean (we'll get there!) for each group!"
+#| label: fig-faceted_histograms_all species
+#| fig-cap: "Note how common axes allow comparison."
  ggplot(iris, aes(x=Sepal.Length)) + 
    geom_histogram(aes(fill=Species))+ 
   labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
        y= "Sepal length (cm)",
-       x= "Species")
+       x= "Species")+
+   facet_wrap(~Species, ncol = 1)
 ```
 
-#facetted stacked histogram#### ggplot(iris, aes(Sepal.Length)) +
-geom_histogram(aes(fill=Species), size=3) + xlab("Sepal Length (cm)")+
-ylab("Frequency")+ ggtitle("Sepal Length of various iris species")+
-theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), legend.position =
-"bottom", plot.title = element_text(hjust = 0.5, face="bold", size=32))+
-facet_wrap(\~Species, ncol = 1)
+Another option is to show the cumulative frequency distribution for each
+group.
 
-#boxplot all species#### ggplot(iris, aes(Species,Sepal.Length)) +
-geom_boxplot(aes(colour=Species), size = 3) + ylab("Sepal Length
-(cm)")+ggtitle("Sepal Length of various iris species")+
-theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), plot.title =
-element_text(hjust = 0.5, face="bold", size=32))
+```{r}
+#| label: fig-cdf_all species
+#| fig-cap: "!"
+ggplot(iris, aes(Sepal.Length, colour = Species)) + stat_ecdf()+
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       x= "Sepal length (cm)",
+       y= "Cumulative frequency")
+```
 
-#cdf all species#### par(cex = 2) versi \<-
-ecdf(iris\[iris$Species == "versicolor","Sepal.Length"]) plot(versi, verticals = T, col = "red", main = "Cumulative frequency distribution of Sepal Length (cm)", xlab = "Sepal length (cm)", ylab = "Cumulative relative frequencey") seto <- ecdf(iris[iris$Species
-== "setosa","Sepal.Length"\]) plot(seto, add = T, col = "blue",
-verticals = T) virg \<- ecdf(iris\[iris\$Species ==
-"virginica","Sepal.Length"\]) plot(virg, add = T, col = "orange",
-verticals = T)
+### Categorical-Categorical relationships
 
 #example of diverging, stacked, and mosaic graphs#### library(dplyr)
 
