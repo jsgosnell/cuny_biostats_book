@@ -211,12 +211,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#graphical-summaries" id="toc-graphical-summaries" class="nav-link" data-scroll-target="#graphical-summaries">Graphical summaries</a>
   <ul class="collapse">
   <li><a href="#single-variable" id="toc-single-variable" class="nav-link" data-scroll-target="#single-variable">Single variable</a></li>
+  <li><a href="#multiple-variables" id="toc-multiple-variables" class="nav-link" data-scroll-target="#multiple-variables">Multiple variables</a></li>
   </ul></li>
-  <li><a href="#multiple-variables" id="toc-multiple-variables" class="nav-link" data-scroll-target="#multiple-variables">Multiple variables</a>
-  <ul class="collapse">
-  <li><a href="#numerical-variables-from-multiple-groups" id="toc-numerical-variables-from-multiple-groups" class="nav-link" data-scroll-target="#numerical-variables-from-multiple-groups">Numerical variables from multiple groups</a></li>
-  <li><a href="#categorical-data-from-multiple-groups" id="toc-categorical-data-from-multiple-groups" class="nav-link" data-scroll-target="#categorical-data-from-multiple-groups">Categorical data from multiple groups</a></li>
-  </ul></li>
+  <li><a href="#numerical-summaries" id="toc-numerical-summaries" class="nav-link" data-scroll-target="#numerical-summaries">Numerical Summaries</a></li>
   <li><a href="#add-segment-for-each-point-segment_data-data.frame-x-150-xend-150-y" id="toc-add-segment-for-each-point-segment_data-data.frame-x-150-xend-150-y" class="nav-link" data-scroll-target="#add-segment-for-each-point-segment_data-data.frame-x-150-xend-150-y">#add segment for each point segment_data = data.frame( x = 1:50, xend = 1:50, y</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/summarizing_data.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/summarizing_data.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
@@ -880,7 +877,12 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
 <span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="summarizing_data_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+<div id="fig-bar_chart_flowers_with_colors_ggplot2_no_legend" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-bar_chart_flowers_with_colors_ggplot2_no_legend-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;22: Let colors match traits if possible, but note everyone can’t see colors and sometimes they are not printed.</figcaption>
+</figure>
+</div>
 </div>
 </div>
 <details>
@@ -902,7 +904,7 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <div id="fig-bar_charts_but_lines" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-bar_charts_but_lines-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;22: Note you only really <em>know</em> the tops of the bar!</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;23: Note you only really <em>know</em> the tops of the bar!</figcaption>
 </figure>
 </div>
 </div>
@@ -920,7 +922,7 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <div id="fig-bar_charts_but_just_points" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-bar_charts_but_just_points-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;23: Displaying the data may be the easiest option for small-ish datasets.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;24: Displaying the data may be the easiest option for small-ish datasets.</figcaption>
 </figure>
 </div>
 </div>
@@ -928,12 +930,11 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 </details>
 </section>
 </section>
-</section>
-<section id="multiple-variables" class="level2">
-<h2 class="anchored" data-anchor-id="multiple-variables">Multiple variables</h2>
-<p>Often we collect multiple pieces of information instead of just one. This can occur for multiple reasons. We may want to consider differences in some variable/trait among groups. This means we have either numerical or categorical data from various groups, but note that groups themselves are now a piece of data! We can think of these analyses as impact of group (a category) on traits (numerical or categorical). We will eventually call these a t-test or ANOVA (when the trait we measure is categorical) ota <span class="math inline">\(\chi^2\)</span> test (when the trait is categorical). Either way, this is a case where we are collecting a single piece of data from multiple groups.</p>
-<section id="numerical-variables-from-multiple-groups" class="level3">
-<h3 class="anchored" data-anchor-id="numerical-variables-from-multiple-groups">Numerical variables from multiple groups</h3>
+<section id="multiple-variables" class="level3">
+<h3 class="anchored" data-anchor-id="multiple-variables">Multiple variables</h3>
+<p>Often we collect multiple pieces of information instead of just one. This can occur for multiple reasons. We may want to consider differences in some variable/trait among groups. This means we have either numerical or categorical data from various groups, but note that groups themselves are now a piece of data! We can think of these analyses as impact of group (a category) on traits (numerical or categorical). We will eventually call these a t-test or ANOVA (when the trait we measure is categorical) ota <span class="math inline">\(\chi^2\)</span> test (when the trait is categorical). Either way, this is a case where we are collecting a single piece of data from multiple groups. Alternatively, we may collect data on multiple traits from a single group to see how they impact each other. We will eventually analyze this type of data using regression or correlation. Regardless of type, we can also graph this data.</p>
+<section id="numerical-variables-from-multiple-groups" class="level4">
+<h4 class="anchored" data-anchor-id="numerical-variables-from-multiple-groups">Numerical variables from multiple groups</h4>
 <p>When we gather numerical data from various groups and wish to compare, we can extend our use bar charts and box-whisker plots by using shapes, colors, or other features to symbolize the groups. For example, we can illustrate the mean (coming up in numerical summaries) or other summary statistics using bar plots..</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>Species, <span class="at">fill=</span>Species)) <span class="sc">+</span></span>
@@ -1000,14 +1001,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <div id="fig-cdf_all_species" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-cdf_all_species-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;24: Cumulative frequency distributions can be useful in noting exactly where distributions diverge</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;25: Cumulative frequency distributions can be useful in noting exactly where distributions diverge</figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="categorical-data-from-multiple-groups" class="level3">
-<h3 class="anchored" data-anchor-id="categorical-data-from-multiple-groups">Categorical data from multiple groups</h3>
+<section id="categorical-data-from-multiple-groups" class="level4">
+<h4 class="anchored" data-anchor-id="categorical-data-from-multiple-groups">Categorical data from multiple groups</h4>
 <p>For our example, let’s return to our focus on the color of flowers for various species of iris. One option for this is to consider bar plots. These can be stacked…</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris,<span class="fu">aes</span>(<span class="at">x=</span>Species)) <span class="sc">+</span></span>
@@ -1021,7 +1022,7 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <div id="fig-stacked_bar_plot_iris" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-stacked_bar_plot_iris-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;25: Bar plots are stacked by default and count the number of rows found in each category</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;26: Bar plots are stacked by default and count the number of rows found in each category</figcaption>
 </figure>
 </div>
 </div>
@@ -1039,7 +1040,7 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <div id="fig-group_bar_plot_iris" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-group_bar_plot_iris-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;26: Bar plots can also be grouped by adding the position_dodge argument</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;27: Bar plots can also be grouped by adding the position_dodge argument</figcaption>
 </figure>
 </div>
 </div>
@@ -1070,7 +1071,7 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <div id="fig-divergent_bar_plot_iris" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-divergent_bar_plot_iris-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;27: Divergent plots show how 2 categories differ among groups</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;28: Divergent plots show how 2 categories differ among groups</figcaption>
 </figure>
 </div>
 </div>
@@ -1087,12 +1088,12 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <div id="fig-divergent_bar_plot_iris_flipped" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-divergent_bar_plot_iris_flipped-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;28: Reorienting graphs may help viewers better visualize differnces</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;29: Reorienting graphs may help viewers better visualize differnces</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>or using an additional argument (<strong>remember, a lot of this is for later referernce!</strong>)</p>
+<p>or using an additional argument (<strong>remember, a lot of this is for later reference!</strong>)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_summary,<span class="fu">aes</span>(<span class="at">x=</span>Species, <span class="at">y=</span>Frequency)) <span class="sc">+</span></span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Blue), <span class="at">stat=</span><span class="st">"identity"</span>)<span class="sc">+</span></span>
@@ -1105,12 +1106,17 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <div id="fig-divergent_bar_plot_iris_flipped_2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-divergent_bar_plot_iris_flipped_2-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;29: Note we get the same results by simply adding the argument coord_flip</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;30: Note we get the same results by simply adding the argument coord_flip</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>A few notes here. geom_bar and geom_col are very similar commands, but geom_bar assumes its needs to do something to the data (like count it) by default, whereas geom_col assumes the data are summarized/ready to plot as is. The extra argument stat=identity above can usually make geom_bar behave like geom_col.</p>
+<details>
+<summary>
+geom_bar vs geom_col
+</summary>
+<p>geom_bar and geom_col are very similar commands, but geom_bar assumes its needs to do something to the data (like count it) by default, whereas geom_col assumes the data are summarized/ready to plot as is. The extra argument stat=identity above can usually make geom_bar behave like geom_col.</p>
+</details>
 <p>In the above cases, each group was measured the same number of times. However, if this isn’t true, visualizations may confound sampling size with summaries. In those cases, focusing on proportion of outcomes may be more useful (and will give you the exact same visualization if all groups were measured the same number of times!). This is sometimes called a mosaic plot; another way to make them (not shown here) is using the package <em>ggmosaic</em>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris,<span class="fu">aes</span>(<span class="at">x=</span>Species)) <span class="sc">+</span></span>
@@ -1124,7 +1130,7 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <div id="fig-mosaic_plot" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-mosaic_plot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;30: For proportion-based visualizations, stacked bar plots may be easier to read than grouped. We just add the position=fill argument to make these.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;31: For proportion-based visualizations, stacked bar plots may be easier to read than grouped. We just add the position=fill argument to make these.</figcaption>
 </figure>
 </div>
 </div>
@@ -1135,7 +1141,7 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"pink"</span>, <span class="st">"orange"</span>, <span class="st">"yellow"</span>)</span>
 <span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>iris_new<span class="sc">$</span>Color <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">sample</span>(colors, <span class="at">size =</span> <span class="fu">nrow</span>(iris),<span class="at">replace =</span> T))</span>
 <span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>iris_both <span class="ot">&lt;-</span> <span class="fu">rbind</span>(iris,iris_new)</span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>iris_both<span class="sc">$</span>Population <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"East"</span>,<span class="fu">nrow</span>(iris)), <span class="fu">rep</span>(<span class="st">"West"</span>, <span class="fu">nrow</span>(iris_new)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>iris_both<span class="sc">$</span>Population <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"East"</span>,<span class="fu">nrow</span>(iris)), <span class="fu">rep</span>(<span class="st">"West"</span>, <span class="fu">nrow</span>(iris_new))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_both,<span class="fu">aes</span>(<span class="at">x=</span>Species)) <span class="sc">+</span></span>
@@ -1143,14 +1149,13 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Color of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica "</span>), <span class="st">"flowers"</span>)),</span>
 <span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>,</span>
 <span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
-<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"legend"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"orange"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>, <span class="st">"pink"</span><span class="ot">=</span><span class="st">"pink"</span>, <span class="st">"yellow"</span><span class="ot">=</span><span class="st">"yellow"</span>))<span class="sc">+</span></span>
-<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>)<span class="sc">+</span></span>
-<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Population, <span class="at">nrow=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"Flower color"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"orange"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>, <span class="st">"pink"</span><span class="ot">=</span><span class="st">"pink"</span>, <span class="st">"yellow"</span><span class="ot">=</span><span class="st">"yellow"</span>))<span class="sc">+</span></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Population, <span class="at">nrow=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-faceted_mosaic_plot" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-faceted_mosaic_plot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;31: Faceting can make patterns easier to compare.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;32: Faceting can make patterns easier to compare.</figcaption>
 </figure>
 </div>
 </div>
@@ -1162,32 +1167,143 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Color of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica "</span>), <span class="st">"flowers"</span>)),</span>
 <span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>,</span>
 <span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"legend"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"orange"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>, <span class="st">"pink"</span><span class="ot">=</span><span class="st">"pink"</span>, <span class="st">"yellow"</span><span class="ot">=</span><span class="st">"yellow"</span>))<span class="sc">+</span></span>
-<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>)<span class="sc">+</span></span>
-<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Population, <span class="at">nrow=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"Flower color"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"orange"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>, <span class="st">"pink"</span><span class="ot">=</span><span class="st">"pink"</span>, <span class="st">"yellow"</span><span class="ot">=</span><span class="st">"yellow"</span>))<span class="sc">+</span></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Population, <span class="at">nrow=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-faceted_mosaic_plot_proportion" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="summarizing_data_files/figure-html/fig-faceted_mosaic_plot_proportion-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;32: We can add facets and proportions.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;33: We can add facets and proportions.</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>#turn this into pie chart#### vegSurvey_veg_per_site<span class="math inline">\(sampling_point &lt;- factor(vegSurvey_per_site\)</span>sampling_point) #have to make weird empty factor else you get concentric circles vegSurvey_veg_per_site$Share &lt;- “” ggplot(vegSurvey_veg_per_site, aes(x=Share, y=Proportion)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Frequency”) + xlab(“Sampling point”) + ggtitle(“Invasive and native species based on site”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32)) + coord_polar(theta=“y”) + facet_wrap(~sampling_point)</p>
-<p>#or (not in slides) cast to get single plot/split#### vegSurvey_veg_per_site_cast &lt;- dcast(vegSurvey_veg_per_site, veg_Type ~ “Proportion”, value.var = “Proportion”, mean)</p>
-<p>vegSurvey_veg_per_site_cast$Site &lt;- “”</p>
-<p>ggplot(vegSurvey_veg_per_site_cast, aes(x=Site, y=Proportion)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Frequency”) + xlab(““) + ggtitle(”Overall composition of invasive and native species across sites”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32)) + coord_polar(theta=“y”)</p>
-<p>#mosaic plot facetted by slope#### vegSurvey_per_slope &lt;- dcast(vegSurvey, sampling_point + slope~ “total_per_slope”, sum, value.var = “spp”) vegSurvey &lt;- merge(vegSurvey, vegSurvey_per_slope) vegSurvey<span class="math inline">\(Proportion &lt;- vegSurvey\)</span>spp/vegSurvey$total_per_slope</p>
-<p>ggplot(vegSurvey, aes(x=sampling_point, y=Proportion)) + geom_bar(aes(fill=veg_Type), size = 3, stat = “identity”) + ylab(“Frequency”) + xlab(“Sampling point”) + ggtitle(“Invasive and native species based on slope”)+ scale_fill_manual(name=“Plant type”,values = c(“#FFA373”,“#50486D”)) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32)) + facet_wrap(~slope, ncol=1)</p>
+<p>Finally, we can end this section noting a pie chart is just a transformed bar chart.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>iris_both<span class="sc">$</span>Share <span class="ot">&lt;-</span> <span class="st">""</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_both,<span class="fu">aes</span>(<span class="at">x=</span>Share)) <span class="sc">+</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Color), <span class="at">position=</span><span class="st">"fill"</span>)<span class="sc">+</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Distribution of flower colors differ among populations of "</span>,<span class="fu">italic</span>(<span class="st">"I. species "</span>))),</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">""</span>, </span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">""</span>)<span class="sc">+</span></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"Flower color"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"orange"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>, <span class="st">"pink"</span><span class="ot">=</span><span class="st">"pink"</span>, <span class="st">"yellow"</span><span class="ot">=</span><span class="st">"yellow"</span>))<span class="sc">+</span></span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(Population<span class="sc">~</span>Species) <span class="sc">+</span></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">coord_polar</span>(<span class="at">theta=</span><span class="st">"y"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-faceted_pie_plot_proportion" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-faceted_pie_plot_proportion-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;34: We can add facets and proportions.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section id="relationships-among-data-from-a-single-group" class="level4">
 <h4 class="anchored" data-anchor-id="relationships-among-data-from-a-single-group">Relationships among data from a single group</h4>
-<p>#numerical, numerical relationships #### # #scatter#### ggplot(iris, aes(y =Petal.Length,x =Sepal.Length)) + geom_point(aes(colour=Species), size = 3) + xlab(“Sepal Length (cm)”) + ylab(“Petal Length (cm)”) + ggtitle(“Relationship between sepal and petal lengths in irises”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#data over time#### #use airquality dataset for time series # airquality<span class="math inline">\(Date &lt;- as.Date(paste(airquality\)</span>Month, airquality$Day, sep=“/”), format =“%m/%d” )</p>
-<p>#just points#### ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(size = 3, col = “orange”) + xlab(“Date”) + ylab(“Temperature (C)”) + ggtitle(“Temperature over time”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#points and line#### ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(size = 3, col = “orange”) + geom_line() + xlab(“Date”) + ylab(“Temperature (C)”) + ggtitle(“Temperature over time”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#more than one axis#### #for 1:1 transformation data (anything you can use a function to make on a similar #scale) #can add easily but not get scale ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(size = 3, col = “orange”) + geom_line() + geom_point(aes(y=Wind)) + xlab(“Date”) + ylab(“Temperature (C)”) + ggtitle(“Temperature over time”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#manually scale data and get secondary axis #have to aes to make tranformation (not aes_string) #put colour in quotes in aes to force legend ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(aes(col =“Temp”), size = 3) + geom_line(col=“orange”) + geom_point(aes(y=Wind+50, col = “Wind speed”)) + scale_y_continuous(sec.axis = sec_axis(~.-50, name = “Wind (mph)”)) + xlab(“Date”) + ylab(“Temperature (C)”) + ggtitle(“Environmental measurements over time”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>Instead of collecting data on a single trait from multiple groups, we may collect data on multiple traits from a single group. For example, we could want to see if petal length is related to sepal width in <em>I.virginica</em>. This relationship could be visually summarized using a scatter plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length, <span class="at">y=</span>Petal.Length)) <span class="sc">+</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Larger sepals means larger petals in "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))),</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-scatterplot" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-scatterplot-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;35: Scatter plots show relationships among numerical variables.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Obviously we can (and will) combine many of the above approaches. For example, we may want to see if relationships among two numerical variables differ among groups (an ANCOVA!).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris,</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length, <span class="at">y=</span>Petal.Length, <span class="at">color=</span>Species)) <span class="sc">+</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Larger sepals means larger petals in "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))),</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-scatterplot_all_species" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-scatterplot_all_species-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;36: We can add facets and proportions</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We’ll get to these later in class, but I just want to note their existence here. Finally, if you are reading this for the first time, don’t worry about the tests (just like the code!). We will explain how all these tests are related when we get there!</p>
+<p>Finally, note data of this type may include time or dates. We’ll use a different dataset to illustrate this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>airquality<span class="sc">$</span>Date <span class="ot">&lt;-</span><span class="fu">as.Date</span>(<span class="fu">paste</span>(airquality<span class="sc">$</span>Month, airquality<span class="sc">$</span>Day,<span class="st">"1973"</span>, <span class="at">sep=</span><span class="st">"/"</span>), <span class="at">format =</span><span class="st">"%m/%d/%Y"</span>)</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(airquality, <span class="fu">aes</span>(<span class="at">x=</span>Date,<span class="at">y =</span>Temp)) <span class="sc">+</span> </span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">col =</span> <span class="st">"orange"</span>) <span class="sc">+</span> </span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Temperature over time"</span>, </span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Date"</span>,</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Temperature (C)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-scatterplot_regression" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-scatterplot_regression-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;37: Scatter plots can also include temporal data</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We can also add lines…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(airquality, <span class="fu">aes</span>(<span class="at">x=</span>Date,<span class="at">y =</span>Temp)) <span class="sc">+</span> </span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">col =</span> <span class="st">"orange"</span>) <span class="sc">+</span> </span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Temperature over time"</span>, </span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Date"</span>,</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Temperature (C)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-scatterplot_regression_lines" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-scatterplot_regression_lines-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;38: Scatter plots can also include lines</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We can even include multiple data sets!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(airquality, <span class="fu">aes</span>(<span class="at">x =</span>Date,<span class="at">y =</span>Temp)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">col =</span><span class="st">"Temp"</span>)) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">col=</span><span class="st">"orange"</span>) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y=</span>Wind<span class="sc">+</span><span class="dv">50</span>, <span class="at">col =</span> <span class="st">"Wind speed"</span>)) <span class="sc">+</span> <span class="fu">scale_y_continuous</span>(<span class="at">sec.axis =</span> <span class="fu">sec_axis</span>(<span class="sc">~</span>.<span class="sc">-</span><span class="dv">50</span>, <span class="at">name =</span> <span class="st">"Wind (mph)"</span>)) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>Wind<span class="sc">+</span><span class="dv">50</span>))<span class="sc">+</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Environmental measurements over time"</span>, </span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Date"</span>,</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Temperature (C)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-scatterplot_regression_lines_two" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-scatterplot_regression_lines_two-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;39: Scatter plots can also include multiple lines</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="theres-more" class="level4">
+<h4 class="anchored" data-anchor-id="theres-more">There’s more!</h4>
+<p>This just scratches the surface of potential ways to visualize data. For example, heatmaps can be used to show location specific data and we can build interactive or animated visualizations. However, the basic principles we’ve examined here should get you started.</p>
+<p>The different approaches covered here also indicate there a lots way to display data! Whichever approach you use, you should ensure that you represent the data honestly and clearly. Sometimes that means you just display data (points)! You should also always consider possible ways the data/visualization could be misinterpreted and avoid them. Common mistakes include the decision about which baseline should be included. For example, should charts always include 0 on the y-axis? Not including 0 can may small differences appear large. For example, compare</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co">#tax cuts/metabolism</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>However, including it can make important changes seem insignificant!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co">#body temperature/co2/temperature</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Thought must be applied to individual situations.</p>
+</section>
+</section>
+</section>
+<section id="numerical-summaries" class="level2">
+<h2 class="anchored" data-anchor-id="numerical-summaries">Numerical Summaries</h2>
 <p>#outliers and bad fits####</p>
 <p>good_fit_x &lt;- runif(100, 1, 50) good_fit_y &lt;- rnorm(100,25,2) good_data &lt;- data.frame(source = “good”, x=good_fit_x, y=good_fit_y) bad_fit_x &lt;- runif(10, 20, 30) bad_fit_y &lt;- rnorm(10,95,1) bad_data &lt;- data.frame(source = “outlier”, x=bad_fit_x, y=bad_fit_y) all_data &lt;- rbind (good_data, bad_data)</p>
 <p>#just points#### ggplot(all_data, aes(x =x,y =y)) + geom_point(aes(color=source), size = 3) + xlab(“x”) + ylab(“y”) + ggtitle(“Outliers can impact data”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
@@ -1202,8 +1318,6 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <p>#just scatter plot</p>
 <p>ggplot(iris[iris$Species == “setosa”,], aes(sample,Sepal.Length)) + geom_point(size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(expression(paste(“Sepal Length in”, italic(“Iris setosa”))))+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
 <p>#add mean ggplot(iris[iris<span class="math inline">\(Species == "setosa",], aes(sample,Sepal.Length)) + geom_point(size = 3) + ylab("Sepal Length (cm)")+ggtitle(expression(paste("Sepal Length in ", italic("Iris setosa"))))+ geom_hline(yintercept = mean(iris[iris\)</span>Species == “setosa”, “Sepal.Length”]), color = “blue”, size = 2) + annotate(“text”, label = “mean”, x = 20, y = 4.9 , size = 8, color = “blue”) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-</section>
-</section>
 </section>
 <section id="add-segment-for-each-point-segment_data-data.frame-x-150-xend-150-y" class="level1">
 <h1>#add segment for each point segment_data = data.frame( x = 1:50, xend = 1:50, y</h1>
