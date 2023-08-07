@@ -464,6 +464,7 @@ examples (nominal data). For example, we could examine the colors of our
 (notice this produces no output...)...
 
 ```{r}
+set.seed(19)
 colors <- c("blue", "orange", "purple")
 iris$Color <- factor(sample(colors, size = nrow(iris),replace = T))
 
@@ -574,12 +575,25 @@ ggplot(iris[iris$Species == "virginica",],
 
 </details>
 
+## Multiple variables
+
+Often we collect multiple pieces of information instead of just one.
+This can occur for multiple reasons. We may want to consider differences
+in some variable/trait among groups. This means we have either numerical
+or categorical data from various groups, but note that groups themselves
+are now a piece of data! We can think of these analyses as impact of
+group (a category) on traits (numerical or categorical). We will
+eventually call these a t-test or ANOVA (when the trait we measure is
+categorical) ota $\chi^2$ test (when the trait is categorical). Either
+way, this is a case where we are collecting a single piece of data from
+multiple groups.
+
 ### Numerical variables from multiple groups
 
 When we gather numerical data from various groups and wish to compare,
 we can extend our use bar charts and box-whisker plots by using shapes,
 colors, or other features to symbolize the groups. For example, we can
-illustrate the mean (comning up in numerical summaries) or other summary
+illustrate the mean (coming up in numerical summaries) or other summary
 statistics using bar plots..
 
 ```{r}
@@ -652,7 +666,44 @@ ggplot(iris, aes(Sepal.Length, colour = Species)) + stat_ecdf()+
        y= "Cumulative frequency")
 ```
 
-### Categorical-Categorical relationships
+### Categorical data from multiple groups
+
+#### Relationships among data from a single group
+
+For our example, let's return to our focus on the color of flowers for
+various species of iris. One option for this is to consider bar plots.
+
+```{r}
+ggplot(iris,aes(x=Species, y=color,fill=Color)) +
+  geom_bar()+
+  labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
+       x= "Colors",
+       y= "Frequency")+
+  scale_fill_manual("legend", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))
+```
+
+vegSurvey \<- data.frame(sampling_point=rep(c(1:5),4),
+slope=c(rep("North",10),rep("South",10)),
+veg_Type=rep(c(rep("native",5),rep("introduced",5)),2),
+spp=as.integer(abs(rnorm(20,5,2))))
+vegSurvey$spp <- ifelse(vegSurvey$veg_Type
+=="introduced",vegSurvey$spp+1,vegSurvey$spp)
+
+vegSurvey \<- vegSurvey %\>% mutate(sppInv= ifelse(veg_Type
+=="native",spp,spp\*-1))
+
+ggplot(vegSurvey, aes(x=sampling_point, y=spp)) +
+geom_bar(aes(fill=veg_Type), size = 3, stat = "identity", position =
+position_dodge(width=0.5)) + ylab("Frequency") + xlab("Sampling
+point") + ggtitle("Invasive and native species based on site")+
+scale_fill_manual(name="Plant type",values = c("#FFA373","#50486D")) +
+theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
+element_text(face="bold", size=28), axis.text.y = element_text(size=20),
+axis.text.x = element_text(size=20), legend.text =element_text(size=20),
+legend.title = element_text(size=20, face="bold"), plot.title =
+element_text(hjust = 0.5, face="bold", size=32))
+
+In
 
 #example of diverging, stacked, and mosaic graphs#### library(dplyr)
 
