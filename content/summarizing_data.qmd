@@ -107,7 +107,8 @@ we'll go over a number of graphs. Consider this is a resource. I don't
 expect you to know how to make each of these on your own immediately. We
 will actually introduce the software we are using to make these in later
 sections. Instead, you can return here later when you are actually
-making a graph for ideas (and code!).
+making a graph for ideas (and code!). **For your first read, focus on
+the images (not the code!)**
 
 While the type of graph you should use will depend on the data (and you
 may have several options!) all graphs should have
@@ -658,8 +659,8 @@ Another option is to show the cumulative frequency distribution for each
 group.
 
 ```{r}
-#| label: fig-cdf_all species
-#| fig-cap: "!"
+#| label: fig-cdf_all_species
+#| fig-cap: "Cumulative frequency distributions can be useful in noting exactly where distributions diverge"
 ggplot(iris, aes(Sepal.Length, colour = Species)) + stat_ecdf()+
   labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
        x= "Sepal length (cm)",
@@ -668,140 +669,166 @@ ggplot(iris, aes(Sepal.Length, colour = Species)) + stat_ecdf()+
 
 ### Categorical data from multiple groups
 
-#### Relationships among data from a single group
-
 For our example, let's return to our focus on the color of flowers for
 various species of iris. One option for this is to consider bar plots.
+These can be stacked...
 
 ```{r}
-ggplot(iris,aes(x=Species, y=color,fill=Color)) +
-  geom_bar()+
+#| label: fig-stacked_bar_plot_iris
+#| fig-cap: "Bar plots are stacked by default and count the number of rows found in each category"
+ggplot(iris,aes(x=Species)) +
+  geom_bar(aes(fill=Color))+
   labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
-       x= "Colors",
+       x= "Species",
        y= "Frequency")+
-  scale_fill_manual("legend", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))
+  scale_fill_manual("legend", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))+
+  guides(fill = "none")
 ```
 
-vegSurvey \<- data.frame(sampling_point=rep(c(1:5),4),
-slope=c(rep("North",10),rep("South",10)),
-veg_Type=rep(c(rep("native",5),rep("introduced",5)),2),
-spp=as.integer(abs(rnorm(20,5,2))))
-vegSurvey$spp <- ifelse(vegSurvey$veg_Type
-=="introduced",vegSurvey$spp+1,vegSurvey$spp)
+or not...
 
-vegSurvey \<- vegSurvey %\>% mutate(sppInv= ifelse(veg_Type
-=="native",spp,spp\*-1))
+```{r}
+#| label: fig-group_bar_plot_iris
+#| fig-cap: "Bar plots can also be grouped by adding the position_dodge argument"
+ggplot(iris,aes(x=Species)) +
+  geom_bar(aes(fill=Color), position = position_dodge(width=0.5))+
+  labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
+       x= "Species",
+       y= "Frequency")+
+  scale_fill_manual("legend", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))+
+  guides(fill = "none")
 
-ggplot(vegSurvey, aes(x=sampling_point, y=spp)) +
-geom_bar(aes(fill=veg_Type), size = 3, stat = "identity", position =
-position_dodge(width=0.5)) + ylab("Frequency") + xlab("Sampling
-point") + ggtitle("Invasive and native species based on site")+
-scale_fill_manual(name="Plant type",values = c("#FFA373","#50486D")) +
-theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), plot.title =
-element_text(hjust = 0.5, face="bold", size=32))
+```
 
-In
+Other options include divergent plots, but those are best for 2 groups
+of data. They also require the data to be summarized and somewhat
+transformed. For example, we could have blue or not blue flowers.
 
-#example of diverging, stacked, and mosaic graphs#### library(dplyr)
+```{r}
+library(plyr)
+iris$blue <- revalue(iris$Color, c("blue"="blue", "purple"="not blue", "orange"="not blue"))
 
-# long-form vegetation survey data from
+```
 
-# http://luisdva.github.io/rstats/Diverging-bar-plots/
+Then we have to summarize the data.
 
-# these data should more or less reflect the vegetation patterns at "Quebrada de Cordoba", Chile
+```{r}
+iris_summary <- data.frame(table(iris$blue, iris$Species))
+names(iris_summary) <- c("Blue", "Species", "Frequency")
+```
 
-vegSurvey \<- data.frame(sampling_point=rep(c(1:5),4),
-slope=c(rep("North",10),rep("South",10)),
-veg_Type=rep(c(rep("native",5),rep("introduced",5)),2),
-spp=as.integer(abs(rnorm(20,5,2))))
-vegSurvey$spp <- ifelse(vegSurvey$veg_Type
-=="introduced",vegSurvey$spp+1,vegSurvey$spp)
+and make not blue negative
 
-vegSurvey \<- vegSurvey %\>% mutate(sppInv= ifelse(veg_Type
-=="native",spp,spp\*-1))
+```{r}
+iris_summary[iris_summary$Blue == "not blue", "Frequency"] <- iris_summary[iris_summary$Blue == "not blue", "Frequency"] * -1
 
-#grouped bar plot#### ggplot(vegSurvey, aes(x=sampling_point, y=spp)) +
-geom_bar(aes(fill=veg_Type), size = 3, stat = "identity", position =
-position_dodge(width=0.5)) + ylab("Frequency") + xlab("Sampling
-point") + ggtitle("Invasive and native species based on site")+
-scale_fill_manual(name="Plant type",values = c("#FFA373","#50486D")) +
-theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), plot.title =
-element_text(hjust = 0.5, face="bold", size=32))
+```
 
-#stacked bar plot#### ggplot(vegSurvey, aes(x=sampling_point, y=spp)) +
-geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") +
-ylab("Frequency")+ xlab("Sampling point")+ ggtitle("Invasive and native
-species based on site")+ scale_fill_manual(name="Plant type",values =
-c("#FFA373","#50486D")) + theme(axis.title.x = element_text(face="bold",
-size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y
-= element_text(size=20), axis.text.x = element_text(size=20),
-legend.text =element_text(size=20), legend.title = element_text(size=20,
-face="bold"), plot.title = element_text(hjust = 0.5, face="bold",
-size=32))
+then plot it.
 
-#facetted stacked#### ggplot(vegSurvey, aes(x=sampling_point, y=spp)) +
-geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") +
-ylab("Frequency")+ xlab("Sampling point")+ ggtitle("Invasive and native
-species based on site")+ scale_fill_manual(name="Plant type",values =
-c("#FFA373","#50486D")) + theme(axis.title.x = element_text(face="bold",
-size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y
-= element_text(size=20), axis.text.x = element_text(size=20),
-legend.text =element_text(size=20), legend.title = element_text(size=20,
-face="bold"), plot.title = element_text(hjust = 0.5, face="bold",
-size=32)) + facet_wrap(\~slope, nrow = 1)
+```{r}
+#| label: fig-divergent_bar_plot_iris
+#| fig-cap: "Divergent plots show how 2 categories differ among groups"
+ggplot(iris_summary,aes(x=Species, y=Frequency)) +
+  geom_bar(aes(fill=Blue), stat="identity")+
+  labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
+       x= "Species",
+       y= "Frequency")+
+  scale_fill_manual("legend", values = c("blue" = "blue", "not blue" = "orange", "purple" = "purple"))
+```
 
-# divergent plot
+which we could flip by reversing all x/y arguments..
 
-ggplot(vegSurvey, aes(x=sampling_point, y=sppInv, fill=veg_Type))+
-geom_bar(stat="identity",position="identity")+ xlab("sampling
-point")+ylab("number of species")+ scale_fill_manual(name="Plant
-type",values = c("#FFA373","#50486D"))+ coord_flip()+
-geom_hline(yintercept=0)+ xlab("Sampling Points")+ ylab("Species
-number")+ scale_y_continuous(breaks =
-pretty(vegSurvey$sppInv),labels = abs(pretty(vegSurvey$sppInv)))+
-theme(strip.text.x = element_text(face = "bold"))
+```{r}
+#| label: fig-divergent_bar_plot_iris_flipped
+#| fig-cap: "Reorienting graphs may help viewers better visualize differnces"
+ggplot(iris_summary,aes(y=Species, x=Frequency)) +
+  geom_bar(aes(fill=Blue), stat="identity")+
+  labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
+       y= "Species",
+       x= "Frequency")+
+  scale_fill_manual("legend", values = c("blue" = "blue", "not blue" = "orange", "purple" = "purple"))
+```
 
-# divergent plot with facetting by slope
+or using an additional argument (**remember, a lot of this is for later
+referernce!**)
 
-ggplot(vegSurvey, aes(x=sampling_point, y=sppInv, fill=veg_Type))+
-geom_bar(stat="identity",position="identity")+
-facet_wrap(\~slope)+xlab("sampling point")+ylab("number of species")+
-scale_fill_manual(name="Plant type",values = c("#FFA373","#50486D"))+
-coord_flip()+ geom_hline(yintercept=0)+ xlab("Sampling Points")+
-ylab("Species number")+ scale_y_continuous(breaks =
-pretty(vegSurvey$sppInv),labels = abs(pretty(vegSurvey$sppInv)))+
-theme(strip.text.x = element_text(face = "bold"))
+```{r}
+#| label: fig-divergent_bar_plot_iris_flipped_2
+#| fig-cap: "Note we get the same results by simply adding the argument coord_flip"
+ggplot(iris_summary,aes(x=Species, y=Frequency)) +
+  geom_bar(aes(fill=Blue), stat="identity")+
+  labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
+       x= "Species",
+       y= "Frequency")+
+  scale_fill_manual("legend", values = c("blue" = "blue", "not blue" = "orange", "purple" = "purple")) +
+  coord_flip()
+```
 
-#mosaic plot#### #for mosaic plots, need to use other package (ggmosaic)
-or add frequency column #for your choice variable
+A few notes here. geom_bar and geom_col are very similar commands, but
+geom_bar assumes its needs to do something to the data (like count it)
+by default, whereas geom_col assumes the data are summarized/ready to
+plot as is. The extra argument stat=identity above can usually make
+geom_bar behave like geom_col.
 
-library(reshape2)
+In the above cases, each group was measured the same number of times.
+However, if this isn't true, visualizations may confound sampling size
+with summaries. In those cases, focusing on proportion of outcomes may
+be more useful (and will give you the exact same visualization if all
+groups were measured the same number of times!). This is sometimes
+called a mosaic plot; another way to make them (not shown here) is using
+the package *ggmosaic*.
 
-#get total native/invasive per site vegSurvey_veg_per_site \<-
-dcast(vegSurvey, sampling_point+veg_Type\~ "total_veg_per_site", sum,
-value.var = "spp") vegSurvey_per_site \<- dcast(vegSurvey,
-sampling_point \~ "total_per_site", sum, value.var = "spp")
-vegSurvey_veg_per_site \<- merge(vegSurvey_veg_per_site,
-vegSurvey_per_site)
-vegSurvey_veg_per_site$Proportion <- vegSurvey_veg_per_site$total_veg_per_site/
-vegSurvey_veg_per_site\$total_per_site
+```{r}
+#| label: fig-mosaic_plot
+#| fig-cap: "For proportion-based visualizations, stacked bar plots may be easier to read than grouped. We just add the position=fill argument to make these."
+ggplot(iris,aes(x=Species)) +
+  geom_bar(aes(fill=Color), position = "fill")+
+  labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
+       x= "Species",
+       y= "Proportion")+
+  scale_fill_manual("legend", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))+
+  guides(fill = "none")
+```
 
-ggplot(vegSurvey_veg_per_site, aes(x=sampling_point, y=Proportion)) +
-geom_bar(aes(fill=veg_Type), size = 3, stat = "identity") +
-ylab("Percent") + xlab("Sampling point") + ggtitle("Invasive and native
-species based on site")+ scale_fill_manual(name="Plant type",values =
-c("#FFA373","#50486D")) + theme(axis.title.x = element_text(face="bold",
-size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y
-= element_text(size=20), axis.text.x = element_text(size=20),
-legend.text =element_text(size=20), legend.title = element_text(size=20,
-face="bold"), plot.title = element_text(hjust = 0.5, face="bold",
-size=32))
+Note we could also facet this data if we had other variables. For
+example, assume sampled another set of populations to the west..
+
+```{r}
+iris_new <- iris
+colors <- c("pink", "orange", "yellow")
+iris_new$Color <- factor(sample(colors, size = nrow(iris),replace = T))
+iris_both <- rbind(iris,iris_new)
+iris_both$Population <- c(rep("East",nrow(iris)), rep("West", nrow(iris_new)))
+```
+
+```{r}
+#| label: fig-faceted_mosaic_plot
+#| fig-cap: "Faceting can make patterns easier to compare."
+ggplot(iris_both,aes(x=Species)) +
+  geom_bar(aes(fill=Color))+
+  labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
+       x= "Species",
+       y= "Frequency")+
+  scale_fill_manual("legend", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple", "pink"="pink", "yellow"="yellow"))+
+  guides(fill = "none")+
+  facet_wrap(~Population, nrow=1)
+```
+
+Note we can combined these ideas!
+
+```{r}
+#| label: fig-faceted_mosaic_plot_proportion
+#| fig-cap: "We can add facets and proportions."
+ggplot(iris_both,aes(x=Species)) +
+  geom_bar(aes(fill=Color), position="fill")+
+  labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
+       x= "Species",
+       y= "Frequency")+
+  scale_fill_manual("legend", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple", "pink"="pink", "yellow"="yellow"))+
+  guides(fill = "none")+
+  facet_wrap(~Population, nrow=1)
+```
 
 #turn this into pie chart####
 vegSurvey_veg_per_site$sampling_point <- factor(vegSurvey_per_site$sampling_point)
@@ -852,6 +879,8 @@ axis.text.x = element_text(size=20), legend.text =element_text(size=20),
 legend.title = element_text(size=20, face="bold"), plot.title =
 element_text(hjust = 0.5, face="bold", size=32)) + facet_wrap(\~slope,
 ncol=1)
+
+#### Relationships among data from a single group
 
 #numerical, numerical relationships \#### \# #scatter#### ggplot(iris,
 aes(y =Petal.Length,x =Sepal.Length)) + geom_point(aes(colour=Species),
