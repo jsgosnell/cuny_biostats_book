@@ -934,7 +934,7 @@ ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(aes(col ="Temp")) + geom_l
        y="Temperature (C)")
 ```
 
-#### There's more!
+#### There's more to do and think about!
 
 This just scratches the surface of potential ways to visualize data. For
 example, heatmaps can be used to show location specific data and we can
@@ -948,47 +948,68 @@ display data (points)! You should also always consider possible ways the
 data/visualization could be misinterpreted and avoid them. Common
 mistakes include the decision about which baseline should be included.
 For example, should charts always include 0 on the y-axis? Not including
-0 can may small differences appear large. For example, compare
+0 can may small differences appear large. However, including it can make
+important changes seem insignificant! Consider
 
 ```{r}
-#tax cuts/metabolism
+#| label: fig-compare_zero_points
+#| fig-cap: "The decision of where to start the y-axis can have major impacts on interpretation"
+small_difference <- data.frame(Treatment = c("a","b"), mean=c(37,40))
+library(ggpubr)
+bp <- ggplot(small_difference, aes(x=Treatment, y=mean, fill=Treatment))+
+  geom_bar(stat="identity")
+sp <- ggplot(small_difference, aes(x=Treatment, y=mean, color=Treatment))+
+  geom_point()
+compare <- ggarrange(bp, sp, labels = c("A", "B"),
+          ncol = 2, nrow = 1,common.legend = TRUE, legend="bottom")
+annotate_figure(compare,
+                top = text_grob("Including a zero point can make a big difference!", color = "red", face = "bold", size = 14))
+
+
 ```
 
-However, including it can make important changes seem insignificant!
+If this is changes in temperature, option B may be more useful (this
+could be a normal temperature (37 C) compared to a fever of 104 (40 C).
+However, if its a difference in a metabolic rate, it may have minor
+impacts (and thus we choose option A)!
+
+Similarly, imagine we collected this data
 
 ```{r}
-#body temperature/co2/temperature
+#| label: fig-outliers
+#| fig-cap: "This would likely indicate"
+
+good_fit_x <- runif(100, 1, 50) 
+good_fit_y <- rnorm(100,25,2) 
+good_data <- data.frame(source = "good", x=good_fit_x, y=good_fit_y) 
+bad_fit_x <- runif(10, 20, 30) 
+bad_fit_y <- rnorm(10,95,1) 
+bad_data <- data.frame(source = "outlier", x=bad_fit_x, y=bad_fit_y) 
+all_data <- rbind (good_data, bad_data)
+
+points <- ggplot(all_data, aes(x =x,y =y)) + geom_point(aes(color=source)) + 
+  labs(title="Raw data")
+
+points_plus_curve <- ggplot(all_data, aes(x =x,y =y)) + geom_point(aes(color=source)) + 
+  geom_smooth(se = F) + 
+    labs(title="Curve fit to data but points shown")
+
+curve <- ggplot(all_data, aes(x =x,y =y)) + geom_smooth(se = F) +
+    labs(title="Only curve")
+compare <- ggarrange(points, points_plus_curve, curve, labels = c("A", "B", "C"),
+          ncol = 2, nrow = 2, common.legend = TRUE, legend="bottom")
+annotate_figure(compare,
+                top = text_grob("Same data, three visualizations", color = "red", face = "bold", size = 14))
+
 ```
 
-Thought must be applied to individual situations.
+Whereas the raw data (panel A) may suggest some outliers that are
+concerning, by panel C we have "smoothed" the data and made an
+interesting pattern. **In general, thought must be applied to individual
+situations regarding visualization style and nuance**. Adding
+information on spread in the data will also help (coming up!).
 
 ## Numerical Summaries
-
-#outliers and bad fits####
-
-good_fit_x \<- runif(100, 1, 50) good_fit_y \<- rnorm(100,25,2)
-good_data \<- data.frame(source = "good", x=good_fit_x, y=good_fit_y)
-bad_fit_x \<- runif(10, 20, 30) bad_fit_y \<- rnorm(10,95,1) bad_data
-\<- data.frame(source = "outlier", x=bad_fit_x, y=bad_fit_y) all_data
-\<- rbind (good_data, bad_data)
-
-#just points#### ggplot(all_data, aes(x =x,y =y)) +
-geom_point(aes(color=source), size = 3) + xlab("x") + ylab("y") +
-ggtitle("Outliers can impact data")+ theme(axis.title.x =
-element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), plot.title =
-element_text(hjust = 0.5, face="bold", size=32))
-
-#curve and scatter#### ggplot(all_data, aes(x =x,y =y)) +
-geom_point(aes(color=source), size = 3) + geom_smooth(se = F) +
-xlab("x") + ylab("y") + ggtitle("Outliers can impact data")+
-theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), plot.title =
-element_text(hjust = 0.5, face="bold", size=32))
 
 #just curve#### ggplot(all_data, aes(x =x,y =y)) + geom_smooth(se = F) +
 xlab("x") + ylab("y") + ggtitle("Outliers can impact data")+
