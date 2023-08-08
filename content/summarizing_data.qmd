@@ -230,7 +230,7 @@ approach. Consider these graphs.
 ```{r}
 #| label: fig-cardinals_plot
 #| fig-cap: "Example of left-skewed data (plot)"
-cardinals <- rbeta(10000,70,5) 
+cardinals <- round(rbeta(10000,70,5),3)
 hist(cardinals, main="Weight of Westchester cardinals", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "red", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
 
 ```
@@ -249,7 +249,7 @@ ggplot(data.frame(cardinals),
 ```{r}
 #| label: fig-parrots
 #| fig-cap: "Example of normal data"
-parrots<- c(rnorm(1000,20,4)) 
+parrots<- round(c(rnorm(1000,.9,4)),3)
 ggplot(data.frame(parrots), 
        aes(x=parrots)) +
   geom_histogram( fill="green", color="black") +
@@ -261,7 +261,7 @@ ggplot(data.frame(parrots),
 ```{r}
 #| label: fig-blue_jays
 #| fig-cap: "Example of right-skewed data"
-blue_jays <- rbeta(10000,2,12)
+blue_jays <- round(rbeta(10000,2,10),3)
 ggplot(data.frame(blue_jays), 
        aes(x=blue_jays)) +
   geom_histogram( fill="blue", color="black") +
@@ -284,7 +284,7 @@ woodpecker weights.
 ```{r}
 #| label: fig-robins
 #| fig-cap: "Example of uniform data"
-rochester <- c(runif(1000,.1,8)) 
+rochester <- round(c(runif(1000,.1,8)),3)
 ggplot(data.frame(rochester), 
        aes(x=rochester)) +
   geom_histogram( fill="pink", color="black") +
@@ -297,7 +297,7 @@ ggplot(data.frame(rochester),
 ```{r}
 #| label: fig-woodpeckers
 #| fig-cap: "Example of bimodal data"
-woodpeckers <- c(rnorm(100,20,4),rnorm(100,40,4)) 
+woodpeckers <- round(c(rnorm(100,20,4),rnorm(100,40,4)),3)
 ggplot(data.frame(woodpeckers), 
        aes(x=woodpeckers)) +
   geom_histogram( fill="orange", color="black") +
@@ -1011,27 +1011,108 @@ information on spread in the data will also help (coming up!).
 
 ## Numerical Summaries
 
-#just curve#### ggplot(all_data, aes(x =x,y =y)) + geom_smooth(se = F) +
-xlab("x") + ylab("y") + ggtitle("Outliers can impact data")+
-theme(axis.title.x = element_text(face="bold", size=28), axis.title.y =
-element_text(face="bold", size=28), axis.text.y = element_text(size=20),
-axis.text.x = element_text(size=20), legend.text =element_text(size=20),
-legend.title = element_text(size=20, face="bold"), plot.title =
-element_text(hjust = 0.5, face="bold", size=32))
+While visual summaries give us a clearer picture of the data, numerical
+summaries can help distill a large dataset into several components that
+can then be analyzed or compared. **A key point is we are rarely trying
+to say if 2 groups are exactly the same or if a trait value is exactly
+equal to something.** Given sampling error, we know its unlikely we
+would get exactly the same values, and, more importantly, its really
+rare for 2 groups to be exactly the same. Instead, we are often
+comparing characteristics of the population data among group or to set
+values.
 
-#skewed left with measures of central tendency#### ##weird issues with
-margins and legends par(mar = c(rep(4,4))) birds \<- rbeta(10000,70,5)
-hist(birds, main="Weight of Westchester cardinals", xlab = "\n Weight
-(g)", ylab = "Frequency (#)\n", col = "red", cex.lab=label_size,
-cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
-abline(v=mean(birds), col="yellow", lwd = 4) abline(v=median(birds),
-col="green", lwd = 4) #no built in mode function.... \# Create the
-function. getmode \<- function(v) { uniqv \<- unique(v)
-uniqv\[which.max(tabulate(match(v, uniqv)))\] }
+One common characteristic of a population is central tendency. Central
+tendency considers what are common values in a dataset by focusing on
+the center of the distribution. Mean, or the average or $\mu$ , is one
+measure of central tendency. Due to sampling error, we don't know $\mu$,
+but we can estimate it. In general, we use Greek letters to denote the
+population values and standard(Latin) letters typically denote our
+estimate (sometimes with added symbols). For example, if we have *n*
+data points, our estimate of the mean $\mu$ is known as $\overline{Y}$
+(read as "y-bar") is
 
-abline(v=(getmode(birds)), col="blue", lwd = 4) legend("topleft", legend
-= c("mean", "median", "mode"), fill=c("yellow", "green","blue"), cex =
-1.5, bty = "n", x.intersp = .1, y.intersp = .5)
+$$
+\overline{Y} = \frac{\sum_{i=1}^{n} n_{i}}{n} \sim \mu
+$$
+
+where $\sim$ means "approximately". Other measures of central tendency
+include the mode (most common data point) or median (middle data point
+if all data were placed in ascending order (remember box plots!)).
+
+Why do we need more than one measure of central tendency? Consider our
+cardinal data:
+
+```{r}
+#| label: fig-cardinals_ggplot2_ct
+#| fig-cap: "Skew impacts value of and relationships among various measures of central tendency"
+# function to calculate mode
+fun.mode<-function(x){as.numeric(names(sort(-table(x)))[1])}
+
+ggplot(data.frame(cardinals), 
+       aes(x=cardinals)) +
+  geom_histogram(color="black") +
+  labs(title="Weight of Westchester cardinals",
+       x= "Weight (g)",
+       y= "Frequency")+
+  geom_vline(aes(xintercept=mean(cardinals), color="mean"))+
+  geom_vline(aes(xintercept=median(cardinals), color= "median"))+
+  geom_vline(aes(xintercept=fun.mode(cardinals), color = "mode")) +
+  theme_bw()+theme(legend.position="bottom")+
+    guides(color = guide_legend(title = "Measure"))
+```
+
+Note the data is left-skewed. so the mean is pulled towards these
+outliers. The median may offer a better summary of the actual center. We
+see similar outcomes with right-skewed data.
+
+```{r}
+#| label: fig-blue_jays_ggplot2_ct
+#| fig-cap: "Skew impacts value of and relationships among various measures of central tendency"
+ggplot(data.frame(blue_jays), 
+       aes(x=blue_jays)) +
+  geom_histogram(color="black") +
+  labs(title="Weight of Westchester blue jays",
+       x= "Weight (g)",
+       y= "Frequency")+
+  geom_vline(aes(xintercept=mean(blue_jays), color="mean"))+
+  geom_vline(aes(xintercept=median(blue_jays), color= "median"))+
+  geom_vline(aes(xintercept=fun.mode(blue_jays), color = "mode")) +
+  theme_bw()+theme(legend.position="bottom")+
+    guides(color = guide_legend(title = "Measure"))
+```
+
+But with symmetric data, we see the measures of central tendency align
+more
+
+```{r}
+#| label: fig-parrots_ggplot2_ct
+#| fig-cap: "For symmetric data, measures of central tendency are more aligned."
+ggplot(data.frame(parrots), 
+       aes(x=parrots)) +
+  geom_histogram(color="black") +
+  labs(title="Weight of Westchester parrots",
+       x= "Weight (g)",
+       y= "Frequency")+
+  geom_vline(aes(xintercept=mean(parrots), color="mean"))+
+  geom_vline(aes(xintercept=median(parrots), color= "median"))+
+  geom_vline(aes(xintercept=fun.mode(parrots), color = "mode")) +
+  theme_bw()+theme(legend.position="bottom")+
+    guides(color = guide_legend(title = "Measure"))
+```
+
+<details>
+
+<summary>Why is the mode not always on the highest bar?</summary>
+
+Note the mode is heavily/totally impacted by data precision and thus can
+lead to unusual matches with histograms. In our above example, cardinals
+were measured to 10^-3^ grams. However, the data was binned to levels of
+10^-2^ grams. Due to this mismatch, the most common measurement of the
+*raw* data was `r fun.mode(cardinals)`, which occurred
+`r length(cardinals[cardinals ==fun.mode(cardinals)` times. However,
+more data points still fell in another bin!
+
+</details>
 
 #bimodal data with measures of central tendency##### par(mar =
 c(rep(2,4))) putnam \<- c(rnorm(100,20,4),rnorm(100,40,4)) hist(putnam,
