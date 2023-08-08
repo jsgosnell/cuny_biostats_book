@@ -564,7 +564,7 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 <p>This distribution of this data is approximately normal. We will define normality more later (equations!), but for now note the distribution is roughly symmetric, with tails on either side. Values near the middle of the range are more common, with the chance of getting smaller or larger values declining at an increasing rate…</p>
 <p>Comparing the above graph to other distributions may be an easier approach. Consider these graphs.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cardinals <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">70</span>,<span class="dv">5</span>) </span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cardinals <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">70</span>,<span class="dv">5</span>),<span class="dv">3</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(cardinals, <span class="at">main=</span><span class="st">"Weight of Westchester cardinals"</span>, <span class="at">xlab =</span> <span class="st">"</span><span class="sc">\n</span><span class="st"> Weight (g)"</span>, <span class="at">ylab =</span> <span class="st">"Frequency (#)</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span><span class="fl">1.25</span>, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-cardinals_plot" class="quarto-figure quarto-figure-center anchored">
@@ -595,7 +595,7 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>parrots<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">1000</span>,<span class="dv">20</span>,<span class="dv">4</span>)) </span>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>parrots<span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">1000</span>,.<span class="dv">9</span>,<span class="dv">4</span>)),<span class="dv">3</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(parrots), </span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>parrots)) <span class="sc">+</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"green"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
@@ -615,7 +615,7 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>blue_jays <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">2</span>,<span class="dv">12</span>)</span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>blue_jays <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">2</span>,<span class="dv">10</span>),<span class="dv">3</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(blue_jays), </span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>blue_jays)) <span class="sc">+</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
@@ -637,7 +637,7 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 <p>The cardinal <a href="#fig-cardinals_ggplot2">Figure&nbsp;10</a> data has a longer left tail and is not symmetric. We call this left- or negatively-skewed data (since it’s going lower on the x-axis). Compare that to the blue jay <a href="#fig-blue_jays">Figure&nbsp;12</a> data; it has a longer right-tail and is positively- or right-skewed. Again, note this is all relative to symmetric data like you see with the parrots <a href="#fig-parrots">Figure&nbsp;11</a>, which is normally-distributed data.</p>
 <p>All symmetric data is not normal, however. Look at the data on robin and woodpecker weights.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>rochester <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">runif</span>(<span class="dv">1000</span>,.<span class="dv">1</span>,<span class="dv">8</span>)) </span>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>rochester <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">runif</span>(<span class="dv">1000</span>,.<span class="dv">1</span>,<span class="dv">8</span>)),<span class="dv">3</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(rochester), </span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>rochester)) <span class="sc">+</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"pink"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
@@ -657,7 +657,7 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>woodpeckers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">20</span>,<span class="dv">4</span>),<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">40</span>,<span class="dv">4</span>)) </span>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>woodpeckers <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">20</span>,<span class="dv">4</span>),<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">40</span>,<span class="dv">4</span>)),<span class="dv">3</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(woodpeckers), </span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>woodpeckers)) <span class="sc">+</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"orange"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
@@ -1287,30 +1287,172 @@ geom_bar vs geom_col
 </div>
 </div>
 </section>
-<section id="theres-more" class="level4">
-<h4 class="anchored" data-anchor-id="theres-more">There’s more!</h4>
+<section id="theres-more-to-do-and-think-about" class="level4">
+<h4 class="anchored" data-anchor-id="theres-more-to-do-and-think-about">There’s more to do and think about!</h4>
 <p>This just scratches the surface of potential ways to visualize data. For example, heatmaps can be used to show location specific data and we can build interactive or animated visualizations. However, the basic principles we’ve examined here should get you started.</p>
-<p>The different approaches covered here also indicate there a lots way to display data! Whichever approach you use, you should ensure that you represent the data honestly and clearly. Sometimes that means you just display data (points)! You should also always consider possible ways the data/visualization could be misinterpreted and avoid them. Common mistakes include the decision about which baseline should be included. For example, should charts always include 0 on the y-axis? Not including 0 can may small differences appear large. For example, compare</p>
+<p>The different approaches covered here also indicate there a lots way to display data! Whichever approach you use, you should ensure that you represent the data honestly and clearly. Sometimes that means you just display data (points)! You should also always consider possible ways the data/visualization could be misinterpreted and avoid them. Common mistakes include the decision about which baseline should be included. For example, should charts always include 0 on the y-axis? Not including 0 can may small differences appear large. However, including it can make important changes seem insignificant! Consider</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co">#tax cuts/metabolism</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>small_difference <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Treatment =</span> <span class="fu">c</span>(<span class="st">"a"</span>,<span class="st">"b"</span>), <span class="at">mean=</span><span class="fu">c</span>(<span class="dv">37</span>,<span class="dv">40</span>))</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'ggpubr'</code></pre>
 </div>
-<p>However, including it can make important changes seem insignificant!</p>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:plyr':
+
+    mutate</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>bp <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(small_difference, <span class="fu">aes</span>(<span class="at">x=</span>Treatment, <span class="at">y=</span>mean, <span class="at">fill=</span>Treatment))<span class="sc">+</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"identity"</span>)</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>sp <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(small_difference, <span class="fu">aes</span>(<span class="at">x=</span>Treatment, <span class="at">y=</span>mean, <span class="at">color=</span>Treatment))<span class="sc">+</span></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>compare <span class="ot">&lt;-</span> <span class="fu">ggarrange</span>(bp, sp, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>),</span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">1</span>,<span class="at">common.legend =</span> <span class="cn">TRUE</span>, <span class="at">legend=</span><span class="st">"bottom"</span>)</span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a><span class="fu">annotate_figure</span>(compare,</span>
+<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">top =</span> <span class="fu">text_grob</span>(<span class="st">"Including a zero point can make a big difference!"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">14</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-compare_zero_points" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-compare_zero_points-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;40: The decision of where to start the y-axis can have major impacts on interpretation</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>If this is changes in temperature, option B may be more useful (this could be a normal temperature (37 C) compared to a fever of 104 (40 C). However, if its a difference in a metabolic rate, it may have minor impacts (and thus we choose option A)!</p>
+<p>Similarly, imagine we collected this data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co">#body temperature/co2/temperature</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>good_fit_x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">100</span>, <span class="dv">1</span>, <span class="dv">50</span>) </span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>good_fit_y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">25</span>,<span class="dv">2</span>) </span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>good_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">source =</span> <span class="st">"good"</span>, <span class="at">x=</span>good_fit_x, <span class="at">y=</span>good_fit_y) </span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>bad_fit_x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>) </span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>bad_fit_y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10</span>,<span class="dv">95</span>,<span class="dv">1</span>) </span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>bad_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">source =</span> <span class="st">"outlier"</span>, <span class="at">x=</span>bad_fit_x, <span class="at">y=</span>bad_fit_y) </span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> <span class="fu">rbind</span> (good_data, bad_data)</span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a>points <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(all_data, <span class="fu">aes</span>(<span class="at">x =</span>x,<span class="at">y =</span>y)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color=</span>source)) <span class="sc">+</span> </span>
+<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Raw data"</span>)</span>
+<span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-12"><a href="#cb72-12" aria-hidden="true" tabindex="-1"></a>points_plus_curve <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(all_data, <span class="fu">aes</span>(<span class="at">x =</span>x,<span class="at">y =</span>y)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color=</span>source)) <span class="sc">+</span> </span>
+<span id="cb72-13"><a href="#cb72-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> F) <span class="sc">+</span> </span>
+<span id="cb72-14"><a href="#cb72-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Curve fit to data but points shown"</span>)</span>
+<span id="cb72-15"><a href="#cb72-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-16"><a href="#cb72-16" aria-hidden="true" tabindex="-1"></a>curve <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(all_data, <span class="fu">aes</span>(<span class="at">x =</span>x,<span class="at">y =</span>y)) <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">se =</span> F) <span class="sc">+</span></span>
+<span id="cb72-17"><a href="#cb72-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Only curve"</span>)</span>
+<span id="cb72-18"><a href="#cb72-18" aria-hidden="true" tabindex="-1"></a>compare <span class="ot">&lt;-</span> <span class="fu">ggarrange</span>(points, points_plus_curve, curve, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>),</span>
+<span id="cb72-19"><a href="#cb72-19" aria-hidden="true" tabindex="-1"></a>          <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">common.legend =</span> <span class="cn">TRUE</span>, <span class="at">legend=</span><span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'
+`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
 </div>
-<p>Thought must be applied to individual situations.</p>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">annotate_figure</span>(compare,</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">top =</span> <span class="fu">text_grob</span>(<span class="st">"Same data, three visualizations"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">14</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-outliers" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-outliers-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;41: This would likely indicate</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Whereas the raw data (panel A) may suggest some outliers that are concerning, by panel C we have “smoothed” the data and made an interesting pattern. <strong>In general, thought must be applied to individual situations regarding visualization style and nuance</strong>. Adding information on spread in the data will also help (coming up!).</p>
 </section>
 </section>
 </section>
 <section id="numerical-summaries" class="level2">
 <h2 class="anchored" data-anchor-id="numerical-summaries">Numerical Summaries</h2>
-<p>#outliers and bad fits####</p>
-<p>good_fit_x &lt;- runif(100, 1, 50) good_fit_y &lt;- rnorm(100,25,2) good_data &lt;- data.frame(source = “good”, x=good_fit_x, y=good_fit_y) bad_fit_x &lt;- runif(10, 20, 30) bad_fit_y &lt;- rnorm(10,95,1) bad_data &lt;- data.frame(source = “outlier”, x=bad_fit_x, y=bad_fit_y) all_data &lt;- rbind (good_data, bad_data)</p>
-<p>#just points#### ggplot(all_data, aes(x =x,y =y)) + geom_point(aes(color=source), size = 3) + xlab(“x”) + ylab(“y”) + ggtitle(“Outliers can impact data”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#curve and scatter#### ggplot(all_data, aes(x =x,y =y)) + geom_point(aes(color=source), size = 3) + geom_smooth(se = F) + xlab(“x”) + ylab(“y”) + ggtitle(“Outliers can impact data”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#just curve#### ggplot(all_data, aes(x =x,y =y)) + geom_smooth(se = F) + xlab(“x”) + ylab(“y”) + ggtitle(“Outliers can impact data”)+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#skewed left with measures of central tendency#### ##weird issues with margins and legends par(mar = c(rep(4,4))) birds &lt;- rbeta(10000,70,5) hist(birds, main=“Weight of Westchester cardinals”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “red”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size) abline(v=mean(birds), col=“yellow”, lwd = 4) abline(v=median(birds), col=“green”, lwd = 4) #no built in mode function…. # Create the function. getmode &lt;- function(v) { uniqv &lt;- unique(v) uniqv[which.max(tabulate(match(v, uniqv)))] }</p>
-<p>abline(v=(getmode(birds)), col=“blue”, lwd = 4) legend(“topleft”, legend = c(“mean”, “median”, “mode”), fill=c(“yellow”, “green”,“blue”), cex = 1.5, bty = “n”, x.intersp = .1, y.intersp = .5)</p>
+<p>While visual summaries give us a clearer picture of the data, numerical summaries can help distill a large dataset into several components that can then be analyzed or compared. <strong>A key point is we are rarely trying to say if 2 groups are exactly the same or if a trait value is exactly equal to something.</strong> Given sampling error, we know its unlikely we would get exactly the same values, and, more importantly, its really rare for 2 groups to be exactly the same. Instead, we are often comparing characteristics of the population data among group or to set values.</p>
+<p>One common characteristic of a population is central tendency. Central tendency considers what are common values in a dataset by focusing on the center of the distribution. Mean, or the average or <span class="math inline">\(\mu\)</span> , is one measure of central tendency. Due to sampling error, we don’t know <span class="math inline">\(\mu\)</span>, but we can estimate it. In general, we use Greek letters to denote the population values and standard(Latin) letters typically denote our estimate (sometimes with added symbols). For example, if we have <em>n</em> data points, our estimate of the mean <span class="math inline">\(\mu\)</span> is known as <span class="math inline">\(\overline{Y}\)</span> (read as “y-bar”) is</p>
+<p><span class="math display">\[
+\overline{Y} = \frac{\sum_{i=1}^{n} n_{i}}{n} \sim \mu
+\]</span></p>
+<p>where <span class="math inline">\(\sim\)</span> means “approximately”. Other measures of central tendency include the mode (most common data point) or median (middle data point if all data were placed in ascending order (remember box plots!)).</p>
+<p>Why do we need more than one measure of central tendency? Consider our cardinal data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to calculate mode</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>fun.mode<span class="ot">&lt;-</span><span class="cf">function</span>(x){<span class="fu">as.numeric</span>(<span class="fu">names</span>(<span class="fu">sort</span>(<span class="sc">-</span><span class="fu">table</span>(x)))[<span class="dv">1</span>])}</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(cardinals), </span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>cardinals)) <span class="sc">+</span></span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Westchester cardinals"</span>,</span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(cardinals), <span class="at">color=</span><span class="st">"mean"</span>))<span class="sc">+</span></span>
+<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">median</span>(cardinals), <span class="at">color=</span> <span class="st">"median"</span>))<span class="sc">+</span></span>
+<span id="cb75-12"><a href="#cb75-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">fun.mode</span>(cardinals), <span class="at">color =</span> <span class="st">"mode"</span>)) <span class="sc">+</span></span>
+<span id="cb75-13"><a href="#cb75-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>)<span class="sc">+</span></span>
+<span id="cb75-14"><a href="#cb75-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Measure"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-cardinals_ggplot2_ct" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-cardinals_ggplot2_ct-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;42: Skew impacts value of and relationships among various measures of central tendency</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Note the data is left-skewed. so the mean is pulled towards these outliers. The median may offer a better summary of the actual center. We see similar outcomes with right-skewed data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(blue_jays), </span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>blue_jays)) <span class="sc">+</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Westchester blue jays"</span>,</span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(blue_jays), <span class="at">color=</span><span class="st">"mean"</span>))<span class="sc">+</span></span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">median</span>(blue_jays), <span class="at">color=</span> <span class="st">"median"</span>))<span class="sc">+</span></span>
+<span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">fun.mode</span>(blue_jays), <span class="at">color =</span> <span class="st">"mode"</span>)) <span class="sc">+</span></span>
+<span id="cb77-10"><a href="#cb77-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>)<span class="sc">+</span></span>
+<span id="cb77-11"><a href="#cb77-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Measure"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-blue_jays_ggplot2_ct" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-blue_jays_ggplot2_ct-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;43: Skew impacts value of and relationships among various measures of central tendency</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>But with symmetric data, we see the measures of central tendency align more</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(parrots), </span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>parrots)) <span class="sc">+</span></span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Westchester parrots"</span>,</span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(parrots), <span class="at">color=</span><span class="st">"mean"</span>))<span class="sc">+</span></span>
+<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">median</span>(parrots), <span class="at">color=</span> <span class="st">"median"</span>))<span class="sc">+</span></span>
+<span id="cb79-9"><a href="#cb79-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">fun.mode</span>(parrots), <span class="at">color =</span> <span class="st">"mode"</span>)) <span class="sc">+</span></span>
+<span id="cb79-10"><a href="#cb79-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>)<span class="sc">+</span></span>
+<span id="cb79-11"><a href="#cb79-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Measure"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-parrots_ggplot2_ct" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-parrots_ggplot2_ct-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;44: For symmetric data, measures of central tendency are more aligned.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<details>
+<summary>
+Why is the mode not always on the highest bar?
+</summary>
+<p>Note the mode is heavily/totally impacted by data precision and thus can lead to unusual matches with histograms. In our above example, cardinals were measured to 10<sup>-3</sup> grams. However, the data was binned to levels of 10<sup>-2</sup> grams. Due to this mismatch, the most common measurement of the <em>raw</em> data was 0.95, which occurred 160 times. However, more data points still fell in another bin!</p>
+</details>
 <p>#bimodal data with measures of central tendency##### par(mar = c(rep(2,4))) putnam &lt;- c(rnorm(100,20,4),rnorm(100,40,4)) hist(putnam, main=“Weight of Westchester woodpeckers”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “orange”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size, probability = T) lines(density(putnam), col = “black”, lwd = 4) # add a density estimate with defaults abline(v=mean(putnam), col=“red”, lwd = 4) abline(v=median(putnam), col=“green”, lwd = 4) abline(v=(getmode(putnam)), col=“blue”, lwd = 4) legend(“bottomright”, legend = c(“mean”, “median”, “mode”), fill=c(“red”,“green”,</p>
 <pre><code>                                                                "blue"), cex = 1.5,
    bty="n", x.intersp = .1, y.intersp = .5)</code></pre>
