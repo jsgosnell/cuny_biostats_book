@@ -307,13 +307,14 @@ ggplot(data.frame(woodpeckers),
 ```
 
 Both these are roughly symmetric but clearly different from
-normally-distributed data. The robin data is what we call *uniformly*
-distributed. There are really no tails, as it appears you are just as
-likely to see any number within the bounds as any other. *Kurtosis* is
-the statistical term for what proportion of the data points are in the
-tails. High kurtosis distributions have heavy tails with multiple
-outliers. The uniform distibution is an example of a low kurtosis
-distribution (it has no tails!).
+normally-distributed data (we will return to the woodpecker data!). The
+robin data is what we call *uniformly* distributed. There are really no
+tails, as it appears you are just as likely to see any number within the
+bounds as any other. *Kurtosis* is the statistical term for what
+proportion of the data points are in the tails. High kurtosis
+distributions have heavy tails with multiple outliers. The uniform
+distibution is an example of a low kurtosis distribution (it has no
+tails!).
 
 This figure may also help.
 
@@ -1021,6 +1022,8 @@ rare for 2 groups to be exactly the same. Instead, we are often
 comparing characteristics of the population data among group or to set
 values.
 
+### Central tendency
+
 One common characteristic of a population is central tendency. Central
 tendency considers what are common values in a dataset by focusing on
 the center of the distribution. Mean, or the average or $\mu$ , is one
@@ -1114,17 +1117,64 @@ more data points still fell in another bin!
 
 </details>
 
-#bimodal data with measures of central tendency##### par(mar =
-c(rep(2,4))) putnam \<- c(rnorm(100,20,4),rnorm(100,40,4)) hist(putnam,
-main="Weight of Westchester woodpeckers", xlab = "\n Weight (g)", ylab =
-"Frequency (#)\n", col = "orange", cex.lab=label_size, cex.axis=1.25,
-cex.main=title_size, cex.sub=label_size, probability = T)
-lines(density(putnam), col = "black", lwd = 4) \# add a density estimate
-with defaults abline(v=mean(putnam), col="red", lwd = 4)
-abline(v=median(putnam), col="green", lwd = 4)
-abline(v=(getmode(putnam)), col="blue", lwd = 4) legend("bottomright",
-legend = c("mean", "median", "mode"), fill=c("red","green","blue"), cex = 1.5,
-   bty="n", x.intersp = .1, y.intersp = .5)
+A special case where central tendency may not be the best way to
+describe a distribution is known as *bimodal* data. In this case, the
+distribution shows two, not one, clear peak. Remember the woodpecker
+@fig-woodpeckers data?
+
+```{r}
+#| label: fig-woodpeckers-measures
+#| fig-cap: "Example of bimodal data with various measures"
+ggplot(data.frame(woodpeckers), 
+       aes(x=woodpeckers)) +
+  geom_histogram(aes(y=..density..), color="black") +
+  geom_density()+
+  labs(title="Weight of  Westchester woodpeckers",
+       x= "Weight (g)",
+       y= "Proportion")+
+    theme_bw()+
+  geom_vline(aes(xintercept=mean(woodpeckers), color="mean"))+
+  geom_vline(aes(xintercept=median(woodpeckers), color= "median"))+
+  geom_vline(aes(xintercept=fun.mode(woodpeckers), color = "mode")) +
+  theme_bw()+theme(legend.position="bottom")+
+    guides(color = guide_legend(title = "Measure"))
+
+```
+
+Note the mode is (again) off, but the mean and median also represent
+uncommon individuals!
+
+### Spread
+
+Along with the central tendency, another set of numerical summaries
+focus on the spread of the data. In some ways these focus on how much of
+the data is in the tail (or how *heavy* the tail is). To illustrate
+this, consider the @fig-normal_virginica_ggplot data.
+
+```{r}
+ggplot(iris[iris$Species == "virginica",],
+              aes(x=Sepal.Length)) +
+  geom_histogram( fill="blue", color="black") +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"))),
+       x= "Sepal length (cm)",
+       y= "Frequency")
+```
+
+We can instead plot the raw data
+
+```{r}
+#| label: fig-virginica_raw
+#| fig-cap: "Note x-axis is just sample order!"
+iris$sample <- 1:nrow(iris)
+ggplot(iris[iris$Species == "virginica",],
+              aes(y=Sepal.Length, x=sample))+
+  geom_point() 
+
+
+
+
++ ylab("Sepal Length (cm)")+ggtitle(expression(paste("Sepal Length in", italic("Iris setosa"))))+ theme(axis.title.x = element_text(face="bold", size=28), axis.title.y = element_text(face="bold", size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face="bold"), plot.title = element_text(hjust = 0.5, face="bold", size=32))
+```
 
 #illustrate variance#### #add sample \# iris\$sample \<- 1:nrow(iris)
 
@@ -1201,9 +1251,8 @@ main="Weight of Westchester cardinals", xlab = "\n Weight (g)", ylab =
 cex.main=title_size, cex.sub=label_size) abline(v=mean(birds),
 col="yellow", lwd = 4) abline(v=median(birds), col="green", lwd = 4)
 abline(v=(getmode(birds)), col="blue", lwd = 4) legend(x=.75, y= 1000,
-legend = c("mean", "median", "mode"), fill=c("yellow","green",
-bty="n", x.intersp = .1, y.intersp = .5)
-
+legend = c("mean", "median", "mode"), fill=c("yellow","green", bty="n",
+x.intersp = .1, y.intersp = .5)
 
 #categorical data#### head(iris)
 iris$random <- runif(1:nrow(iris)) iris$LL \<- 0 iris$LL[iris$random \>
