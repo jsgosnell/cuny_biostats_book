@@ -213,8 +213,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#single-variable" id="toc-single-variable" class="nav-link" data-scroll-target="#single-variable">Single variable</a></li>
   <li><a href="#multiple-variables" id="toc-multiple-variables" class="nav-link" data-scroll-target="#multiple-variables">Multiple variables</a></li>
   </ul></li>
-  <li><a href="#numerical-summaries" id="toc-numerical-summaries" class="nav-link" data-scroll-target="#numerical-summaries">Numerical Summaries</a></li>
-  <li><a href="#add-segment-for-each-point-segment_data-data.frame-x-150-xend-150-y" id="toc-add-segment-for-each-point-segment_data-data.frame-x-150-xend-150-y" class="nav-link" data-scroll-target="#add-segment-for-each-point-segment_data-data.frame-x-150-xend-150-y">#add segment for each point segment_data = data.frame( x = 1:50, xend = 1:50, y</a></li>
+  <li><a href="#numerical-summaries" id="toc-numerical-summaries" class="nav-link" data-scroll-target="#numerical-summaries">Numerical Summaries</a>
+  <ul class="collapse">
+  <li><a href="#central-tendency" id="toc-central-tendency" class="nav-link" data-scroll-target="#central-tendency">Central tendency</a></li>
+  <li><a href="#spread" id="toc-spread" class="nav-link" data-scroll-target="#spread">Spread</a></li>
+  <li><a href="#others-worth-knowingremembering" id="toc-others-worth-knowingremembering" class="nav-link" data-scroll-target="#others-worth-knowingremembering">Others worth knowing/remembering</a></li>
+  </ul></li>
+  <li><a href="#moving-on" id="toc-moving-on" class="nav-link" data-scroll-target="#moving-on">Moving on</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/summarizing_data.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/summarizing_data.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -676,7 +681,7 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 </div>
 </div>
 </div>
-<p>Both these are roughly symmetric but clearly different from normally-distributed data. The robin data is what we call <em>uniformly</em> distributed. There are really no tails, as it appears you are just as likely to see any number within the bounds as any other. <em>Kurtosis</em> is the statistical term for what proportion of the data points are in the tails. High kurtosis distributions have heavy tails with multiple outliers. The uniform distibution is an example of a low kurtosis distribution (it has no tails!).</p>
+<p>Both these are roughly symmetric but clearly different from normally-distributed data (we will return to the woodpecker data!). The robin data is what we call <em>uniformly</em> distributed. There are really no tails, as it appears you are just as likely to see any number within the bounds as any other. <em>Kurtosis</em> is the statistical term for what proportion of the data points are in the tails. High kurtosis distributions have heavy tails with multiple outliers. The uniform distibution is an example of a low kurtosis distribution (it has no tails!).</p>
 <p>This figure may also help.</p>
 <div id="fig-comparison" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -1364,6 +1369,8 @@ Attaching package: 'ggpubr'</code></pre>
 <section id="numerical-summaries" class="level2">
 <h2 class="anchored" data-anchor-id="numerical-summaries">Numerical Summaries</h2>
 <p>While visual summaries give us a clearer picture of the data, numerical summaries can help distill a large dataset into several components that can then be analyzed or compared. <strong>A key point is we are rarely trying to say if 2 groups are exactly the same or if a trait value is exactly equal to something.</strong> Given sampling error, we know its unlikely we would get exactly the same values, and, more importantly, its really rare for 2 groups to be exactly the same. Instead, we are often comparing characteristics of the population data among group or to set values.</p>
+<section id="central-tendency" class="level3">
+<h3 class="anchored" data-anchor-id="central-tendency">Central tendency</h3>
 <p>One common characteristic of a population is central tendency. Central tendency considers what are common values in a dataset by focusing on the center of the distribution. Mean, or the average or <span class="math inline">\(\mu\)</span> , is one measure of central tendency. Due to sampling error, we don’t know <span class="math inline">\(\mu\)</span>, but we can estimate it. In general, we use Greek letters to denote the population values and standard(Latin) letters typically denote our estimate (sometimes with added symbols). For example, if we have <em>n</em> data points, our estimate of the mean <span class="math inline">\(\mu\)</span> is known as <span class="math inline">\(\overline{Y}\)</span> (read as “y-bar”) is</p>
 <p><span class="math display">\[
 \overline{Y} = \frac{\sum_{i=1}^{n} n_{i}}{n} \sim \mu
@@ -1451,26 +1458,206 @@ Attaching package: 'ggpubr'</code></pre>
 <summary>
 Why is the mode not always on the highest bar?
 </summary>
-<p>Note the mode is heavily/totally impacted by data precision and thus can lead to unusual matches with histograms. In our above example, cardinals were measured to 10<sup>-3</sup> grams. However, the data was binned to levels of 10<sup>-2</sup> grams. Due to this mismatch, the most common measurement of the <em>raw</em> data was 0.954, which occurred 165 times. However, more data points still fell in another bin!</p>
+<p>Note the mode is heavily/totally impacted by data precision and thus can lead to unusual matches with histograms. In our above example, cardinals were measured to 10<sup>-3</sup> grams. However, the data was binned to levels of 10<sup>-2</sup> grams. Due to this mismatch, the most common measurement of the <em>raw</em> data was 0.942, which occurred 172 times. However, more data points still fell in another bin!</p>
 </details>
-<p>#bimodal data with measures of central tendency##### par(mar = c(rep(2,4))) putnam &lt;- c(rnorm(100,20,4),rnorm(100,40,4)) hist(putnam, main=“Weight of Westchester woodpeckers”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “orange”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size, probability = T) lines(density(putnam), col = “black”, lwd = 4) # add a density estimate with defaults abline(v=mean(putnam), col=“red”, lwd = 4) abline(v=median(putnam), col=“green”, lwd = 4) abline(v=(getmode(putnam)), col=“blue”, lwd = 4) legend(“bottomright”, legend = c(“mean”, “median”, “mode”), fill=c(“red”,“green”,“blue”), cex = 1.5, bty=“n”, x.intersp = .1, y.intersp = .5)</p>
-<p>#illustrate variance#### #add sample # iris$sample &lt;- 1:nrow(iris)</p>
-<p>#just scatter plot</p>
-<p>ggplot(iris[iris$Species == “setosa”,], aes(sample,Sepal.Length)) + geom_point(size = 3) + ylab(“Sepal Length (cm)”)+ggtitle(expression(paste(“Sepal Length in”, italic(“Iris setosa”))))+ theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#add mean ggplot(iris[iris<span class="math inline">\(Species == "setosa",], aes(sample,Sepal.Length)) + geom_point(size = 3) + ylab("Sepal Length (cm)")+ggtitle(expression(paste("Sepal Length in ", italic("Iris setosa"))))+ geom_hline(yintercept = mean(iris[iris\)</span>Species == “setosa”, “Sepal.Length”]), color = “blue”, size = 2) + annotate(“text”, label = “mean”, x = 20, y = 4.9 , size = 8, color = “blue”) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>A special case where central tendency may not be the best way to describe a distribution is known as <em>bimodal</em> data. In this case, the distribution shows two, not one, clear peak. Remember the woodpecker <a href="#fig-woodpeckers">Figure&nbsp;14</a> data?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(woodpeckers), </span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>woodpeckers)) <span class="sc">+</span></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..density..), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>()<span class="sc">+</span></span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of  Westchester woodpeckers"</span>,</span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Proportion"</span>)<span class="sc">+</span></span>
+<span id="cb81-8"><a href="#cb81-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()<span class="sc">+</span></span>
+<span id="cb81-9"><a href="#cb81-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(woodpeckers), <span class="at">color=</span><span class="st">"mean"</span>))<span class="sc">+</span></span>
+<span id="cb81-10"><a href="#cb81-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">median</span>(woodpeckers), <span class="at">color=</span> <span class="st">"median"</span>))<span class="sc">+</span></span>
+<span id="cb81-11"><a href="#cb81-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">fun.mode</span>(woodpeckers), <span class="at">color =</span> <span class="st">"mode"</span>)) <span class="sc">+</span></span>
+<span id="cb81-12"><a href="#cb81-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>)<span class="sc">+</span></span>
+<span id="cb81-13"><a href="#cb81-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Measure"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-woodpeckers-measures" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-woodpeckers-measures-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;45: Example of bimodal data with various measures</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Note the mode is (again) off, but the mean and median also represent uncommon individuals!</p>
 </section>
-<section id="add-segment-for-each-point-segment_data-data.frame-x-150-xend-150-y" class="level1">
-<h1>#add segment for each point segment_data = data.frame( x = 1:50, xend = 1:50, y</h1>
-<p>iris[iris<span class="math inline">\(Species == "setosa", "Sepal.Length"], yend = mean(iris[iris\)</span>Species == “setosa”, “Sepal.Length”]) )</p>
-<p>ggplot(iris[iris<span class="math inline">\(Species == "setosa",], aes(sample,Sepal.Length)) + geom_point(size = 3) + ylab("Sepal Length (cm)")+ggtitle(expression(paste("Sepal Length in ", italic("Iris setosa"))))+ geom_hline(yintercept = mean(iris[iris\)</span>Species == “setosa”, “Sepal.Length”]), color = “blue”, size = 2) + annotate(“text”, label = “mean”, x = 20, y = 4.9 , size = 8, color = “blue”) + annotate(“text”, label = “square each red line and find average”, x = 25, y = 5.5 , size = 8, color = “red”) + geom_segment(data = segment_data, aes(x = x, y = y, xend = xend, yend = yend), color= “red”, size = 1.1) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#transformations####</p>
-<p>sample_data &lt;- data.frame(x = rnorm (1000, 1, 1)) sample_data<span class="math inline">\(x_add &lt;- sample_data\)</span>x+5</p>
-<p>ggplot(sample_data) + geom_histogram(aes(x =x, fill=“x”), se = F) + geom_histogram(aes(x = x_add, fill=“x+5”), se = F)+ labs(fill=“Data”)+ xlab(“x”) + ylab(“y”) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=30), axis.text.x = element_text(size=30), legend.text =element_text(size=30), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>sample_data<span class="math inline">\(x_multiply &lt;- sample_data\)</span>x*5</p>
-<p>ggplot(sample_data) + geom_histogram(aes(x =x, fill=“x”), se = F) + geom_histogram(aes(x = x_multiply, fill=“x*5”), se = F)+ labs(fill=“Data”)+ xlab(“x”) + ylab(“y”) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=30), axis.text.x = element_text(size=30), legend.text =element_text(size=30), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
-<p>#shift them left summary(birds) length(birds[birds &lt; .9]) birds[birds &lt; .9] &lt;- birds[birds &lt; .9] - .2 hist(birds, main=“Weight of Westchester cardinals”, xlab = “Weight (g)”, ylab = “Frequency (#)”, col = “red”, cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size) abline(v=mean(birds), col=“yellow”, lwd = 4) abline(v=median(birds), col=“green”, lwd = 4) abline(v=(getmode(birds)), col=“blue”, lwd = 4) legend(x=.75, y= 1000, legend = c(“mean”, “median”, “mode”), fill=c(“yellow”,“green”, bty=“n”, x.intersp = .1, y.intersp = .5)</p>
-<p>#categorical data#### head(iris) iris<span class="math inline">\(random &lt;- runif(1:nrow(iris)) iris\)</span>LL &lt;- 0 iris<span class="math inline">\(LL[iris\)</span>random &gt; .7] &lt;- 1</p>
-<p>ggplot(iris[iris<span class="math inline">\(Species == "setosa", ], aes(LL)) + geom_histogram(size=3) + xlab("Genotype score")+ ylab("Frequency")+ ggtitle("Genotype score in an iris species")+ geom_vline(xintercept = mean(iris[iris\)</span>Species == “setosa”, “LL”]), color = “blue”) + annotate(“text”, label = “proportion”, x = .25, y = 20 , size = 8, color = “blue”) + theme(axis.title.x = element_text(face=“bold”, size=28), axis.title.y = element_text(face=“bold”, size=28), axis.text.y = element_text(size=20), axis.text.x = element_text(size=20), legend.text =element_text(size=20), legend.title = element_text(size=20, face=“bold”), plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<section id="spread" class="level3">
+<h3 class="anchored" data-anchor-id="spread">Spread</h3>
+<p>Along with the central tendency, another set of numerical summaries focus on the spread of the data. In some ways these focus on how much of the data is in the tail (or how <em>heavy</em> the tail is). To illustrate this, consider the <a href="#fig-normal_virginica_ggplot">Figure&nbsp;5</a> data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length)) <span class="sc">+</span></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))),</span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-normal_virginica_ggplot_2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-normal_virginica_ggplot_2-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;46: Remember this example of approximately normal data?</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We can instead plot the raw data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>iris<span class="sc">$</span>sample <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(iris)</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>sample))<span class="sc">+</span></span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>), <span class="st">"arranged by collection order"</span>)),</span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Collection #"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-virginica_raw" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-virginica_raw-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;47: Note x-axis is just sample order!</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Now let’s add the mean</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>sample))<span class="sc">+</span></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">'blue'</span>) <span class="sc">+</span></span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>), <span class="st">"arranged by collection order"</span>)),</span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Collection #"</span>)<span class="sc">+</span></span>
+<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])), <span class="at">color =</span> <span class="st">"blue"</span>)<span class="sc">+</span></span>
+<span id="cb86-8"><a href="#cb86-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"mean"</span>, <span class="at">x =</span> <span class="dv">135</span>, <span class="at">y =</span> <span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])<span class="sc">+</span>.<span class="dv">13</span>, <span class="at">color =</span> <span class="st">"blue"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-virginica_raw_mean" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-virginica_raw_mean-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;48: Mean shown in blue!</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Note the points differ in how far they are from the mean! For example, we could find another species with a very similar mean but different spread of the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>iris_new <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Sepal.Length =</span> <span class="fu">runif</span>(<span class="dv">50</span>,<span class="at">min=</span><span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])<span class="sc">-</span>.<span class="dv">25</span>, <span class="at">max=</span><span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])<span class="sc">+</span>.<span class="dv">25</span>), <span class="at">Species =</span> <span class="st">"uniforma"</span>, <span class="at">sample=</span><span class="dv">101</span><span class="sc">:</span><span class="dv">150</span>)</span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>iris_hypothetical <span class="ot">&lt;-</span> <span class="fu">merge</span>(iris, iris_new, <span class="at">all =</span> T)</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_hypothetical[iris_hypothetical<span class="sc">$</span>Species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"virginica"</span>, <span class="st">"uniforma"</span>),],</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>sample, <span class="at">color=</span>Species))<span class="sc">+</span></span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>), <span class="st">" and "</span>, <span class="fu">italic</span>(<span class="st">"uniforma"</span>), <span class="st">"arranged by collection order"</span>)),</span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Collection #"</span>)<span class="sc">+</span></span>
+<span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(iris_hypothetical[iris_hypothetical<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])), <span class="at">color =</span> <span class="st">"blue"</span>)<span class="sc">+</span></span>
+<span id="cb87-10"><a href="#cb87-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(iris_hypothetical[iris_hypothetical<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"uniforma"</span>, <span class="st">"Sepal.Length"</span>])), <span class="at">color =</span> <span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb87-11"><a href="#cb87-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"I. virginica mean"</span>, <span class="at">x =</span> <span class="dv">135</span>, <span class="at">y =</span> <span class="fu">mean</span>(iris_hypothetical[iris_hypothetical<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])<span class="sc">+</span>.<span class="dv">13</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb87-12"><a href="#cb87-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"I. uniforma mean"</span>, <span class="at">x =</span> <span class="dv">135</span>, <span class="at">y =</span> <span class="fu">mean</span>(iris_hypothetical[iris_hypothetical<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])<span class="sc">-</span>.<span class="dv">13</span>, <span class="at">color =</span> <span class="st">"blue"</span>)<span class="sc">+</span></span>
+<span id="cb87-13"><a href="#cb87-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-virginica_raw_mean_new_species" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-virginica_raw_mean_new_species-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;49: Similar mean, very different distribution!</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>This spread could be quantified in multiple ways. Here we focus on the variance, which is defined as</p>
+<p><span class="math display">\[
+s^2 = \frac{\sum_{i=1}^{n} (Y_{i}-\overline{Y})^2}{n-1} \sim \sigma^2
+\]</span></p>
+<p>Again, the population parameter is <span class="math inline">\(\sigma^2\)</span>, and the estimate is <span class="math inline">\(s^2\)</span>. This is effectively the average distance of each point from the mean squared!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>segment_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>( <span class="at">x =</span> <span class="dv">101</span><span class="sc">:</span><span class="dv">150</span>, <span class="at">xend =</span> <span class="dv">101</span><span class="sc">:</span><span class="dv">150</span>, <span class="at">y=</span>iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>], <span class="at">yend =</span> <span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>]) )</span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>sample))<span class="sc">+</span></span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">'blue'</span>) <span class="sc">+</span></span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>), <span class="st">"arranged by collection order"</span>)),</span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Collection #"</span>)<span class="sc">+</span></span>
+<span id="cb88-8"><a href="#cb88-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])), <span class="at">color =</span> <span class="st">"blue"</span>)<span class="sc">+</span></span>
+<span id="cb88-9"><a href="#cb88-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"mean"</span>, <span class="at">x =</span> <span class="dv">135</span>, <span class="at">y =</span> <span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])<span class="sc">+</span>.<span class="dv">13</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb88-10"><a href="#cb88-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"square each red line </span><span class="sc">\n</span><span class="st"> and find average!"</span>, <span class="at">x =</span> <span class="dv">145</span>, <span class="at">y =</span> <span class="fl">7.5</span> , <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span> <span class="fu">geom_segment</span>(<span class="at">data =</span> segment_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">xend =</span> xend, <span class="at">yend =</span> yend), <span class="at">color=</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="fl">1.1</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-virginica_raw_mean_lines" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-virginica_raw_mean_lines-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;50: Mean shown in blue!</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Why <span class="math inline">\(n-1\)</span> on the bottom, you might ask? Related reasons focus on degrees of freedom (we’ll get there) and bias. Our estimate of <span class="math inline">\(s^2\)</span> is based on our sample mean. Since the sample mean can, at best, be the population mean, our variance estimate may be biased (too small). Dividing by <span class="math inline">\(n-1\)</span> can be shown to correcthat. Alternatively, we are estimating one parameter from our data (again, <span class="math inline">\(\mu\)</span>), so we need to remove one degree of freedom from our calculation. However, some programs still <span class="math inline">\(n\)</span> on the bottom. Note this will only <em>really</em> matter when <span class="math inline">\(n\)</span> is small. In short, as another professor once told me, if the difference is based on whether you use <span class="math inline">\(n\)</span> or <span class="math inline">\(n-1\)</span> in your variance calculation, you likely have other problems.</p>
+<p>Note variance has odd (squared) units. If we take the square root of the variance, we get a value called the standard deviation.</p>
+<p><span class="math display">\[
+standard\;deviation = sd= \sqrt{variance}
+\]</span></p>
+<p>This metric is now in the same units as the mean (<span class="math inline">\(\mu\)</span>), so we can plot them easily on the same graph! This will become important later, especially when we discuss normal distributions.</p>
+</section>
+<section id="others-worth-knowingremembering" class="level3">
+<h3 class="anchored" data-anchor-id="others-worth-knowingremembering">Others worth knowing/remembering</h3>
+<p>The coefficient of variation, <span class="math inline">\(CV\)</span>, is found using the formula</p>
+<p><span class="math display">\[
+CV = \frac{s}{Y} * 100\%
+\]</span></p>
+<p>This scales the variance (spread) of the data by the mean. The <span class="math inline">\(CV\)</span> is unitless and can be used to compare various distributions.</p>
+<p>As noted above in the discussion of five-number summaries, we can also find the assorted quartiles, minimum, and maximum of a dataset. This can be especially helpful when the mean isn’t a useful measure of central tendency (since variance and <span class="math inline">\(CV\)</span> rely on the estimate of the mean!). For examples, see <a href="#fig-cardinals_plot">Figure&nbsp;9</a>. The original five number summary is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cardinals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.7530  0.9160  0.9370  0.9334  0.9540  0.9950 </code></pre>
+</div>
+</div>
+<p>Note that if we shifted the bottom 10% of the values even <em>further</em> left (increasing the skew), the median stays the same, as does the IQR.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>cardinals_new <span class="ot">&lt;-</span> cardinals</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>cardinals_new[cardinals_new <span class="sc">&lt;</span> <span class="fu">quantile</span>(cardinals_new, <span class="at">probs=</span> .<span class="dv">1</span>)] <span class="ot">&lt;-</span> cardinals_new[cardinals_new <span class="sc">&lt;</span> <span class="fu">quantile</span>(cardinals_new, <span class="at">probs=</span> .<span class="dv">1</span>)]<span class="sc">-</span>.<span class="dv">4</span></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(cardinals_new), </span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>cardinals_new)) <span class="sc">+</span></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Westchester cardinals (shifted)"</span>,</span>
+<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
+<span id="cb92-9"><a href="#cb92-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cardinals_new)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.3530  0.9160  0.9370  0.8945  0.9540  0.9950 </code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-cardinals_ggplot2_shifted" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-cardinals_ggplot2_shifted-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;51: Shifted cardinal data</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Finally, if we have categorical instead of numerical data, we can find the proportion of data in each category. Producing this summary actually requires you to count the number in a given group and divided by the total number sampled.</p>
+</section>
+</section>
+<section id="moving-on" class="level2">
+<h2 class="anchored" data-anchor-id="moving-on">Moving on</h2>
+<p>Now that we can summarize data, we can begin to connect summaries to statistics (and learn/remember some probability along the way!).</p>
 
 
 </section>
