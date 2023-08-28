@@ -970,7 +970,7 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <p>or box-and-whisker plots.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>Species, <span class="at">fill=</span>Species)) <span class="sc">+</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">colour=</span>Species))<span class="sc">+</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Species))<span class="sc">+</span></span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. species"</span>))),        <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>, <span class="at">x=</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="summarizing_data_files/figure-html/fig-box_whisker_all species-1.png" class="img-fluid">{#fig-box_whisker_all species width=672}</p>
@@ -1464,7 +1464,7 @@ Attaching package: 'ggpubr'</code></pre>
 <summary>
 Why is the mode not always on the highest bar?
 </summary>
-<p>Note the mode is heavily/totally impacted by data precision and thus can lead to unusual matches with histograms. In our above example, cardinals were measured to 10<sup>-3</sup> grams. However, the data was binned to levels of 10<sup>-2</sup> grams. Due to this mismatch, the most common measurement of the <em>raw</em> data was 0.948, which occurred 173 times. However, more data points still fell in another bin!</p>
+<p>Note the mode is heavily/totally impacted by data precision and thus can lead to unusual matches with histograms. In our above example, cardinals were measured to 10<sup>-3</sup> grams. However, the data was binned to levels of 10<sup>-2</sup> grams. Due to this mismatch, the most common measurement of the <em>raw</em> data was 0.957, which occurred 166 times. However, more data points still fell in another bin!</p>
 </details>
 <p>A special case where central tendency may not be the best way to describe a distribution is known as <em>bimodal</em> data. In this case, the distribution shows two, not one, clear peak. Remember the woodpecker <a href="#fig-woodpeckers">Figure&nbsp;14</a> data?</p>
 <div class="cell">
@@ -1524,7 +1524,7 @@ Why is the mode not always on the highest bar?
 <span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
 <span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>sample))<span class="sc">+</span></span>
 <span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>), <span class="st">"arranged by collection order"</span>)),</span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>), <span class="st">" arranged by collection order"</span>)),</span>
 <span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Collection #"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -1541,7 +1541,7 @@ Why is the mode not always on the highest bar?
 <div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
 <span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>sample))<span class="sc">+</span></span>
 <span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">'blue'</span>) <span class="sc">+</span></span>
-<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>), <span class="st">"arranged by collection order"</span>)),</span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>), <span class="st">" arranged by collection order"</span>)),</span>
 <span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Collection #"</span>)<span class="sc">+</span></span>
 <span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])), <span class="at">color =</span> <span class="st">"blue"</span>)<span class="sc">+</span></span>
@@ -1562,7 +1562,7 @@ Why is the mode not always on the highest bar?
 <span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_hypothetical[iris_hypothetical<span class="sc">$</span>Species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"virginica"</span>, <span class="st">"uniforma"</span>),],</span>
 <span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>sample, <span class="at">color=</span>Species))<span class="sc">+</span></span>
 <span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>), <span class="st">" and "</span>, <span class="fu">italic</span>(<span class="st">"uniforma"</span>), <span class="st">"arranged by collection order"</span>)),</span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>), <span class="st">" and "</span>, <span class="fu">italic</span>(<span class="st">"uniforma "</span>), <span class="st">"arranged by collection order"</span>)),</span>
 <span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Collection #"</span>)<span class="sc">+</span></span>
 <span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(iris_hypothetical[iris_hypothetical<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])), <span class="at">color =</span> <span class="st">"blue"</span>)<span class="sc">+</span></span>
@@ -1589,7 +1589,7 @@ s^2 = \frac{\sum_{i=1}^{n} (Y_{i}-\overline{Y})^2}{n-1} \sim \sigma^2
 <span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
 <span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>sample))<span class="sc">+</span></span>
 <span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">'blue'</span>) <span class="sc">+</span></span>
-<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>), <span class="st">"arranged by collection order"</span>)),</span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>), <span class="st">" arranged by collection order"</span>)),</span>
 <span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Collection #"</span>)<span class="sc">+</span></span>
 <span id="cb88-8"><a href="#cb88-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])), <span class="at">color =</span> <span class="st">"blue"</span>)<span class="sc">+</span></span>
@@ -1627,7 +1627,7 @@ CV = \frac{s}{Y} * 100\%
 <div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cardinals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.7710  0.9160  0.9360  0.9329  0.9540  0.9950 </code></pre>
+ 0.7770  0.9170  0.9370  0.9334  0.9550  0.9960 </code></pre>
 </div>
 </div>
 <p>Note that if we shifted the bottom 10% of the values even <em>further</em> left (increasing the skew), the median stays the same, as does the IQR.</p>
@@ -1647,7 +1647,7 @@ CV = \frac{s}{Y} * 100\%
 <div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cardinals_new)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.3710  0.9160  0.9360  0.8944  0.9540  0.9950 </code></pre>
+ 0.3770  0.9170  0.9370  0.8945  0.9550  0.9960 </code></pre>
 </div>
 <div class="cell-output-display">
 <div id="fig-cardinals_ggplot2_shifted" class="quarto-figure quarto-figure-center anchored">
