@@ -627,7 +627,7 @@ or box-and-whisker plots.
 #| label: fig-box_whisker_all species 
 #| #| fig-cap: "These display five-number summaries for each group"  
 ggplot(iris, aes(y=Sepal.Length, x=Species, fill=Species)) +
-  geom_boxplot(aes(colour=Species))+
+  geom_boxplot(aes(fill=Species))+
   labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),        y= "Sepal length (cm)", x= "Species")
 ```
 
@@ -1173,7 +1173,7 @@ iris$sample <- 1:nrow(iris)
 ggplot(iris[iris$Species == "virginica",],
               aes(y=Sepal.Length, x=sample))+
   geom_point() +
-    labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"), "arranged by collection order")),
+    labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"), " arranged by collection order")),
        y= "Sepal length (cm)",
        x= "Collection #")
 ```
@@ -1186,7 +1186,7 @@ Now let's add the mean
 ggplot(iris[iris$Species == "virginica",],
               aes(y=Sepal.Length, x=sample))+
   geom_point(color='blue') +
-    labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"), "arranged by collection order")),
+    labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"), " arranged by collection order")),
        y= "Sepal length (cm)",
        x= "Collection #")+
   geom_hline(aes(yintercept=mean(iris[iris$Species == "virginica", "Sepal.Length"])), color = "blue")+
@@ -1205,7 +1205,7 @@ iris_hypothetical <- merge(iris, iris_new, all = T)
 ggplot(iris_hypothetical[iris_hypothetical$Species %in% c("virginica", "uniforma"),],
               aes(y=Sepal.Length, x=sample, color=Species))+
   geom_point() +
-    labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"), " and ", italic("uniforma"), "arranged by collection order")),
+    labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"), " and ", italic("uniforma "), "arranged by collection order")),
        y= "Sepal length (cm)",
        x= "Collection #")+
   geom_hline(aes(yintercept=mean(iris_hypothetical[iris_hypothetical$Species == "virginica", "Sepal.Length"])), color = "blue")+
@@ -1233,7 +1233,7 @@ segment_data <- data.frame( x = 101:150, xend = 101:150, y=iris[iris$Species == 
 ggplot(iris[iris$Species == "virginica",],
               aes(y=Sepal.Length, x=sample))+
   geom_point(color='blue') +
-    labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"), "arranged by collection order")),
+    labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"), " arranged by collection order")),
        y= "Sepal length (cm)",
        x= "Collection #")+
   geom_hline(aes(yintercept=mean(iris[iris$Species == "virginica", "Sepal.Length"])), color = "blue")+
