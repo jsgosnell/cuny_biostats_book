@@ -4,28 +4,29 @@ subtitle: Working with a sample
 bibliography: references.bib
 ---
 
-Now that we can describe data distributions, we want to start thinking about how
-we quantify the uncertainty in our estimates (of $\mu$, for example). Remember,
-we typically want to describe a population but need to rely on a sample, and
-we've already talked about sampling error. So now we just want to think about
-how much error we typically have (or, alternatively, how precise are our
-estimates).
+Now that we can describe data distributions, we want to start thinking
+about how we quantify the uncertainty in our estimates (of $\mu$, for
+example). Remember, we typically want to describe a population but need
+to rely on a sample, and we've already talked about sampling error. So
+now we just want to think about how much error we typically have (or,
+alternatively, how precise are our estimates).
 
-Answering this question is hard. Quantifying sampling error requires you to know
-the "true" value for a population parameter, but we only have estimates!
-Statisticians solve this problem by investigating sampling error in populations
-they fully know because they created them.
+Answering this question is hard. Quantifying sampling error requires you
+to know the "true" value for a population parameter, but we only have
+estimates! Statisticians solve this problem by investigating sampling
+error in populations they fully know because they created them.
 
-For example, let's assume we measure all the males in a population. Furthermore,
-let's assume the distribution of heights is *normal*. Remember, this means the
-distribution is roughly symmetric, with tails on either side. Values near the
-middle of the range are more common, with the chance of getting smaller or
-larger values declining at an increasing rate. In fact, in turns out \~95% of
-the data lies within two standard deviations (remember those?) of the mean (so
-we calculate the mean and then the standard deviation. We then subtract the
-standard deviation from the mean to find a lower bound. We then add the standard
-deviation from the mean to find an upper bound. These bounds denote where 95% of
-the data points will be found).
+For example, let's assume we measure all the males in a population.
+Furthermore, let's assume the distribution of heights is *normal*.
+Remember, this means the distribution is roughly symmetric, with tails
+on either side. Values near the middle of the range are more common,
+with the chance of getting smaller or larger values declining at an
+increasing rate. In fact, in turns out \~95% of the data lies within two
+standard deviations (remember those?) of the mean (so we calculate the
+mean and then the standard deviation. We then subtract the standard
+deviation from the mean to find a lower bound. We then add the standard
+deviation from the mean to find an upper bound. These bounds denote
+where 95% of the data points will be found).
 
 Let's see this in action. First, lets make a population and graph it
 
@@ -44,7 +45,9 @@ ggplot(population_norm, aes(height)) +
        title = "Height of all males in our fake population")
 ```
 
-Now let's add the mean and mark two standard deviations above and below it
+Now let's add the mean (`r round(mean(population_norm$height),2)` in)
+and mark two standard deviations (sd =
+`r round(sd(population_norm$height),2)` in) above and below it.
 
 ```{r}
 #| label: fig-height_all_with_lines
@@ -67,3 +70,21 @@ ggplot(population_norm, aes(height)) +
      annotate("text", label = "2 standard deviations \n above", y = 1200, x = mean(population_norm$height)+
                      2*sd(population_norm$height), color = "green")
 ```
+
+This bound captures
+`r dim(population_norm[population_norm$height >mean(population_norm$height)-2*sd(population_norm$height) & population_norm$height < mean(population_norm$height)+               2*sd(population_norm$height),])[1]/length(population_norm$height) *100`%
+of the data.
+
+Now let's sample the population.
+
+```{r}
+sample_1 <- population_norm[sample(nrow(population_norm), 100),]
+ggplot(sample_1, aes(height)) + 
+  geom_histogram() +
+  labs(x="Height (in)", y= "Frequency",
+       title = "Height of 100 random males in our fake population")
+
+```
+
+For this sample, we have a mean of `r round(mean(sample_1$height),2)` in and a
+standard deviation of `r round(sd(sample_1$height),2)` in.
