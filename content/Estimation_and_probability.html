@@ -255,7 +255,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Now let’s add the mean and mark two standard deviations above and below it</p>
+<p>Now let’s add the mean (69.97 in) and mark two standard deviations (sd = 3.02 in) above and below it.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean"</span> <span class="ot">=</span> <span class="st">"black"</span>, <span class="st">"2 standard deviations below"</span> <span class="ot">=</span> <span class="st">"red"</span>, </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">"2 standard deviations above"</span> <span class="ot">=</span> <span class="st">"green"</span>)</span>
@@ -286,6 +286,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>This bound captures 95.53% of the data.</p>
+<p>Now let’s sample the population.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sample_1 <span class="ot">&lt;-</span> population_norm[<span class="fu">sample</span>(<span class="fu">nrow</span>(population_norm), <span class="dv">100</span>),]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sample_1, <span class="fu">aes</span>(height)) <span class="sc">+</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Height (in)"</span>, <span class="at">y=</span> <span class="st">"Frequency"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Height of 100 random males in our fake population"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Estimation_and_probability_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>For this sample, we have a mean of 69.78 in and a standard deviation of 3.11 in.</p>
 
 
 
