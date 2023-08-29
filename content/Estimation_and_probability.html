@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -196,7 +230,62 @@ ul.task-list li input[type="checkbox"] {
 
 <p>Now that we can describe data distributions, we want to start thinking about how we quantify the uncertainty in our estimates (of <span class="math inline">\(\mu\)</span>, for example). Remember, we typically want to describe a population but need to rely on a sample, and we’ve already talked about sampling error. So now we just want to think about how much error we typically have (or, alternatively, how precise are our estimates).</p>
 <p>Answering this question is hard. Quantifying sampling error requires you to know the “true” value for a population parameter, but we only have estimates! Statisticians solve this problem by investigating sampling error in populations they fully know because they created them.</p>
-<p>For example, let’s assume we measure all the males in a population. Furthermore, let’s assume the distribution of heights is <em>normal</em>. Remember, this means the distribution is roughly symmetric, with tails on either side. Values near the middle of the range are more common, with the chance of getting smaller or larger values declining at an increasing rate. In fact, in turns out ~95% of the data lies within two standard deviations (remember those?) of the mean (so we calculate the mean and then the standard deviation. We then subtract the standard deviation from the mean to find a lower bound. We then addthe standard deviation from the mean to find an upper bound. These bounds denote where 95% of the data points will be found).</p>
+<p>For example, let’s assume we measure all the males in a population. Furthermore, let’s assume the distribution of heights is <em>normal</em>. Remember, this means the distribution is roughly symmetric, with tails on either side. Values near the middle of the range are more common, with the chance of getting smaller or larger values declining at an increasing rate. In fact, in turns out ~95% of the data lies within two standard deviations (remember those?) of the mean (so we calculate the mean and then the standard deviation. We then subtract the standard deviation from the mean to find a lower bound. We then add the standard deviation from the mean to find an upper bound. These bounds denote where 95% of the data points will be found).</p>
+<p>Let’s see this in action. First, lets make a population and graph it</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>population_size <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>population_norm <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span>population_size, </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">height =</span> <span class="fu">rnorm</span>(population_size, <span class="dv">70</span>, <span class="dv">3</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(population_norm, <span class="fu">aes</span>(height)) <span class="sc">+</span> </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Height (in)"</span>, <span class="at">y=</span> <span class="st">"Frequency"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Height of all males in our fake population"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-height_all" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Estimation_and_probability_files/figure-html/fig-height_all-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Our imaginary population!</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Now let’s add the mean and mark two standard deviations above and below it</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean"</span> <span class="ot">=</span> <span class="st">"black"</span>, <span class="st">"2 standard deviations below"</span> <span class="ot">=</span> <span class="st">"red"</span>, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">"2 standard deviations above"</span> <span class="ot">=</span> <span class="st">"green"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(population_norm, <span class="fu">aes</span>(height)) <span class="sc">+</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Height (in)"</span>, <span class="at">y=</span> <span class="st">"Frequency"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Height of all males in our fake population"</span>) <span class="sc">+</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(height), <span class="at">color=</span><span class="st">"mean"</span>))<span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(height)<span class="sc">-</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(height), <span class="at">color=</span><span class="st">"2 standard deviations below"</span>))<span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(height)<span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(height), <span class="at">color=</span><span class="st">"2 standard deviations above"</span>)) <span class="sc">+</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors)<span class="sc">+</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>   <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"mean"</span>, <span class="at">y =</span> <span class="dv">1200</span>, <span class="at">x =</span> <span class="fu">mean</span>(population_norm<span class="sc">$</span>height), <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>     <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"2 standard deviations </span><span class="sc">\n</span><span class="st"> below"</span>, <span class="at">y =</span> <span class="dv">1200</span>, <span class="at">x =</span> <span class="fu">mean</span>(population_norm<span class="sc">$</span>height)<span class="sc">-</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(population_norm<span class="sc">$</span>height), <span class="at">color =</span> <span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>     <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"2 standard deviations </span><span class="sc">\n</span><span class="st"> above"</span>, <span class="at">y =</span> <span class="dv">1200</span>, <span class="at">x =</span> <span class="fu">mean</span>(population_norm<span class="sc">$</span>height)<span class="sc">+</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(population_norm<span class="sc">$</span>height), <span class="at">color =</span> <span class="st">"green"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-height_all_with_lines" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Estimation_and_probability_files/figure-html/fig-height_all_with_lines-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Our imaginary population!</figcaption>
+</figure>
+</div>
+</div>
+</div>
 
 
 
