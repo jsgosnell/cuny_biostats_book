@@ -40,7 +40,7 @@ population_norm <- data.frame(id = 1:population_size,
 library(ggplot2)
 
 ggplot(population_norm, aes(height)) + 
-  geom_histogram() +
+  geom_histogram(color="black") +
   labs(x="Height (in)", y= "Frequency",
        title = "Height of all males in our fake population")
 ```
@@ -55,7 +55,7 @@ and mark two standard deviations (sd =
 colors <- c("mean" = "black", "2 standard deviations below" = "red", 
             "2 standard deviations above" = "green")
 ggplot(population_norm, aes(height)) + 
-  geom_histogram() +
+  geom_histogram(color="black") +
   labs(x="Height (in)", y= "Frequency",
        title = "Height of all males in our fake population",
        color="Measure") +
@@ -76,7 +76,9 @@ This bound captures
 `r dim(population_norm[population_norm$height >mean(population_norm$height)-2*sd(population_norm$height) & population_norm$height < mean(population_norm$height)+               2*sd(population_norm$height),])[1]/length(population_norm$height) *100`%
 of the data.
 
-Now let's sample the population.
+Now let's sample the population. We'll start by drawing a sample of 100
+from the population. This is true random sampling, so any differences
+are due to *sampling error*.
 
 ```{r}
 sample_1 <- population_norm[sample(nrow(population_norm), 100),]
@@ -87,5 +89,226 @@ ggplot(sample_1, aes(height)) +
 
 ```
 
-For this sample, we have a mean of `r round(mean(sample_1$height),2)` in and a
-standard deviation of `r round(sd(sample_1$height),2)` in.
+For this sample, we have a mean of `r round(mean(sample_1$height),2)` in
+and a standard deviation of `r round(sd(sample_1$height),2)` in.
+
+Here's the tricky part. We typically only have one sample, but we want
+to discuss the uncertainty in our estimate. So, let's explore this by
+drawing multiple samples (each of 100 individuals) from our population
+and finding the mean for each sample.
+
+```{r}
+number_of_samples <- 1000
+sample_outcomes_1 <- data.frame(mean = rep(NA, number_of_samples), sd = NA)
+
+for (i in 1:number_of_samples){
+  sample_1 <- population_norm[sample(nrow(population_norm), 100),]
+  sample_outcomes_1$mean[i] <- mean(sample_1$height)
+  sample_outcomes_1$sd[i] <- sd(sample_1$height)
+  
+}
+```
+
+Then let's plot the means.
+
+```{r}
+ggplot(sample_outcomes_1, aes(mean)) + 
+    geom_histogram(color="black") +
+  labs(x="Height (in)", y= "Frequency",
+       title = "Mean heights from our samples (n = 100)",
+       color="Measure") +
+    geom_vline(aes(xintercept=mean(mean), color="mean"))+
+    geom_vline(aes(xintercept=mean(mean)-
+                     2*sd(mean), color="2 standard deviations below"))+
+  geom_vline(aes(xintercept=mean(mean)+
+                     2*sd(mean), color="2 standard deviations above")) +
+        scale_color_manual(values = colors)+
+   annotate("text", label = "mean", y = 150, x = mean(sample_outcomes_1$mean), color = "black") +
+     annotate("text", label = "2 standard deviations \n below", y = 150, x = mean(sample_outcomes_1$mean)-
+                     2*sd(sample_outcomes_1$mean), color = "red")+
+     annotate("text", label = "2 standard deviations \n above", y = 150, x = mean(sample_outcomes_1$mean)+
+                     2*sd(sample_outcomes_1$mean), color = "green")
+  
+ 
+
+
+```
+
+For our sample of means (this should sound weird!), we have a mean of
+`r round(mean(sample_outcomes_1$mean),2)` in and a standard deviation of
+`r round(sd(sample_outcomes_1$mean),2)` in.
+
+Note this suggests the mean of our means is close to the true population
+value of $\mu$. But the spread of our means (their standard deviation)
+is much less than the spread of the actual population! How much less?
+Let's consider a set of smaller samples (n = 20).
+
+```{r}
+sample_outcomes_2 <- data.frame(mean = rep(NA, number_of_samples), sd = NA)
+
+for (i in 1:number_of_samples){
+  sample_2 <- population_norm[sample(nrow(population_norm), 20),]
+  sample_outcomes_2$mean[i] <- mean(sample_2$height)
+  sample_outcomes_2$sd[i] <- sd(sample_2$height)
+  
+}
+
+ggplot(sample_outcomes_2, aes(mean)) + 
+   geom_histogram(color="black") +
+  labs(x="Height (in)", y= "Frequency",
+       title = "Mean heights from our samples (n = 20)",
+       color="Measure") +
+    geom_vline(aes(xintercept=mean(mean), color="mean"))+
+    geom_vline(aes(xintercept=mean(mean)-
+                     2*sd(mean), color="2 standard deviations below"))+
+  geom_vline(aes(xintercept=mean(mean)+
+                     2*sd(mean), color="2 standard deviations above")) +
+        scale_color_manual(values = colors)+
+   annotate("text", label = "mean", y = 150, x = mean(sample_outcomes$mean), color = "black") +
+     annotate("text", label = "2 standard deviations \n below", y = 150, x = mean(sample_outcomes_2$mean)-
+                     2*sd(sample_outcomes_2$mean), color = "red")+
+     annotate("text", label = "2 standard deviations \n above", y = 150, x = mean(sample_outcomes_2$mean)+
+                     2*sd(sample_outcomes_2$mean), color = "green")
+```
+
+This new sample of means has a mean of
+`r round(mean(sample_outcomes_2$mean),2)` in and a standard deviation of
+`r round(sd(sample_outcomes_2$mean),2)` in. So, the estimate for $\mu$
+is still close to the same, but the standard deviation of our estimates
+is growing.
+
+This is even more clear if we sample only 5 individuals.
+
+```{r}
+sample_outcomes_3 <- data.frame(mean = rep(NA, number_of_samples), sd = NA)
+
+for (i in 1:number_of_samples){
+  sample_3 <- population_norm[sample(nrow(population_norm), 5),]
+  sample_outcomes_3$mean[i] <- mean(sample_3$height)
+  sample_outcomes_3$sd[i] <- sd(sample_3$height)
+  
+}
+
+ggplot(sample_outcomes_3, aes(mean)) + 
+   geom_histogram(color="black") +
+  labs(x="Height (in)", y= "Frequency",
+       title = "Mean heights from our samples (n = 5)",
+       color="Measure") +
+    geom_vline(aes(xintercept=mean(mean), color="mean"))+
+    geom_vline(aes(xintercept=mean(mean)-
+                     2*sd(mean), color="2 standard deviations below"))+
+  geom_vline(aes(xintercept=mean(mean)+
+                     2*sd(mean), color="2 standard deviations above")) +
+        scale_color_manual(values = colors)+
+   annotate("text", label = "mean", y = 150, x = mean(sample_outcomes$mean), color = "black") +
+     annotate("text", label = "2 standard deviations \n below", y = 150, x = mean(sample_outcomes_3$mean)-
+                     2*sd(sample_outcomes_3$mean), color = "red")+
+     annotate("text", label = "2 standard deviations \n above", y = 150, x = mean(sample_outcomes_3$mean)+
+                     2*sd(sample_outcomes_3$mean), color = "green")
+```
+
+where we find a mean of `r round(mean(sample_outcomes_3$mean),2)` in and
+a standard deviation of `r round(sd(sample_outcomes_3$mean),2)` in.
+
+If we facet the graphs (and let them share an x-axis) we can see this
+even better
+
+```{r}
+sample_outcomes_1$n=100
+sample_outcomes_2$n=20
+sample_outcomes_3$n=5
+samples_all <- rbind(sample_outcomes_1,sample_outcomes_2, sample_outcomes_3)
+
+ggplot(samples_all, aes(mean)) + 
+   geom_histogram(color="black") +
+  labs(x="Height (in)", y= "Frequency",
+       title = "Mean heights from our samples",
+       color="Measure") +  facet_wrap(~n, ncol=1)
+```
+
+You can clearly see larger sample sizes lead to a more "clustered' group
+of means (so there is less uncertainty in the measurements!). This is
+why larger estimates make us more confident in our estimates - the means
+we get are less likely to be far away! In other words, larger samples
+yield more precise estimates with lower spread (lower sampling error).
+
+We call the standard deviation of our means the *standard error*. We can
+calculate this as
+
+$$
+[\sigma_{\overline{Y}} = \frac{\sigma}{\sqrt{n}}] \sim [s_{\overline{Y}} = \frac{s}{\sqrt{n}}]
+$$
+
+Also, note distribution of means was normal (which we will define even
+better in a few lectures!). For now, that means we can get 95% of the
+sample means within \~2 standard deviations of the mean of means, which
+is very close to the true mean. Conversely, if we use data from each
+sample to generate a an interval \~2 standard deviations above and below
+each sample mean, these intervals will contain the true mean 95% of the
+time. We call this range a 95% confidence interval. For example,
+
+```{r}
+number_of_samples <- 20
+sample_outcomes <- data.frame(mean = rep(NA, number_of_samples), sd = NA, se = NA)
+
+for (i in 1:number_of_samples){
+  sample_1 <- population_norm[sample(nrow(population_norm), 100),]
+  sample_outcomes$mean[i] <- mean(sample_1$height)
+  sample_outcomes$sd[i] <- sd(sample_1$height)
+  sample_outcomes$se <- sd(sample_1$height)/sqrt(100)
+}
+sample_outcomes$sample <- as.factor(1:number_of_samples)
+ggplot(sample_outcomes
+       , aes(x=sample, y=mean)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin=mean-(2*se), ymax=mean+(2*se)), size=1.5)+
+  geom_hline(aes(yintercept=mean(population_norm$height))) +
+  ylab("Mean")+
+  xlab("Sample")+
+  ggtitle("Variation in error bars")
+
+```
+
+Notice one of samples (#2) has a range that does not include the true
+mean of the population!
+
+Also (we'll come back to this), the "\~2" is based on sample size. The
+value actually trends towards 1.96 at large sample sizes, but at sample
+sizes over ten 2 is a good estimate. We could also have other numbers.
+For example, we could have a 90% confidence interval.
+
+<details>
+
+<summary>Would it be wider or narrower compared to a 95%
+interval?</summary>
+
+If you are less confident in the interval (90% vs 95%), the interval
+itself will get smaller (only 90% of samples need to have the true
+mean!)
+
+</details>
+
+Finally (and more compicated), note this assumes we have lots of
+samples, but we typically only have one. The average probability of the
+first 95% CI capturing the true sample mean is only around 83%
+@kalinowski2010.
+
+<details>
+
+<summary>Need to see this another way</summary>
+
+These two simulations (produced by UBC) will allow you to see this
+another way!
+
+-   [Relationship between sample size and distribution of sample means
+    for samples from a normally distributed
+    population](https://www.zoology.ubc.ca/~whitlock/Kingfisher/SamplingNormal.htm){target="_blank"}
+
+-   [Confidence
+    intervals](https://www.zoology.ubc.ca/~whitlock/Kingfisher/CIMean.htm){target="_blank"}
+
+</details>
+
+Finally, it turns out the underlying distribution of data doesn't
+matter. The means of the data will be normally distributed as long as
+you have a large sample size.
