@@ -245,7 +245,9 @@ sample means within \~2 standard deviations of the mean of means, which
 is very close to the true mean. Conversely, if we use data from each
 sample to generate a an interval \~2 standard deviations above and below
 each sample mean, these intervals will contain the true mean 95% of the
-time. We call this range a 95% confidence interval. For example,
+time. We call this range a 95% confidence interval. For example, let's
+take take 20 samples of 100 individuals from our fake population, then
+calculate and plot their confidence intervals.
 
 ```{r}
 number_of_samples <- 20
@@ -260,8 +262,8 @@ for (i in 1:number_of_samples){
 sample_outcomes$sample <- as.factor(1:number_of_samples)
 ggplot(sample_outcomes
        , aes(x=sample, y=mean)) +
-  geom_point(size = 3) +
-  geom_errorbar(aes(ymin=mean-(2*se), ymax=mean+(2*se)), size=1.5)+
+  geom_point() +
+  geom_errorbar(aes(ymin=mean-(2*se), ymax=mean+(2*se)))+
   geom_hline(aes(yintercept=mean(population_norm$height))) +
   ylab("Mean")+
   xlab("Sample")+
@@ -274,8 +276,10 @@ mean of the population!
 
 Also (we'll come back to this), the "\~2" is based on sample size. The
 value actually trends towards 1.96 at large sample sizes, but at sample
-sizes over ten 2 is a good estimate. We could also have other numbers.
-For example, we could have a 90% confidence interval.
+sizes over ten 2 is a good estimate. You may also here this total (the 2
+multiplied by the standard error) referred to as the *margin of error*.
+We could also have other numbers. For example, we could have a 90%
+confidence interval.
 
 <details>
 
@@ -288,6 +292,10 @@ mean!)
 
 </details>
 
+A few other notes about confidence intervals
+
+-   
+
 Finally (and more compicated), note this assumes we have lots of
 samples, but we typically only have one. The average probability of the
 first 95% CI capturing the true sample mean is only around 83%
@@ -295,7 +303,7 @@ first 95% CI capturing the true sample mean is only around 83%
 
 <details>
 
-<summary>Need to see this another way</summary>
+<summary>Need to see this another way?</summary>
 
 These two simulations (produced by UBC) will allow you to see this
 another way!
@@ -311,4 +319,72 @@ another way!
 
 Finally, it turns out the underlying distribution of data doesn't
 matter. The means of the data will be normally distributed as long as
-you have a large sample size.
+you have a large sample size. This is know as the *central limit
+theorem.*
+
+To prove this, let's instead consider a uniform distribuation:
+
+```{r}
+population_unif <- data.frame(id = 1:population_size, 
+                         height = runif(population_size, 60, 80))
+ggplot(population_unif, aes(height)) + 
+  geom_histogram(color="black") +
+  labs(x="Height (in)", y= "Frequency",
+       title = "Height of all males in our fake population")
+```
+
+Now let's do what we did above. First, draw a sample of 100
+
+```{r}
+sample_unif <- population_unif[sample(nrow(population_unif), 100),]
+ggplot(sample_unif, aes(height)) + 
+  geom_histogram() +
+  labs(x="Height (in)", y= "Frequency",
+       title = "Height of 100 random males in our fake population")
+```
+
+Note the sample is still relatively unformly distributed. In general, a
+good sample should resemble the underlying population, so this makes
+sense.
+
+Now let's sample a 100 of these and plot the means of each sample.
+
+```{r}
+number_of_samples <- 1000
+sample_outcomes_unif <- data.frame(mean = rep(NA, number_of_samples), sd = NA)
+
+for (i in 1:number_of_samples){
+  sample_unif <- population_norm[sample(nrow(population_unif), 100),]
+  sample_outcomes_unif$mean[i] <- mean(sample_unif$height)
+  sample_outcomes_unif$sd[i] <- sd(sample_unif$height)
+}
+ggplot(sample_outcomes_unif, aes(mean)) + 
+    geom_histogram(color="black") +
+  labs(x="Height (in)", y= "Frequency",
+       title = "Mean heights from our samples (n = 100)",
+       color="Measure") +
+    geom_vline(aes(xintercept=mean(mean), color="mean"))+
+    geom_vline(aes(xintercept=mean(mean)-
+                     2*sd(mean), color="2 standard deviations below"))+
+  geom_vline(aes(xintercept=mean(mean)+
+                     2*sd(mean), color="2 standard deviations above")) +
+        scale_color_manual(values = colors)+
+   annotate("text", label = "mean", y = 150, x = mean(sample_outcomes_unif$mean), color = "black") +
+     annotate("text", label = "2 standard deviations \n below", y = 150, x = mean(sample_outcomes_unif$mean)-
+                     2*sd(sample_outcomes_unif$mean), color = "red")+
+     annotate("text", label = "2 standard deviations \n above", y = 150, x = mean(sample_outcomes_unif$mean)+
+                     2*sd(sample_outcomes_unif$mean), color = "green")
+```
+
+Notice we are back to a normal distribution!
+
+<details>
+
+<summary>Need to see this another way?</summary>
+
+Another UBC visualization will allow you to see this another way!
+
+-   [Central limit theorem: Sampling from non-normal
+    distributions.](https://www.zoology.ubc.ca/~whitlock/Kingfisher/CLT.htm){target="_blank"}
+
+</details>
