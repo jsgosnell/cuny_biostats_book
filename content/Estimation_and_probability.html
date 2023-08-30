@@ -54,7 +54,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -240,7 +259,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(population_norm, <span class="fu">aes</span>(height)) <span class="sc">+</span> </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Height (in)"</span>, <span class="at">y=</span> <span class="st">"Frequency"</span>,</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Height of all males in our fake population"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -260,7 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean"</span> <span class="ot">=</span> <span class="st">"black"</span>, <span class="st">"2 standard deviations below"</span> <span class="ot">=</span> <span class="st">"red"</span>, </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">"2 standard deviations above"</span> <span class="ot">=</span> <span class="st">"green"</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(population_norm, <span class="fu">aes</span>(height)) <span class="sc">+</span> </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Height (in)"</span>, <span class="at">y=</span> <span class="st">"Frequency"</span>,</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Height of all males in our fake population"</span>,</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span><span class="st">"Measure"</span>) <span class="sc">+</span></span>
@@ -288,7 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>This bound captures 95.53% of the data.</p>
-<p>Now let’s sample the population.</p>
+<p>Now let’s sample the population. We’ll start by drawing a sample of 100 from the population. This is true random sampling, so any differences are due to <em>sampling error</em>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sample_1 <span class="ot">&lt;-</span> population_norm[<span class="fu">sample</span>(<span class="fu">nrow</span>(population_norm), <span class="dv">100</span>),]</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sample_1, <span class="fu">aes</span>(height)) <span class="sc">+</span> </span>
@@ -303,10 +322,195 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>For this sample, we have a mean of 69.78 in and a standard deviation of 3.11 in.</p>
+<p>Here’s the tricky part. We typically only have one sample, but we want to discuss the uncertainty in our estimate. So, let’s explore this by drawing multiple samples (each of 100 individuals) from our population and finding the mean for each sample.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>number_of_samples <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>sample_outcomes_1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mean =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, number_of_samples), <span class="at">sd =</span> <span class="cn">NA</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>number_of_samples){</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  sample_1 <span class="ot">&lt;-</span> population_norm[<span class="fu">sample</span>(<span class="fu">nrow</span>(population_norm), <span class="dv">100</span>),]</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  sample_outcomes_1<span class="sc">$</span>mean[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(sample_1<span class="sc">$</span>height)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  sample_outcomes_1<span class="sc">$</span>sd[i] <span class="ot">&lt;-</span> <span class="fu">sd</span>(sample_1<span class="sc">$</span>height)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then let’s plot the means.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sample_outcomes_1, <span class="fu">aes</span>(mean)) <span class="sc">+</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Height (in)"</span>, <span class="at">y=</span> <span class="st">"Frequency"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Mean heights from our samples (n = 100)"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span><span class="st">"Measure"</span>) <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(mean), <span class="at">color=</span><span class="st">"mean"</span>))<span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(mean)<span class="sc">-</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(mean), <span class="at">color=</span><span class="st">"2 standard deviations below"</span>))<span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(mean)<span class="sc">+</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(mean), <span class="at">color=</span><span class="st">"2 standard deviations above"</span>)) <span class="sc">+</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors)<span class="sc">+</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>   <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"mean"</span>, <span class="at">y =</span> <span class="dv">150</span>, <span class="at">x =</span> <span class="fu">mean</span>(sample_outcomes_1<span class="sc">$</span>mean), <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>     <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"2 standard deviations </span><span class="sc">\n</span><span class="st"> below"</span>, <span class="at">y =</span> <span class="dv">150</span>, <span class="at">x =</span> <span class="fu">mean</span>(sample_outcomes_1<span class="sc">$</span>mean)<span class="sc">-</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(sample_outcomes_1<span class="sc">$</span>mean), <span class="at">color =</span> <span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>     <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"2 standard deviations </span><span class="sc">\n</span><span class="st"> above"</span>, <span class="at">y =</span> <span class="dv">150</span>, <span class="at">x =</span> <span class="fu">mean</span>(sample_outcomes_1<span class="sc">$</span>mean)<span class="sc">+</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(sample_outcomes_1<span class="sc">$</span>mean), <span class="at">color =</span> <span class="st">"green"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Estimation_and_probability_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>For our sample of means (this should sound weird!), we have a mean of 69.98 in and a standard deviation of 0.3 in.</p>
+<p>Note this suggests the mean of our means is close to the true population value of <span class="math inline">\(\mu\)</span>. But the spread of our means (their standard deviation) is much less than the spread of the actual population! How much less? Let’s consider a set of smaller samples (n = 20).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sample_outcomes_2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mean =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, number_of_samples), <span class="at">sd =</span> <span class="cn">NA</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>number_of_samples){</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  sample_2 <span class="ot">&lt;-</span> population_norm[<span class="fu">sample</span>(<span class="fu">nrow</span>(population_norm), <span class="dv">20</span>),]</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  sample_outcomes_2<span class="sc">$</span>mean[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(sample_2<span class="sc">$</span>height)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  sample_outcomes_2<span class="sc">$</span>sd[i] <span class="ot">&lt;-</span> <span class="fu">sd</span>(sample_2<span class="sc">$</span>height)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sample_outcomes_2, <span class="fu">aes</span>(mean)) <span class="sc">+</span> </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Height (in)"</span>, <span class="at">y=</span> <span class="st">"Frequency"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Mean heights from our samples (n = 20)"</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span><span class="st">"Measure"</span>) <span class="sc">+</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(mean), <span class="at">color=</span><span class="st">"mean"</span>))<span class="sc">+</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(mean)<span class="sc">-</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(mean), <span class="at">color=</span><span class="st">"2 standard deviations below"</span>))<span class="sc">+</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(mean)<span class="sc">+</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(mean), <span class="at">color=</span><span class="st">"2 standard deviations above"</span>)) <span class="sc">+</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors)<span class="sc">+</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>   <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"mean"</span>, <span class="at">y =</span> <span class="dv">150</span>, <span class="at">x =</span> <span class="fu">mean</span>(sample_outcomes_2<span class="sc">$</span>mean), <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>     <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"2 standard deviations </span><span class="sc">\n</span><span class="st"> below"</span>, <span class="at">y =</span> <span class="dv">150</span>, <span class="at">x =</span> <span class="fu">mean</span>(sample_outcomes_2<span class="sc">$</span>mean)<span class="sc">-</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(sample_outcomes_2<span class="sc">$</span>mean), <span class="at">color =</span> <span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>     <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"2 standard deviations </span><span class="sc">\n</span><span class="st"> above"</span>, <span class="at">y =</span> <span class="dv">150</span>, <span class="at">x =</span> <span class="fu">mean</span>(sample_outcomes_2<span class="sc">$</span>mean)<span class="sc">+</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(sample_outcomes_2<span class="sc">$</span>mean), <span class="at">color =</span> <span class="st">"green"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Estimation_and_probability_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>This new sample of means has a mean of 69.96 in and a standard deviation of 0.66 in. So, the estimate for <span class="math inline">\(\mu\)</span> is still close to the same, but the standard deviation of our estimates is growing.</p>
+<p>This is even more clear if we sample only 5 individuals.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>sample_outcomes_3 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mean =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, number_of_samples), <span class="at">sd =</span> <span class="cn">NA</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>number_of_samples){</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  sample_3 <span class="ot">&lt;-</span> population_norm[<span class="fu">sample</span>(<span class="fu">nrow</span>(population_norm), <span class="dv">5</span>),]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  sample_outcomes_3<span class="sc">$</span>mean[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(sample_3<span class="sc">$</span>height)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  sample_outcomes_3<span class="sc">$</span>sd[i] <span class="ot">&lt;-</span> <span class="fu">sd</span>(sample_3<span class="sc">$</span>height)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sample_outcomes_3, <span class="fu">aes</span>(mean)) <span class="sc">+</span> </span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Height (in)"</span>, <span class="at">y=</span> <span class="st">"Frequency"</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Mean heights from our samples (n = 5)"</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span><span class="st">"Measure"</span>) <span class="sc">+</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(mean), <span class="at">color=</span><span class="st">"mean"</span>))<span class="sc">+</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(mean)<span class="sc">-</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(mean), <span class="at">color=</span><span class="st">"2 standard deviations below"</span>))<span class="sc">+</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="fu">mean</span>(mean)<span class="sc">+</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(mean), <span class="at">color=</span><span class="st">"2 standard deviations above"</span>)) <span class="sc">+</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors)<span class="sc">+</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>   <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"mean"</span>, <span class="at">y =</span> <span class="dv">150</span>, <span class="at">x =</span> <span class="fu">mean</span>(sample_outcomes_3<span class="sc">$</span>mean), <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>     <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"2 standard deviations </span><span class="sc">\n</span><span class="st"> below"</span>, <span class="at">y =</span> <span class="dv">150</span>, <span class="at">x =</span> <span class="fu">mean</span>(sample_outcomes_3<span class="sc">$</span>mean)<span class="sc">-</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(sample_outcomes_3<span class="sc">$</span>mean), <span class="at">color =</span> <span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>     <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"2 standard deviations </span><span class="sc">\n</span><span class="st"> above"</span>, <span class="at">y =</span> <span class="dv">150</span>, <span class="at">x =</span> <span class="fu">mean</span>(sample_outcomes_3<span class="sc">$</span>mean)<span class="sc">+</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(sample_outcomes_3<span class="sc">$</span>mean), <span class="at">color =</span> <span class="st">"green"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Estimation_and_probability_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>where we find a mean of 69.97 in and a standard deviation of 1.33 in.</p>
+<p>If we facet the graphs (and let them share an x-axis) we can see this even better</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sample_outcomes_1<span class="sc">$</span>n<span class="ot">=</span><span class="dv">100</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>sample_outcomes_2<span class="sc">$</span>n<span class="ot">=</span><span class="dv">20</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>sample_outcomes_3<span class="sc">$</span>n<span class="ot">=</span><span class="dv">5</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>samples_all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(sample_outcomes_1,sample_outcomes_2, sample_outcomes_3)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(samples_all, <span class="fu">aes</span>(mean)) <span class="sc">+</span> </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Height (in)"</span>, <span class="at">y=</span> <span class="st">"Frequency"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Mean heights from our samples"</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span><span class="st">"Measure"</span>) <span class="sc">+</span>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>n, <span class="at">ncol=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Estimation_and_probability_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>You can clearly see larger sample sizes lead to a more “clustered’ group of means (so there is less uncertainty in the measurements!). This is why larger estimates make us more confident in our estimates - the means we get are less likely to be far away! In other words, larger samples yield more precise estimates with lower spread (lower sampling error).</p>
+<p>We call the standard deviation of our means the <em>standard error</em>. We can calculate this as</p>
+<p><span class="math display">\[
+[\sigma_{\overline{Y}} = \frac{\sigma}{\sqrt{n}}] \sim [s_{\overline{Y}} = \frac{s}{\sqrt{n}}]
+\]</span></p>
+<p>Also, note distribution of means was normal (which we will define even better in a few lectures!). For now, that means we can get 95% of the sample means within ~2 standard deviations of the mean of means, which is very close to the true mean. Conversely, if we use data from each sample to generate a an interval ~2 standard deviations above and below each sample mean, these intervals will contain the true mean 95% of the time. We call this range a 95% confidence interval. For example,</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>number_of_samples <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>sample_outcomes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mean =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, number_of_samples), <span class="at">sd =</span> <span class="cn">NA</span>, <span class="at">se =</span> <span class="cn">NA</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>number_of_samples){</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  sample_1 <span class="ot">&lt;-</span> population_norm[<span class="fu">sample</span>(<span class="fu">nrow</span>(population_norm), <span class="dv">100</span>),]</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  sample_outcomes<span class="sc">$</span>mean[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(sample_1<span class="sc">$</span>height)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  sample_outcomes<span class="sc">$</span>sd[i] <span class="ot">&lt;-</span> <span class="fu">sd</span>(sample_1<span class="sc">$</span>height)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  sample_outcomes<span class="sc">$</span>se <span class="ot">&lt;-</span> <span class="fu">sd</span>(sample_1<span class="sc">$</span>height)<span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">100</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>sample_outcomes<span class="sc">$</span>sample <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="dv">1</span><span class="sc">:</span>number_of_samples)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sample_outcomes</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>       , <span class="fu">aes</span>(<span class="at">x=</span>sample, <span class="at">y=</span>mean)) <span class="sc">+</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>mean<span class="sc">-</span>(<span class="dv">2</span><span class="sc">*</span>se), <span class="at">ymax=</span>mean<span class="sc">+</span>(<span class="dv">2</span><span class="sc">*</span>se)), <span class="at">size=</span><span class="fl">1.5</span>)<span class="sc">+</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(population_norm<span class="sc">$</span>height))) <span class="sc">+</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Mean"</span>)<span class="sc">+</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Sample"</span>)<span class="sc">+</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Variation in error bars"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Estimation_and_probability_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Notice one of samples (#2) has a range that does not include the true mean of the population!</p>
+<p>Also (we’ll come back to this), the “~2” is based on sample size. The value actually trends towards 1.96 at large sample sizes, but at sample sizes over ten 2 is a good estimate. We could also have other numbers. For example, we could have a 90% confidence interval.</p>
+<details>
+<summary>
+Would it be wider or narrower compared to a 95% interval?
+</summary>
+<p>If you are less confident in the interval (90% vs 95%), the interval itself will get smaller (only 90% of samples need to have the true mean!)</p>
+</details>
+<p>Finally (and more compicated), note this assumes we have lots of samples, but we typically only have one. The average probability of the first 95% CI capturing the true sample mean is only around 83% <span class="citation" data-cites="kalinowski2010">Kalinowski (<a href="#ref-kalinowski2010" role="doc-biblioref">2010</a>)</span>.</p>
+<details>
+<summary>
+Need to see this another way
+</summary>
+<p>These two simulations (produced by UBC) will allow you to see this another way!</p>
+<ul>
+<li><p><a href="https://www.zoology.ubc.ca/~whitlock/Kingfisher/SamplingNormal.htm" target="_blank">Relationship between sample size and distribution of sample means for samples from a normally distributed population</a></p></li>
+<li><p><a href="https://www.zoology.ubc.ca/~whitlock/Kingfisher/CIMean.htm" target="_blank">Confidence intervals</a></p></li>
+</ul>
+</details>
+<p>Finally, it turns out the underlying distribution of data doesn’t matter. The means of the data will be normally distributed as long as you have a large sample size.</p>
 
 
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-kalinowski2010" class="csl-entry" role="listitem">
+Kalinowski, Pav. 2010. <span>“Understanding Confidence Intervals (CIs) and Effect Size Estimation.”</span> <em>APS Observer</em> 23 (4). <a href="https://www.psychologicalscience.org/observer/understanding-confidence-intervals-cis-and-effect-size-estimation">https://www.psychologicalscience.org/observer/understanding-confidence-intervals-cis-and-effect-size-estimation</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
