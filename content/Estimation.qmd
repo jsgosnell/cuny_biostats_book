@@ -28,7 +28,9 @@ deviation from the mean to find a lower bound. We then add the standard
 deviation from the mean to find an upper bound. These bounds denote
 where 95% of the data points will be found).
 
-Let's see this in action. First, lets make a population and graph it
+Let's see this in action. First, lets make a population with a trait
+(let's assume *height*, measured in cm, that follows a normal
+distribution. We can set the mean to 70 and the standard deviation to 3.
 
 ```{r}
 #| label: fig-height_all
@@ -37,17 +39,26 @@ set.seed(42)
 population_size <- 10000
 population_norm <- data.frame(id = 1:population_size, 
                          height = rnorm(population_size, 70, 3))
+
+
+```
+
+Now's let graph it.  
+
+```{r}
 library(ggplot2)
 
 ggplot(population_norm, aes(height)) + 
   geom_histogram(color="black") +
-  labs(x="Height (in)", y= "Frequency",
+  labs(x="Height (cm)", y= "Frequency",
        title = "Height of all males in our fake population")
 ```
 
-Now let's add the mean (`r round(mean(population_norm$height),2)` in)
+Now let's add the mean (`r round(mean(population_norm$height),2)` cm)
 and mark two standard deviations (sd =
-`r round(sd(population_norm$height),2)` in) above and below it.
+`r round(sd(population_norm$height),2)` in) above and below it. Remember
+we noted a benefit of using standard deviations to describe spread was
+that they were in the same units as the mean? Now we can use that!
 
 ```{r}
 #| label: fig-height_all_with_lines
@@ -56,7 +67,7 @@ colors <- c("mean" = "black", "2 standard deviations below" = "red",
             "2 standard deviations above" = "green")
 ggplot(population_norm, aes(height)) + 
   geom_histogram(color="black") +
-  labs(x="Height (in)", y= "Frequency",
+  labs(x="Height (cm)", y= "Frequency",
        title = "Height of all males in our fake population",
        color="Measure") +
     geom_vline(aes(xintercept=mean(height), color="mean"))+
@@ -84,13 +95,13 @@ are due to *sampling error*.
 sample_1 <- population_norm[sample(nrow(population_norm), 100),]
 ggplot(sample_1, aes(height)) + 
   geom_histogram() +
-  labs(x="Height (in)", y= "Frequency",
+  labs(x="Height (cm)", y= "Frequency",
        title = "Height of 100 random males in our fake population")
 
 ```
 
-For this sample, we have a mean of `r round(mean(sample_1$height),2)` in
-and a standard deviation of `r round(sd(sample_1$height),2)` in.
+For this sample, we have a mean of `r round(mean(sample_1$height),2)` cm
+and a standard deviation of `r round(sd(sample_1$height),2)` cm.
 
 Here's the tricky part. We typically only have one sample, but we want
 to discuss the uncertainty in our estimate. So, let's explore this by
@@ -114,7 +125,7 @@ Then let's plot the means.
 ```{r}
 ggplot(sample_outcomes_1, aes(mean)) + 
     geom_histogram(color="black") +
-  labs(x="Height (in)", y= "Frequency",
+  labs(x="Height (cm)", y= "Frequency",
        title = "Mean heights from our samples (n = 100)",
        color="Measure") +
     geom_vline(aes(xintercept=mean(mean), color="mean"))+
@@ -136,7 +147,7 @@ ggplot(sample_outcomes_1, aes(mean)) +
 
 For our sample of means (this should sound weird!), we have a mean of
 `r round(mean(sample_outcomes_1$mean),2)` in and a standard deviation of
-`r round(sd(sample_outcomes_1$mean),2)` in.
+`r round(sd(sample_outcomes_1$mean),2)` cm
 
 Note this suggests the mean of our means is close to the true population
 value of $\mu$. But the spread of our means (their standard deviation)
@@ -155,7 +166,7 @@ for (i in 1:number_of_samples){
 
 ggplot(sample_outcomes_2, aes(mean)) + 
    geom_histogram(color="black") +
-  labs(x="Height (in)", y= "Frequency",
+  labs(x="Height (cm)", y= "Frequency",
        title = "Mean heights from our samples (n = 20)",
        color="Measure") +
     geom_vline(aes(xintercept=mean(mean), color="mean"))+
@@ -173,7 +184,7 @@ ggplot(sample_outcomes_2, aes(mean)) +
 
 This new sample of means has a mean of
 `r round(mean(sample_outcomes_2$mean),2)` in and a standard deviation of
-`r round(sd(sample_outcomes_2$mean),2)` in. So, the estimate for $\mu$
+`r round(sd(sample_outcomes_2$mean),2)` cm So, the estimate for $\mu$
 is still close to the same, but the standard deviation of our estimates
 is growing.
 
@@ -191,7 +202,7 @@ for (i in 1:number_of_samples){
 
 ggplot(sample_outcomes_3, aes(mean)) + 
    geom_histogram(color="black") +
-  labs(x="Height (in)", y= "Frequency",
+  labs(x="Height (cm)", y= "Frequency",
        title = "Mean heights from our samples (n = 5)",
        color="Measure") +
     geom_vline(aes(xintercept=mean(mean), color="mean"))+
@@ -208,7 +219,7 @@ ggplot(sample_outcomes_3, aes(mean)) +
 ```
 
 where we find a mean of `r round(mean(sample_outcomes_3$mean),2)` in and
-a standard deviation of `r round(sd(sample_outcomes_3$mean),2)` in.
+a standard deviation of `r round(sd(sample_outcomes_3$mean),2)` cm.
 
 If we facet the graphs (and let them share an x-axis) we can see this
 even better
@@ -221,7 +232,7 @@ samples_all <- rbind(sample_outcomes_1,sample_outcomes_2, sample_outcomes_3)
 
 ggplot(samples_all, aes(mean)) + 
    geom_histogram(color="black") +
-  labs(x="Height (in)", y= "Frequency",
+  labs(x="Height (cm)", y= "Frequency",
        title = "Mean heights from our samples",
        color="Measure") +  facet_wrap(~n, ncol=1)
 ```
@@ -274,12 +285,20 @@ ggplot(sample_outcomes
 Notice one of samples (#2) has a range that does not include the true
 mean of the population!
 
-Also (we'll come back to this), the "\~2" is based on sample size. The
-value actually trends towards 1.96 at large sample sizes, but at sample
-sizes over ten 2 is a good estimate. You may also here this total (the 2
-multiplied by the standard error) referred to as the *margin of error*.
-We could also have other numbers. For example, we could have a 90%
-confidence interval.
+A few other notes about confidence intervals
+
+-   Confidence interval for normally-distributed samples (like those
+    described here!) should be symmetric around the mean. This will
+    change slightly for non-normal data (which we may address with
+    generalized linear models that use a binomial, Poisson, or gamma
+    distribution).
+
+-   The "\~2" is based on sample size. The value actually trends towards
+    1.96 at large sample sizes, but at sample sizes over ten 2 is a good
+    estimate. You may also here this total (the 2 multiplied by the
+    standard error) referred to as the *margin of error*. We could also
+    have other numbers. For example, we could have a 90% confidence
+    interval.
 
 <details>
 
@@ -292,14 +311,13 @@ mean!)
 
 </details>
 
-A few other notes about confidence intervals
+-   Confidence bounds also exist. These are slightly different - we'll
+    explain them in a few chapters.
 
--   
-
-Finally (and more compicated), note this assumes we have lots of
-samples, but we typically only have one. The average probability of the
-first 95% CI capturing the true sample mean is only around 83%
-@kalinowski2010.
+-   (more complicated) Note these calculations assumes we have lots of
+    samples, but we typically only have one. The average probability of
+    the first 95% CI capturing the true sample mean is only around 83%
+    @kalinowski2010.
 
 <details>
 
@@ -318,36 +336,37 @@ another way!
 </details>
 
 Finally, it turns out the underlying distribution of data doesn't
-matter. The means of the data will be normally distributed as long as
-you have a large sample size. This is know as the *central limit
-theorem.*
+matter; only that of the trait we are focused on does. For example, the
+means of the data will be normally distributed as long as you have a
+large sample size. This is know as the *central limit theorem.*
 
-To prove this, let's instead consider a uniform distribuation:
+To prove this, let's instead consider a uniform distribution:
 
 ```{r}
 population_unif <- data.frame(id = 1:population_size, 
                          height = runif(population_size, 60, 80))
 ggplot(population_unif, aes(height)) + 
   geom_histogram(color="black") +
-  labs(x="Height (in)", y= "Frequency",
+  labs(x="Height (cm)", y= "Frequency",
        title = "Height of all males in our fake population")
 ```
 
-Now let's do what we did above. First, draw a sample of 100
+Now, let's do what we did above. First, draw a sample of 100
 
 ```{r}
 sample_unif <- population_unif[sample(nrow(population_unif), 100),]
 ggplot(sample_unif, aes(height)) + 
   geom_histogram() +
-  labs(x="Height (in)", y= "Frequency",
+  labs(x="Height (cm)", y= "Frequency",
        title = "Height of 100 random males in our fake population")
 ```
 
-Note the sample is still relatively unformly distributed. In general, a
-good sample should resemble the underlying population, so this makes
-sense.
+Note the sample is still relatively uniformly distributed. This makes
+sense. In general, a good sample should resemble the underlying
+population, so this makes sense.
 
-Now let's sample a 100 of these and plot the means of each sample.
+Now let's sample a 100 of these numerous times and plot the means of
+each sample.
 
 ```{r}
 number_of_samples <- 1000
@@ -360,7 +379,7 @@ for (i in 1:number_of_samples){
 }
 ggplot(sample_outcomes_unif, aes(mean)) + 
     geom_histogram(color="black") +
-  labs(x="Height (in)", y= "Frequency",
+  labs(x="Height (cm)", y= "Frequency",
        title = "Mean heights from our samples (n = 100)",
        color="Measure") +
     geom_vline(aes(xintercept=mean(mean), color="mean"))+
@@ -388,3 +407,86 @@ Another UBC visualization will allow you to see this another way!
     distributions.](https://www.zoology.ubc.ca/~whitlock/Kingfisher/CLT.htm){target="_blank"}
 
 </details>
+
+As you can see above, 95% confidence intervals are commonly graphed to
+show the potential spread of *mean* values. This distinction is
+important, as one could plot the standard deviation of the raw the data,
+the standard error of the related means, *or* the 95% confidence
+interval. These can be very different. As an example,let's return to our normal 
+population.
+
+```{r}
+number_of_samples <- 1
+sample_outcomes <- data.frame(mean = rep(NA, number_of_samples), sd = NA, se = NA)
+
+for (i in 1:number_of_samples){
+  sample_1 <- population_norm[sample(nrow(population_norm), 100),]
+  sample_outcomes$mean[i] <- mean(sample_1$height)
+  sample_outcomes$sd[i] <- sd(sample_1$height)
+  sample_outcomes$se <- sd(sample_1$height)/sqrt(100)
+}
+sample_outcomes$sample <- as.factor(1:number_of_samples)
+
+sample_1$sample <- "Data"
+sample_1$data <- sample_1$height
+onese <- sample_outcomes
+onese$sample <- "+- 1 standard error"
+onese$data <- onese$mean
+onese$bar_length <-  onese$se
+twosd <- sample_outcomes
+twosd$sample <- "+- 2 standard error ~ \n 95% confidence interval"
+twosd$data <- twosd$mean
+twosd$bar_length <-  onese$se * 2
+onesd <- sample_outcomes
+onesd$sample <- "+- 1 standard deviation"
+onesd$data <- onesd$mean
+onesd$bar_length <-  onese$sd
+
+example_clarity <- merge(sample_1, onese, all.x =T, all.y = T)
+example_clarity <- merge(example_clarity, twosd, all.x =T, all.y = T)
+example_clarity <- merge(example_clarity, onesd, all.x =T, all.y = T)
+
+library(plyr)
+example_clarity$sample <- relevel(as.factor(example_clarity$sample), "Data")
+
+ggplot(example_clarity
+       , aes(x=sample, y=data)) +
+  geom_point() +
+  geom_errorbar(aes(ymin=mean-bar_length, ymax=mean+bar_length))+
+  labs(y ="Height (cm)", x= "Frequency",
+       title = "Variation in error bar display")
+```
+
+Notice the differences! We will typically use 95% confidence intervals in class,
+but you should always specify in your captions and note when you read other 
+papers! 
+
+Visualizations of spread are commonly used with bar graphs (despite the earlier 
+issues we noted with bar graphs!).  For example, we can return to our iris data 
+and add 
+```{r}
+library(Rmisc)
+function_output <- summarySE(iris, measurevar="Sepal.Length", groupvars =
+                               c("Species"))
+
+ggplot(function_output, aes(y=Sepal.Length, x=Species, fill=Species)) +
+  geom_col(aes(fill=Species)) +
+    geom_errorbar(aes(ymin=Sepal.Length-ci, ymax=Sepal.Length+ci)) +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species")
+```
+
+In general, presenting the estimate for a parameter and measures of sampling 
+error (or uncertainty) allow you to state the magnitude of a statistic. This is 
+a different but related approach to the more commonly observed p-values (which 
+we'll get to!).  For example, for a single population we can ask if the confidence
+interval includes a relevant value (like 0!).  For multiple groups,we can consider
+if the true means are in the same range by looking at overlap in confidence 
+intervals among the groups.
+
+In this chapter we've started to talk about probability. In the next we will 
+review some probability basics before we move onto testing hypotheses.
+
+
+
