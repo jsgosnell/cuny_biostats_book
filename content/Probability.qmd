@@ -1,0 +1,50 @@
+---
+title: Probability
+subtitle: The backbone of statistics!
+bibliography: references.bib
+---
+
+We've already address probability. When we stated the 95% confidence
+interval means that if we make these intervals from 100 samples that we
+expect 95 of them to contain the true mean, we are discussing
+probability. An even easier example is flipping a coin. You probably
+know there is a 50% chance of a coin landing on heads. That doesn't mean
+given flip will be half heads and half tails. Both of these statements
+refer to likely outcomes if we do something many, many times!
+
+To put it specifically, the probability of an outcome is its true
+relative frequency, the proportion of times the event would occur if we
+repeated the same process over and over again. We can describe the
+probability if an outcome by considering all the potential outcomes and
+how likely each is. If we describe all the outcomes, the total
+probability must be equal to 1 (since frequency is typically measured as
+a fraction!). Some probability distributions can be described
+mathematically, others are a list of possible outcomes, and others are
+almost impossible to solve. The "impossible" ones requre simulations,
+and we will return to this for our introduction to Bayesian analysis.
+
+The simplest case is when we focus on outcomes for a single trait that
+falls into specific categories. These outcomes are often *mutually
+exclusive*, meaning only one can happen (like our heads and tails
+example!), and lead to discrete probability distributions (meaning each
+outcome has to be a specific value). Another example is rolling a
+6-sided die. The die can only land on numbers 1 to 6 (so 2.57 is not an
+option!).
+
+```{r}
+die_roll <- data.frame(Number = 1:6, Probability = rep(1/6,6))
+die_roll$Number <- factor(die_roll$Number)
+ggplot(die_roll, aes(x=Number, y= Probability, fill=Number)) +
+  geom_col() 
+```
+
+Compare this to a continuous probability distribution, where the outcome
+can take any value in a given range.
+
+```{r}
+ggplot(data = data.frame(x = c(-3, 3)), aes(x)) +
+  stat_function(fun = dnorm, n = 101, args = list(mean = 0, sd = 1), color = "orange")+
+  labs()
+```
+
+Even more
