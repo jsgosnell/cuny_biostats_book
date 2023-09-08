@@ -211,7 +211,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lets-start-with-an-example" id="toc-lets-start-with-an-example" class="nav-link active" data-scroll-target="#lets-start-with-an-example">Let’s start with an example</a>
+  <ul class="collapse">
+  <li><a href="#moving-to-a-sample-of-means" id="toc-moving-to-a-sample-of-means" class="nav-link" data-scroll-target="#moving-to-a-sample-of-means">Moving to a sample of means</a></li>
+  </ul></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/Estimation.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/Estimation.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -236,6 +246,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>Now that we can describe data distributions, we want to start thinking about how we quantify the uncertainty in our estimates (of <span class="math inline">\(\mu\)</span>, for example). Remember, we typically want to describe a population but need to rely on a sample, and we’ve already talked about sampling error. So now we just want to think about how much error we typically have (or, alternatively, how precise are our estimates).</p>
 <p>Answering this question is hard. Quantifying sampling error requires you to know the “true” value for a population parameter, but we only have estimates! Statisticians solve this problem by investigating sampling error in populations they fully know because they created them.</p>
+<section id="lets-start-with-an-example" class="level2">
+<h2 class="anchored" data-anchor-id="lets-start-with-an-example">Let’s start with an example</h2>
 <p>For example, let’s assume we measure all the males in a population. Furthermore, let’s assume the distribution of heights is <em>normal</em>. Remember, this means the distribution is roughly symmetric, with tails on either side. Values near the middle of the range are more common, with the chance of getting smaller or larger values declining at an increasing rate. In fact, in turns out ~95% of the data lies within two standard deviations (remember those?) of the mean (so we calculate the mean and then the standard deviation. We then subtract the standard deviation from the mean to find a lower bound. We then add the standard deviation from the mean to find an upper bound. These bounds denote where 95% of the data points will be found).</p>
 <p>Let’s see this in action. First, lets make a population with a trait (let’s assume <em>height</em>, measured in cm, that follows a normal distribution. We can set the mean to 70 and the standard deviation to 3.</p>
 <div class="cell">
@@ -307,6 +319,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>For this sample, we have a mean of 69.78 cm and a standard deviation of 3.11 cm.</p>
+<section id="moving-to-a-sample-of-means" class="level3">
+<h3 class="anchored" data-anchor-id="moving-to-a-sample-of-means">Moving to a sample of means</h3>
 <p>Here’s the tricky part. We typically only have one sample, but we want to discuss the uncertainty in our estimate. So, let’s explore this by drawing multiple samples (each of 100 individuals) from our population and finding the mean for each sample.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>number_of_samples <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
@@ -632,9 +646,14 @@ Need to see this another way?
 </div>
 </div>
 <p>In general, presenting the estimate for a parameter and measures of sampling error (or uncertainty) allow you to state the magnitude of a statistic. This is a different but related approach to the more commonly observed p-values (which we’ll get to!). For example, for a single population we can ask if the confidence interval includes a relevant value (like 0!). For multiple groups,we can consider if the true means are in the same range by looking at overlap in confidence intervals among the groups.</p>
+</section>
+</section>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
 <p>In this chapter we’ve started to talk about probability. In the next we will review some probability basics before we move onto testing hypotheses.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1003,7 +1022,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">© CC BY-NC-SA 4.0</div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/Estimation.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/Estimation.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></div>
+    </div>
     <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a>.</div>
   </div>
 </footer>
