@@ -139,13 +139,13 @@ the probability of two or more outcomes for a specific event), we need
 to consider if the events are *independent*. This means the outcome of
 one does not influence the outcome of the other. If this is true, the
 probability of both events occurring can be found by simply multiplying
-the probability of each. For example, consider the probability of
-flipping a coin twice and seeing a heads followed by a tails. We can
-write out all the options (T, HH, TH, TT); assuming independence, the
-probability for each is $\frac{1}{4}$. We can also say the probability
-of heads on the first flip is $\frac{1}{2}$ and the probability of tails
-on the second flip is $\frac{1}{2}$; multiplying these yields
-$\frac{1}{2}$.
+the probability of each (the *multiplication rule*. For example,
+consider the probability of flipping a coin twice and seeing a heads
+followed by a tails. We can write out all the options (T, HH, TH, TT);
+assuming independence, the probability for each is $\frac{1}{4}$. We can
+also say the probability of heads on the first flip is $\frac{1}{2}$ and
+the probability of tails on the second flip is $\frac{1}{2}$;
+multiplying these yields $\frac{1}{2}$.
 
 Consider instead that we roll 2 dice and measure the sum of the rolls.
 Since one roll does not influence the other, these are independent
@@ -197,9 +197,234 @@ desired outcomes are mutually exclusive. So we can find the probability
 of each happening and then add them. It's easy to see how probability
 can get complicated!
 
+## Conditional Probability
+
 Unlike our coin example, sometimes a first event occurring does
 influence the probability of a second event.
 
 ![XKCD Conditional Risk: The annual death rate among people who know
 that statistics is one is
 six.](https://imgs.xkcd.com/comics/conditional_risk.png){fig-alt="Two stick figures are walking outside. Lightning strikes. One mentions they should go inside. The other notes only 45 Americans are killed by a lightning strike each year, so the chances of dying are less than one in 7,000,000"}
+
+In a similar vein, although the risk of shark attack is low, it
+increases dramatically if you swim in the ocean.
+
+Unlike our previous examples, we now have 2 events (lets call them A and
+B), and the probability of both occurring is equal to
+
+$$
+P[A \ and \ B] = P[A] \ P[B|A]
+$$
+
+which can be read as "the probability of A and B occurring is equal to
+the probability of A multiplied by the probability of B given A occurs".
+Note if A and B are independent, this reduces to the multiplication
+rule.
+
+We can extend this by noting
+
+$$
+P[A \ and \ B] = P[A] \ P[B|A] \\
+P[A \ and \ B] = P[B] \ P[A|B] \\
+P[A] \ P[B|A] = P[B] \ P[A|B] \\
+ P[A|B] = \frac{P[B|A]*P[A]}{P[B]}
+$$
+
+This rule is known as *Bayes' Theorem*. We will return to this when we
+discuss *Bayesian* analysis, but we can use it here for demonstration.
+
+For our lightning example, we could use some (pretend) numbers to
+understand the risk and Bayes' Theorem. First, let A be the probability
+of being outside in a lightning storm. B is then the probability of
+getting struck by lightning, , and P\[B\|A\] is the probabiity of
+getting struck by lightning given that you are outside in a lightning
+storm (hint: it's much higher than the P\[B\]).
+
+Here's anoher similar (in concept) example. Medical trials are designed
+to test the effectiveness of drugs or treatments. In these trials, drug
+efficacy is considered by comparing outcomes in people who receive the
+drug or treatment compared to those who receive a placebo (such as a
+sugar pill). Note this only works if participants do not know which
+group (drug vs placebo) they are in (why?). In a given trial, people who
+receive the drug recover 60% of the time (or avoid some other adverse
+outcome). This may seem good, but it's only relevant when compared to
+the placebo group. What if people receiving the placebo recovered 80% of
+the time? Also, if we know the probability of recovering without the
+drug, we can consider the total probability of recovery. For now, let's
+assume that 20% of people who receive the placebo recover.
+
+We could use a tree diagram to consider possible options:
+
+```{r}
+library(DiagrammeR)
+
+bayes_probability_tree <- function(prior, true_positive, true_negative, label1 = "Prior", 
+                                   label2 = "Complimentary Prior", label3 = "True Positive",
+                                   label4 = "False Negative", label5 = "False Positive",
+                                   label6 = "True Negative") {
+  
+  if (!all(c(prior, true_positive, true_negative) > 0) && !all(c(prior, true_positive, true_negative) < 1)) {
+    stop("probabilities must be greater than 0 and less than 1.",
+         call. = FALSE)
+  }
+  c_prior <- 1 - prior
+  c_tp <- 1 - true_positive
+  c_tn <- 1 - true_negative
+  
+  round4 <- purrr::partial(round, digits = 5)
+  
+  b1 <- round4(prior * true_positive)
+  b2 <- round4(prior * c_tp)
+  b3 <- round4(c_prior * c_tn)
+  b4 <- round4(c_prior * true_negative)
+  
+  bp <-  round4(b1/(b1 + b3))
+  
+  labs <- c("X", prior, c_prior, true_positive, c_tp, true_negative, c_tn, b1, b2, b4, b3)
+  
+  tree <-
+    create_graph() %>%
+    add_n_nodes(
+      n = 11,
+      type = "path",
+      label = labs,
+      node_aes = node_aes(
+        shape = "circle",
+        height = 1,
+        width = 1,
+        x = c(0, 3, 3, 6, 6, 6, 6, 8, 8, 8, 8),
+        y = c(0, 2, -2, 3, 1, -3, -1, 3, 1, -3, -1))) %>% 
+    add_edge(
+      from = 1,
+      to = 2,
+      edge_aes = edge_aes(
+        label = label1
+      )
+    ) %>% 
+    add_edge(
+      from = 1, 
+      to = 3,
+      edge_aes = edge_aes(
+        label = label2
+      )
+    ) %>% 
+    add_edge(
+      from = 2,
+      to = 4,
+      edge_aes = edge_aes(
+        label = label3
+      )
+    ) %>% 
+    add_edge(
+      from = 2,
+      to = 5,
+      edge_aes = edge_aes(
+        label = label4
+      )
+    ) %>% 
+    add_edge(
+      from = 3,
+      to = 7,
+      edge_aes = edge_aes(
+        label = label5
+      )
+    ) %>% 
+    add_edge(
+      from = 3,
+      to = 6,
+      edge_aes = edge_aes(
+        label = label6
+      )
+    ) %>% 
+    add_edge(
+      from = 4,
+      to = 8,
+      edge_aes = edge_aes(
+        label = "="
+      )
+    ) %>% 
+    add_edge(
+      from = 5,
+      to = 9,
+      edge_aes = edge_aes(
+        label = "="
+      )
+    ) %>% 
+    add_edge(
+      from = 7,
+      to = 11,
+      edge_aes = edge_aes(
+        label = "="
+      )
+    ) %>% 
+    add_edge(
+      from = 6,
+      to = 10,
+      edge_aes = edge_aes(
+        label = "="
+      )
+    ) 
+  message(glue::glue("The probability of having {label1} after testing {label3} is {bp}"))
+  print(render_graph(tree))
+  invisible(tree)
+}
+
+#first example
+bayes_probability_tree(prior = 0.5, true_positive = 0.8, true_negative = 0.8, label1 = "medicine", label2 = "placebo",
+                       label3 = "cured", label4 = "not cured",
+                       label5 = "cured", label6 = "not cured")
+
+```
+
+This tree let's us consider multiple things. We can see the probability
+of being cured is .5, but 80% of those come from the group receiving
+medicine (again, the P\[being cured\|given medicine\]). WE could also
+derive this using Bayes Theorem.
+
+$$
+P[being \ cured|medicine] = \frac{P[receiving \ medicine|cured]P[being \ cured]}{P[receiving \ medicine]} \\
+P[being \ cured|medicine] = \frac{.8 * .5}{.5} \\
+P[being \ cured|medicine] = .8
+ 
+$$
+
+One more example. Instead of medical trials, let's focus on medical
+screenings. These are used to identify patients who have a condition,
+but there are no perfect tests. A test may give a *false positive*,
+meaning it says a condition exists when it does not. A test can also
+give a *false negative*, meaning it finds a condition does not exist
+when it really does. Both of these present issues for patients and
+explain why series of tests are often used before more invasive
+procedures are employed.
+
+For example, assume a procedure is used to assess skin cancer. This
+cancer occurs at a frequency of .00021 in the general population. The
+test is fairly accurate; if a patient has cancer, the screening will
+correctly identify if 95% of the time. However, the probability of a
+false positive is .01. Given these numbers, how worried should a person
+be about a positive test?
+
+Although the test seems to be good, note the prevalence of a false
+positive is far higher than the prevalence of cancer! This means most
+positives will likely be false. To quantify this, let A be the
+probability of cancer and B be the probability of a positive screening.
+So,
+
+$$
+P[A|B] = \frac{.95 \ * .00021}{.95 \ * \ .0021+.01*.9779} \\
+P[A|B] = .169
+$$
+
+In other words, only 17% of people with positive screenings actually
+have cancer.
+
+To show this in a probability tree:
+
+```{r}
+bayes_probability_tree(prior = 0.0021, true_positive = 0.95, true_negative = 0.99, label1 = "cancer", 
+                       label2 = "not cancer",
+                       label3 = "positive", 
+                       label4 = "negative",
+                       label5 = "positive", 
+                       label6 = "negative")
+```
