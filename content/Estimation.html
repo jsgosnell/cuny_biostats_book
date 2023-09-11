@@ -266,10 +266,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#lets-start-with-an-example" id="toc-lets-start-with-an-example" class="nav-link active" data-scroll-target="#lets-start-with-an-example">Let’s start with an example</a>
-  <ul class="collapse">
+  <li><a href="#lets-start-with-an-example" id="toc-lets-start-with-an-example" class="nav-link active" data-scroll-target="#lets-start-with-an-example">Let’s start with an example</a></li>
   <li><a href="#moving-to-a-sample-of-means" id="toc-moving-to-a-sample-of-means" class="nav-link" data-scroll-target="#moving-to-a-sample-of-means">Moving to a sample of means</a></li>
-  </ul></li>
+  <li><a href="#what-if-the-population-isnt-normal" id="toc-what-if-the-population-isnt-normal" class="nav-link" data-scroll-target="#what-if-the-population-isnt-normal">What if the population isn’t normal?</a></li>
+  <li><a href="#visualization-issues" id="toc-visualization-issues" class="nav-link" data-scroll-target="#visualization-issues">Visualization issues</a></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/Estimation.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/Estimation.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
@@ -359,7 +359,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sample_1 <span class="ot">&lt;-</span> population_norm[<span class="fu">sample</span>(<span class="fu">nrow</span>(population_norm), <span class="dv">100</span>),]</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sample_1, <span class="fu">aes</span>(height)) <span class="sc">+</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Height (cm)"</span>, <span class="at">y=</span> <span class="st">"Frequency"</span>,</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Height of 100 random males in our fake population"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -370,8 +370,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>For this sample, we have a mean of 69.78 cm and a standard deviation of 3.11 cm.</p>
-<section id="moving-to-a-sample-of-means" class="level3">
-<h3 class="anchored" data-anchor-id="moving-to-a-sample-of-means">Moving to a sample of means</h3>
+</section>
+<section id="moving-to-a-sample-of-means" class="level2">
+<h2 class="anchored" data-anchor-id="moving-to-a-sample-of-means">Moving to a sample of means</h2>
 <p>Here’s the tricky part. We typically only have one sample, but we want to discuss the uncertainty in our estimate. So, let’s explore this by drawing multiple samples (each of 100 individuals) from our population and finding the mean for each sample.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>number_of_samples <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
@@ -557,6 +558,9 @@ Need to see this another way?
 <li><p><a href="https://www.zoology.ubc.ca/~whitlock/Kingfisher/CIMean.htm" target="_blank">Confidence intervals</a></p></li>
 </ul>
 </details>
+</section>
+<section id="what-if-the-population-isnt-normal" class="level2">
+<h2 class="anchored" data-anchor-id="what-if-the-population-isnt-normal">What if the population isn’t normal?</h2>
 <p>Finally, it turns out the underlying distribution of data doesn’t matter; only that of the trait we are focused on does. For example, the means of the data will be normally distributed as long as you have a large sample size. This is know as the <em>central limit theorem.</em></p>
 <p>To prove this, let’s instead consider a uniform distribution:</p>
 <div class="cell">
@@ -577,7 +581,7 @@ Need to see this another way?
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sample_unif <span class="ot">&lt;-</span> population_unif[<span class="fu">sample</span>(<span class="fu">nrow</span>(population_unif), <span class="dv">100</span>),]</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sample_unif, <span class="fu">aes</span>(height)) <span class="sc">+</span> </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Height (cm)"</span>, <span class="at">y=</span> <span class="st">"Frequency"</span>,</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Height of 100 random males in our fake population"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -631,6 +635,9 @@ Need to see this another way?
 <li><a href="https://www.zoology.ubc.ca/~whitlock/Kingfisher/CLT.htm" target="_blank">Central limit theorem: Sampling from non-normal distributions.</a></li>
 </ul>
 </details>
+</section>
+<section id="visualization-issues" class="level2">
+<h2 class="anchored" data-anchor-id="visualization-issues">Visualization issues</h2>
 <p>As you can see above, 95% confidence intervals are commonly graphed to show the potential spread of <em>mean</em> values. This distinction is important, as one could plot the standard deviation of the raw the data, the standard error of the related means, <em>or</em> the 95% confidence interval. These can be very different. As an example,let’s return to our normal population.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>number_of_samples <span class="ot">&lt;-</span> <span class="dv">1</span></span>
@@ -697,7 +704,6 @@ Need to see this another way?
 </div>
 </div>
 <p>In general, presenting the estimate for a parameter and measures of sampling error (or uncertainty) allow you to state the magnitude of a statistic. This is a different but related approach to the more commonly observed p-values (which we’ll get to!). For example, for a single population we can ask if the confidence interval includes a relevant value (like 0!). For multiple groups,we can consider if the true means are in the same range by looking at overlap in confidence intervals among the groups.</p>
-</section>
 </section>
 <section id="next-steps" class="level2">
 <h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
