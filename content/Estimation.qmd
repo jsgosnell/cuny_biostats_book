@@ -94,7 +94,7 @@ are due to *sampling error*.
 ```{r}
 sample_1 <- population_norm[sample(nrow(population_norm), 100),]
 ggplot(sample_1, aes(height)) + 
-  geom_histogram() +
+  geom_histogram(color="black") +
   labs(x="Height (cm)", y= "Frequency",
        title = "Height of 100 random males in our fake population")
 
@@ -103,7 +103,7 @@ ggplot(sample_1, aes(height)) +
 For this sample, we have a mean of `r round(mean(sample_1$height),2)` cm
 and a standard deviation of `r round(sd(sample_1$height),2)` cm.
 
-### Moving to a sample of means
+## Moving to a sample of means
 
 Here's the tricky part. We typically only have one sample, but we want
 to discuss the uncertainty in our estimate. So, let's explore this by
@@ -337,6 +337,8 @@ another way!
 
 </details>
 
+## What if the population isn't normal?
+
 Finally, it turns out the underlying distribution of data doesn't
 matter; only that of the trait we are focused on does. For example, the
 means of the data will be normally distributed as long as you have a
@@ -358,7 +360,7 @@ Now, let's do what we did above. First, draw a sample of 100
 ```{r}
 sample_unif <- population_unif[sample(nrow(population_unif), 100),]
 ggplot(sample_unif, aes(height)) + 
-  geom_histogram() +
+  geom_histogram(color="black") +
   labs(x="Height (cm)", y= "Frequency",
        title = "Height of 100 random males in our fake population")
 ```
@@ -409,6 +411,8 @@ Another UBC visualization will allow you to see this another way!
     distributions.](https://www.zoology.ubc.ca/~whitlock/Kingfisher/CLT.htm){target="_blank"}
 
 </details>
+
+## Visualization issues
 
 As you can see above, 95% confidence intervals are commonly graphed to
 show the potential spread of *mean* values. This distinction is
