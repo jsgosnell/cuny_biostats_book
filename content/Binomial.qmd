@@ -148,7 +148,7 @@ actually observed) by drawing a piece of paper, writing down what it
 says, returning it to the hat, and repeating the process 9 more times to
 get single sample. For each sample, you could then calculate the
 observed proportion of older birds. You could visualize the spread of
-those results usinga histogram. It's important to realize this is
+those results using a histogram. It's important to realize this is
 *doable* without a computer (think it through), but it would take a lot
 of time because you need a lot of samples (**we'll come back to this**).
 
@@ -197,12 +197,17 @@ Just looking at this, it seems getting a proportion of .5 is unlikely.
 It only occurred
 `r length(sampling_experiment[sampling_experiment$observed_proportion == .5,])`
 times. However, we also need to note how often *more* extreme outcomes
-occurred, since those are also useful in considering if the null
-hypothesis is valid. Also note those (can) exist on both sides of the
-hypothesized value. In this example, our observed proportion was .5.
-That's .25 away from the value under the null hypothesis (.75), so we
-should all simulations that were . 5 or less or 1 or more. That only
-happened
+occurred. Why?
+
+More extreme values (the same or further distance away from the
+hypothesized value as our observed signal were) are also useful in
+considering if the null hypothesis is valid. When we move to continuous
+distributions, it's also impossible to get a certain value (as mentioned
+in the probability section).
+
+In this example, our observed proportion was .5. That's .25 away from
+the value under the null hypothesis (.75), so we should all simulations
+that were . 5 or less or 1 or more. That only happened
 `r length(sampling_experiment[sampling_experiment$observed_proportion <= .5|sampling_experiment$observed_proportion >= 1,])`
 times. So, in taking 1000 random draws from our null population, we only
 saw what we actually observed (or something more extreme)
@@ -218,3 +223,7 @@ Explaining p-values is hard!
 ```         
 {{< video https://www.youtube.com/watch?v=bz9nzc-jVEE&t=4s >}}
 ```
+
+A smaller p-value therefore means it is less likely to obtain your
+observed signal, or something more extreme, by chance when the null
+hypothesis is true. undefined
