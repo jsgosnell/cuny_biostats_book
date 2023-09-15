@@ -299,4 +299,3 @@ ggplot(radiologist, aes(x = Proportion, y = Probability)) +
   guides(fill = F)
 
 
-
