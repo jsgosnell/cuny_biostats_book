@@ -487,12 +487,12 @@ finches$Proportion <- finches$Number/18
 finches$criteria <- "retain"
 finches$criteria[pbinom(finches$Number, 18, .75) < .025] <- "reject"
 finches$criteria[(1-pbinom(finches$Number, 18, .75)) < .025] <- "reject"
-proportion_observed = data.frame(Proportion = 9/18, Probability = .5)
+proportion_observed = data.frame(Proportion = 9/18, Probability = .3)
 ggplot(finches, aes(x = Proportion, y = Probability)) + 
   geom_bar(stat="identity", aes(fill = criteria)) + 
-  geom_segment(x = .29031, xend = .70968,y= .5 , yend =.5, size = 2) +
+  geom_segment(x = .29031, xend = .70968,y= .3 , yend =.3) +
   geom_vline(xintercept = .75, color = "blue") + geom_vline(xintercept = 9/18, color = "black") +
-  geom_point(data= proportion_observed, size = 8) +
+  geom_point(data= proportion_observed) +
   ggtitle("Comparing p-values and confidence intervals for finch problem")
 ```
 
