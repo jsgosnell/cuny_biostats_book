@@ -394,7 +394,7 @@ H_A: p \neq .75
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sampling_experiment<span class="sc">$</span>observed_proportion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.7222222 0.8333333 0.7777778 0.8333333 0.7777778 0.8333333</code></pre>
+<pre><code>[1] 0.7222222 0.7222222 0.6111111 0.6666667 0.8333333 0.6111111</code></pre>
 </div>
 </div>
 <p>Note we see some variation. Also note it is <em>impossible</em> to get a proportion of .75. Why? We only sampled 18 individuals, so we can’t get any outcomes that aren’t some form of a whole number less than 18 divided by 18. This seems simple, but it’s a reminder that your signal being different than your hypothesized value is not sufficient to reject the null hypothesis!</p>
@@ -413,9 +413,9 @@ H_A: p \neq .75
 <p><img src="Binomial_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Just looking at this, it seems getting a proportion of .5 is unlikely. It only occurred 9 times. However, we also need to note how often <em>more</em> extreme outcomes occurred. Why?</p>
+<p>Just looking at this, it seems getting a proportion of .5 is unlikely. It only occurred 13 times. However, we also need to note how often <em>more</em> extreme outcomes occurred. Why?</p>
 <p>More extreme values (the same or further distance away from the hypothesized value as our observed signal were) are also useful in considering if the null hypothesis is valid. When we move to continuous distributions, it’s also impossible to get a certain value (as mentioned in the probability section).</p>
-<p>In this example, our observed proportion was .5. That’s .25 away from the value under the null hypothesis (.75), so we should all simulations that were . 5 or less or 1 or more. That only happened 20 times. So, in taking 1000 random draws from our null population, we only saw what we actually observed (or something more extreme) 0.02% of the time.</p>
+<p>In this example, our observed proportion was .5. That’s .25 away from the value under the null hypothesis (.75), so we should all simulations that were . 5 or less or 1 or more. That only happened 22 times. So, in taking 1000 random draws from our null population, we only saw what we actually observed (or something more extreme) 0.022% of the time.</p>
 </section>
 <section id="welcome-to-the-p-value" class="level2">
 <h2 class="anchored" data-anchor-id="welcome-to-the-p-value">Welcome to the p-value</h2>
@@ -587,12 +587,12 @@ H_A: p &lt; .33
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria <span class="ot">&lt;-</span> <span class="st">"retain"</span></span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria[<span class="fu">pbinom</span>(finches<span class="sc">$</span>Number, <span class="dv">18</span>, .<span class="dv">75</span>) <span class="sc">&lt;</span> .<span class="dv">025</span>] <span class="ot">&lt;-</span> <span class="st">"reject"</span></span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria[(<span class="dv">1</span><span class="sc">-</span><span class="fu">pbinom</span>(finches<span class="sc">$</span>Number, <span class="dv">18</span>, .<span class="dv">75</span>)) <span class="sc">&lt;</span> .<span class="dv">025</span>] <span class="ot">&lt;-</span> <span class="st">"reject"</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>proportion_observed <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">Proportion =</span> <span class="dv">9</span><span class="sc">/</span><span class="dv">18</span>, <span class="at">Probability =</span> .<span class="dv">3</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>proportion_observed <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">Proportion =</span> <span class="dv">9</span><span class="sc">/</span><span class="dv">18</span>, <span class="at">Probability =</span> .<span class="dv">5</span>)</span>
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(finches, <span class="fu">aes</span>(<span class="at">x =</span> Proportion, <span class="at">y =</span> Probability)) <span class="sc">+</span> </span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"identity"</span>, <span class="fu">aes</span>(<span class="at">fill =</span> criteria)) <span class="sc">+</span> </span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> .<span class="dv">29031</span>, <span class="at">xend =</span> .<span class="dv">70968</span>,<span class="at">y=</span> .<span class="dv">3</span> , <span class="at">yend =</span>.<span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> .<span class="dv">29031</span>, <span class="at">xend =</span> .<span class="dv">70968</span>,<span class="at">y=</span> .<span class="dv">5</span> , <span class="at">yend =</span>.<span class="dv">5</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> .<span class="dv">75</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">9</span><span class="sc">/</span><span class="dv">18</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span> proportion_observed) <span class="sc">+</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span> proportion_observed, <span class="at">size =</span> <span class="dv">8</span>) <span class="sc">+</span></span>
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Comparing p-values and confidence intervals for finch problem"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Binomial_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
