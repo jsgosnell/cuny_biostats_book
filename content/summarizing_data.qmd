@@ -785,11 +785,11 @@ like geom_col.
 
 In the above cases, each group was measured the same number of times.
 However, if this isn't true, visualizations may confound sampling size
-with summaries. In those cases, focusing on proportion of outcomes may
-be more useful (and will give you the exact same visualization if all
-groups were measured the same number of times!). This is sometimes
-called a mosaic plot; another way to make them (not shown here) is using
-the package *ggmosaic*.
+with summaries. In those cases, focusing on proportion (explained
+below!) of outcomes may be more useful (and will give you the exact same
+visualization if all groups were measured the same number of times!).
+This is sometimes called a mosaic plot; another way to make them (not
+shown here) is using the package *ggmosaic*.
 
 ```{r}
 #| label: fig-mosaic_plot
@@ -1306,9 +1306,47 @@ summary(cardinals_new)
 ```
 
 Finally, if we have categorical instead of numerical data, we can find
-the proportion of data in each category. Producing this summary actually
-requires you to count the number in a given group and divided by the
-total number sampled.
+the proportion of data in each category. We mentioned this approach when
+producing mosaic plots. To find a proportion, you count the number of
+samples that fall in a given group and divided that by the total number
+sampled. Alternatively, you can assign a score of *0* for values that
+are not in the focal group and a score of *1* to samples that are - the
+average of these scores will give you the proportion.
+
+For example, earlier we plotted how flower color differed among species
+and location.
+
+```{r}
+ggplot(iris_both,aes(x=Species)) +
+  geom_bar(aes(fill=Color), position="fill")+
+  labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
+       x= "Species",
+       y= "Frequency")+
+  scale_fill_manual("Flower color", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple", "pink"="pink", "yellow"="yellow"))+
+  facet_wrap(~Population, nrow=1)
+```
+
+Let's see where this came from. We can count the number of each color in
+each species in each population:
+
+```{r, echo=F}
+
+flower_table <- table(iris_both$Population, iris_both$Species,iris_both$Color, 
+                 dnn=c("Population", "Species", "Color"))
+flower_count_df <- data.frame(x)
+flower_count_df$Population_species <- paste(flower_count_df$Population,flower_count_df$Species)
+flower_count_df <- flower_count_df[order(flower_count_df$Population_species),]
+flower_count_df[,1:4]
+```
+
+Then divide them by the number sampled for each species in each population:
+
+```{r}
+flower_prop_df <- data.frame(prop.table(flower_table, margin = c("Population", "Species")))
+flower_prop_df$Population_species <- paste(flower_prop_df$Population,flower_prop_df$Species)
+flower_prop_df <- flower_prop_df[order(flower_prop_df$Population_species),]
+flower_prop_df[,1:4]
+```
 
 ## Next steps
 
