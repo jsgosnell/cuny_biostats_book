@@ -127,7 +127,7 @@ they encompass all the probability space. **It is usually just as simple
 as switching signs**. For example, if we focus on older birds, we get
 
 $$
-H_O: p=.75 \\
+H_O: p=.75 \\  
 H_A: p \neq .75
 $$
 
@@ -182,7 +182,7 @@ divided by 18. This seems simple, but it's a reminder that your signal
 being different than your hypothesized value is not sufficient to reject
 the null hypothesis!
 
-Now let's plot the observed proportions:
+Now let's plot the proportions from our sampling experiment:
 
 ```{r}
 ggplot(sampling_experiment,
@@ -297,19 +297,19 @@ $\alpha$ of .05,we would expect to see something this extreme by chance
 1 time out of 20! In other words, we can have errors. Think about it
 this way:
 
-+-------------------------------+-------------------------------+
-|                               | **Biological reality**        |
-+-------------------------------+-------------------------------+
-| \                             | **H~O~ True**                 |
-|                               |                               |
-| **Decision (based on analysis |                               |
-| of sample data)**             |                               |
-+-------------------------------+-------------------------------+
-| **Reject H~O~**               | Type I error (Probability of  |
-|                               | this is ɑ)                    |
-+-------------------------------+-------------------------------+
-| **Do not reject H~O~**        | Correct (1- ɑ)                |
-+-------------------------------+-------------------------------+
++----------------------------------+----------------------------------+
+|                                  | **Biological reality**           |
++----------------------------------+----------------------------------+
+| \                                | **HO True**                      |
+|                                  |                                  |
+| **Decision (based on analysis of |                                  |
+| sample data)**                   |                                  |
++----------------------------------+----------------------------------+
+| **Reject HO**                    | Type I error (Probability of     |
+|                                  | this is ɑ)                       |
++----------------------------------+----------------------------------+
+| **Do not reject HO**             | Correct (1- ɑ)                   |
++----------------------------------+----------------------------------+
 
 $\alpha$ sets the limit we are ok with for rejecting H~O~ when it is
 true (a *Type 1* error). Alternatively, a *Type II* error is when we do
@@ -372,9 +372,9 @@ poly <- rbind(poly1, poly2, poly3)
 poly$id <- factor(poly$id,  labels=c("power","beta","alpha"))
 
 ggplot(poly, aes(x,y, fill=id, group=id)) +
-  geom_polygon(show_guide=F, alpha=I(8/10)) +
+  geom_polygon(show.legend = F, alpha=I(8/10)) +
   # add line for treatment group
-  geom_line(data=df1, aes(x,y, color="H0", group=NULL, fill=NULL), size=1.5, show_guide=F) + 
+  geom_line(data=df1, aes(x,y, color="H0", group=NULL, fill=NULL), size=1.5, show.legend =F) + 
   # add line for treatment group. These lines could be combined into one dataframe.
   geom_line(data=df2, aes(color="HA", group=NULL, fill=NULL),size=1.5, show_guide=F) +
   # add vlines for z_crit
@@ -457,7 +457,7 @@ binom.test(116,641, p=.33, alternative = "less")
 Here we reject H~O~, where
 
 $$
-H_O: p>=.33 \\
+H_O: p>=.33 \\ 
 H_A: p < .33
 $$
 
@@ -503,10 +503,10 @@ finches$Proportion <- finches$Number/18
 finches$criteria <- "retain"
 finches$criteria[pbinom(finches$Number, 18, .75) < .025] <- "reject"
 finches$criteria[(1-pbinom(finches$Number, 18, .75)) < .025] <- "reject"
-proportion_observed = data.frame(Proportion = 9/18, Probability = .3)
+proportion_observed = data.frame(Proportion = 9/18, Probability = .15)#sets height
 ggplot(finches, aes(x = Proportion, y = Probability)) + 
   geom_bar(stat="identity", aes(fill = criteria)) + 
-  geom_segment(x = .29031, xend = .70968,y= .3 , yend =.3) +
+  geom_segment(x = .29031, xend = .70968,y= .15 , yend =.15) +
   geom_vline(xintercept = .75, color = "blue") + geom_vline(xintercept = 9/18, color = "black") +
   geom_point(data= proportion_observed) +
   ggtitle("Comparing p-values and confidence intervals for finch problem")

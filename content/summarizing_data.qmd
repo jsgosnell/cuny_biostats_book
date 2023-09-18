@@ -1334,18 +1334,23 @@ each species in each population:
 flower_table <- table(iris_both$Population, iris_both$Species,iris_both$Color, 
                  dnn=c("Population", "Species", "Color"))
 flower_count_df <- data.frame(flower_table)
+names(flower_count_df)[4] <- "Frequency"
 flower_count_df$Population_species <- paste(flower_count_df$Population,flower_count_df$Species)
 flower_count_df <- flower_count_df[order(flower_count_df$Population_species),]
-flower_count_df[,1:4]
+library(rmarkdown)
+row.names(flower_count_df) <- NULL
+paged_table(flower_count_df[,1:4])
 ```
 
 Then divide them by the number sampled for each species in each population:
 
 ```{r}
 flower_prop_df <- data.frame(prop.table(flower_table, margin = c("Population", "Species")))
+names(flower_prop_df)[4] <- "Proportion"
 flower_prop_df$Population_species <- paste(flower_prop_df$Population,flower_prop_df$Species)
 flower_prop_df <- flower_prop_df[order(flower_prop_df$Population_species),]
-flower_prop_df[,1:4]
+row.names(flower_prop_df) <- NULL
+paged_table(flower_prop_df[,1:4])
 ```
 
 ## Next steps
