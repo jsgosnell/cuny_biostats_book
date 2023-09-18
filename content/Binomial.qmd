@@ -187,7 +187,7 @@ Now let's plot the observed proportions:
 ```{r}
 ggplot(sampling_experiment,
               aes(x=observed_proportion)) +
-  geom_histogram( fill="blue", color="black") +
+  geom_histogram(color="black") +
   labs(title="Observed proportions from 1000 random draws",
        x= "Proportion",
        y= "Frequency")
@@ -214,6 +214,22 @@ times. So, in taking 1000 random draws from our null population, we only
 saw what we actually observed (or something more extreme)
 `r length(sampling_experiment[sampling_experiment$observed_proportion <= .5|sampling_experiment$observed_proportion >= 1,])*.001`%
 of the time.
+
+```{r}
+
+sampling_experiment$Proportion = ifelse(sampling_experiment$observed_proportion <= .5, 
+                                  '<= .5', ifelse(sampling_experiment$observed_proportion >= 1, '>.5 & < 1', '>= 1'))
+
+
+ggplot(sampling_experiment,
+              aes(x=observed_proportion, fill=Proportion)) +
+  geom_histogram(color="black") +
+  labs(title="Observed proportions from 1000 random draws",
+       x= "Proportion",
+       y= "Frequency")
+
+
+```
 
 ## Welcome to the p-value
 
@@ -281,19 +297,19 @@ $\alpha$ of .05,we would expect to see something this extreme by chance
 1 time out of 20! In other words, we can have errors. Think about it
 this way:
 
-+---------------------------------+---------------------------------+
-|                                 | **Biological reality**          |
-+---------------------------------+---------------------------------+
-| \                               | **H~O~ True**                   |
-|                                 |                                 |
-| **Decision (based on analysis   |                                 |
-| of sample data)**               |                                 |
-+---------------------------------+---------------------------------+
-| **Reject H~O~**                 | Type I error (Probability of    |
-|                                 | this is ɑ)                      |
-+---------------------------------+---------------------------------+
-| **Do not reject H~O~**          | Correct (1- ɑ)                  |
-+---------------------------------+---------------------------------+
++-------------------------------+-------------------------------+
+|                               | **Biological reality**        |
++-------------------------------+-------------------------------+
+| \                             | **H~O~ True**                 |
+|                               |                               |
+| **Decision (based on analysis |                               |
+| of sample data)**             |                               |
++-------------------------------+-------------------------------+
+| **Reject H~O~**               | Type I error (Probability of  |
+|                               | this is ɑ)                    |
++-------------------------------+-------------------------------+
+| **Do not reject H~O~**        | Correct (1- ɑ)                |
++-------------------------------+-------------------------------+
 
 $\alpha$ sets the limit we are ok with for rejecting H~O~ when it is
 true (a *Type 1* error). Alternatively, a *Type II* error is when we do
