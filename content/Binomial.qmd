@@ -260,15 +260,31 @@ In the case of our binomial data, very close actually means exact. The
 binomial data is an example of data where we can fully describe the
 probability outcomes a sample may take. While not developed here, this
 means we use the *binomial distribution* to calculate our probabilities.
+This distribution allows calculations of how often you would expect *s*
+successes for a set number of trials (*n-s*) if a population had a
+proportion of *p* for the focal trait. It is based on the multiplication
+rule of probability (you can find the probability independent events by
+multiplying their respective probabilities) and using combinations to
+determine how many ways one can arrange *s* successes in *n* draws. It
+can be written as
+
+$$
+P[n \ successes] = {n\choose s}p^s(1-p)^{n-s}
+$$
+
+Using this distribution we can ask for the probability of obtaining a
+signal as more extreme than what we actually observed by chance if the
+null hypothesis is true (p-value!). The *dbinom* function in R uses this
+distribution.
 
 ```{r}
 sum(dbinom(0:9,18,.75))+dbinom(18,18,.75)
 
 ```
 
-This distributional assumptions powers the binomial test (also called
-the exact binomial test). In R, we can use the binom.test function to
-carry it, with the arguments
+This distributional assumptions also powers the binomial test (also
+called the exact binomial test). In R, we can use the binom.test
+function to carry it, with the arguments
 
 -   x=number of successes
 
@@ -285,8 +301,10 @@ binom.test(x=9, n=18, p=.75)
 Note for this test the default value for p is .5 (equal chance), so if
 you don't enter it that's what will be used.
 
-Notice all our p-values are fairly close. It should be noted the p-value
-obtained by simulation will vary slightly each time, while those
+Notice all our p-values are fairly close. P-values obtained using the
+distributional assumptions match exactly., and that obtained by
+simulation is very close. It should also be noted that although the
+p-value obtained by simulation will vary slightly each time, while those
 obtained using the binomial distribution will stay the same.
 
 ## Understand what this means
@@ -297,24 +315,31 @@ $\alpha$ of .05,we would expect to see something this extreme by chance
 1 time out of 20! In other words, we can have errors. Think about it
 this way:
 
-+----------------------------------+----------------------------------+
-|                                  | **Biological reality**           |
-+----------------------------------+----------------------------------+
-| \                                | **HO True**                      |
-|                                  |                                  |
-| **Decision (based on analysis of |                                  |
-| sample data)**                   |                                  |
-+----------------------------------+----------------------------------+
-| **Reject HO**                    | Type I error (Probability of     |
-|                                  | this is ɑ)                       |
-+----------------------------------+----------------------------------+
-| **Do not reject HO**             | Correct (1- ɑ)                   |
-+----------------------------------+----------------------------------+
++---------------------------+---------------------------+---------+
+|                           | **Biological reality**    |         |
++---------------------------+---------------------------+---------+
+| \                         | **H~O~ True**             | **H~O~  |
+|                           |                           | False** |
+| **Decision (based on      |                           |         |
+| analysis of sample        |                           |         |
+| data)**                   |                           |         |
++---------------------------+---------------------------+---------+
+| **Reject H~O~**           | Type I error (P\[ɑ\])     | Power   |
+|                           |                           | (1-     |
+|                           |                           | $\beta$ |
+|                           |                           | )       |
++---------------------------+---------------------------+---------+
+| **Do not reject H~O~**    | Correct (P\[1- ɑ\])       | Type II |
+|                           |                           | Error   |
+|                           |                           | (       |
+|                           |                           | Pr\[$\b |
+|                           |                           | eta$\]) |
++---------------------------+---------------------------+---------+
 
 $\alpha$ sets the limit we are ok with for rejecting H~O~ when it is
 true (a *Type 1* error). Alternatively, a *Type II* error is when we do
 not reject H~O~ even when it's is false. Importantly,
-$\alpha + beta \neq 1$! Instead, $\alpha + (1-\alpha)$ is the
+$\alpha + \beta \neq 1$! Instead, $\alpha + (1-\alpha)$ is the
 probability space for H~O~, and $\beta + (1-\beta)$ (or $\beta + power$)
 is the probability space for H~A~. How they overlap depends on the
 signal, as the the distribution of signals under H~A~ is close to what
