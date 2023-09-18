@@ -1191,7 +1191,7 @@ geom_bar vs geom_col
 </summary>
 <p>geom_bar and geom_col are very similar commands, but geom_bar assumes its needs to do something to the data (like count it) by default, whereas geom_col assumes the data are summarized/ready to plot as is. The extra argument stat=identity above can usually make geom_bar behave like geom_col.</p>
 </details>
-<p>In the above cases, each group was measured the same number of times. However, if this isn’t true, visualizations may confound sampling size with summaries. In those cases, focusing on proportion of outcomes may be more useful (and will give you the exact same visualization if all groups were measured the same number of times!). This is sometimes called a mosaic plot; another way to make them (not shown here) is using the package <em>ggmosaic</em>.</p>
+<p>In the above cases, each group was measured the same number of times. However, if this isn’t true, visualizations may confound sampling size with summaries. In those cases, focusing on proportion (explained below!) of outcomes may be more useful (and will give you the exact same visualization if all groups were measured the same number of times!). This is sometimes called a mosaic plot; another way to make them (not shown here) is using the package <em>ggmosaic</em>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris,<span class="fu">aes</span>(<span class="at">x=</span>Species)) <span class="sc">+</span></span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Color), <span class="at">position =</span> <span class="st">"fill"</span>)<span class="sc">+</span></span>
@@ -1527,7 +1527,7 @@ Attaching package: 'ggpubr'</code></pre>
 <summary>
 Why is the mode not always on the highest bar?
 </summary>
-<p>Note the mode is heavily/totally impacted by data precision and thus can lead to unusual matches with histograms. In our above example, cardinals were measured to 10<sup>-3</sup> grams. However, the data was binned to levels of 10<sup>-2</sup> grams. Due to this mismatch, the most common measurement of the <em>raw</em> data was 0.943, which occurred 168 times. However, more data points still fell in another bin!</p>
+<p>Note the mode is heavily/totally impacted by data precision and thus can lead to unusual matches with histograms. In our above example, cardinals were measured to 10<sup>-3</sup> grams. However, the data was binned to levels of 10<sup>-2</sup> grams. Due to this mismatch, the most common measurement of the <em>raw</em> data was 0.949, which occurred 173 times. However, more data points still fell in another bin!</p>
 </details>
 <p>A special case where central tendency may not be the best way to describe a distribution is known as <em>bimodal</em> data. In this case, the distribution shows two, not one, clear peak. Remember the woodpecker <a href="#fig-woodpeckers">Figure&nbsp;14</a> data?</p>
 <div class="cell">
@@ -1690,7 +1690,7 @@ CV = \frac{s}{Y} * 100\%
 <div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cardinals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.7320  0.9170  0.9370  0.9335  0.9540  0.9960 </code></pre>
+ 0.7660  0.9160  0.9360  0.9329  0.9540  0.9940 </code></pre>
 </div>
 </div>
 <p>Note that if we shifted the bottom 10% of the values even <em>further</em> left (increasing the skew), the median stays the same, as does the IQR.</p>
@@ -1710,7 +1710,7 @@ CV = \frac{s}{Y} * 100\%
 <div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cardinals_new)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.3320  0.9170  0.9370  0.8939  0.9540  0.9960 </code></pre>
+ 0.3660  0.9160  0.9360  0.8935  0.9540  0.9940 </code></pre>
 </div>
 <div class="cell-output-display">
 <div id="fig-cardinals_ggplot2_shifted" class="quarto-figure quarto-figure-center anchored">
@@ -1721,7 +1721,96 @@ CV = \frac{s}{Y} * 100\%
 </div>
 </div>
 </div>
-<p>Finally, if we have categorical instead of numerical data, we can find the proportion of data in each category. Producing this summary actually requires you to count the number in a given group and divided by the total number sampled.</p>
+<p>Finally, if we have categorical instead of numerical data, we can find the proportion of data in each category. We mentioned this approach when producing mosaic plots. To find a proportion, you count the number of samples that fall in a given group and divided that by the total number sampled. Alternatively, you can assign a score of <em>0</em> for values that are not in the focal group and a score of <em>1</em> to samples that are - the average of these scores will give you the proportion.</p>
+<p>For example, earlier we plotted how flower color differed among species and location.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_both,<span class="fu">aes</span>(<span class="at">x=</span>Species)) <span class="sc">+</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Color), <span class="at">position=</span><span class="st">"fill"</span>)<span class="sc">+</span></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Color of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica "</span>), <span class="st">"flowers"</span>)),</span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>,</span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"Flower color"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"orange"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>, <span class="st">"pink"</span><span class="ot">=</span><span class="st">"pink"</span>, <span class="st">"yellow"</span><span class="ot">=</span><span class="st">"yellow"</span>))<span class="sc">+</span></span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Population, <span class="at">nrow=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="summarizing_data_files/figure-html/unnamed-chunk-62-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Let’s see where this came from. We can count the number of each color in each species in each population:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   Population    Species  Color Freq
+1        East     setosa   blue   20
+7        East     setosa orange   12
+13       East     setosa purple   18
+19       East     setosa   pink    0
+25       East     setosa yellow    0
+3        East versicolor   blue   14
+9        East versicolor orange   16
+15       East versicolor purple   20
+21       East versicolor   pink    0
+27       East versicolor yellow    0
+5        East  virginica   blue   14
+11       East  virginica orange   19
+17       East  virginica purple   17
+23       East  virginica   pink    0
+29       East  virginica yellow    0
+2        West     setosa   blue    0
+8        West     setosa orange   12
+14       West     setosa purple    0
+20       West     setosa   pink   13
+26       West     setosa yellow   25
+4        West versicolor   blue    0
+10       West versicolor orange   14
+16       West versicolor purple    0
+22       West versicolor   pink   16
+28       West versicolor yellow   20
+6        West  virginica   blue    0
+12       West  virginica orange   16
+18       West  virginica purple    0
+24       West  virginica   pink   18
+30       West  virginica yellow   16</code></pre>
+</div>
+</div>
+<p>Then divide them by the number sampled for each species in each population:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>flower_prop_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">prop.table</span>(flower_table, <span class="at">margin =</span> <span class="fu">c</span>(<span class="st">"Population"</span>, <span class="st">"Species"</span>)))</span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>flower_prop_df<span class="sc">$</span>Population_species <span class="ot">&lt;-</span> <span class="fu">paste</span>(flower_prop_df<span class="sc">$</span>Population,flower_prop_df<span class="sc">$</span>Species)</span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>flower_prop_df <span class="ot">&lt;-</span> flower_prop_df[<span class="fu">order</span>(flower_prop_df<span class="sc">$</span>Population_species),]</span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>flower_prop_df[,<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Population    Species  Color Freq
+1        East     setosa   blue 0.40
+7        East     setosa orange 0.24
+13       East     setosa purple 0.36
+19       East     setosa   pink 0.00
+25       East     setosa yellow 0.00
+3        East versicolor   blue 0.28
+9        East versicolor orange 0.32
+15       East versicolor purple 0.40
+21       East versicolor   pink 0.00
+27       East versicolor yellow 0.00
+5        East  virginica   blue 0.28
+11       East  virginica orange 0.38
+17       East  virginica purple 0.34
+23       East  virginica   pink 0.00
+29       East  virginica yellow 0.00
+2        West     setosa   blue 0.00
+8        West     setosa orange 0.24
+14       West     setosa purple 0.00
+20       West     setosa   pink 0.26
+26       West     setosa yellow 0.50
+4        West versicolor   blue 0.00
+10       West versicolor orange 0.28
+16       West versicolor purple 0.00
+22       West versicolor   pink 0.32
+28       West versicolor yellow 0.40
+6        West  virginica   blue 0.00
+12       West  virginica orange 0.32
+18       West  virginica purple 0.00
+24       West  virginica   pink 0.36
+30       West  virginica yellow 0.32</code></pre>
+</div>
+</div>
 </section>
 </section>
 <section id="next-steps" class="level2">
