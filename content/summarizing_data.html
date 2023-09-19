@@ -641,7 +641,7 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 <p>This distribution of this data is approximately normal. We will define normality more later (equations!), but for now note the distribution is roughly symmetric, with tails on either side. Values near the middle of the range are more common, with the chance of getting smaller or larger values declining at an increasing rate…</p>
 <p>Comparing the above graph to other distributions may be an easier approach. Consider these graphs.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cardinals <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">70</span>,<span class="dv">5</span>),<span class="dv">3</span>)</span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cardinals <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">10</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="dv">50</span><span class="sc">+</span><span class="fu">runif</span>(<span class="dv">10000</span>,<span class="dv">5</span>,<span class="dv">10</span>),<span class="dv">3</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(cardinals, <span class="at">main=</span><span class="st">"Weight of Westchester cardinals"</span>, <span class="at">xlab =</span> <span class="st">"</span><span class="sc">\n</span><span class="st"> Weight (g)"</span>, <span class="at">ylab =</span> <span class="st">"Frequency (#)</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span><span class="fl">1.25</span>, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-cardinals_plot" class="quarto-figure quarto-figure-center anchored">
@@ -672,7 +672,7 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>parrots<span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">1000</span>,.<span class="dv">9</span>,<span class="dv">4</span>)),<span class="dv">3</span>)</span>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>parrots<span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">1000</span>,<span class="dv">400</span>,<span class="dv">10</span>)),<span class="dv">3</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(parrots), </span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>parrots)) <span class="sc">+</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"green"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
@@ -692,7 +692,7 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>blue_jays <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">2</span>,<span class="dv">10</span>),<span class="dv">3</span>)</span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>blue_jays <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">2</span>,<span class="dv">8</span>)<span class="sc">*</span><span class="dv">100</span><span class="sc">+</span><span class="fu">runif</span>(<span class="dv">10000</span>,<span class="dv">60</span>,<span class="dv">80</span>),<span class="dv">3</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(blue_jays), </span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>blue_jays)) <span class="sc">+</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
@@ -714,7 +714,7 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 <p>The cardinal <a href="#fig-cardinals_ggplot2">Figure&nbsp;10</a> data has a longer left tail and is not symmetric. We call this left- or negatively-skewed data (since it’s going lower on the x-axis). Compare that to the blue jay <a href="#fig-blue_jays">Figure&nbsp;12</a> data; it has a longer right-tail and is positively- or right-skewed. Again, note this is all relative to symmetric data like you see with the parrots <a href="#fig-parrots">Figure&nbsp;11</a>, which is normally-distributed data.</p>
 <p>All symmetric data is not normal, however. Look at the data on robin and woodpecker weights.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>rochester <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">runif</span>(<span class="dv">1000</span>,.<span class="dv">1</span>,<span class="dv">8</span>)),<span class="dv">3</span>)</span>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>rochester <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">runif</span>(<span class="dv">1000</span>,<span class="dv">75</span>,<span class="dv">85</span>)),<span class="dv">3</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(rochester), </span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>rochester)) <span class="sc">+</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"pink"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
@@ -734,7 +734,7 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>woodpeckers <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">20</span>,<span class="dv">4</span>),<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">40</span>,<span class="dv">4</span>)),<span class="dv">3</span>)</span>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>woodpeckers <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">60</span>,<span class="dv">4</span>),<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">80</span>,<span class="dv">4</span>)),<span class="dv">3</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(woodpeckers), </span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>woodpeckers)) <span class="sc">+</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"orange"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
@@ -1530,7 +1530,7 @@ Attaching package: 'ggpubr'</code></pre>
 <summary>
 Why is the mode not always on the highest bar?
 </summary>
-<p>Note the mode is heavily/totally impacted by data precision and thus can lead to unusual matches with histograms. In our above example, cardinals were measured to 10<sup>-3</sup> grams. However, the data was binned to levels of 10<sup>-2</sup> grams. Due to this mismatch, the most common measurement of the <em>raw</em> data was 0.94, which occurred 161 times. However, more data points still fell in another bin!</p>
+<p>Note the mode is heavily/totally impacted by data precision and thus can lead to unusual matches with histograms. In our above example, cardinals were measured to 10<sup>-3</sup> grams. However, the data was binned to levels of 10<sup>-2</sup> grams. Due to this mismatch, the most common measurement of the <em>raw</em> data was 46.921, which occurred 7 times. However, more data points still fell in another bin!</p>
 </details>
 <p>A special case where central tendency may not be the best way to describe a distribution is known as <em>bimodal</em> data. In this case, the distribution shows two, not one, clear peak. Remember the woodpecker <a href="#fig-woodpeckers">Figure&nbsp;14</a> data?</p>
 <div class="cell">
@@ -1693,7 +1693,7 @@ CV = \frac{s}{Y} * 100\%
 <div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cardinals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.7770  0.9170  0.9370  0.9336  0.9550  0.9930 </code></pre>
+  20.16   46.05   50.05   49.15   53.19   59.35 </code></pre>
 </div>
 </div>
 <p>Note that if we shifted the bottom 10% of the values even <em>further</em> left (increasing the skew), the median stays the same, as does the IQR.</p>
@@ -1713,7 +1713,7 @@ CV = \frac{s}{Y} * 100\%
 <div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cardinals_new)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.3770  0.9170  0.9370  0.8936  0.9550  0.9930 </code></pre>
+  19.77   46.05   50.05   49.11   53.19   59.35 </code></pre>
 </div>
 <div class="cell-output-display">
 <div id="fig-cardinals_ggplot2_shifted" class="quarto-figure quarto-figure-center anchored">
