@@ -372,8 +372,10 @@ H_O: p=.25
 \]</span></p>
 <p>We also have alternative hypotheses (abbreviated H<sub>A</sub>)to accompany each of these. Our alternative is just the opposite of the null. Together, they encompass all the probability space. <strong>It is usually just as simple as switching signs</strong>. For example, if we focus on older birds, we get</p>
 <p><span class="math display">\[
+\begin{split}
 H_O: p=.75 \\  
 H_A: p \neq .75
+\end{split}
 \]</span></p>
 <p>The above ideas stay the same for all NHST approaches! We always use the null hypothesis to generate a “known” population (sometimes called the <em>null population</em>, draw samples from it, and then compare it to what we actually observed. What changes based on data type is how we generate the sample and multiple draws.</p>
 </section>
@@ -395,7 +397,7 @@ H_A: p \neq .75
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sampling_experiment<span class="sc">$</span>observed_proportion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.6666667 0.7777778 0.8333333 0.6666667 0.4444444 0.6666667</code></pre>
+<pre><code>[1] 0.7222222 0.7222222 0.7222222 0.9444444 0.6111111 0.7777778</code></pre>
 </div>
 </div>
 <p>Note we see some variation. Also note it is <em>impossible</em> to get a proportion of .75. Why? We only sampled 18 individuals, so we can’t get any outcomes that aren’t some form of a whole number less than 18 divided by 18. This seems simple, but it’s a reminder that your signal being different than your hypothesized value is not sufficient to reject the null hypothesis!</p>
@@ -414,9 +416,9 @@ H_A: p \neq .75
 <p><img src="Binomial_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Just looking at this, it seems getting a proportion of .5 is unlikely. It only occurred 17 times. However, we also need to note how often <em>more</em> extreme outcomes occurred. Why?</p>
+<p>Just looking at this, it seems getting a proportion of .5 is unlikely. It only occurred 13 times. However, we also need to note how often <em>more</em> extreme outcomes occurred. Why?</p>
 <p>More extreme values (the same or further distance away from the hypothesized value as our observed signal were) are also useful in considering if the null hypothesis is valid. When we move to continuous distributions, it’s also impossible to get a certain value (as mentioned in the probability section).</p>
-<p>In this example, our observed proportion was .5. That’s .25 away from the value under the null hypothesis (.75), so we should all simulations that were . 5 or less or 1 or more. That only happened 34 times. So, in taking 1000 random draws from our null population, we only saw what we actually observed (or something more extreme) 0.034% of the time.</p>
+<p>In this example, our observed proportion was .5. That’s .25 away from the value under the null hypothesis (.75), so we should all simulations that were . 5 or less or 1 or more. That only happened 22 times. So, in taking 1000 random draws from our null population, we only saw what we actually observed (or something more extreme) 0.022% of the time.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sampling_experiment<span class="sc">$</span>Proportion <span class="ot">=</span> <span class="fu">ifelse</span>(sampling_experiment<span class="sc">$</span>observed_proportion <span class="sc">&lt;=</span> .<span class="dv">5</span>, </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">'&lt;= .5'</span>, <span class="fu">ifelse</span>(sampling_experiment<span class="sc">$</span>observed_proportion <span class="sc">&gt;=</span> <span class="dv">1</span>, <span class="st">'&gt;.5 &amp; &lt; 1'</span>, <span class="st">'&gt;= 1'</span>))</span>
@@ -486,9 +488,9 @@ probability of success
 <p>Note our p-value is the probability we would get a signal like we observed by chance <em>if</em> the null hypothesis was true. This means for an <span class="math inline">\(\alpha\)</span> of .05,we would expect to see something this extreme by chance 1 time out of 20! In other words, we can have errors. Think about it this way:</p>
 <table class="table">
 <colgroup>
-<col style="width: 34%">
-<col style="width: 34%">
-<col style="width: 20%">
+<col style="width: 31%">
+<col style="width: 31%">
+<col style="width: 22%">
 </colgroup>
 <tbody>
 <tr class="odd">
@@ -584,8 +586,10 @@ probability of success
 </div>
 <p>Here we reject H<sub>O</sub>, where</p>
 <p><span class="math display">\[
+\begin{split}
 H_O: p&gt;=.33 \\
 H_A: p &lt; .33
+\end{split}
 \]</span></p>
 <p>However, sided or tailed tests should be rarely used? Why? Because it can be too tempting to use a sided test after observing the data! A signal that is not significant at the <span class="math inline">\(\alpha\)</span> =.05 level using two-sided tests can be significant as a one-tailed test.</p>
 <p>If you do use these, note they correspond to confidence bounds instead of intervals. Again, the full rejection region is placed on one side of the estimate.</p>
