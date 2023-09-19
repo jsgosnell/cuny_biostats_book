@@ -395,7 +395,7 @@ H_A: p \neq .75
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sampling_experiment<span class="sc">$</span>observed_proportion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.7777778 0.7222222 0.6111111 0.8333333 0.6111111 0.7222222</code></pre>
+<pre><code>[1] 0.6666667 0.7777778 0.8333333 0.6666667 0.4444444 0.6666667</code></pre>
 </div>
 </div>
 <p>Note we see some variation. Also note it is <em>impossible</em> to get a proportion of .75. Why? We only sampled 18 individuals, so we can’t get any outcomes that aren’t some form of a whole number less than 18 divided by 18. This seems simple, but it’s a reminder that your signal being different than your hypothesized value is not sufficient to reject the null hypothesis!</p>
@@ -414,9 +414,9 @@ H_A: p \neq .75
 <p><img src="Binomial_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Just looking at this, it seems getting a proportion of .5 is unlikely. It only occurred 19 times. However, we also need to note how often <em>more</em> extreme outcomes occurred. Why?</p>
+<p>Just looking at this, it seems getting a proportion of .5 is unlikely. It only occurred 17 times. However, we also need to note how often <em>more</em> extreme outcomes occurred. Why?</p>
 <p>More extreme values (the same or further distance away from the hypothesized value as our observed signal were) are also useful in considering if the null hypothesis is valid. When we move to continuous distributions, it’s also impossible to get a certain value (as mentioned in the probability section).</p>
-<p>In this example, our observed proportion was .5. That’s .25 away from the value under the null hypothesis (.75), so we should all simulations that were . 5 or less or 1 or more. That only happened 25 times. So, in taking 1000 random draws from our null population, we only saw what we actually observed (or something more extreme) 0.025% of the time.</p>
+<p>In this example, our observed proportion was .5. That’s .25 away from the value under the null hypothesis (.75), so we should all simulations that were . 5 or less or 1 or more. That only happened 34 times. So, in taking 1000 random draws from our null population, we only saw what we actually observed (or something more extreme) 0.034% of the time.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sampling_experiment<span class="sc">$</span>Proportion <span class="ot">=</span> <span class="fu">ifelse</span>(sampling_experiment<span class="sc">$</span>observed_proportion <span class="sc">&lt;=</span> .<span class="dv">5</span>, </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">'&lt;= .5'</span>, <span class="fu">ifelse</span>(sampling_experiment<span class="sc">$</span>observed_proportion <span class="sc">&gt;=</span> <span class="dv">1</span>, <span class="st">'&gt;.5 &amp; &lt; 1'</span>, <span class="st">'&gt;= 1'</span>))</span>
@@ -442,14 +442,18 @@ H_A: p \neq .75
 <p>Explaining p-values is hard! You can see some statisticians try to explain the concept <a href="https://www.youtube.com/watch?v=bz9nzc-jVEE&amp;t=4s" target="_blank">here</a>.</p>
 <p>A smaller p-value therefore means it is less likely to obtain your observed signal, or something more extreme, by chance when the null hypothesis is true. Traditionally, a p-value of less than .05 is thought to be sufficient evidence to reject the null hypothesis. This comparison value is sometimes called the <span class="math inline">\(\alpha\)</span> (alpha) level. While we now often get specific p-values from software, historically people used tables to find ranges (less than .05, for example).</p>
 <p>As shown above, we can always use simulations to obtain a p-value. However, without a computer (and even with) it’s cumbersome. We also have to redo it for every change (for example, what if our sample contained 19 instead of 18 birds?). Another option is to find an algorithm that can be used to calculate a distribution that is very close to what we saw with the simulation.</p>
-<p>In the case of our binomial data, very close actually means exact. The binomial data is an example of data where we can fully describe the probability outcomes a sample may take. While not developed here, this means we use the <em>binomial distribution</em> to calculate our probabilities.</p>
+<p>In the case of our binomial data, very close actually means exact. The binomial data is an example of data where we can fully describe the probability outcomes a sample may take. While not developed here, this means we use the <em>binomial distribution</em> to calculate our probabilities. This distribution allows calculations of how often you would expect <em>s</em> successes for a set number of trials (<em>n-s</em>) if a population had a proportion of <em>p</em> for the focal trait. It is based on the multiplication rule of probability (you can find the probability independent events by multiplying their respective probabilities) and using combinations to determine how many ways one can arrange <em>s</em> successes in <em>n</em> draws. It can be written as</p>
+<p><span class="math display">\[
+P[n \ successes] = {n\choose s}p^s(1-p)^{n-s}
+\]</span></p>
+<p>Using this distribution we can ask for the probability of obtaining a signal as more extreme than what we actually observed by chance if the null hypothesis is true (p-value!). The <em>dbinom</em> function in R uses this distribution.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">dbinom</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">9</span>,<span class="dv">18</span>,.<span class="dv">75</span>))<span class="sc">+</span><span class="fu">dbinom</span>(<span class="dv">18</span>,<span class="dv">18</span>,.<span class="dv">75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.02498549</code></pre>
 </div>
 </div>
-<p>This distributional assumptions powers the binomial test (also called the exact binomial test). In R, we can use the binom.test function to carry it, with the arguments</p>
+<p>This distributional assumptions also powers the binomial test (also called the exact binomial test). In R, we can use the binom.test function to carry it, with the arguments</p>
 <ul>
 <li><p>x=number of successes</p>
 <ul>
@@ -475,38 +479,44 @@ probability of success
 </div>
 </div>
 <p>Note for this test the default value for p is .5 (equal chance), so if you don’t enter it that’s what will be used.</p>
-<p>Notice all our p-values are fairly close. It should be noted the p-value obtained by simulation will vary slightly each time, while those obtained using the binomial distribution will stay the same.</p>
+<p>Notice all our p-values are fairly close. P-values obtained using the distributional assumptions match exactly., and that obtained by simulation is very close. It should also be noted that although the p-value obtained by simulation will vary slightly each time, while those obtained using the binomial distribution will stay the same.</p>
 </section>
 <section id="understand-what-this-means" class="level2">
 <h2 class="anchored" data-anchor-id="understand-what-this-means">Understand what this means</h2>
 <p>Note our p-value is the probability we would get a signal like we observed by chance <em>if</em> the null hypothesis was true. This means for an <span class="math inline">\(\alpha\)</span> of .05,we would expect to see something this extreme by chance 1 time out of 20! In other words, we can have errors. Think about it this way:</p>
 <table class="table">
 <colgroup>
-<col style="width: 48%">
-<col style="width: 48%">
+<col style="width: 34%">
+<col style="width: 34%">
+<col style="width: 20%">
 </colgroup>
 <tbody>
 <tr class="odd">
 <td></td>
 <td><strong>Biological reality</strong></td>
+<td></td>
 </tr>
 <tr class="even">
 <td><p><br>
 </p>
 <p><strong>Decision (based on analysis of sample data)</strong></p></td>
-<td><strong>HO True</strong></td>
+<td><strong>H<sub>O</sub> True</strong></td>
+<td><strong>H<sub>O</sub> False</strong></td>
 </tr>
 <tr class="odd">
-<td><strong>Reject HO</strong></td>
-<td>Type I error (Probability of this is ɑ)</td>
+<td><strong>Reject H<sub>O</sub></strong></td>
+<td>Type I error (P[ɑ])</td>
+<td>Power (1- <span class="math inline">\(\beta\)</span> )</td>
 </tr>
 <tr class="even">
-<td><strong>Do not reject HO</strong></td>
-<td>Correct (1- ɑ)</td>
+<td><strong>Do not reject H<sub>O</sub></strong></td>
+<td>Correct (P[1- ɑ])</td>
+<td>Type II Error ( Pr<br>
+[<span class="math inline">\(\b eta\)</span>])</td>
 </tr>
 </tbody>
 </table>
-<p><span class="math inline">\(\alpha\)</span> sets the limit we are ok with for rejecting H<sub>O</sub> when it is true (a <em>Type 1</em> error). Alternatively, a <em>Type II</em> error is when we do not reject H<sub>O</sub> even when it’s is false. Importantly, <span class="math inline">\(\alpha + beta \neq 1\)</span>! Instead, <span class="math inline">\(\alpha + (1-\alpha)\)</span> is the probability space for H<sub>O</sub>, and <span class="math inline">\(\beta + (1-\beta)\)</span> (or <span class="math inline">\(\beta + power\)</span>) is the probability space for H<sub>A</sub>. How they overlap depends on the signal, as the the distribution of signals under H<sub>A</sub> is close to what we already estimated for confidence intervals! You can visualize the relationship using the image below. Note the code is hidden given it’s length!</p>
+<p><span class="math inline">\(\alpha\)</span> sets the limit we are ok with for rejecting H<sub>O</sub> when it is true (a <em>Type 1</em> error). Alternatively, a <em>Type II</em> error is when we do not reject H<sub>O</sub> even when it’s is false. Importantly, <span class="math inline">\(\alpha + \beta \neq 1\)</span>! Instead, <span class="math inline">\(\alpha + (1-\alpha)\)</span> is the probability space for H<sub>O</sub>, and <span class="math inline">\(\beta + (1-\beta)\)</span> (or <span class="math inline">\(\beta + power\)</span>) is the probability space for H<sub>A</sub>. How they overlap depends on the signal, as the the distribution of signals under H<sub>A</sub> is close to what we already estimated for confidence intervals! You can visualize the relationship using the image below. Note the code is hidden given it’s length!</p>
 <div class="cell">
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
@@ -520,7 +530,15 @@ probability of success
 <p><img src="Binomial_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>The key point is the experimenter sets H<sub>O</sub> and <span class="math inline">\(\alpha\)</span>. Here we clearly see that in a typical test (like what we illustrated above) <span class="math inline">\(\alpha\)</span> is split among the top and bottom of the distribution of signals under H<sub>O</sub> to create <em>rejection regions</em>. Note if we decrease <span class="math inline">\(\alpha\)</span>, which we can, we also decrease the power of the test! These issues come up in <em>power analysis</em>, which is way of using prior estimates of the distribution of signals to determine appropriate sample sizes needed to detect significant results. (Another form of power analysis occurs after a test is carried out, but this basically rehashing the p-value <span class="citation" data-cites="levine2001">Levine and Ensom (<a href="#ref-levine2001" role="doc-biblioref">2001</a>)</span> <span class="citation" data-cites="heckman2022">Heckman, Davis, and Crowson (<a href="#ref-heckman2022" role="doc-biblioref">2022</a>)</span>.</p>
+<p>The key point is the experimenter sets H<sub>O</sub> and <span class="math inline">\(\alpha\)</span>. Here we clearly see that in a typical test (like what we illustrated above) <span class="math inline">\(\alpha\)</span> is split among the top and bottom of the distribution of signals under H<sub>O</sub> to create <em>rejection regions</em>. Note if we decrease <span class="math inline">\(\alpha\)</span>, which we can, we also decrease the power of the test! On a related note, we can return to an earlier image</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/ppv, npv, sensitivity, and specificity.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">A 3D visualisaion of PPV, NPV, Sensitivity and Specificity. Luigi Albert Maria, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons</figcaption>
+</figure>
+</div>
+<p>and note that power is equal to sensitivity!</p>
+<p>These issues come up in <em>power analysis</em>, which is way of using prior estimates of the distribution of signals to determine appropriate sample sizes needed to detect significant results. Another form of power analysis occurs after a test is carried out, but this basically rehashing the p-value <span class="citation" data-cites="levine2001">Levine and Ensom (<a href="#ref-levine2001" role="doc-biblioref">2001</a>)</span> <span class="citation" data-cites="heckman2022">Heckman, Davis, and Crowson (<a href="#ref-heckman2022" role="doc-biblioref">2022</a>)</span>.</p>
 <p>This all points to a central idea of NHST. Larger sample sizes let you pick up smaller differences among groups! For example, we could see the same proportion (50%) of older birds in our sample, but if we only collected 8 individuals we would not be able to reject H<sub>O</sub>. Note,</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">4</span>,<span class="dv">8</span>,<span class="at">p=</span>.<span class="dv">75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
