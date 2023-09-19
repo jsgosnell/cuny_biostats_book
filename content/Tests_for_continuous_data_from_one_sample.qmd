@@ -1,9 +1,41 @@
 ---
 title: One sample tests for continuous data
-subtitle: Extending tests!
+subtitle: The one where we fully introduce normality
 bibliography: references.bib
 ---
 
 In this chapter will build on our introduction to significance testing
-by considering tests for continous data collected on one trait from a
-single population.
+by considering tests for continuous data collected on one trait from a
+single population. This will also allow/require us to more fully define
+*normal* distributions, which we have already started to discuss.
+
+## Example
+
+Let's return to our iris data and focus on sepal lengths of *I.
+viriginica*.
+
+```{r}
+library(ggplot2)
+ggplot(iris[iris$Species == "virginica",],
+              aes(x=Sepal.Length)) +
+  geom_histogram( fill="blue", color="black") +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"))),
+       x= "Sepal length (cm)",
+       y= "Frequency")
+```
+
+What if we wanted to test if the height was equal to a certain value
+like 7 cm?
+
+**We can't, and it's not**.
+
+Height is a random variable. It differs among individuals (see above),
+so it isn't equal to any specific value. This may seem obvious, but it's
+an important step in understanding hypothesis testing. What we actually
+(might) want to test is something about the distribution of height. In
+fact, we typically focus on the *mean* of the distribution. So, we can
+ask if the *mean* height of *I. virginica* is equal to 7 cm.
+
+To do this, we need to do what we did with binomial data: develop a null
+hypotheses, use it to construct a null distribution, and compare our
+data to it see how unusual it is (and get a p-value).

@@ -230,7 +230,7 @@ approach. Consider these graphs.
 ```{r}
 #| label: fig-cardinals_plot
 #| fig-cap: "Example of left-skewed data (plot)"
-cardinals <- round(rbeta(10000,70,5),3)
+cardinals <- round(rbeta(10000,10,2)*50+runif(10000,5,10),3)
 hist(cardinals, main="Weight of Westchester cardinals", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "red", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
 
 ```
@@ -249,7 +249,7 @@ ggplot(data.frame(cardinals),
 ```{r}
 #| label: fig-parrots
 #| fig-cap: "Example of normal data"
-parrots<- round(c(rnorm(1000,.9,4)),3)
+parrots<- round(c(rnorm(1000,400,10)),3)
 ggplot(data.frame(parrots), 
        aes(x=parrots)) +
   geom_histogram( fill="green", color="black") +
@@ -261,7 +261,7 @@ ggplot(data.frame(parrots),
 ```{r}
 #| label: fig-blue_jays
 #| fig-cap: "Example of right-skewed data"
-blue_jays <- round(rbeta(10000,2,10),3)
+blue_jays <- round(rbeta(10000,2,8)*100+runif(10000,60,80),3)
 ggplot(data.frame(blue_jays), 
        aes(x=blue_jays)) +
   geom_histogram( fill="blue", color="black") +
@@ -284,7 +284,7 @@ woodpecker weights.
 ```{r}
 #| label: fig-robins
 #| fig-cap: "Example of uniform data"
-rochester <- round(c(runif(1000,.1,8)),3)
+rochester <- round(c(runif(1000,75,85)),3)
 ggplot(data.frame(rochester), 
        aes(x=rochester)) +
   geom_histogram( fill="pink", color="black") +
@@ -297,7 +297,7 @@ ggplot(data.frame(rochester),
 ```{r}
 #| label: fig-woodpeckers
 #| fig-cap: "Example of bimodal data"
-woodpeckers <- round(c(rnorm(100,20,4),rnorm(100,40,4)),3)
+woodpeckers <- round(c(rnorm(100,60,4),rnorm(100,80,4)),3)
 ggplot(data.frame(woodpeckers), 
        aes(x=woodpeckers)) +
   geom_histogram( fill="orange", color="black") +

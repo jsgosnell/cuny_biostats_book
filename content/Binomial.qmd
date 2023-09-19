@@ -472,7 +472,15 @@ two-tailed) tests. This means we considered deviations from our value
 under the null hypothesis (for p-values) or via sampling error (for
 confidence intervals) based on their magnitude, and not direction.
 However, we can instead decide we want to consider differences to one
-"side" of our value of interest.
+"side" of our value of interest. Following this idea, we have 3 options
+for our null and alternative hypotheses (note *C* is a constant value
+here!):
+
+|          |                         |                                                        |                                                     |
+|----------|-------------------------|--------------------------------------------------------|-----------------------------------------------------|
+|          | **Two-sided (typical)** | **Focused on signals greater than predicted in null**  | **Focused on signals less than predicted in null**  |
+| **H~O~** | p = C                   | p \<= C                                                | p \>= C                                             |
+| **H~A~** | p $\neq$ C              | p \> C                                                 | p \< C                                              |
 
 For example, Claramunt et al @claramunt2022 wished to consider if roads
 impaired bird movement. To do they considered if banded birds were more
@@ -516,7 +524,7 @@ estimate for the proportion of older birds `r 9/18`. Just like for
 continuous data, we can consider sampling error in our estimate. This is
 actually a bit tricky,and many ways have been proposed to do this
 [@subedi2019]. Note, for example, the *binom.confint* function in the
-*binom* package gives 10 options, where
+*binom* package gives multiple options. For the function,
 
 -   the first argument is the number of successes
 
