@@ -82,7 +82,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../content/acknowledgements.html" rel="next">
+<link href="../content/Tests_for_continuous_data_from_one_sample.html" rel="next">
 <link href="../content/Probability.html" rel="prev">
 <link href="../images/favicon.ico" rel="icon">
 <script src="../site_libs/quarto-html/quarto.js"></script>
@@ -234,6 +234,12 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../content/Tests_for_continuous_data_from_one_sample.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tests for continuous data from one sample</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../content/acknowledgements.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Acknowledgements</span></a>
   </div>
@@ -366,7 +372,8 @@ div.csl-indent {
 <p><span class="math display">\[
 H_O: p=.75
 \]</span></p>
-<p>where <em>p</em> is the probability of a bird in our sample being old. Note we could instead focus on young birds and get:<br>
+<p>where <em>p</em> is the probability of a bird in our sample being old (for a single draw), or what we expect on average over larger samples (a proportion!). Remember, to find a proportion, you count the number of samples that fall in a given group and divided that by the total number sampled. Alternatively, you can assign a score of <em>0</em> for values that are not in the focal group and a score of <em>1</em> to samples that are - the average of these scores will give you the proportion.</p>
+<p>Note we could instead focus on young birds and get:<br>
 <span class="math display">\[
 H_O: p=.25
 \]</span></p>
@@ -381,7 +388,8 @@ H_A: p \neq .75
 </section>
 <section id="binomial-data" class="level2">
 <h2 class="anchored" data-anchor-id="binomial-data">Binomial data</h2>
-<p>This example focuses on data that only has 2 outcomes (young and old in our example). That is known as <em>binomial</em> data. <strong>For any type of data, we can simulate a distribution under the null hypothesis</strong>. For this example, we could put 4 pieces of paper in a hat, 3 labelled <em>older</em> and 1 labelled <em>younger</em>. We can then draw a sample of 18 (the number we actually observed) by drawing a piece of paper, writing down what it says, returning it to the hat, and repeating the process 9 more times to get single sample. For each sample, you could then calculate the observed proportion of older birds. You could visualize the spread of those results using a histogram. It’s important to realize this is <em>doable</em> without a computer (think it through), but it would take a lot of time because you need a lot of samples (<strong>we’ll come back to this</strong>).</p>
+<p>This example focuses on data that only has 2 outcomes (young and old in our example). That is known as <em>binomial</em> data (so if data can be divided into two categories, we call it <em>binomial data</em>). A special case of binomial data exists when we only get one organism in our sample (e.g., one bird, one coin flip). We call this <em>Bernoulli</em> data.</p>
+<p><strong>For any type of data, we can simulate a distribution under the null hypothesis</strong>. For this example, we could put 4 pieces of paper in a hat, 3 labelled <em>older</em> and 1 labelled <em>younger</em>. We can then draw a sample of 18 (the number we actually observed) by drawing a piece of paper, writing down what it says, returning it to the hat, and repeating the process 9 more times to get single sample. For each sample, you could then calculate the observed proportion of older birds. You could visualize the spread of those results using a histogram. It’s important to realize this is <em>doable</em> without a computer (think it through), but it would take a lot of time because you need a lot of samples (<strong>we’ll come back to this</strong>).</p>
 <p>For now, let’s do it with the computer. Let’s also take a shortcut: Instead of younger and older, let’s label the pieces of paper 0 and 1. We will also call the 0’s failures and the 1’s successes. Then we can sum the draws and divide by 10 to get the proportion of successes (make sure you understand why!). For now, let’s do a 1000 random draws of 18.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>choices <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">1</span>),<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
@@ -397,7 +405,7 @@ H_A: p \neq .75
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sampling_experiment<span class="sc">$</span>observed_proportion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.8333333 0.7222222 0.7222222 0.5555556 0.7777778 0.8333333</code></pre>
+<pre><code>[1] 0.7777778 0.6111111 0.7777778 0.8333333 0.7222222 0.6111111</code></pre>
 </div>
 </div>
 <p>Note we see some variation. Also note it is <em>impossible</em> to get a proportion of .75. Why? We only sampled 18 individuals, so we can’t get any outcomes that aren’t some form of a whole number less than 18 divided by 18. This seems simple, but it’s a reminder that your signal being different than your hypothesized value is not sufficient to reject the null hypothesis!</p>
@@ -416,9 +424,9 @@ H_A: p \neq .75
 <p><img src="Binomial_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Just looking at this, it seems getting a proportion of .5 is unlikely. It only occurred 16 times. However, we also need to note how often <em>more</em> extreme outcomes occurred. Why?</p>
+<p>Just looking at this, it seems getting a proportion of .5 is unlikely. It only occurred 19 times. However, we also need to note how often <em>more</em> extreme outcomes occurred. Why?</p>
 <p>More extreme values (the same or further distance away from the hypothesized value as our observed signal were) are also useful in considering if the null hypothesis is valid. When we move to continuous distributions, it’s also impossible to get a certain value (as mentioned in the probability section).</p>
-<p>In this example, our observed proportion was .5. That’s .25 away from the value under the null hypothesis (.75), so we should all simulations that were . 5 or less or 1 or more. That only happened 27 times. So, in taking 1000 random draws from our null population, we only saw what we actually observed (or something more extreme) 0.027% of the time.</p>
+<p>In this example, our observed proportion was .5. That’s .25 away from the value under the null hypothesis (.75), so we should all simulations that were . 5 or less or 1 or more. That only happened 30 times. So, in taking 1000 random draws from our null population, we only saw what we actually observed (or something more extreme) 0.03% of the time.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sampling_experiment<span class="sc">$</span>Proportion <span class="ot">=</span> <span class="fu">ifelse</span>(sampling_experiment<span class="sc">$</span>observed_proportion <span class="sc">&lt;=</span> .<span class="dv">5</span>, </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">'&lt;= .5'</span>, <span class="fu">ifelse</span>(sampling_experiment<span class="sc">$</span>observed_proportion <span class="sc">&gt;=</span> <span class="dv">1</span>, <span class="st">'&gt;.5 &amp; &lt; 1'</span>, <span class="st">'&gt;= 1'</span>))</span>
@@ -444,7 +452,7 @@ H_A: p \neq .75
 <p>Explaining p-values is hard! You can see some statisticians try to explain the concept <a href="https://www.youtube.com/watch?v=bz9nzc-jVEE&amp;t=4s" target="_blank">here</a>.</p>
 <p>A smaller p-value therefore means it is less likely to obtain your observed signal, or something more extreme, by chance when the null hypothesis is true. Traditionally, a p-value of less than .05 is thought to be sufficient evidence to reject the null hypothesis. This comparison value is sometimes called the <span class="math inline">\(\alpha\)</span> (alpha) level. While we now often get specific p-values from software, historically people used tables to find ranges (less than .05, for example).</p>
 <p>As shown above, we can always use simulations to obtain a p-value. However, without a computer (and even with) it’s cumbersome. We also have to redo it for every change (for example, what if our sample contained 19 instead of 18 birds?). Another option is to find an algorithm that can be used to calculate a distribution that is very close to what we saw with the simulation.</p>
-<p>In the case of our binomial data, very close actually means exact. The binomial data is an example of data where we can fully describe the probability outcomes a sample may take. While not developed here, this means we use the <em>binomial distribution</em> to calculate our probabilities. This distribution allows calculations of how often you would expect <em>s</em> successes for a set number of trials (<em>n-s</em>) if a population had a proportion of <em>p</em> for the focal trait. It is based on the multiplication rule of probability (you can find the probability independent events by multiplying their respective probabilities) and using combinations to determine how many ways one can arrange <em>s</em> successes in <em>n</em> draws. It can be written as</p>
+<p>In the case of our binomial data, very close actually means exact. The binomial data is an example of data where we can fully describe the probability outcomes a sample may take. While not developed here, this means we use the <em>binomial distribution</em> to calculate our probabilities. This distribution allows calculations of how often you would expect <em>s</em> successes for a set number of trials (<em>n-s</em>) if a population had a proportion of <em>p</em> for the focal trait. It is based on the multiplication rule of probability (you can find the probability independent events by multiplying their respective probabilities) and using combinations to determine how many ways one can arrange <em>s</em> successes in <em>n</em> draws (since order of successes and failures is not important here). It can be written as</p>
 <p><span class="math display">\[
 P[n \ successes] = {n\choose s}p^s(1-p)^{n-s}
 \]</span></p>
@@ -488,9 +496,9 @@ probability of success
 <p>Note our p-value is the probability we would get a signal like we observed by chance <em>if</em> the null hypothesis was true. This means for an <span class="math inline">\(\alpha\)</span> of .05,we would expect to see something this extreme by chance 1 time out of 20! In other words, we can have errors. Think about it this way:</p>
 <table class="table">
 <colgroup>
-<col style="width: 31%">
-<col style="width: 31%">
 <col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 23%">
 </colgroup>
 <tbody>
 <tr class="odd">
@@ -541,9 +549,35 @@ probability of success
 </div>
 <p>and note that power is equal to sensitivity!</p>
 <p>These issues come up in <em>power analysis</em>, which is way of using prior estimates of the distribution of signals to determine appropriate sample sizes needed to detect significant results. Another form of power analysis occurs after a test is carried out, but this basically rehashing the p-value <span class="citation" data-cites="levine2001">Levine and Ensom (<a href="#ref-levine2001" role="doc-biblioref">2001</a>)</span> <span class="citation" data-cites="heckman2022">Heckman, Davis, and Crowson (<a href="#ref-heckman2022" role="doc-biblioref">2022</a>)</span>.</p>
-<p>This all points to a central idea of NHST. Larger sample sizes let you pick up smaller differences among groups! For example, we could see the same proportion (50%) of older birds in our sample, but if we only collected 8 individuals we would not be able to reject H<sub>O</sub>. Note,</p>
+<p>This all points to a central idea of NHST. Larger sample sizes let you pick up smaller differences among groups! For example, we could see the same proportion (50%) of older birds in our sample, but if we only collected 8 individuals we would not be able to reject H<sub>O</sub>. Note what happens to our simulation outcomes:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">4</span>,<span class="dv">8</span>,<span class="at">p=</span>.<span class="dv">75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>number_of_draws <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>number_of_simulations <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>sampling_experiment<span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">"observed_proportion"</span> <span class="ot">=</span> <span class="fu">rep</span>(<span class="cn">NA</span>, number_of_simulations))</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>number_of_simulations){</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>sampling_experiment<span class="sc">$</span>observed_proportion[i] <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">sample</span>(choices,number_of_draws, <span class="at">replace=</span>T))<span class="sc">/</span>number_of_draws</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>sampling_experiment<span class="sc">$</span>Proportion <span class="ot">=</span> <span class="fu">ifelse</span>(sampling_experiment<span class="sc">$</span>observed_proportion <span class="sc">&lt;=</span> .<span class="dv">5</span>, </span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">'&lt;= .5'</span>, <span class="fu">ifelse</span>(sampling_experiment<span class="sc">$</span>observed_proportion <span class="sc">&gt;=</span> <span class="dv">1</span>, <span class="st">'&gt;.5 &amp; &lt; 1'</span>, <span class="st">'&gt;= 1'</span>))</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sampling_experiment,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>observed_proportion, <span class="at">fill=</span>Proportion)) <span class="sc">+</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Observed proportions from 1000 random draws"</span>,</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Proportion"</span>,</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Binomial_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>So now, we find that outcomes that are as or more extreme than what we saw in the actual data occur 2 times. So, in taking 1000 random draws from our null population, we only saw what we actually observed (or something more extreme) 0.002% of the time. Similarly,</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">4</span>,<span class="dv">8</span>,<span class="at">p=</span>.<span class="dv">75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Exact binomial test
@@ -559,6 +593,23 @@ probability of success
 </div>
 </div>
 <p>leads to a p-value which is &gt;.05, so we fail to reject H<sub>O</sub>. Again, this relates to how sampling error interacts with sample size, much as we saw when constructing confidence intervals. This means we have to differentiate between <em>statistical significance</em> and <em>importance</em>.</p>
+<p>Given a large enough sample size, we can detect very small differences from our parameter value under the null hypothesis. For example, what if data from another population of finches showed 780 older birds out of a sample of 1000 birds that collided with windows. If we assume the population distribution in regards to age is the same, we still get</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">780</span>,<span class="dv">1000</span>, <span class="at">p =</span> .<span class="dv">75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Exact binomial test
+
+data:  780 and 1000
+number of successes = 780, number of trials = 1000, p-value = 0.02843
+alternative hypothesis: true probability of success is not equal to 0.75
+95 percent confidence interval:
+ 0.7530202 0.8053200
+sample estimates:
+probability of success 
+                  0.78 </code></pre>
+</div>
+</div>
 </section>
 <section id="estimates-and-p-values-work-together" class="level2">
 <h2 class="anchored" data-anchor-id="estimates-and-p-values-work-together">Estimates and p-values work together</h2>
@@ -569,15 +620,17 @@ probability of success
 <p>In introducing the p-value (and estimation) we focused on two-sided (or two-tailed) tests. This means we considered deviations from our value under the null hypothesis (for p-values) or via sampling error (for confidence intervals) based on their magnitude, and not direction. However, we can instead decide we want to consider differences to one “side” of our value of interest. Following this idea, we have 3 options for our null and alternative hypotheses (note <em>C</em> is a constant value here!):</p>
 <table class="table">
 <colgroup>
-<col style="width: 7%">
-<col style="width: 17%">
-<col style="width: 38%">
-<col style="width: 36%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 31%">
+<col style="width: 29%">
 </colgroup>
 <tbody>
 <tr class="odd">
 <td></td>
-<td><strong>Two-sided (typical)</strong></td>
+<td><ul>
+<li>*Two-sided ( typical)**</li>
+</ul></td>
 <td><strong>Focused on signals greater than predicted in null</strong></td>
 <td><strong>Focused on signals less than predicted in null</strong></td>
 </tr>
@@ -597,7 +650,7 @@ probability of success
 </table>
 <p>For example, Claramunt et al <span class="citation" data-cites="claramunt2022">Claramunt, Hong, and Bravo (<a href="#ref-claramunt2022" role="doc-biblioref">2022</a>)</span> wished to consider if roads impaired bird movement. To do they considered if banded birds were more likely to be recapture in one of 3 areas across a road from their original location or one of 6 on the same side on which they were captured. They were only interested if roads reduced bird movement, so they were justified in using a <em>sided</em> test. These tests move all the rejection region to one side. You can run these by adding an <em>alternative</em> argument to binom.test</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">116</span>,<span class="dv">641</span>, <span class="at">p=</span>.<span class="dv">33</span>, <span class="at">alternative =</span> <span class="st">"less"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">116</span>,<span class="dv">641</span>, <span class="at">p=</span>.<span class="dv">33</span>, <span class="at">alternative =</span> <span class="st">"less"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Exact binomial test
@@ -625,14 +678,28 @@ H_A: p &lt; .33
 <section id="tying-it-all-together" class="level2">
 <h2 class="anchored" data-anchor-id="tying-it-all-together">Tying it all together</h2>
 <p>Let’s return to our bird collision example and connect estimation and p-values (and teach you how to estimate confidence intervals for binomial data).</p>
-<p>Remember, we found 9 older birds in our sample of 18. This means our estimate for the proportion of older birds 0.5. Just like for continuous data, we can consider sampling error in our estimate. This is actually a bit tricky,and many ways have been proposed to do this <span class="citation" data-cites="subedi2019">(<a href="#ref-subedi2019" role="doc-biblioref">Subedi and Issos 2019</a>)</span>. Note, for example, the <em>binom.confint</em> function in the <em>binom</em> package gives multiple options. For the function,</p>
+<p>Remember, we found 9 older birds in our sample of 18. This means our estimate for the proportion of older birds 0.5. Just like for continuous data, we can consider sampling error in our estimate. Let’s think about how that might happen.</p>
+<details>
+<summary>
+<p>In short, the standard error of <em>p</em> is</p>
+<p><span class="math display">\[
+SE(p) = \sqrt{\frac{p(1-p)}{N}}
+\]</span>but since we don’t know p, we use our estimate</p>
+<p><span class="math display">\[
+SE(\hat{p}) = \sqrt{\frac{(\hat{p}(1-\hat{p})}{N}}
+\]</span></p>
+<p>To find out a little more, click here.</p>
+</summary>
+<p>Let’s not derive this fully, but just think about it. We have a proportion of success <em>p</em>, so (1 - <em>p</em>) is equal to the probability of failure (since we only have 2 options). For a single draw (Bernoulli data), we could simply multiple</p>
+</details>
+<p>This is actually a bit tricky,and many ways have been proposed to do this <span class="citation" data-cites="subedi2019">(<a href="#ref-subedi2019" role="doc-biblioref">Subedi and Issos 2019</a>)</span>. Note, for example, the <em>binom.confint</em> function in the <em>binom</em> package gives multiple options. For the function,</p>
 <ul>
 <li><p>the first argument is the number of successes</p></li>
 <li><p>the second argument is the number of trials</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(binom)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.confint</span>(<span class="dv">9</span>,<span class="dv">18</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(binom)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.confint</span>(<span class="dv">9</span>,<span class="dv">18</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          method x  n mean     lower     upper
 1  agresti-coull 9 18  0.5 0.2903102 0.7096898
@@ -650,21 +717,21 @@ H_A: p &lt; .33
 </div>
 <p>For now, we will use method labelled the Agresti-Coull method, which adjusts for slight bias in other estimates and is useful across sample sizes.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>using_distribution <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">18</span>,<span class="dv">18</span>,.<span class="dv">75</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>finches <span class="ot">&lt;-</span> <span class="fu">data.frame</span> (<span class="at">Number =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">18</span>, <span class="at">Probability =</span> using_distribution)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>Proportion <span class="ot">&lt;-</span> finches<span class="sc">$</span>Number<span class="sc">/</span><span class="dv">18</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria <span class="ot">&lt;-</span> <span class="st">"retain"</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria[<span class="fu">pbinom</span>(finches<span class="sc">$</span>Number, <span class="dv">18</span>, .<span class="dv">75</span>) <span class="sc">&lt;</span> .<span class="dv">025</span>] <span class="ot">&lt;-</span> <span class="st">"reject"</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria[(<span class="dv">1</span><span class="sc">-</span><span class="fu">pbinom</span>(finches<span class="sc">$</span>Number, <span class="dv">18</span>, .<span class="dv">75</span>)) <span class="sc">&lt;</span> .<span class="dv">025</span>] <span class="ot">&lt;-</span> <span class="st">"reject"</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>proportion_observed <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">Proportion =</span> <span class="dv">9</span><span class="sc">/</span><span class="dv">18</span>, <span class="at">Probability =</span> .<span class="dv">15</span>)<span class="co">#sets height</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(finches, <span class="fu">aes</span>(<span class="at">x =</span> Proportion, <span class="at">y =</span> Probability)) <span class="sc">+</span> </span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"identity"</span>, <span class="fu">aes</span>(<span class="at">fill =</span> criteria)) <span class="sc">+</span> </span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> .<span class="dv">29031</span>, <span class="at">xend =</span> .<span class="dv">70968</span>,<span class="at">y=</span> .<span class="dv">15</span> , <span class="at">yend =</span>.<span class="dv">15</span>) <span class="sc">+</span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> .<span class="dv">75</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">9</span><span class="sc">/</span><span class="dv">18</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span> proportion_observed) <span class="sc">+</span></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Comparing p-values and confidence intervals for finch problem"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>using_distribution <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">18</span>,<span class="dv">18</span>,.<span class="dv">75</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>finches <span class="ot">&lt;-</span> <span class="fu">data.frame</span> (<span class="at">Number =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">18</span>, <span class="at">Probability =</span> using_distribution)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>Proportion <span class="ot">&lt;-</span> finches<span class="sc">$</span>Number<span class="sc">/</span><span class="dv">18</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria <span class="ot">&lt;-</span> <span class="st">"retain"</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria[<span class="fu">pbinom</span>(finches<span class="sc">$</span>Number, <span class="dv">18</span>, .<span class="dv">75</span>) <span class="sc">&lt;</span> .<span class="dv">025</span>] <span class="ot">&lt;-</span> <span class="st">"reject"</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria[(<span class="dv">1</span><span class="sc">-</span><span class="fu">pbinom</span>(finches<span class="sc">$</span>Number, <span class="dv">18</span>, .<span class="dv">75</span>)) <span class="sc">&lt;</span> .<span class="dv">025</span>] <span class="ot">&lt;-</span> <span class="st">"reject"</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>proportion_observed <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">Proportion =</span> <span class="dv">9</span><span class="sc">/</span><span class="dv">18</span>, <span class="at">Probability =</span> .<span class="dv">15</span>)<span class="co">#sets height</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(finches, <span class="fu">aes</span>(<span class="at">x =</span> Proportion, <span class="at">y =</span> Probability)) <span class="sc">+</span> </span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"identity"</span>, <span class="fu">aes</span>(<span class="at">fill =</span> criteria)) <span class="sc">+</span> </span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> .<span class="dv">29031</span>, <span class="at">xend =</span> .<span class="dv">70968</span>,<span class="at">y=</span> .<span class="dv">15</span> , <span class="at">yend =</span>.<span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> .<span class="dv">75</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">9</span><span class="sc">/</span><span class="dv">18</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span> proportion_observed) <span class="sc">+</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Comparing p-values and confidence intervals for finch problem"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Binomial_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<p><img src="Binomial_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Note we see our rejection region in red; it also contains our estimate! Similarly, the 95% confidence interval for our estimate does not contain the paramater value under the null hypothesis!</p>
@@ -1049,8 +1116,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../content/acknowledgements.html" class="pagination-link">
-        <span class="nav-page-text">Acknowledgements</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../content/Tests_for_continuous_data_from_one_sample.html" class="pagination-link">
+        <span class="nav-page-text">Tests for continuous data from one sample</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

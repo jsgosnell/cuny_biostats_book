@@ -63,6 +63,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../content/acknowledgements.html" rel="next">
+<link href="../content/Binomial.html" rel="prev">
 <link href="../images/favicon.ico" rel="icon">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -110,9 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
-      Biostatistics: Concepts and approaches for collecting good data and  turning it into knowledge!
-      </li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../content/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../content/Tests_for_continuous_data_from_one_sample.html">Tests for continuous data from one sample</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -211,6 +211,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../content/Binomial.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Hypothesis testing starting with binomial tests</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/Tests_for_continuous_data_from_one_sample.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Tests for continuous data from one sample</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -327,10 +333,20 @@ What is our null hypothesis for this example?
 </summary>
 <p>For this example, we are focused on a two-tailed test (we are asking if the mean is equal to a certain value), so we have</p>
 <p><span class="math display">\[
+\begin{split}
 H_O: \mu_{height} = 7 \ cm \\
 H_A: \mu_{height} \neq 7 \ cm
+\end(split)
 \]</span></p>
 </details>
+<p>Now that we have a null hypothesis, we need to test it. We can do this by simulation. Let’s make a distribution where the <span class="math inline">\(\mu_{height} =7 \  cm\)</span>, then draw samples from it and see how rare it is to get what we actually observed in the data…which was</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6.588</code></pre>
+</div>
+</div>
+<p>Seems easy enough, but what distribution do we draw from? For our binomial data we knew exactly what to parameterize - that’s because the entire distribution is described by the parameter <em>p</em> (go back to the last chapter and note we can find the spread using this one variable as well!).</p>
 
 
 </section>
@@ -684,6 +700,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../content/Binomial.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Hypothesis testing starting with binomial tests</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../content/acknowledgements.html" class="pagination-link">
+        <span class="nav-page-text">Acknowledgements</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">

@@ -218,6 +218,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../content/Tests_for_continuous_data_from_one_sample.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tests for continuous data from one sample</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../content/acknowledgements.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Acknowledgements</span></a>
   </div>
@@ -289,7 +295,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#central-tendency" id="toc-central-tendency" class="nav-link" data-scroll-target="#central-tendency">Central tendency</a></li>
   <li><a href="#spread" id="toc-spread" class="nav-link" data-scroll-target="#spread">Spread</a></li>
-  <li><a href="#others-worth-knowingremembering" id="toc-others-worth-knowingremembering" class="nav-link" data-scroll-target="#others-worth-knowingremembering">Others worth knowing/remembering</a></li>
+  <li><a href="#coefficient-of-variation" id="toc-coefficient-of-variation" class="nav-link" data-scroll-target="#coefficient-of-variation">Coefficient of variation</a></li>
+  <li><a href="#odds-and-ends-quartiles-percentiles-other-splits-maximum-and-minimum" id="toc-odds-and-ends-quartiles-percentiles-other-splits-maximum-and-minimum" class="nav-link" data-scroll-target="#odds-and-ends-quartiles-percentiles-other-splits-maximum-and-minimum">Odds and Ends: Quartiles, percentiles, other splits, maximum and minimum</a></li>
+  <li><a href="#proportions-for-categorical-data" id="toc-proportions-for-categorical-data" class="nav-link" data-scroll-target="#proportions-for-categorical-data">Proportions for categorical data</a></li>
   </ul></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
@@ -1530,7 +1538,7 @@ Attaching package: 'ggpubr'</code></pre>
 <summary>
 Why is the mode not always on the highest bar?
 </summary>
-<p>Note the mode is heavily/totally impacted by data precision and thus can lead to unusual matches with histograms. In our above example, cardinals were measured to 10<sup>-3</sup> grams. However, the data was binned to levels of 10<sup>-2</sup> grams. Due to this mismatch, the most common measurement of the <em>raw</em> data was 50.031, which occurred 6 times. However, more data points still fell in another bin!</p>
+<p>Note the mode is heavily/totally impacted by data precision and thus can lead to unusual matches with histograms. In our above example, cardinals were measured to 10<sup>-3</sup> grams. However, the data was binned to levels of 10<sup>-2</sup> grams. Due to this mismatch, the most common measurement of the <em>raw</em> data was 47.513, which occurred 5 times. However, more data points still fell in another bin!</p>
 </details>
 <p>A special case where central tendency may not be the best way to describe a distribution is known as <em>bimodal</em> data. In this case, the distribution shows two, not one, clear peak. Remember the woodpecker <a href="#fig-woodpeckers">Figure&nbsp;14</a> data?</p>
 <div class="cell">
@@ -1681,19 +1689,22 @@ standard\;deviation = sd= \sqrt{variance}
 \]</span></p>
 <p>This metric is now in the same units as the mean (<span class="math inline">\(\mu\)</span>), so we can plot them easily on the same graph! This will become important later, especially when we discuss normal distributions.</p>
 </section>
-<section id="others-worth-knowingremembering" class="level3">
-<h3 class="anchored" data-anchor-id="others-worth-knowingremembering">Others worth knowing/remembering</h3>
+<section id="coefficient-of-variation" class="level3">
+<h3 class="anchored" data-anchor-id="coefficient-of-variation">Coefficient of variation</h3>
 <p>The coefficient of variation, <span class="math inline">\(CV\)</span>, is found using the formula</p>
 <p><span class="math display">\[
 CV = \frac{s}{Y} * 100\%
 \]</span></p>
 <p>This scales the variance (spread) of the data by the mean. The <span class="math inline">\(CV\)</span> is unitless and can be used to compare various distributions.</p>
+</section>
+<section id="odds-and-ends-quartiles-percentiles-other-splits-maximum-and-minimum" class="level3">
+<h3 class="anchored" data-anchor-id="odds-and-ends-quartiles-percentiles-other-splits-maximum-and-minimum">Odds and Ends: Quartiles, percentiles, other splits, maximum and minimum</h3>
 <p>As noted above in the discussion of five-number summaries, we can also find the assorted quartiles, minimum, and maximum of a dataset. This can be especially helpful when the mean isn’t a useful measure of central tendency (since variance and <span class="math inline">\(CV\)</span> rely on the estimate of the mean!). For examples, see <a href="#fig-cardinals_plot">Figure&nbsp;9</a>. The original five number summary is</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cardinals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  16.66   46.01   50.10   49.20   53.21   59.61 </code></pre>
+  21.85   46.06   50.07   49.20   53.19   59.65 </code></pre>
 </div>
 </div>
 <p>Note that if we shifted the bottom 10% of the values even <em>further</em> left (increasing the skew), the median stays the same, as does the IQR.</p>
@@ -1713,7 +1724,7 @@ CV = \frac{s}{Y} * 100\%
 <div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cardinals_new)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  16.25   46.01   50.10   49.16   53.21   59.61 </code></pre>
+  21.45   46.06   50.07   49.16   53.19   59.65 </code></pre>
 </div>
 <div class="cell-output-display">
 <div id="fig-cardinals_ggplot2_shifted" class="quarto-figure quarto-figure-center anchored">
@@ -1724,6 +1735,9 @@ CV = \frac{s}{Y} * 100\%
 </div>
 </div>
 </div>
+</section>
+<section id="proportions-for-categorical-data" class="level3">
+<h3 class="anchored" data-anchor-id="proportions-for-categorical-data">Proportions for categorical data</h3>
 <p>Finally, if we have categorical instead of numerical data, we can find the proportion of data in each category. We mentioned this approach when producing mosaic plots. To find a proportion, you count the number of samples that fall in a given group and divided that by the total number sampled. Alternatively, you can assign a score of <em>0</em> for values that are not in the focal group and a score of <em>1</em> to samples that are - the average of these scores will give you the proportion.</p>
 <p>For example, earlier we plotted how flower color differed among species and location.</p>
 <div class="cell">
