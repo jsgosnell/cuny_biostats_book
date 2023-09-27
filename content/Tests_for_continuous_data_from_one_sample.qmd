@@ -172,3 +172,54 @@ stat_function(fun = dnorm, args = list(mean = mean(iris[iris$Species == "virgini
 ```
 
 Note it fits fairly well, so we'll use it for our sampling experiment.
+To do so, we'll take 50 draws (since we had a sample size of 50) from a
+normal distribution, find means for each draw, then consider their
+distribution.
+
+```{r}
+number_of_draws <- 50
+number_of_simulations <- 1000
+
+sampling_experiment<- data.frame("observed_mean" = rep(NA, number_of_simulations))
+for(i in 1:number_of_simulations){
+sampling_experiment$observed_mean[i] = mean(rnorm(50, 7, sd = sd(iris[iris$Species == "virginica","Sepal.Length"])))
+}
+
+```
+
+Let's check out the first few outcomes
+
+```{r}
+head(sampling_experiment)
+```
+
+and plot them
+
+```{r}
+ggplot(sampling_experiment,
+              aes(x=observed_mean)) +
+  geom_histogram(color="black") +
+  labs(title="Observed means from 1000 random draws",
+       x= "Mean",
+       y= "Frequency")
+```
+
+Now let's see how that compares to what we actually saw.
+
+```{r}
+sampling_experiment$compare =   ifelse(abs(sampling_experiment$observed_mean-7) >= abs(mean(iris[iris$Species == "virginica","Sepal.Length"])-7), 'as or more extreme', 'not as or more extreme')
+
+sampling_experiment$compare <- factor(sampling_experiment$compare)
+levels(sampling_experiment$compare) <- c(levels(sampling_experiment$compare), "as or more extreme")
+
+ggplot(sampling_experiment,
+              aes(x=observed_mean, fill=compare)) +
+  geom_histogram(color="black") +
+  labs(title="Observed means from 1000 random draws",
+       x= "Mean",
+       y= "Frequency") +
+    scale_fill_discrete(drop = FALSE)
+
+```
+
+So in our example simulation,

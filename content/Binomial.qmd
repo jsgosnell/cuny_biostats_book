@@ -236,6 +236,8 @@ sampling_experiment$Proportion = ifelse(sampling_experiment$observed_proportion 
                                   '<= .5', ifelse(sampling_experiment$observed_proportion >= 1, '>.5 & < 1', '>= 1'))
 
 
+
+
 ggplot(sampling_experiment,
               aes(x=observed_proportion, fill=Proportion)) +
   geom_histogram(color="black") +
@@ -243,7 +245,19 @@ ggplot(sampling_experiment,
        x= "Proportion",
        y= "Frequency")
 
+```
 
+Or to think about as or more extreme..
+
+```{r}
+sampling_experiment$Proportion2 = ifelse(abs(sampling_experiment$observed_proportion-.75) >= abs(9/18-.75), 'as or more extreme', 'not as or more extreme')
+
+ggplot(sampling_experiment,
+              aes(x=observed_proportion, fill=Proportion2)) +
+  geom_histogram(color="black") +
+  labs(title="Observed proportions from 1000 random draws",
+       x= "Proportion",
+       y= "Frequency")
 ```
 
 ## Welcome to the p-value
