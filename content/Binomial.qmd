@@ -115,8 +115,15 @@ $$
 H_O: p=.75
 $$
 
-where *p* is the probability of a bird in our sample being old. Note we
-could instead focus on young birds and get:\
+where *p* is the probability of a bird in our sample being old (for a
+single draw), or what we expect on average over larger samples (a
+proportion!). Remember, to find a proportion, you count the number of
+samples that fall in a given group and divided that by the total number
+sampled. Alternatively, you can assign a score of *0* for values that
+are not in the focal group and a score of *1* to samples that are - the
+average of these scores will give you the proportion.
+
+Note we could instead focus on young birds and get:\
 $$
 H_O: p=.25
 $$
@@ -142,17 +149,22 @@ the sample and multiple draws.
 ## Binomial data
 
 This example focuses on data that only has 2 outcomes (young and old in
-our example). That is known as *binomial* data. **For any type of data,
-we can simulate a distribution under the null hypothesis**. For this
-example, we could put 4 pieces of paper in a hat, 3 labelled *older* and
-1 labelled *younger*. We can then draw a sample of 18 (the number we
-actually observed) by drawing a piece of paper, writing down what it
-says, returning it to the hat, and repeating the process 9 more times to
-get single sample. For each sample, you could then calculate the
-observed proportion of older birds. You could visualize the spread of
-those results using a histogram. It's important to realize this is
-*doable* without a computer (think it through), but it would take a lot
-of time because you need a lot of samples (**we'll come back to this**).
+our example). That is known as *binomial* data (so if data can be
+divided into two categories, we call it *binomial data*). A special case
+of binomial data exists when we only get one organism in our sample
+(e.g., one bird, one coin flip). We call this *Bernoulli* data.
+
+**For any type of data, we can simulate a distribution under the null
+hypothesis**. For this example, we could put 4 pieces of paper in a hat,
+3 labelled *older* and 1 labelled *younger*. We can then draw a sample
+of 18 (the number we actually observed) by drawing a piece of paper,
+writing down what it says, returning it to the hat, and repeating the
+process 9 more times to get single sample. For each sample, you could
+then calculate the observed proportion of older birds. You could
+visualize the spread of those results using a histogram. It's important
+to realize this is *doable* without a computer (think it through), but
+it would take a lot of time because you need a lot of samples (**we'll
+come back to this**).
 
 For now, let's do it with the computer. Let's also take a shortcut:
 Instead of younger and older, let's label the pieces of paper 0 and 1.
@@ -267,8 +279,9 @@ successes for a set number of trials (*n-s*) if a population had a
 proportion of *p* for the focal trait. It is based on the multiplication
 rule of probability (you can find the probability independent events by
 multiplying their respective probabilities) and using combinations to
-determine how many ways one can arrange *s* successes in *n* draws. It
-can be written as
+determine how many ways one can arrange *s* successes in *n* draws
+(since order of successes and failures is not important here). It can be
+written as
 
 $$
 P[n \ successes] = {n\choose s}p^s(1-p)^{n-s}
@@ -317,22 +330,23 @@ $\alpha$ of .05,we would expect to see something this extreme by chance
 1 time out of 20! In other words, we can have errors. Think about it
 this way:
 
-+----------------------+----------------------+---------------------+
-|                      | **Biological         |                     |
-|                      | reality**            |                     |
-+----------------------+----------------------+---------------------+
-| \                    | **H~O~ True**        | **H~O~ False**      |
-|                      |                      |                     |
-| **Decision (based on |                      |                     |
-| analysis of sample   |                      |                     |
-| data)**              |                      |                     |
-+----------------------+----------------------+---------------------+
-| **Reject H~O~**      | Type I error         | Power (1- $\beta$ ) |
-|                      | (P\[ɑ\])             |                     |
-+----------------------+----------------------+---------------------+
-| **Do not reject      | Correct (P\[1- ɑ\])  | Type II Error ( Pr\ |
-| H~O~**               |                      | \[$\b eta$\])       |
-+----------------------+----------------------+---------------------+
++---------------------+---------------------+----------------+
+|                     | **Biological        |                |
+|                     | reality**           |                |
++---------------------+---------------------+----------------+
+| \                   | **H~O~ True**       | **H~O~ False** |
+|                     |                     |                |
+| **Decision (based   |                     |                |
+| on analysis of      |                     |                |
+| sample data)**      |                     |                |
++---------------------+---------------------+----------------+
+| **Reject H~O~**     | Type I error        | Power (1-      |
+|                     | (P\[ɑ\])            | $\beta$ )      |
++---------------------+---------------------+----------------+
+| **Do not reject     | Correct (P\[1- ɑ\]) | Type II Error  |
+| H~O~**              |                     | ( Pr\          |
+|                     |                     | \[$\b eta$\])  |
++---------------------+---------------------+----------------+
 
 $\alpha$ sets the limit we are ok with for rejecting H~O~ when it is
 true (a *Type 1* error). Alternatively, a *Type II* error is when we do
@@ -444,7 +458,36 @@ rehashing the p-value @levine2001 @heckman2022.
 This all points to a central idea of NHST. Larger sample sizes let you
 pick up smaller differences among groups! For example, we could see the
 same proportion (50%) of older birds in our sample, but if we only
-collected 8 individuals we would not be able to reject H~O~. Note,
+collected 8 individuals we would not be able to reject H~O~. Note what
+happens to our simulation outcomes:
+
+```{r}
+number_of_draws <- 8
+number_of_simulations <- 1000
+
+sampling_experiment<- data.frame("observed_proportion" = rep(NA, number_of_simulations))
+for(i in 1:number_of_simulations){
+sampling_experiment$observed_proportion[i] = sum(sample(choices,number_of_draws, replace=T))/number_of_draws
+}
+sampling_experiment$Proportion = ifelse(sampling_experiment$observed_proportion <= .5, 
+                                  '<= .5', ifelse(sampling_experiment$observed_proportion >= 1, '>.5 & < 1', '>= 1'))
+
+
+ggplot(sampling_experiment,
+              aes(x=observed_proportion, fill=Proportion)) +
+  geom_histogram(color="black") +
+  labs(title="Observed proportions from 1000 random draws",
+       x= "Proportion",
+       y= "Frequency")
+```
+
+So now, we find that outcomes that are as or more extreme than what we
+saw in the actual data occur
+`r length(sampling_experiment[sampling_experiment$observed_proportion <= .5|sampling_experiment$observed_proportion >= 1,])`
+times. So, in taking 1000 random draws from our null population, we only
+saw what we actually observed (or something more extreme)
+`r length(sampling_experiment[sampling_experiment$observed_proportion <= .5|sampling_experiment$observed_proportion >= 1,])*.001`%
+of the time. Similarly,
 
 ```{r}
 binom.test(4,8,p=.75)
@@ -454,6 +497,16 @@ leads to a p-value which is \>.05, so we fail to reject H~O~. Again,
 this relates to how sampling error interacts with sample size, much as
 we saw when constructing confidence intervals. This means we have to
 differentiate between *statistical significance* and *importance*.
+
+Given a large enough sample size, we can detect very small differences
+from our parameter value under the null hypothesis. For example, what if
+data from another population of finches showed 780 older birds out of a
+sample of 1000 birds that collided with windows. If we assume the
+population distribution in regards to age is the same, we still get
+
+```{r}
+binom.test(780,1000, p = .75)
+```
 
 ## Estimates and p-values work together
 
@@ -475,11 +528,16 @@ However, we can instead decide we want to consider differences to one
 for our null and alternative hypotheses (note *C* is a constant value
 here!):
 
-|          |                         |                                                       |                                                    |
-|----------|-------------------------|-------------------------------------------------------|----------------------------------------------------|
-|          | **Two-sided (typical)** | **Focused on signals greater than predicted in null** | **Focused on signals less than predicted in null** |
-| **H~O~** | p = C                   | p \<= C                                               | p \>= C                                            |
-| **H~A~** | p $\neq$ C              | p \> C                                                | p \< C                                             |
++------------+------------+----------------------+--------------------+
+|            | *          | **Focused on signals | **Focused on       |
+|            | *Two-sided | greater than         | signals less than  |
+|            | (          | predicted in null**  | predicted in       |
+|            | typical)** |                      | null**             |
++------------+------------+----------------------+--------------------+
+| **H~O~**   | p = C      | p \<= C              | p \>= C            |
++------------+------------+----------------------+--------------------+
+| **H~A~**   | p $\neq$ C | p \> C               | p \< C             |
++------------+------------+----------------------+--------------------+
 
 For example, Claramunt et al @claramunt2022 wished to consider if roads
 impaired bird movement. To do they considered if banded birds were more
@@ -520,10 +578,33 @@ binomial data).
 
 Remember, we found 9 older birds in our sample of 18. This means our
 estimate for the proportion of older birds `r 9/18`. Just like for
-continuous data, we can consider sampling error in our estimate. This is
-actually a bit tricky,and many ways have been proposed to do this
-[@subedi2019]. Note, for example, the *binom.confint* function in the
-*binom* package gives multiple options. For the function,
+continuous data, we can consider sampling error in our estimate. Let's
+think about how that might happen.
+
+<details><summary> In short, the standard error of *p* is
+
+$$
+SE(p) = \sqrt{\frac{p(1-p)}{N}}
+$$but since we don't know p, we use our estimate
+
+$$
+SE(\hat{p}) = \sqrt{\frac{(\hat{p}(1-\hat{p})}{N}}
+$$
+
+To find out a little more, click here.
+
+</summary>
+
+Let's not derive this fully, but just think about it. We have a
+proportion of success *p*, so (1 - *p*) is equal to the probability of
+failure (since we only have 2 options). For a single draw (Bernoulli
+data), we could simply multiple
+
+</details>
+
+This is actually a bit tricky,and many ways have been proposed to do
+this [@subedi2019]. Note, for example, the *binom.confint* function in
+the *binom* package gives multiple options. For the function,
 
 -   the first argument is the number of successes
 

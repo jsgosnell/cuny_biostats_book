@@ -57,8 +57,25 @@ For this example, we are focused on a two-tailed test (we are asking if
 the mean is equal to a certain value), so we have
 
 $$
+\begin{split}
 H_O: \mu_{height} = 7 \ cm \\ 
 H_A: \mu_{height} \neq 7 \ cm
+\end(split)
 $$
 
 </details>
+
+Now that we have a null hypothesis, we need to test it. We can do this
+by simulation. Let's make a distribution where the
+$\mu_{height} =7 \  cm$, then draw samples from it and see how rare it
+is to get what we actually observed in the data...which was
+
+```{r}
+mean(iris[iris$Species == "virginica","Sepal.Length"])
+```
+
+Seems easy enough, but what distribution do we draw from? For our
+binomial data we knew exactly what to parameterize - that's because the
+entire distribution is described by the parameter *p* (go back to the
+last chapter and note we can find the spread using this one variable as
+well!).
