@@ -148,11 +148,12 @@ the sample and multiple draws.
 
 ## Binomial data
 
-This example focuses on data that only has 2 outcomes (young and old in
-our example). That is known as *binomial* data (so if data can be
-divided into two categories, we call it *binomial data*). A special case
-of binomial data exists when we only get one organism in our sample
-(e.g., one bird, one coin flip). We call this *Bernoulli* data.
+This example focuses on independent data points (one does not impact any
+others) that can be divided into 2 outcomes (young and old in our
+example). That is known as *binomial* data (so if data can be divided
+into two categories, we call it *binomial data*). A special case of
+binomial data exists when we only get one organism in our sample (e.g.,
+one bird, one coin flip). We call this *Bernoulli* data.
 
 **For any type of data, we can simulate a distribution under the null
 hypothesis**. For this example, we could put 4 pieces of paper in a hat,
@@ -322,7 +323,7 @@ simulation is very close. It should also be noted that although the
 p-value obtained by simulation will vary slightly each time, while those
 obtained using the binomial distribution will stay the same.
 
-## Understand what this means
+## Understand what this implies!
 
 Note our p-value is the probability we would get a signal like we
 observed by chance *if* the null hypothesis was true. This means for an
@@ -502,19 +503,35 @@ Given a large enough sample size, we can detect very small differences
 from our parameter value under the null hypothesis. For example, what if
 data from another population of finches showed 780 older birds out of a
 sample of 1000 birds that collided with windows. If we assume the
-population distribution in regards to age is the same, we still get
+population distribution in regards to age is the same, we are still
+testing
+
+$$
+\begin{split}
+H_O: p=.75 \\  
+H_A: p \neq .75
+\end{split}
+$$
+
+In our sample, we found a signal of `r 780/1000`, which is very close to
+.75. However, we find a p-value of
 
 ```{r}
 binom.test(780,1000, p = .75)
 ```
 
+Is the slight increase in older birds really important to understanding
+the population? Maybe, or maybe not. The point is we have to understand
+the difference between estimates and significance and the more nebulous
+idea of *importance*.
+
 ## Estimates and p-values work together
 
-This is one way estimates and NHST work together.Estimate focuses on the
-sample ( Given sampling error, where do we think true parameter lies?).
-Hypothesis testing focuses on the likelihood of the signal given the
-null distribution (how likely were we to observe data that we did, a la
-the p-value), but gives no information about the actual difference
+This is one way estimates and NHST work together. Estimate focuses on
+the sample (Given sampling error, where do we think true parameter
+lies?). Hypothesis testing focuses on the likelihood of the signal given
+the null distribution (how likely were we to observe data that we did, a
+la the p-value), but gives no information about the actual difference
 (which could be important for determining if something really matters!).
 
 ## One-sided tests
@@ -597,14 +614,61 @@ To find out a little more, click here.
 
 Let's not derive this fully, but just think about it. We have a
 proportion of success *p*, so (1 - *p*) is equal to the probability of
-failure (since we only have 2 options). For a single draw (Bernoulli
-data), we could simply multiple
+failure (since we only have 2 options). For variance, we noted we find
+the average squared didstance from the focal parameter value (in this
+case, a proportion).
+
+For a single draw (Bernoulli data), if we assume a success is equal to 1
+and a failure to zero, we could "simply" multiply the likelihood of each
+our outcomes by their average squared distance from the mean
+
+$$
+\begin{split}
+\sigma^2 = (0-p)^2(1-p)+(1-p)^2(p)\\
+which \ eventually \ reduces \  to \\
+\sigma^2 =p(1-p)
+\end{split}
+$$
+
+If we move to N independent draws, we predict the average observed
+outcome (or the mean number of successes!) will be
+
+$$
+\mu_S = Np
+$$
+
+Since we are assuming each data point is independent, the variance of N
+draws will be
+
+$$
+\sigma_\mu^2 =Np(1-p)
+$$
+
+so
+
+$$
+\sigma_\mu =\sqrt{Np(1-p)}
+$$
+
+Notice in doing this we went from a proportion to a number of successes!
+Now we can use our typical equation for standard error of the means
+
+$$
+[\sigma_{\mu_s} = \frac{\sigma}{\sqrt{N}} = \frac{\sqrt{(Np(1-p)}}{\sqrt{N}}  = \sqrt{\frac{(p(1-p)}{N}} \ ] \sim [s_{\overline{Y}} = \frac{s}{\sqrt{N}} =   \frac{\sqrt{(N\hat{p}(1-\hat{p})}}{\sqrt{N}} = \sqrt{\frac{(\hat{p}(1-\hat{p})}{N}}]
+$$
+
+This is actually a bit tricky as it assumes some connections between
+categorical and continuous data, and many ways have been proposed to do
+this [@subedi2019], but this gets us close.
 
 </details>
 
-This is actually a bit tricky,and many ways have been proposed to do
-this [@subedi2019]. Note, for example, the *binom.confint* function in
-the *binom* package gives multiple options. For the function,
+It turns out our estimate of the standard error may be biased,
+especially for small sample sizes or extreme (close to 0 or 1) values of
+*p*. For that reason, several ways have been suggested to calculate
+confidence intervals [@subedi2019] . Note, for example, the
+*binom.confint* function in the *binom* package gives multiple outcomes.
+For the function,
 
 -   the first argument is the number of successes
 
