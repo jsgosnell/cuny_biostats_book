@@ -397,7 +397,7 @@ H_A: p \neq .75
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sampling_experiment<span class="sc">$</span>observed_proportion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.8333333 0.7777778 0.7222222 0.5555556 0.7222222 0.7777778</code></pre>
+<pre><code>[1] 0.8333333 0.7222222 0.7222222 0.5555556 0.7777778 0.8333333</code></pre>
 </div>
 </div>
 <p>Note we see some variation. Also note it is <em>impossible</em> to get a proportion of .75. Why? We only sampled 18 individuals, so we can’t get any outcomes that aren’t some form of a whole number less than 18 divided by 18. This seems simple, but it’s a reminder that your signal being different than your hypothesized value is not sufficient to reject the null hypothesis!</p>
@@ -416,9 +416,9 @@ H_A: p \neq .75
 <p><img src="Binomial_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Just looking at this, it seems getting a proportion of .5 is unlikely. It only occurred 11 times. However, we also need to note how often <em>more</em> extreme outcomes occurred. Why?</p>
+<p>Just looking at this, it seems getting a proportion of .5 is unlikely. It only occurred 16 times. However, we also need to note how often <em>more</em> extreme outcomes occurred. Why?</p>
 <p>More extreme values (the same or further distance away from the hypothesized value as our observed signal were) are also useful in considering if the null hypothesis is valid. When we move to continuous distributions, it’s also impossible to get a certain value (as mentioned in the probability section).</p>
-<p>In this example, our observed proportion was .5. That’s .25 away from the value under the null hypothesis (.75), so we should all simulations that were . 5 or less or 1 or more. That only happened 19 times. So, in taking 1000 random draws from our null population, we only saw what we actually observed (or something more extreme) 0.019% of the time.</p>
+<p>In this example, our observed proportion was .5. That’s .25 away from the value under the null hypothesis (.75), so we should all simulations that were . 5 or less or 1 or more. That only happened 27 times. So, in taking 1000 random draws from our null population, we only saw what we actually observed (or something more extreme) 0.027% of the time.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sampling_experiment<span class="sc">$</span>Proportion <span class="ot">=</span> <span class="fu">ifelse</span>(sampling_experiment<span class="sc">$</span>observed_proportion <span class="sc">&lt;=</span> .<span class="dv">5</span>, </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">'&lt;= .5'</span>, <span class="fu">ifelse</span>(sampling_experiment<span class="sc">$</span>observed_proportion <span class="sc">&gt;=</span> <span class="dv">1</span>, <span class="st">'&gt;.5 &amp; &lt; 1'</span>, <span class="st">'&gt;= 1'</span>))</span>
@@ -490,7 +490,7 @@ probability of success
 <colgroup>
 <col style="width: 31%">
 <col style="width: 31%">
-<col style="width: 22%">
+<col style="width: 30%">
 </colgroup>
 <tbody>
 <tr class="odd">
@@ -569,7 +569,7 @@ probability of success
 <p>In introducing the p-value (and estimation) we focused on two-sided (or two-tailed) tests. This means we considered deviations from our value under the null hypothesis (for p-values) or via sampling error (for confidence intervals) based on their magnitude, and not direction. However, we can instead decide we want to consider differences to one “side” of our value of interest. Following this idea, we have 3 options for our null and alternative hypotheses (note <em>C</em> is a constant value here!):</p>
 <table class="table">
 <colgroup>
-<col style="width: 6%">
+<col style="width: 7%">
 <col style="width: 17%">
 <col style="width: 38%">
 <col style="width: 36%">
