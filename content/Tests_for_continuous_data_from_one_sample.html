@@ -336,7 +336,7 @@ What is our null hypothesis for this example?
 \begin{split}
 H_O: \mu_{height} = 7 \ cm \\
 H_A: \mu_{height} \neq 7 \ cm
-\end(split)
+\end{split}
 \]</span></p>
 </details>
 <p>Now that we have a null hypothesis, we need to test it. We can do this by simulation. Let’s make a distribution where the <span class="math inline">\(\mu_{height} =7 \  cm\)</span>, then draw samples from it and see how rare it is to get what we actually observed in the data…which was</p>
@@ -347,6 +347,76 @@ H_A: \mu_{height} \neq 7 \ cm
 </div>
 </div>
 <p>Seems easy enough, but what distribution do we draw from? For our binomial data we knew exactly what to parameterize - that’s because the entire distribution is described by the parameter <em>p</em> (go back to the last chapter and note we can find the spread using this one variable as well!).</p>
+<p>If you remember the central limit theorem, you might realize the distribution of the data does not matter in some ways. No matter what it looks like, the means of the data will tend towards normality. However, we still need to describe it to simulate our draws.</p>
+<p>It turns out the shape of the data itself appears fairly normal. So far we’ve said normal distributions</p>
+<ul>
+<li>are roughly symmetric, with tails on either side. Values near the middle of the range are more common, with the chance of getting smaller or larger values declining at an increasing rate</li>
+</ul>
+<p>95% of the sample is within \~2 standard deviations of the mean (and for our mean of means, 95% of the data is within 2 standard errors)</p>
+<p>Look at a density function fit to the data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length)) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..),<span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>()<span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
+ℹ Please use `after_stat(density)` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>It does appear to be fairly symmetric and peaked in the middle. It turns out normal distributions (finally defined below!) are very common in nature.</p>
+<p>Just like the binomial data, a normal distribution can be described using a formula. The formula has 2 parameters that define the shape of the distribution. <span class="math inline">\(\mu\)</span> defines the center of the distribution, and <span class="math inline">\(\sigma^2\)</span> describes its spread. The formula for the probabilty density function is</p>
+<p><span class="math display">\[
+f(x) = \frac{1}{\sqrt{2\pi\sigma^2}}
+e^{\frac{-(x-\mu)^2}{2\sigma^2}}
+\]</span></p>
+<p>This looks complicated, but remember: this is just an equation for describing the likelihood of outcomes in a probability space! The first part <span class="math inline">\(\sqrt{2\pi\sigma^2}\)</span> arises from trying to work with a curve. To understand the rest, lets take the ln of both sides</p>
+<p><span class="math display">\[
+\begin{split}
+\ln(f(x)) = \ln(\frac{1}{\sqrt{2\pi\sigma^2}}) - \frac{1}{2\sigma^2}*(x-\mu)^2 \\
+\ln(f(x)) = -\ln(\sqrt{2\pi\sigma^2}) - \frac{1}{2\sigma^2}*(x-\mu)^2
+\end{split}
+\]</span></p>
+<p>This may not look like it helps much, but we now have the formula for a straight line, <span class="math inline">\(y=mx+b\)</span>, where</p>
+<p><span class="math display">\[
+\begin{split}
+y= \ln(f(x)) \\
+b = - \frac{1}{2\sigma^2}\\
+m = -\ln(\sqrt{2\pi\sigma^2})\\
+x =  (x-\mu)^2
+\end{split}
+\]</span></p>
+<p>In other words, our independent variable is the squared distance from the mean (so all positive)! Note both the y-intercept (the amplitude) and slope (shape) depends on how spread out the data is (<span class="math inline">\(\sigma^2\)</span>). Note in general when ln(y) decreases linearly with x, y decreases at a constant proportional rate with x. So we can say&nbsp;a normal random variate is any random variable in which the probability of an observation declines in proportion to its squared deviation from the mean (µ).</p>
+<p>Let’s fit a normal distribution to our data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PDF from data"</span> <span class="ot">=</span> <span class="st">"black"</span>, <span class="st">"normal curve"</span> <span class="ot">=</span> <span class="st">"red"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length)) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..),<span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">color=</span><span class="st">"PDF from data"</span>))<span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Westchester parrots"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Density"</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span><span class="st">"Source"</span> ) <span class="sc">+</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>]), <span class="at">sd =</span> <span class="fu">sd</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>])), <span class="fu">aes</span>(<span class="at">color=</span><span class="st">"normal curve"</span>))<span class="sc">+</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Note it fits fairly well, so we’ll use it for our sampling experiment.</p>
 
 
 </section>
