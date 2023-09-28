@@ -230,15 +230,15 @@ to a p-value of 0 - unusual in some regards, but possible here.
 
 ## Z-test: a distribution based approach
 
-Just like we saw for binomial data, this approach is always doable but
-mainly due to computers. Otherwise we would need to repeat the sampling
-experiment for any change in sample size, mean, or standard deviation.
-Instead, we can use the formula above to *approximate* the distribution
-of sampling means. This is an *approximate* solution because our means
-approach a normal distribution as sample size increases - so for
-non-infinity sample sizes, they may not be perfectly normal! We call
-this the z-test, and it can be carried out using the z.test function in
-the BDSA package.
+Just like we saw for binomial data, a simulation-based approach is
+always doable but mainly due to computers. Otherwise we would need to
+repeat the sampling experiment for any change in sample size, mean, or
+standard deviation. Instead, we can also use the formula above to
+*approximate* the distribution of sampling means. This is an
+*approximate* solution because our means approach a normal distribution
+as sample size increases - so for non-infinity sample sizes, they may
+not be perfectly normal! We call this the z-test, and it can be carried
+out using the z.test function in the BDSA package.
 
 ```{r}
 library(BSDA)
@@ -291,8 +291,8 @@ ggplot(data = data.frame(x = c(-5, 5)), aes(x)) +
 
 ```
 
-This method allowed any data to be considered using a standard table
-such as this one:
+This method allowed any data that could be assumed to follow the note
+assumptions to be considered using a standard table such as this one:
 
 [![Example of z-table. Jsmura, Creative Commons Attribution-Share Alike
 4.0 International
@@ -301,10 +301,11 @@ licence](/images/Tabla_z.png){fig-align="center"}](https://commons.wikimedia.org
 In general would add the percentages (P above) of data points as or more
 extreme than what you observed to get a p-value. Some tables only had
 values \<0; for those you could find the value and multiple it by 2 for
-two-tailed tests since the distribution is symmetric.
-
-For our example, we got a z score of -4.8515. The table doesn't even go
-that low!
+two-tailed tests since the distribution is symmetric. For our example,
+we got a z score of -4.8515. The table doesn't even go that low! In
+general this allowed one table to used for all normal distributions (and
+not different ones for all the possible combinations of means and
+variances).
 
 ## Does the distribution of the data matter?
 
@@ -316,38 +317,177 @@ the sampled means are distributed normally for almost *any* sample size,
 although sample size impacts the spread of the sample means.
 
 ```{r, echo = F}
+#| label: fig-normal_draws
+#| fig-cap:  Means drawn from a normal distribution are normal regardless of sample size
 number_of_simulations <- 1000
-sample_size=c("1","5", "10", "20", "40", "80")
-sampling_experiment <- setNames(data.frame(matrix(ncol = length(sample_size), nrow = number_of_simulations)), sample_size)
+sample_size=c("1","5","10", "20", "40", "80")
 
+sampling_experiment <- setNames(data.frame(matrix(ncol = length(sample_size), nrow = number_of_simulations)), sample_size)
 for(k in 1:length(sample_size)){
 for(i in 1:number_of_simulations){
-sampling_experiment[i,k] = mean(rnorm(as.numeric(sample_size[k])))
+sampling_experiment[i,k] = mean(rnorm(n=as.numeric(sample_size[k])))
 }
 }
 
-library(reshape2)
 sampling_experiment_long <- melt(sampling_experiment, variable.name = "Sample_size", value.name = "mean")
-sampling_experiment_long$Sample_size <- paste("Sample size of ", sampling_experiment_long$Sample_size)
+sampling_experiment_long$Sample_size <- factor(sampling_experiment_long$Sample_size, levels =c("1","5","10", "20", "40", "80"))
+levels(sampling_experiment_long$Sample_size) <- paste("Sample size of ", levels(sampling_experiment_long$Sample_size))
 
 ggplot(sampling_experiment_long,aes(x=mean)) +
   geom_histogram(color="black") +
-  labs(title="Observed means from 1000 random draws using varying sample sizes from a normal distribution",
+  labs(title=paste("Observed means from ", number_of_simulations, " random draws"),
+       subtitle = "Normal distribution",  
        x= "Mean",
        y= "Frequency")+
     facet_wrap(~Sample_size, nrow = 2)
 ```
 
-For other distributions, large sample sizes are required to approximate
-normality. For example,
+For other distributions, larger sample sizes are required to approximate
+normality. For example, consider a highly-peaked (double-exponential)
+distribution
+
+```{r, echo=F}
+sampling_experiment <- setNames(data.frame(matrix(ncol = length(sample_size), nrow = number_of_simulations)), sample_size)
+library(VGAM)
+for(k in 1:length(sample_size)){
+for(i in 1:number_of_simulations){
+sampling_experiment[i,k] = mean(rlaplace(n=as.numeric(sample_size[k])))
+}
+}
+
+sampling_experiment_long <- melt(sampling_experiment, variable.name = "Sample_size", value.name = "mean")
+sampling_experiment_long$Sample_size <- factor(sampling_experiment_long$Sample_size, levels =c("1","5","10", "20", "40", "80"))
+levels(sampling_experiment_long$Sample_size) <- paste("Sample size of ", levels(sampling_experiment_long$Sample_size))
+
+ggplot(sampling_experiment_long,aes(x=mean)) +
+  geom_histogram(color="black") +
+  labs(title=paste("Observed means from ", number_of_simulations, " random draws"),
+       subtitle = "Double-exponential distribution",  
+       x= "Mean",
+       y= "Frequency")+
+    facet_wrap(~Sample_size, nrow = 2)
+```
+
+or as skewed $\chi^2$ distribution (here with a df =4, to be explained
+later!):
+
+```{r, echo = F}
+
+sampling_experiment <- setNames(data.frame(matrix(ncol = length(sample_size), nrow = number_of_simulations)), sample_size)
+library(VGAM)
+for(k in 1:length(sample_size)){
+for(i in 1:number_of_simulations){
+sampling_experiment[i,k] = mean(rchisq(n=as.numeric(sample_size[k]), df = 4))
+}
+}
+
+sampling_experiment_long <- melt(sampling_experiment, variable.name = "Sample_size", value.name = "mean")
+sampling_experiment_long$Sample_size <- factor(sampling_experiment_long$Sample_size, levels =c("1","5","10", "20", "40", "80"))
+levels(sampling_experiment_long$Sample_size) <- paste("Sample size of ", levels(sampling_experiment_long$Sample_size))
+
+ggplot(sampling_experiment_long,aes(x=mean)) +
+  geom_histogram(color="black") +
+  labs(title=paste("Observed means from ", number_of_simulations, " random draws"),
+       subtitle = "Chi-squared distribution, df = 4",  
+       x= "Mean",
+       y= "Frequency")+
+    facet_wrap(~Sample_size, nrow = 2)
+```
+
+Even for these very non-normal distributions, the means approach a
+normal distribution at fairly low sample sizes. This is even true for
+binomial data, especially when *p* is not very close to 0 or 1. Consider
+
+```{r, echo=F}
+sampling_experiment <- setNames(data.frame(matrix(ncol = length(sample_size), nrow = number_of_simulations)), sample_size)
+
+for(k in 1:length(sample_size)){
+for(i in 1:number_of_simulations){
+sampling_experiment[i,k] = rbinom(n=1, size=as.numeric(sample_size[k]), prob=.7)/as.numeric(sample_size[k])
+}
+}
+
+sampling_experiment_long <- melt(sampling_experiment, variable.name = "Sample_size", value.name = "mean")
+sampling_experiment_long$Sample_size <- factor(sampling_experiment_long$Sample_size, levels =c("1","5","10", "20", "40", "80"))
+levels(sampling_experiment_long$Sample_size) <- paste("Sample size of ", levels(sampling_experiment_long$Sample_size))
+
+ggplot(sampling_experiment_long,aes(x=mean)) +
+  geom_histogram(color="black") +
+  labs(title=paste("Observed means from ", number_of_simulations, " random draws"),
+       subtitle = "Binomial distribution, p=.7",  
+       x= "Mean",
+       y= "Frequency")+
+    facet_wrap(~Sample_size, nrow = 2)
+```
+
+This is why it used to be more common to use a normal approximation to
+the binomial distribution - even though the binomial distribution is
+easy to compute,the z is even easier! For example, Sandidge
+[@sandidge2003] noted that brown recluse spiders chose dead prey items
+(as opposed to live - 2 categories!) when offered choices. This data
+could be assessed using a binomial test
 
 ```{r}
+ binom.test(119,(59+41+41), p=.5)
+ 
+```
+
+or a z-test approach by finding a z-sore
+
+```{r}
+ p=.5
+ n=41+41+59
+ z_score <- (119-p*n)/sqrt(n*p*(1-p))
+ pnorm(z_score, lower.tail = F) *2
 
 ```
 
-### QQnorm
+or a $\chi^2$ test, which is equivalent to a z_score but uses a squared
+Z distribution (note the p-values are the same!)
+
+```{r}
+chisq.test(c(119,n-119))
+
+```
+
+This may seem esoteric, but understanding these issues may help you
+interpret older papers while also choosing to employ more modern
+statistical methods.
+
+### QQ norm plots - commonly sed, but not needed, at this point!
+
+In addition to considering the sample size and underlying distribution,
+quantile-quantile (Q-Q) plots are sometimes used to assess normality.
+These plots plot quantiles in one data set against quantiles from
+another to determine if they come from similar distribution. Remember,
+quantiles just order data; percentiles are example where you have 100
+cut points. Q-Q norm plots consider if a given dataset are similar to a
+normal distribution. If so, then the dots should match the straight line
+produced by the *qqline* function.
+
+```{r}
+qqnorm(iris[iris$Species == "virginica","Sepal.Length"])
+qqline(iris[iris$Species == "virginica","Sepal.Length"])
+```
+
+While we introduce Q-Q plots here, and they are often used to assess
+normality, remember our tests (so far) are relying on the means of the
+data being normally-distributed and not the data itself!
 
 ## What if we don't know the variance?
+
+Assuming everything above makes sense, we are left with one issue: the
+variance of the underlying population is rarely known!
+
+In the above examples, we actually used our *estimate* of variance from
+the sample to run our simulation experiment and z-test! While this works
+ok for large sample sizes (yay for central limit theorem!) (and is what
+statisticians relied upon historically), it doesn't work for well for
+smaller sample sizes (unless we somehow know the population variance).
+Our estimates for the population variance are less precise and
+potentially biased at small sample sizes.
+
+To address this issue,
 
 ```{r}
 t.test(iris[iris$Species == "virginica","Sepal.Length"], mu = 7, 
