@@ -15,6 +15,7 @@ Let's return to our iris data and focus on sepal lengths of *I.
 viriginica*.
 
 ```{r}
+set.seed(42)
 library(ggplot2)
 ggplot(iris[iris$Species == "virginica",],
               aes(x=Sepal.Length)) +
@@ -217,9 +218,96 @@ ggplot(sampling_experiment,
   geom_histogram(color="black") +
   labs(title="Observed means from 1000 random draws",
        x= "Mean",
-       y= "Frequency") +
+       y= "Frequency", 
+       fill = "Sampled mean is ...") +
     scale_fill_discrete(drop = FALSE)
 
 ```
 
-So in our example simulation,
+So in our example simulation, **no** observed means were as far from the
+value from the null hypothesis as our sample mean was. This would leave
+to a p-value of 0 - unusual in some regards, but possible here.
+
+## Z-test: a distribution based approach
+
+Just like we saw for binomial data, this approach is always doable but
+mainly due to computers. Otherwise we would need to repeat the sampling
+experiment for any change in sample size, mean, or standard deviation.
+Instead, we can use the formula above to *approximate* the distribution
+of sampling means. This is an *approximate* solution because our means
+approach a normal distribution as sample size increases - so for
+non-infinity sample sizes, they may not be perfectly normal! We call
+this the z-test, and it can be carried out using the z.test function in
+the BDSA package.
+
+```{r}
+library(BSDA)
+z.test(iris[iris$Species == "virginica","Sepal.Length"], mu = 7, 
+             sigma.x= sd(iris[iris$Species == "virginica","Sepal.Length"]))
+```
+
+Using this approach we get a p-value of .000005 - not 0, but very close!
+
+### A little history
+
+Although software now provides us exact (approximate) p-values,
+historically this was far more difficult. For this reason, people took
+advantage of a transformation so they could use a standardized table of
+p-values. For *any* normally-distributed population, we can get a z
+score using
+
+$$
+z=\frac{x - \mu}{\sigma}
+$$
+
+This transforms a given data point into a z-score on the z, or standard
+normal, distribution. This distribution is centered at 0 (think about
+it - if you subtract the mean from all data points...) and has a
+standard deviation of 1 (because you divided by the standard
+deviation!). This also means \~68% of the data points lie between -1 and
+1, while \~95% lie between -2 and 2 (since the standard deviation is
+1!).
+
+This method allowed any data to be considered using a standard table
+such as this one:
+
+[![Example of z-table. Jsmura, Creative Commons Attribution-Share Alike
+4.0 International
+licence](/images/Tabla_z.png){fig-align="center"}](https://commons.wikimedia.org/wiki/File:Tabla_z.png)
+
+In general would add the percentage (P above) of data points as or more
+extreme than what you observed to get a p-value.
+
+For our example, we got a z score of -4.8515
+
+## Does the distribution of the data matter?
+
+Remember we are focusing on the distribution of the means. Given that
+and the central limit theorem, does the distribution of the data matter?
+Yes, but only in regards to the relationship between sample size and
+normality of the sample means. If the underlying data is normal, then
+the sampled means are distributed normally for almost *any* sample size.
+Note
+
+```{r}
+
+```
+
+For other distributions, large sample sizes are required to approximate
+normality. For example,
+
+```{r}
+
+```
+
+### QQnorm
+
+## What if we don't know the variance?
+
+```{r}
+t.test(iris[iris$Species == "virginica","Sepal.Length"], mu = 7, 
+             sigma.x= sd(iris[iris$Species == "virginica","Sepal.Length"]))
+
+```
+
+## What if we don't trust the normal approximation?
