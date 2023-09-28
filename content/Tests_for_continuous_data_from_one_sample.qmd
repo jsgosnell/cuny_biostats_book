@@ -163,8 +163,8 @@ ggplot(iris[iris$Species == "virginica",],
               aes(x=Sepal.Length)) +
   geom_histogram(aes(y = ..density..),fill="blue", color="black") +
   geom_density(aes(color="PDF from data"))+
-  labs(title="Weight of Westchester parrots",
-       x= "Weight (g)",
+    labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"))),
+       x= "Sepal length (cm)",
        y= "Density",
        color="Source" ) +
 stat_function(fun = dnorm, args = list(mean = mean(iris[iris$Species == "virginica","Sepal.Length"]), sd = sd(iris[iris$Species == "virginica","Sepal.Length"])), aes(color="normal curve"))+
@@ -268,6 +268,29 @@ deviation!). This also means \~68% of the data points lie between -1 and
 1, while \~95% lie between -2 and 2 (since the standard deviation is
 1!).
 
+```{r, echo = F}
+#| label: fig-z-colored
+#| fig-cap: "~65% of the data lies with 1 standard deviation of the mean, ~95% lies within 2 standard deviations, and ~99% lies within 3 standard deviations of the mean
+library(viridis)
+colors <- setNames( viridis(5), c("0-1","1-2", "2-3", "3-4", "4+"))
+
+
+#standard normal with 1-4 se highlighted ####
+ggplot(data = data.frame(x = c(-5, 5)), aes(x)) +
+   stat_function(aes(fill="4+"), fun = dnorm, args = list(mean = 0, sd = 1), size = 3,
+                geom = "area") +
+  stat_function(aes(fill="3-4"),fun = dnorm, geom = "area", xlim =c(-4,4)) +
+  stat_function(aes(fill="2-3"),fun = dnorm, geom = "area", xlim =c(-3,3)) +
+  stat_function(aes(fill="1-2"),fun = dnorm, geom = "area", xlim =c(-2,2)) +
+  stat_function(aes(fill="0-1"),fun = dnorm, geom = "area", xlim =c(-1,1)) +
+  scale_x_continuous(breaks=seq(-5,5,1)) +
+  labs(y="Probablity",
+       x="Z score",
+       fill="SE from mean") +
+  scale_x_continuous(breaks=seq(-5,5,1))
+
+```
+
 This method allowed any data to be considered using a standard table
 such as this one:
 
@@ -275,10 +298,13 @@ such as this one:
 4.0 International
 licence](/images/Tabla_z.png){fig-align="center"}](https://commons.wikimedia.org/wiki/File:Tabla_z.png)
 
-In general would add the percentage (P above) of data points as or more
-extreme than what you observed to get a p-value.
+In general would add the percentages (P above) of data points as or more
+extreme than what you observed to get a p-value. Some tables only had
+values \<0; for those you could find the value and multiple it by 2 for
+two-tailed tests since the distribution is symmetric.
 
-For our example, we got a z score of -4.8515
+For our example, we got a z score of -4.8515. The table doesn't even go
+that low!
 
 ## Does the distribution of the data matter?
 
@@ -286,11 +312,30 @@ Remember we are focusing on the distribution of the means. Given that
 and the central limit theorem, does the distribution of the data matter?
 Yes, but only in regards to the relationship between sample size and
 normality of the sample means. If the underlying data is normal, then
-the sampled means are distributed normally for almost *any* sample size.
-Note
+the sampled means are distributed normally for almost *any* sample size,
+although sample size impacts the spread of the sample means.
 
-```{r}
+```{r, echo = F}
+number_of_simulations <- 1000
+sample_size=c("1","5", "10", "20", "40", "80")
+sampling_experiment <- setNames(data.frame(matrix(ncol = length(sample_size), nrow = number_of_simulations)), sample_size)
 
+for(k in 1:length(sample_size)){
+for(i in 1:number_of_simulations){
+sampling_experiment[i,k] = mean(rnorm(as.numeric(sample_size[k])))
+}
+}
+
+library(reshape2)
+sampling_experiment_long <- melt(sampling_experiment, variable.name = "Sample_size", value.name = "mean")
+sampling_experiment_long$Sample_size <- paste("Sample size of ", sampling_experiment_long$Sample_size)
+
+ggplot(sampling_experiment_long,aes(x=mean)) +
+  geom_histogram(color="black") +
+  labs(title="Observed means from 1000 random draws using varying sample sizes from a normal distribution",
+       x= "Mean",
+       y= "Frequency")+
+    facet_wrap(~Sample_size, nrow = 2)
 ```
 
 For other distributions, large sample sizes are required to approximate
