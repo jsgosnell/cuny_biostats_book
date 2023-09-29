@@ -54,7 +54,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -97,6 +116,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+
+<link href="../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -279,6 +301,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#example" id="toc-example" class="nav-link active" data-scroll-target="#example">Example</a></li>
+  <li><a href="#another-way-to-compare" id="toc-another-way-to-compare" class="nav-link" data-scroll-target="#another-way-to-compare">Another way to compare</a></li>
+  <li><a href="#z-test-a-distribution-based-approach" id="toc-z-test-a-distribution-based-approach" class="nav-link" data-scroll-target="#z-test-a-distribution-based-approach">Z-test: a distribution based approach</a>
+  <ul class="collapse">
+  <li><a href="#a-little-history" id="toc-a-little-history" class="nav-link" data-scroll-target="#a-little-history">A little history</a></li>
+  </ul></li>
+  <li><a href="#does-the-distribution-of-the-data-matter" id="toc-does-the-distribution-of-the-data-matter" class="nav-link" data-scroll-target="#does-the-distribution-of-the-data-matter">Does the distribution of the data matter?</a>
+  <ul class="collapse">
+  <li><a href="#qq-norm-plots---commonly-used-but-not-needed-at-this-point" id="toc-qq-norm-plots---commonly-used-but-not-needed-at-this-point" class="nav-link" data-scroll-target="#qq-norm-plots---commonly-used-but-not-needed-at-this-point">QQ norm plots - commonly used, but not needed, at this point!</a></li>
+  </ul></li>
+  <li><a href="#what-if-we-dont-know-the-variance" id="toc-what-if-we-dont-know-the-variance" class="nav-link" data-scroll-target="#what-if-we-dont-know-the-variance">What if we don’t know the variance?</a></li>
+  <li><a href="#what-if-we-dont-trust-the-normal-approximation" id="toc-what-if-we-dont-trust-the-normal-approximation" class="nav-link" data-scroll-target="#what-if-we-dont-trust-the-normal-approximation">What if we don’t trust the normal approximation?</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/Tests_for_continuous_data_from_one_sample.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/Tests_for_continuous_data_from_one_sample.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -308,13 +341,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="example">Example</h2>
 <p>Let’s return to our iris data and focus on sepal lengths of <em>I. viriginica</em>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length)) <span class="sc">+</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))),</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length)) <span class="sc">+</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -403,8 +437,8 @@ x =  (x-\mu)^2
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length)) <span class="sc">+</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..),<span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">color=</span><span class="st">"PDF from data"</span>))<span class="sc">+</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Westchester parrots"</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Density"</span>,</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span><span class="st">"Source"</span> ) <span class="sc">+</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>]), <span class="at">sd =</span> <span class="fu">sd</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>])), <span class="fu">aes</span>(<span class="at">color=</span><span class="st">"normal curve"</span>))<span class="sc">+</span></span>
@@ -431,12 +465,12 @@ x =  (x-\mu)^2
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sampling_experiment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  observed_mean
-1      7.078034
-2      7.000146
-3      7.071418
-4      7.075852
-5      7.098829
-6      6.991267</code></pre>
+1      6.977317
+2      7.064034
+3      6.903823
+4      6.984919
+5      7.005049
+6      6.981765</code></pre>
 </div>
 </div>
 <p>and plot them</p>
@@ -466,8 +500,9 @@ x =  (x-\mu)^2
 <span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
 <span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Observed means from 1000 random draws"</span>,</span>
 <span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Mean"</span>,</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_discrete</span>(<span class="at">drop =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>, </span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Sampled mean is ..."</span>) <span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_discrete</span>(<span class="at">drop =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -475,12 +510,331 @@ x =  (x-\mu)^2
 <p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>So in our example simulation,</p>
+<p>So in our example simulation, <strong>no</strong> observed means were as far from the value from the null hypothesis as our sample mean was. This would leave to a p-value of 0 - unusual in some regards, but possible here.</p>
+</section>
+<section id="another-way-to-compare" class="level2">
+<h2 class="anchored" data-anchor-id="another-way-to-compare">Another way to compare</h2>
+<p>Just like we saw for binomial data, we can always carry out a sampling experiment to find a p-value. However, that’s mainly because we have computers. Even with computers, it would be cumbersome to set up a new sampling experiment for every dataset (which we would need to do for any change in sample size, mean, or standard deviation).</p>
+<p>Instead it would be nice to find a way to replicate the distribution we see above for similar experiments using an equation (just like we did for the binomial data!). One step in doing this relates to how we examine our predictions given our hypotheses. It turns out, we can map our hypotheses to <em>models</em> that explain the variation we see in the data. Our hypotheses (remember</p>
+<p><span class="math display">\[
+\begin{split}
+H_O: \mu_{height} = 7 \ cm \\
+H_A: \mu_{height} \neq 7 \ cm
+\end{split}
+\]</span></p>
+<p>focus on the mean. They are also stating a prediction for every outcome! Under the null hypothesis, if we were asked to guess the length of a sepal from <em>I. virginica</em>, we would guess 7 cm. Under the alternative hypothesis, we would guess it’s something different than 7. Using our sample, we might instead guess it’s equal to 7 + <span class="math inline">\(\delta\)</span>, where <span class="math inline">\(\delta\)</span> is estimated from our sample and 7+ <span class="math inline">\(\delta\)</span> is the mean of our sample.</p>
+<p>For each hypothesis, we could calculate a measure of related mode fit called the sum squared error from our model, or SSE, where</p>
+<p><span class="math display">\[
+SSE=sum \ squared \ error = \sum_{i=1}^{n}(Y_i-\hat{Y_i})^2
+\]</span></p>
+<p>Here, <span class="math inline">\(Y_i\)</span> are the data points, and <span class="math inline">\(\hat{Y_i}\)</span> is our predicted value.</p>
+<p>This is basically saying we compare the predicted to observed value for each data point for each model (the square exists so things don’t cancel out!). Our null hypothesis corresponds to a simpler view of the world (a reduced or null model), where <span class="math inline">\(\hat{Y_i}\)</span> is equal to a given value (in our case, 7 cm), whereas under the alternative hypothesis (which corresponds to an alternative or full model), <span class="math inline">\(\hat{Y_i}\)</span> is equal to a different value (such as 7 + <span class="math inline">\(\delta\)</span>). The value for <span class="math inline">\(\delta\)</span> is estimated from our sample and makes the full model larger than the reduced in regard to the number of parameters included in the model.</p>
+<p>We can then compare the SSE of the 2 models by finding their difference. This is our <strong>signal</strong> from the data. If we take multiple samples from a known population that is defined by the null hypothesis, we can carry out a very similar sampling to what we did originally.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>number_of_simulations){</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, <span class="dv">7</span>, <span class="at">sd =</span> <span class="fu">sd</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>]))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>sampling_experiment<span class="sc">$</span>observed_mean[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(a)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>sampling_experiment<span class="sc">$</span>SSE_null[i] <span class="ot">&lt;-</span>  <span class="fu">sum</span>((a<span class="dv">-7</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>sampling_experiment<span class="sc">$</span>SSE_full[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>((a<span class="sc">-</span><span class="fu">mean</span>(a))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>sampling_experiment<span class="sc">$</span>SSE_difference <span class="ot">&lt;-</span> sampling_experiment<span class="sc">$</span>SSE_null <span class="sc">-</span> sampling_experiment<span class="sc">$</span>SSE_full</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sampling_experiment,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>SSE_difference)) <span class="sc">+</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Observed difference in model fit from 1000 draws"</span>,</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Mean"</span>,</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>difference_SSE_observed <span class="ot">&lt;-</span> <span class="fu">sum</span>((iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>]<span class="sc">-</span><span class="dv">7</span>)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">-</span><span class="fu">sum</span>((iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>]<span class="sc">-</span><span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>]))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sampling_experiment,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>SSE_difference)) <span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Observed difference in model fit from 1000 draws"</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Mean"</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span>difference_SSE_observed))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Note we never saw as large a difference in the <strong>signal</strong> our sampling experiment as we did in the data!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(sampling_experiment[sampling_experiment<span class="sc">$</span>SSE_difference <span class="sc">&gt;=</span>  difference_SSE_observed,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p>Note this distribution is skewed for a few reasons. Given the square term, it must positive. We also unlikely (given sampling error) that signal will be exactly zero. In fact,since we estimate <span class="math inline">\(\delta\)</span> from the data itself, the alternative model is almost always a better fit (remember our bias in variance estimates?).</p>
+<p>This approach accounts for the <strong>noise</strong> that we see in our data (variation we expect to see in signal values even if the null hypothesis is true) through sampling. However, if we could estimate the noise, we could also divide our signal by it. Accounting for signal and noise let’s us take very different questions in terms of data and use a standardized approach to analyze them. This is because a signal to noise ratio typically follows some distribution.</p>
+</section>
+<section id="z-test-a-distribution-based-approach" class="level2">
+<h2 class="anchored" data-anchor-id="z-test-a-distribution-based-approach">Z-test: a distribution based approach</h2>
+<p>In our case, the signal to noise ratio is approximated by the normal distribution! This is an <em>approximate</em> solution to the signal to noise ratio because our means approach a normal distribution as sample size increases - so for non-infinity sample sizes, they may not be perfectly normal!</p>
+<p>We can show that our signal is simply the mean from our data minus the mean under the null hypothesis, and including <span class="math inline">\(\sigma\)</span> in the denominator accounts for noise. We can make this more generalizable if we z-transform the data using the formula</p>
+<p><span class="math display">\[
+z=\frac{Y - \mu}{\sigma}
+\]</span></p>
+<p>After this transformation, the data is centered at 0 (think about it - if you subtract the mean from all data points…) and has a standard deviation of 1 (because you divided by the standard deviation!). This also makes the mean of transformed data equal to <span class="math inline">\(\delta\)</span> and the mean under the null hypothesis equal to zero. This also means ~68% of the data points lie between -1 and 1, while ~95% lie between -2 and 2 (since the standard deviation is 1!).</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: viridisLite</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-z-colored" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/fig-z-colored-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: ~65% of the data lies with 1 standard deviation of the mean, ~95% lies within 2 standard deviations, and ~99% lies within 3 standard deviations of the mean</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We call this specific form of the normal distribution (N(0,1), showing the mean and standard deviation parameters) the Z distribution. Extending on this with some algebra, we can get a Z-score from any data using the equation</p>
+<p><span class="math display">\[
+z=\frac{\bar{x} - \mu}{\sigma}
+\]</span></p>
+<p>This transforms a given data point into a z-score on the z, or standard normal, distribution. We can then use the Z distribution to consider how unusual our z-scores are (i.e., get a p-value!). We call the approach that uses this distribution the z-test, and it can be carried out using the z.test function in the BDSA package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BSDA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lattice</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'BSDA'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:datasets':
+
+    Orange</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">z.test</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>], <span class="at">mu =</span> <span class="dv">7</span>, </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">sigma.x=</span> <span class="fu">sd</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One-sample z-Test
+
+data:  iris[iris$Species == "virginica", "Sepal.Length"]
+z = -4.5815, p-value = 4.617e-06
+alternative hypothesis: true mean is not equal to 7
+95 percent confidence interval:
+ 6.411746 6.764254
+sample estimates:
+mean of x 
+    6.588 </code></pre>
+</div>
+</div>
+<p>Using this approach we get a p-value of .000005 - not 0, but very close!</p>
+<section id="a-little-history" class="level3">
+<h3 class="anchored" data-anchor-id="a-little-history">A little history</h3>
+<p>Although software now provides us exact (approximate) p-values, historically this was far more difficult. For this reason, people took advantage of a transformation so they could use a standardized table like this one.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://commons.wikimedia.org/wiki/File:Tabla_z.png"><img src="../images/Tabla_z.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">Example of z-table. Jsmura, Creative Commons Attribution-Share Alike 4.0 International licence</figcaption>
+</figure>
+</div>
+<p>These tables showed how Z-scores related to p-values. Note these often showed the area to the left of the value, so two-tailed tests required one to multiple the given p-value by 2 (or, if focused on the upper tail, multiply (1-given p-value) by 2 since the distribution is symmetric. Similarly, some tables only had values &lt;0; for those you could find the score whose absolute value corresponed to the observed z-score and multiply the noted p-value by 2 for two-tailed tests .</p>
+<p>For our example, we got a z score of -4.8515. The table doesn’t even go that low!</p>
+</section>
+</section>
+<section id="does-the-distribution-of-the-data-matter" class="level2">
+<h2 class="anchored" data-anchor-id="does-the-distribution-of-the-data-matter">Does the distribution of the data matter?</h2>
+<p>Remember we are focusing on the distribution of the means (both our sampling experiment and SSE calculations include the means of the sample and data under the null hyothesis!). Given that and the central limit theorem, does the distribution of the data matter? Yes, but only in regards to the relationship between sample size and normality of the sample means. If the underlying data is normal, then the sampled means are distributed normally for almost <em>any</em> sample size, although sample size impacts the spread of the sample means.</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>No id variables; using all as measure variables</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-normal_draws" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/fig-normal_draws-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Means drawn from a normal distribution are normal regardless of sample size</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>For other distributions, larger sample sizes are required to approximate normality. For example, consider a highly-peaked (double-exponential) distribution</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: stats4</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: splines</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No id variables; using all as measure variables</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>or as skewed <span class="math inline">\(\chi^2\)</span> distribution (here with a df =4, to be explained later!):</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>No id variables; using all as measure variables</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Even for these very non-normal distributions, the means approach a normal distribution at fairly low sample sizes. This is even true for binomial data, especially when <em>p</em> is not very close to 0 or 1. Consider</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>No id variables; using all as measure variables</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>This is why it used to be more common to use a normal approximation to the binomial distribution - even though the binomial distribution is easy to compute,the z is even easier! For example, Sandidge <span class="citation" data-cites="sandidge2003">(<a href="#ref-sandidge2003" role="doc-biblioref">Sandidge 2003</a>)</span> noted that brown recluse spiders chose dead prey items (as opposed to live - 2 categories!) when offered choices. This data could be assessed using a binomial test</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">binom.test</span>(<span class="dv">119</span>,(<span class="dv">59</span><span class="sc">+</span><span class="dv">41</span><span class="sc">+</span><span class="dv">41</span>), <span class="at">p=</span>.<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Exact binomial test
+
+data:  119 and (59 + 41 + 41)
+number of successes = 119, number of trials = 141, p-value &lt; 2.2e-16
+alternative hypothesis: true probability of success is not equal to 0.5
+95 percent confidence interval:
+ 0.7733542 0.8995595
+sample estimates:
+probability of success 
+             0.8439716 </code></pre>
+</div>
+</div>
+<p>or a z-test approach by finding a z-sore</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a> p<span class="ot">=</span>.<span class="dv">5</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a> n<span class="ot">=</span><span class="dv">41</span><span class="sc">+</span><span class="dv">41</span><span class="sc">+</span><span class="dv">59</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a> z_score <span class="ot">&lt;-</span> (<span class="dv">119</span><span class="sc">-</span>p<span class="sc">*</span>n)<span class="sc">/</span><span class="fu">sqrt</span>(n<span class="sc">*</span>p<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>p))</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">pnorm</span>(z_score, <span class="at">lower.tail =</span> F) <span class="sc">*</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.11282e-16</code></pre>
+</div>
+</div>
+<p>or a <span class="math inline">\(\chi^2\)</span> test, which is similar to a z test but focuses on a sum of independent squared Z variates. The <span class="math inline">\(\chi^2\)</span> distribution is defined by a degrees of freedom, or df, parameter, which in this case isequal to the number of categories -1 (or 2-1=1 in this case). We will return to df multiple times! Note the p-values obtained from the Z and <span class="math inline">\(\chi^2\)</span> tests are the same!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">c</span>(<span class="dv">119</span>,n<span class="dv">-119</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Chi-squared test for given probabilities
+
+data:  c(119, n - 119)
+X-squared = 66.73, df = 1, p-value = 3.113e-16</code></pre>
+</div>
+</div>
+<p>This may seem esoteric, but understanding these issues may help you interpret older papers while also choosing to employ more modern statistical methods.</p>
+<section id="qq-norm-plots---commonly-used-but-not-needed-at-this-point" class="level3">
+<h3 class="anchored" data-anchor-id="qq-norm-plots---commonly-used-but-not-needed-at-this-point">QQ norm plots - commonly used, but not needed, at this point!</h3>
+<p>In addition to considering the sample size and underlying distribution, quantile-quantile (Q-Q) plots are sometimes used to assess normality. These plots plot quantiles in one data set against quantiles from another to determine if they come from similar distribution. Remember, quantiles just order data; percentiles are example where you have 100 cut points. Q-Q norm plots consider if a given dataset are similar to a normal distribution. If so, then the dots should match the straight line produced by the <em>qqline</em> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>])</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>While we introduce Q-Q plots here, and they are often used to assess normality, remember our tests (so far) are relying on the means of the data being normally-distributed and not the data itself!</p>
+</section>
+</section>
+<section id="what-if-we-dont-know-the-variance" class="level2">
+<h2 class="anchored" data-anchor-id="what-if-we-dont-know-the-variance">What if we don’t know the variance?</h2>
+<p>Assuming everything above makes sense, we are left with one issue: the variance of the underlying population is rarely known!</p>
+<p>In the above examples, we actually used our <em>estimate</em> of variance from the sample to run our simulation experiment and z-test! While this works ok for large sample sizes (yay for central limit theorem!) and is what statisticians relied upon historically, it doesn’t work for well for smaller sample sizes (unless we somehow know the population variance). Our estimates for the population variance are less precise and potentially biased at small sample sizes.</p>
+<p>To address this issue, statisticians developed the t-distribution. Unlike the normal distribution, its shape depends on the sample size. This parameter is coded as degrees of freedom, commonly denoted as df, and is equal to n - 1 (we’ll come back to df later!). The major breakthrough, however, was that df was the <em>only</em> sample-specific parameter. The same distribution works regardless of the estimated population variance, as a t statistic/score is created that functions like a z score.</p>
+<p><span class="math display">\[
+t=\frac{\bar{x} - \mu}{\frac{s}{\sqrt{n}}}
+\]</span></p>
+<p>It can be shown (though not here!) that the t-distribution is actually a specific form of the F distribution (which we’ll see in ANOVAs). An F-distribution is the ration of two <span class="math inline">\(\chi^2\)</span> distributions, which (as noted above) are sums of squared Z distributions. The t distribution is the special case where you can take the square of an F distribution where the numerator (top) <span class="math inline">\(\chi^2\)</span> distribution has 1 degree of freedom and the denomintor (bottom) has n-1 degrees of freedom. In general, variance follows a <span class="math inline">\(\chi^2\)</span> distribution with n-1 degrees of freedom.</p>
+<p>Because it directly uses the estimate of the population variance, smaller sample sizes show more spread (and thus make null hypotheses more difficult to reject!). For example, note how small sample sizes (remember, df=3 means n=4!) are notably different from the normal distribution, while larger sample sizes become very hard to distinguish!</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Note this means the t-distribution is actually a class of distributions.</p>
+<p>In older text books, you would have a t-table that showed t scores corresponding to commonly used values of <span class="math inline">\(\alpha\)</span> for multiple degrees of freedom. These published t scores are sometimes called critical values. Users would have compared their calculated t-score (or its absolute value in the case of negative values) to the appropriate critical values (often <span class="math inline">\(\alpha/2\)</span> for 2-sided tests) to determine if a finding was significant. We can actually produce a t table in R.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>cut_offs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">".1"</span>, <span class="st">".05"</span>, <span class="st">".025"</span>, <span class="st">".01"</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>t_table <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="at">ncol =</span> <span class="fu">length</span>(cut_offs)<span class="sc">+</span><span class="dv">1</span>, <span class="at">nrow =</span> <span class="fu">length</span>(df))), <span class="fu">c</span>(<span class="st">"df"</span>,cut_offs))</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>t_table<span class="sc">$</span>df <span class="ot">&lt;-</span> df</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(df)){</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(t_table))</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  t_table[i,j] <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">abs</span>(<span class="fu">qt</span>(<span class="fu">as.numeric</span>(<span class="fu">colnames</span>(t_table)[j]), df[i])),<span class="dv">3</span>)</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(t_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-t_table" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div data-pagedtable="false">
+
+<script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["df"],"name":[1],"type":["int"],"align":["right"]},{"label":[".1"],"name":[2],"type":["dbl"],"align":["right"]},{"label":[".05"],"name":[3],"type":["dbl"],"align":["right"]},{"label":[".025"],"name":[4],"type":["dbl"],"align":["right"]},{"label":[".01"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"3.078","3":"6.314","4":"12.706","5":"31.821"},{"1":"2","2":"1.886","3":"2.920","4":"4.303","5":"6.965"},{"1":"3","2":"1.638","3":"2.353","4":"3.182","5":"4.541"},{"1":"4","2":"1.533","3":"2.132","4":"2.776","5":"3.747"},{"1":"5","2":"1.476","3":"2.015","4":"2.571","5":"3.365"},{"1":"6","2":"1.440","3":"1.943","4":"2.447","5":"3.143"},{"1":"7","2":"1.415","3":"1.895","4":"2.365","5":"2.998"},{"1":"8","2":"1.397","3":"1.860","4":"2.306","5":"2.896"},{"1":"9","2":"1.383","3":"1.833","4":"2.262","5":"2.821"},{"1":"10","2":"1.372","3":"1.812","4":"2.228","5":"2.764"},{"1":"11","2":"1.363","3":"1.796","4":"2.201","5":"2.718"},{"1":"12","2":"1.356","3":"1.782","4":"2.179","5":"2.681"},{"1":"13","2":"1.350","3":"1.771","4":"2.160","5":"2.650"},{"1":"14","2":"1.345","3":"1.761","4":"2.145","5":"2.624"},{"1":"15","2":"1.341","3":"1.753","4":"2.131","5":"2.602"},{"1":"16","2":"1.337","3":"1.746","4":"2.120","5":"2.583"},{"1":"17","2":"1.333","3":"1.740","4":"2.110","5":"2.567"},{"1":"18","2":"1.330","3":"1.734","4":"2.101","5":"2.552"},{"1":"19","2":"1.328","3":"1.729","4":"2.093","5":"2.539"},{"1":"20","2":"1.325","3":"1.725","4":"2.086","5":"2.528"},{"1":"21","2":"1.323","3":"1.721","4":"2.080","5":"2.518"},{"1":"22","2":"1.321","3":"1.717","4":"2.074","5":"2.508"},{"1":"23","2":"1.319","3":"1.714","4":"2.069","5":"2.500"},{"1":"24","2":"1.318","3":"1.711","4":"2.064","5":"2.492"},{"1":"25","2":"1.316","3":"1.708","4":"2.060","5":"2.485"},{"1":"26","2":"1.315","3":"1.706","4":"2.056","5":"2.479"},{"1":"27","2":"1.314","3":"1.703","4":"2.052","5":"2.473"},{"1":"28","2":"1.313","3":"1.701","4":"2.048","5":"2.467"},{"1":"29","2":"1.311","3":"1.699","4":"2.045","5":"2.462"},{"1":"30","2":"1.310","3":"1.697","4":"2.042","5":"2.457"},{"1":"31","2":"1.309","3":"1.696","4":"2.040","5":"2.453"},{"1":"32","2":"1.309","3":"1.694","4":"2.037","5":"2.449"},{"1":"33","2":"1.308","3":"1.692","4":"2.035","5":"2.445"},{"1":"34","2":"1.307","3":"1.691","4":"2.032","5":"2.441"},{"1":"35","2":"1.306","3":"1.690","4":"2.030","5":"2.438"},{"1":"36","2":"1.306","3":"1.688","4":"2.028","5":"2.434"},{"1":"37","2":"1.305","3":"1.687","4":"2.026","5":"2.431"},{"1":"38","2":"1.304","3":"1.686","4":"2.024","5":"2.429"},{"1":"39","2":"1.304","3":"1.685","4":"2.023","5":"2.426"},{"1":"40","2":"1.303","3":"1.684","4":"2.021","5":"2.423"},{"1":"41","2":"1.303","3":"1.683","4":"2.020","5":"2.421"},{"1":"42","2":"1.302","3":"1.682","4":"2.018","5":"2.418"},{"1":"43","2":"1.302","3":"1.681","4":"2.017","5":"2.416"},{"1":"44","2":"1.301","3":"1.680","4":"2.015","5":"2.414"},{"1":"45","2":"1.301","3":"1.679","4":"2.014","5":"2.412"},{"1":"46","2":"1.300","3":"1.679","4":"2.013","5":"2.410"},{"1":"47","2":"1.300","3":"1.678","4":"2.012","5":"2.408"},{"1":"48","2":"1.299","3":"1.677","4":"2.011","5":"2.407"},{"1":"49","2":"1.299","3":"1.677","4":"2.010","5":"2.405"},{"1":"50","2":"1.299","3":"1.676","4":"2.009","5":"2.403"},{"1":"51","2":"1.298","3":"1.675","4":"2.008","5":"2.402"},{"1":"52","2":"1.298","3":"1.675","4":"2.007","5":"2.400"},{"1":"53","2":"1.298","3":"1.674","4":"2.006","5":"2.399"},{"1":"54","2":"1.297","3":"1.674","4":"2.005","5":"2.397"},{"1":"55","2":"1.297","3":"1.673","4":"2.004","5":"2.396"},{"1":"56","2":"1.297","3":"1.673","4":"2.003","5":"2.395"},{"1":"57","2":"1.297","3":"1.672","4":"2.002","5":"2.394"},{"1":"58","2":"1.296","3":"1.672","4":"2.002","5":"2.392"},{"1":"59","2":"1.296","3":"1.671","4":"2.001","5":"2.391"},{"1":"60","2":"1.296","3":"1.671","4":"2.000","5":"2.390"},{"1":"61","2":"1.296","3":"1.670","4":"2.000","5":"2.389"},{"1":"62","2":"1.295","3":"1.670","4":"1.999","5":"2.388"},{"1":"63","2":"1.295","3":"1.669","4":"1.998","5":"2.387"},{"1":"64","2":"1.295","3":"1.669","4":"1.998","5":"2.386"},{"1":"65","2":"1.295","3":"1.669","4":"1.997","5":"2.385"},{"1":"66","2":"1.295","3":"1.668","4":"1.997","5":"2.384"},{"1":"67","2":"1.294","3":"1.668","4":"1.996","5":"2.383"},{"1":"68","2":"1.294","3":"1.668","4":"1.995","5":"2.382"},{"1":"69","2":"1.294","3":"1.667","4":"1.995","5":"2.382"},{"1":"70","2":"1.294","3":"1.667","4":"1.994","5":"2.381"},{"1":"71","2":"1.294","3":"1.667","4":"1.994","5":"2.380"},{"1":"72","2":"1.293","3":"1.666","4":"1.993","5":"2.379"},{"1":"73","2":"1.293","3":"1.666","4":"1.993","5":"2.379"},{"1":"74","2":"1.293","3":"1.666","4":"1.993","5":"2.378"},{"1":"75","2":"1.293","3":"1.665","4":"1.992","5":"2.377"},{"1":"76","2":"1.293","3":"1.665","4":"1.992","5":"2.376"},{"1":"77","2":"1.293","3":"1.665","4":"1.991","5":"2.376"},{"1":"78","2":"1.292","3":"1.665","4":"1.991","5":"2.375"},{"1":"79","2":"1.292","3":"1.664","4":"1.990","5":"2.374"},{"1":"80","2":"1.292","3":"1.664","4":"1.990","5":"2.374"},{"1":"81","2":"1.292","3":"1.664","4":"1.990","5":"2.373"},{"1":"82","2":"1.292","3":"1.664","4":"1.989","5":"2.373"},{"1":"83","2":"1.292","3":"1.663","4":"1.989","5":"2.372"},{"1":"84","2":"1.292","3":"1.663","4":"1.989","5":"2.372"},{"1":"85","2":"1.292","3":"1.663","4":"1.988","5":"2.371"},{"1":"86","2":"1.291","3":"1.663","4":"1.988","5":"2.370"},{"1":"87","2":"1.291","3":"1.663","4":"1.988","5":"2.370"},{"1":"88","2":"1.291","3":"1.662","4":"1.987","5":"2.369"},{"1":"89","2":"1.291","3":"1.662","4":"1.987","5":"2.369"},{"1":"90","2":"1.291","3":"1.662","4":"1.987","5":"2.368"},{"1":"91","2":"1.291","3":"1.662","4":"1.986","5":"2.368"},{"1":"92","2":"1.291","3":"1.662","4":"1.986","5":"2.368"},{"1":"93","2":"1.291","3":"1.661","4":"1.986","5":"2.367"},{"1":"94","2":"1.291","3":"1.661","4":"1.986","5":"2.367"},{"1":"95","2":"1.291","3":"1.661","4":"1.985","5":"2.366"},{"1":"96","2":"1.290","3":"1.661","4":"1.985","5":"2.366"},{"1":"97","2":"1.290","3":"1.661","4":"1.985","5":"2.365"},{"1":"98","2":"1.290","3":"1.661","4":"1.984","5":"2.365"},{"1":"99","2":"1.290","3":"1.660","4":"1.984","5":"2.365"},{"1":"100","2":"1.290","3":"1.660","4":"1.984","5":"2.364"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;3: Critical values</figcaption>
+</figure>
+</div>
+</div>
+<p>To calculate the test statistic in R, we can instead (thankfully!) use the <em>t.test</em> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>], <span class="at">mu =</span> <span class="dv">7</span>, </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">sigma.x=</span> <span class="fu">sd</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One Sample t-test
+
+data:  iris[iris$Species == "virginica", "Sepal.Length"]
+t = -4.5815, df = 49, p-value = 3.195e-05
+alternative hypothesis: true mean is not equal to 7
+95 percent confidence interval:
+ 6.407285 6.768715
+sample estimates:
+mean of x 
+    6.588 </code></pre>
+</div>
+</div>
+<p>Note the t-test also provides confidence intervals. These use</p>
+</section>
+<section id="what-if-we-dont-trust-the-normal-approximation" class="level2">
+
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">What if we don’t trust the normal approximation?</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-sandidge2003" class="csl-entry" role="listitem">
+Sandidge, Jamel S. 2003. <span>“Scavenging by Brown Recluse Spiders.”</span> <em>Nature</em> 426 (6962): 30–30. <a href="https://doi.org/10.1038/426030a">https://doi.org/10.1038/426030a</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
