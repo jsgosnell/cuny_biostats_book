@@ -691,6 +691,261 @@ t.test(iris[iris$Species == "virginica","Sepal.Length"], mu = 7,
              sigma.x= sd(iris[iris$Species == "virginica","Sepal.Length"]))
 ```
 
-Note the t-test also provides confidence intervals. These use
+Note the t-test also provides confidence intervals. Note these consider
+the spread of the data given the t-distribution so they are always wider
+than those predicted using a normal distribution, though the difference
+is small at large sample sizes.
+
+This explains why I have noted \~95% of the data lies within 2 standard
+errors of the mean! For truly normal data, it's actually within 1.96
+standard errors. For data where we estimate the population variance, it
+depend on the sample size, but even at n=21 (and thus df = 20!) the
+number is 2.09. Note
+
+```{r}
+t_critical <- setNames(data.frame(matrix(ncol = 2, nrow = length(sample_size))), c("n", "95% of the data is within this many standard deviations of the mean"))
+for (i in 1:length(sample_size)){
+t_critical$n[i] <- sample_size[i]
+t_critical[i,2] <-qt(.025,as.numeric(sample_size[i]))
+}
+
+```
 
 ## What if we don't trust the normal approximation?
+
+Despite the central limit theorem (or because of it), we may not think
+our sample size is sufficient given the distribution the data to assume
+that $\hat{Y}$ really follows a normal distribution. In that case we a
+few options.
+
+### Wilcoxon test (aka, signed binary-transform, Fisher's sign test)
+
+If the distribution of the data is symmetric, a Wilcoxon test may be
+appropriate. **Note it is rare to have data that are symmetrically
+distributed but that for which you don't think th means will be normally
+distributed)**. We introduce the test here as it will come back up (and
+be more useful) in later chapters.
+
+This test employs a strategy we will see again and again: it ranks the
+data, in this case based on the distance from the mean under the null
+hypothesis. A sign is also assigned to each rank, with those originating
+from data points that were lower than the proposed mean becoming
+negative. In theory, the sum of the signed ranks should be \~0 if H~O~
+is true. We can carry out this test in R using the *wilcox.test*
+function.
+
+```{r}
+wilcox.test(iris[iris$Species == "virginica","Sepal.Length"], mu = 7)
+```
+
+### Sign test
+
+If the data are not symmetrically distributed, the sign test actually
+just counts those below the proposed mean. In theory, approximately half
+the values should be under the proposed mean if H~O~ is true. The
+proportion below is compared to .5 using a binomial test.
+
+```{r}
+SIGN.test(iris[iris$Species == "virginica","Sepal.Length"], md = 7)
+```
+
+### Bootstrapping
+
+#bootstrap####
+
+#back to our fake uniform distributin from the estimation_lecture
+
+\#
+
+#create "population" of males
+
+population_size \<- 10000
+
+set.seed(42)
+
+population_unif \<- data.frame(id = 1:population_size,
+
+height = runif(population_size, 60, 80))
+
+ggplot(population_unif, aes(height)) +
+
+geom_histogram(size=3) +
+
+xlab("Height (in)")+
+
+ylab("Frequency")+
+
+ggtitle("Height of all males in our fake uniform population")+
+
+theme(axis.title.x = element_text(face="bold", size=28),
+
+axis.title.y = element_text(face="bold", size=28),
+
+axis.text.y = element_text(size=20),
+
+axis.text.x = element_text(size=20),
+
+legend.text =element_text(size=20),
+
+legend.title = element_text(size=20, face="bold"),
+
+legend.position = "bottom",
+
+plot.title = element_text(hjust = 0.5, face="bold", size=32))
+
+#sample a 100 of these
+
+sample_unif_1 \<- population_unif\[sample(nrow(population_unif), 100),\]
+
+ggplot(sample_unif_1, aes(height)) +
+
+geom_histogram(size=3) +
+
+xlab("Height (in)")+
+
+ylab("Frequency")+
+
+ggtitle("Height of 100 random males in our fake uniform population")+
+
+theme(axis.title.x = element_text(face="bold", size=28),
+
+axis.title.y = element_text(face="bold", size=28),
+
+axis.text.y = element_text(size=20),
+
+axis.text.x = element_text(size=20),
+
+legend.text =element_text(size=20),
+
+legend.title = element_text(size=20, face="bold"),
+
+legend.position = "bottom",
+
+plot.title = element_text(hjust = 0.5, face="bold", size=32))
+
+#now do this a 1000 times and record it
+
+number_of_samples \<- 1000
+
+sample_outcomes \<- data.frame(mean = rep(NA, number_of_samples), sd =
+NA)
+
+for (i in 1:number_of_samples){
+
+sample_unif_1 \<- population_unif\[sample(nrow(population_unif), 100),\]
+
+sample_outcomes\$mean\[i\] \<- mean(sample_unif_1\$height)
+
+sample_outcomes\$sd\[i\] \<- sd(sample_unif_1\$height)
+
+}
+
+ggplot(sample_outcomes, aes(mean)) +
+
+geom_histogram(size=3) +
+
+xlab("Mean height (in)")+
+
+ylab("Frequency")+
+
+ggtitle("Mean height of 100 males in our uniform population samples")+
+
+theme(axis.title.x = element_text(face="bold", size=28),
+
+axis.title.y = element_text(face="bold", size=28),
+
+axis.text.y = element_text(size=20),
+
+axis.text.x = element_text(size=20),
+
+legend.text =element_text(size=20),
+
+legend.title = element_text(size=20, face="bold"),
+
+legend.position = "bottom",
+
+plot.title = element_text(hjust = 0.5, face="bold", size=32))
+
+\#
+
+#now bootstrap the signal using sample size of 100####
+
+boot.smpl \<- matrix(runif(100,60,80),length(runif(100,60,80)),1000)
+
+boot.smpl \<- apply(boot.smpl,2,sample,r=T)
+
+boot.md \<- data.frame(mean = apply(boot.smpl,2,mean))
+
+ggplot(boot.md, aes(mean)) +
+
+geom_histogram(size=3) +
+
+xlab("Mean height (in)")+
+
+ylab("Frequency")+
+
+ggtitle("Bootstrap distribution of mean height for 100 males \\n in our
+uniform population samples")+
+
+theme(axis.title.x = element_text(face="bold", size=28),
+
+axis.title.y = element_text(face="bold", size=28),
+
+axis.text.y = element_text(size=20),
+
+axis.text.x = element_text(size=20),
+
+legend.text =element_text(size=20),
+
+legend.title = element_text(size=20, face="bold"),
+
+legend.position = "bottom",
+
+plot.title = element_text(hjust = 0.5, face="bold", size=32))
+
+#now bootstrap the signal using sample size of 25####
+
+boot.smpl \<- matrix(runif(25,60,80),length(runif(25,60,80)),1000)
+
+boot.smpl \<- apply(boot.smpl,2,sample,r=T)
+
+boot.md \<- data.frame(mean = apply(boot.smpl,2,mean))
+
+ggplot(boot.md, aes(mean)) +
+
+geom_histogram(size=3) +
+
+xlab("Mean height (in)")+
+
+ylab("Frequency")+
+
+ggtitle("Bootstrap distribution of mean height for 25 males \\n in our
+uniform population samples")+
+
+theme(axis.title.x = element_text(face="bold", size=28),
+
+axis.title.y = element_text(face="bold", size=28),
+
+axis.text.y = element_text(size=20),
+
+axis.text.x = element_text(size=20),
+
+legend.text =element_text(size=20),
+
+legend.title = element_text(size=20, face="bold"),
+
+legend.position = "bottom",
+
+plot.title = element_text(hjust = 0.5, face="bold", size=32))
+
+#bootstrapjsg function####
+
+#source from github
+
+##make sure you have the boot and simpleboot packages installed
+
+source("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/bootstrapjsg.R")
+
+#bootstrapping athlete data
+
+bootstrapjsg(data1=sport\[sport\$Sex == "male", "Ht"\], null=175.6)
