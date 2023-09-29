@@ -311,7 +311,12 @@ div.csl-indent {
   <li><a href="#qq-norm-plots---commonly-used-but-not-needed-at-this-point" id="toc-qq-norm-plots---commonly-used-but-not-needed-at-this-point" class="nav-link" data-scroll-target="#qq-norm-plots---commonly-used-but-not-needed-at-this-point">QQ norm plots - commonly used, but not needed, at this point!</a></li>
   </ul></li>
   <li><a href="#what-if-we-dont-know-the-variance" id="toc-what-if-we-dont-know-the-variance" class="nav-link" data-scroll-target="#what-if-we-dont-know-the-variance">What if we don’t know the variance?</a></li>
-  <li><a href="#what-if-we-dont-trust-the-normal-approximation" id="toc-what-if-we-dont-trust-the-normal-approximation" class="nav-link" data-scroll-target="#what-if-we-dont-trust-the-normal-approximation">What if we don’t trust the normal approximation?</a></li>
+  <li><a href="#what-if-we-dont-trust-the-normal-approximation" id="toc-what-if-we-dont-trust-the-normal-approximation" class="nav-link" data-scroll-target="#what-if-we-dont-trust-the-normal-approximation">What if we don’t trust the normal approximation?</a>
+  <ul class="collapse">
+  <li><a href="#wilcoxon-test-aka-signed-binary-transform-fishers-sign-test" id="toc-wilcoxon-test-aka-signed-binary-transform-fishers-sign-test" class="nav-link" data-scroll-target="#wilcoxon-test-aka-signed-binary-transform-fishers-sign-test">Wilcoxon test (aka, signed binary-transform, Fisher’s sign test)</a></li>
+  <li><a href="#sign-test" id="toc-sign-test" class="nav-link" data-scroll-target="#sign-test">Sign test</a></li>
+  <li><a href="#bootstrapping" id="toc-bootstrapping" class="nav-link" data-scroll-target="#bootstrapping">Bootstrapping</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/Tests_for_continuous_data_from_one_sample.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/Tests_for_continuous_data_from_one_sample.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -821,16 +826,169 @@ mean of x
     6.588 </code></pre>
 </div>
 </div>
-<p>Note the t-test also provides confidence intervals. These use</p>
+<p>Note the t-test also provides confidence intervals. Note these consider the spread of the data given the t-distribution so they are always wider than those predicted using a normal distribution, though the difference is small at large sample sizes.</p>
+<p>This explains why I have noted ~95% of the data lies within 2 standard errors of the mean! For truly normal data, it’s actually within 1.96 standard errors. For data where we estimate the population variance, it depend on the sample size, but even at n=21 (and thus df = 20!) the number is 2.09. Note</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>t_critical <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="fu">length</span>(sample_size))), <span class="fu">c</span>(<span class="st">"n"</span>, <span class="st">"95% of the data is within this many standard deviations of the mean"</span>))</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(sample_size)){</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>t_critical<span class="sc">$</span>n[i] <span class="ot">&lt;-</span> sample_size[i]</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>t_critical[i,<span class="dv">2</span>] <span class="ot">&lt;-</span><span class="fu">qt</span>(.<span class="dv">025</span>,<span class="fu">as.numeric</span>(sample_size[i]))</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="what-if-we-dont-trust-the-normal-approximation" class="level2">
+<h2 class="anchored" data-anchor-id="what-if-we-dont-trust-the-normal-approximation">What if we don’t trust the normal approximation?</h2>
+<p>Despite the central limit theorem (or because of it), we may not think our sample size is sufficient given the distribution the data to assume that <span class="math inline">\(\hat{Y}\)</span> really follows a normal distribution. In that case we a few options.</p>
+<section id="wilcoxon-test-aka-signed-binary-transform-fishers-sign-test" class="level3">
+<h3 class="anchored" data-anchor-id="wilcoxon-test-aka-signed-binary-transform-fishers-sign-test">Wilcoxon test (aka, signed binary-transform, Fisher’s sign test)</h3>
+<p>If the distribution of the data is symmetric, a Wilcoxon test may be appropriate. <strong>Note it is rare to have data that are symmetrically distributed but that for which you don’t think th means will be normally distributed)</strong>. We introduce the test here as it will come back up (and be more useful) in later chapters.</p>
+<p>This test employs a strategy we will see again and again: it ranks the data, in this case based on the distance from the mean under the null hypothesis. A sign is also assigned to each rank, with those originating from data points that were lower than the proposed mean becoming negative. In theory, the sum of the signed ranks should be ~0 if H<sub>O</sub> is true. We can carry out this test in R using the <em>wilcox.test</em> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>], <span class="at">mu =</span> <span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Wilcoxon signed rank test with continuity correction
 
+data:  iris[iris$Species == "virginica", "Sepal.Length"]
+V = 241.5, p-value = 0.0001312
+alternative hypothesis: true location is not equal to 7</code></pre>
+</div>
+</div>
+</section>
+<section id="sign-test" class="level3">
+<h3 class="anchored" data-anchor-id="sign-test">Sign test</h3>
+<p>If the data are not symmetrically distributed, the sign test actually just counts those below the proposed mean. In theory, approximately half the values should be under the proposed mean if H<sub>O</sub> is true. The proportion below is compared to .5 using a binomial test.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SIGN.test</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>], <span class="at">md =</span> <span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One-sample Sign-Test
+
+data:  iris[iris$Species == "virginica", "Sepal.Length"]
+s = 12, p-value = 0.0003059
+alternative hypothesis: true median is not equal to 7
+95 percent confidence interval:
+ 6.3 6.7
+sample estimates:
+median of x 
+        6.5 
+
+Achieved and Interpolated Confidence Intervals: 
+
+                  Conf.Level L.E.pt U.E.pt
+Lower Achieved CI     0.9351    6.3    6.7
+Interpolated CI       0.9500    6.3    6.7
+Upper Achieved CI     0.9672    6.3    6.7</code></pre>
+</div>
+</div>
+</section>
+<section id="bootstrapping" class="level3">
+<h3 class="anchored" data-anchor-id="bootstrapping">Bootstrapping</h3>
+<p>#bootstrap####</p>
+<p>#back to our fake uniform distributin from the estimation_lecture</p>
+<p>#</p>
+<p>#create “population” of males</p>
+<p>population_size &lt;- 10000</p>
+<p>set.seed(42)</p>
+<p>population_unif &lt;- data.frame(id = 1:population_size,</p>
+<p>height = runif(population_size, 60, 80))</p>
+<p>ggplot(population_unif, aes(height)) +</p>
+<p>geom_histogram(size=3) +</p>
+<p>xlab(“Height (in)”)+</p>
+<p>ylab(“Frequency”)+</p>
+<p>ggtitle(“Height of all males in our fake uniform population”)+</p>
+<p>theme(axis.title.x = element_text(face=“bold”, size=28),</p>
+<p>axis.title.y = element_text(face=“bold”, size=28),</p>
+<p>axis.text.y = element_text(size=20),</p>
+<p>axis.text.x = element_text(size=20),</p>
+<p>legend.text =element_text(size=20),</p>
+<p>legend.title = element_text(size=20, face=“bold”),</p>
+<p>legend.position = “bottom”,</p>
+<p>plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#sample a 100 of these</p>
+<p>sample_unif_1 &lt;- population_unif[sample(nrow(population_unif), 100),]</p>
+<p>ggplot(sample_unif_1, aes(height)) +</p>
+<p>geom_histogram(size=3) +</p>
+<p>xlab(“Height (in)”)+</p>
+<p>ylab(“Frequency”)+</p>
+<p>ggtitle(“Height of 100 random males in our fake uniform population”)+</p>
+<p>theme(axis.title.x = element_text(face=“bold”, size=28),</p>
+<p>axis.title.y = element_text(face=“bold”, size=28),</p>
+<p>axis.text.y = element_text(size=20),</p>
+<p>axis.text.x = element_text(size=20),</p>
+<p>legend.text =element_text(size=20),</p>
+<p>legend.title = element_text(size=20, face=“bold”),</p>
+<p>legend.position = “bottom”,</p>
+<p>plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#now do this a 1000 times and record it</p>
+<p>number_of_samples &lt;- 1000</p>
+<p>sample_outcomes &lt;- data.frame(mean = rep(NA, number_of_samples), sd = NA)</p>
+<p>for (i in 1:number_of_samples){</p>
+<p>sample_unif_1 &lt;- population_unif[sample(nrow(population_unif), 100),]</p>
+<p>sample_outcomes$mean[i] &lt;- mean(sample_unif_1$height)</p>
+<p>sample_outcomes$sd[i] &lt;- sd(sample_unif_1$height)</p>
+<p>}</p>
+<p>ggplot(sample_outcomes, aes(mean)) +</p>
+<p>geom_histogram(size=3) +</p>
+<p>xlab(“Mean height (in)”)+</p>
+<p>ylab(“Frequency”)+</p>
+<p>ggtitle(“Mean height of 100 males in our uniform population samples”)+</p>
+<p>theme(axis.title.x = element_text(face=“bold”, size=28),</p>
+<p>axis.title.y = element_text(face=“bold”, size=28),</p>
+<p>axis.text.y = element_text(size=20),</p>
+<p>axis.text.x = element_text(size=20),</p>
+<p>legend.text =element_text(size=20),</p>
+<p>legend.title = element_text(size=20, face=“bold”),</p>
+<p>legend.position = “bottom”,</p>
+<p>plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#</p>
+<p>#now bootstrap the signal using sample size of 100####</p>
+<p>boot.smpl &lt;- matrix(runif(100,60,80),length(runif(100,60,80)),1000)</p>
+<p>boot.smpl &lt;- apply(boot.smpl,2,sample,r=T)</p>
+<p>boot.md &lt;- data.frame(mean = apply(boot.smpl,2,mean))</p>
+<p>ggplot(boot.md, aes(mean)) +</p>
+<p>geom_histogram(size=3) +</p>
+<p>xlab(“Mean height (in)”)+</p>
+<p>ylab(“Frequency”)+</p>
+<p>ggtitle(“Bootstrap distribution of mean height for 100 males \n in our uniform population samples”)+</p>
+<p>theme(axis.title.x = element_text(face=“bold”, size=28),</p>
+<p>axis.title.y = element_text(face=“bold”, size=28),</p>
+<p>axis.text.y = element_text(size=20),</p>
+<p>axis.text.x = element_text(size=20),</p>
+<p>legend.text =element_text(size=20),</p>
+<p>legend.title = element_text(size=20, face=“bold”),</p>
+<p>legend.position = “bottom”,</p>
+<p>plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#now bootstrap the signal using sample size of 25####</p>
+<p>boot.smpl &lt;- matrix(runif(25,60,80),length(runif(25,60,80)),1000)</p>
+<p>boot.smpl &lt;- apply(boot.smpl,2,sample,r=T)</p>
+<p>boot.md &lt;- data.frame(mean = apply(boot.smpl,2,mean))</p>
+<p>ggplot(boot.md, aes(mean)) +</p>
+<p>geom_histogram(size=3) +</p>
+<p>xlab(“Mean height (in)”)+</p>
+<p>ylab(“Frequency”)+</p>
+<p>ggtitle(“Bootstrap distribution of mean height for 25 males \n in our uniform population samples”)+</p>
+<p>theme(axis.title.x = element_text(face=“bold”, size=28),</p>
+<p>axis.title.y = element_text(face=“bold”, size=28),</p>
+<p>axis.text.y = element_text(size=20),</p>
+<p>axis.text.x = element_text(size=20),</p>
+<p>legend.text =element_text(size=20),</p>
+<p>legend.title = element_text(size=20, face=“bold”),</p>
+<p>legend.position = “bottom”,</p>
+<p>plot.title = element_text(hjust = 0.5, face=“bold”, size=32))</p>
+<p>#bootstrapjsg function####</p>
+<p>#source from github</p>
+<p>##make sure you have the boot and simpleboot packages installed</p>
+<p>source(“https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/bootstrapjsg.R”)</p>
+<p>#bootstrapping athlete data</p>
+<p>bootstrapjsg(data1=sport[sport$Sex == “male”, “Ht”], null=175.6)</p>
 
 
 
 </section>
+</section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">What if we don’t trust the normal approximation?</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-sandidge2003" class="csl-entry" role="listitem">
 Sandidge, Jamel S. 2003. <span>“Scavenging by Brown Recluse Spiders.”</span> <em>Nature</em> 426 (6962): 30–30. <a href="https://doi.org/10.1038/426030a">https://doi.org/10.1038/426030a</a>.
 </div>
