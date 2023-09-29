@@ -228,17 +228,174 @@ So in our example simulation, **no** observed means were as far from the
 value from the null hypothesis as our sample mean was. This would leave
 to a p-value of 0 - unusual in some regards, but possible here.
 
+## Another way to compare
+
+Just like we saw for binomial data, we can always carry out a sampling
+experiment to find a p-value. However, that's mainly because we have
+computers. Even with computers, it would be cumbersome to set up a new
+sampling experiment for every dataset (which we would need to do for any
+change in sample size, mean, or standard deviation).
+
+Instead it would be nice to find a way to replicate the distribution we
+see above for similar experiments using an equation (just like we did
+for the binomial data!). One step in doing this relates to how we
+examine our predictions given our hypotheses. It turns out, we can map
+our hypotheses to *models* that explain the variation we see in the
+data. Our hypotheses (remember
+
+$$
+\begin{split}
+H_O: \mu_{height} = 7 \ cm \\ 
+H_A: \mu_{height} \neq 7 \ cm 
+\end{split}
+$$
+
+focus on the mean. They are also stating a prediction for every outcome!
+Under the null hypothesis, if we were asked to guess the length of a
+sepal from *I. virginica*, we would guess 7 cm. Under the alternative
+hypothesis, we would guess it's something different than 7. Using our
+sample, we might instead guess it's equal to 7 + $\delta$, where
+$\delta$ is estimated from our sample and 7+ $\delta$ is the mean of our
+sample.
+
+For each hypothesis, we could calculate a measure of related mode fit
+called the sum squared error from our model, or SSE, where
+
+$$
+SSE=sum \ squared \ error = \sum_{i=1}^{n}(Y_i-\hat{Y_i})^2
+$$
+
+Here, $Y_i$ are the data points, and $\hat{Y_i}$ is our predicted value.
+
+This is basically saying we compare the predicted to observed value for
+each data point for each model (the square exists so things don't cancel
+out!). Our null hypothesis corresponds to a simpler view of the world (a
+reduced or null model), where $\hat{Y_i}$ is equal to a given value (in
+our case, 7 cm), whereas under the alternative hypothesis (which
+corresponds to an alternative or full model), $\hat{Y_i}$ is equal to a
+different value (such as 7 + $\delta$). The value for $\delta$ is
+estimated from our sample and makes the full model larger than the
+reduced in regard to the number of parameters included in the model.
+
+We can then compare the SSE of the 2 models by finding their difference.
+This is our **signal** from the data. If we take multiple samples from a
+known population that is defined by the null hypothesis, we can carry
+out a very similar sampling to what we did originally.
+
+```{r}
+
+for(i in 1:number_of_simulations){
+a <- rnorm(50, 7, sd = sd(iris[iris$Species == "virginica","Sepal.Length"]))
+sampling_experiment$observed_mean[i] <- mean(a)
+
+sampling_experiment$SSE_null[i] <-  sum((a-7)^2)
+
+sampling_experiment$SSE_full[i] <- sum((a-mean(a))^2)
+}
+
+sampling_experiment$SSE_difference <- sampling_experiment$SSE_null - sampling_experiment$SSE_full
+
+ggplot(sampling_experiment,
+              aes(x=SSE_difference)) +
+  geom_histogram(color="black") +
+  labs(title="Observed difference in model fit from 1000 draws",
+       x= "Mean",
+       y= "Frequency")
+
+
+difference_SSE_observed <- sum((iris[iris$Species == "virginica","Sepal.Length"]-7)^2)-sum((iris[iris$Species == "virginica","Sepal.Length"]-mean(iris[iris$Species == "virginica","Sepal.Length"]))^2)
+
+ggplot(sampling_experiment,
+              aes(x=SSE_difference)) +
+  geom_histogram(color="black") +
+  labs(title="Observed difference in model fit from 1000 draws",
+       x= "Mean",
+       y= "Frequency")+
+  geom_vline(aes(xintercept=difference_SSE_observed))
+
+```
+
+Note we never saw as large a difference in the **signal** our sampling
+experiment as we did in the data!
+
+```{r}
+nrow(sampling_experiment[sampling_experiment$SSE_difference >=  difference_SSE_observed,])
+```
+
+Note this distribution is skewed for a few reasons. Given the square
+term, it must positive. We also unlikely (given sampling error) that
+signal will be exactly zero. In fact,since we estimate $\delta$ from the
+data itself, the alternative model is almost always a better fit
+(remember our bias in variance estimates?).
+
+This approach accounts for the **noise** that we see in our data
+(variation we expect to see in signal values even if the null hypothesis
+is true) through sampling. However, if we could estimate the noise, we
+could also divide our signal by it. Accounting for signal and noise
+let's us take very different questions in terms of data and use a
+standardized approach to analyze them. This is because a signal to noise
+ratio typically follows some distribution.
+
 ## Z-test: a distribution based approach
 
-Just like we saw for binomial data, a simulation-based approach is
-always doable but mainly due to computers. Otherwise we would need to
-repeat the sampling experiment for any change in sample size, mean, or
-standard deviation. Instead, we can also use the formula above to
-*approximate* the distribution of sampling means. This is an
-*approximate* solution because our means approach a normal distribution
-as sample size increases - so for non-infinity sample sizes, they may
-not be perfectly normal! We call this the z-test, and it can be carried
-out using the z.test function in the BDSA package.
+In our case, the signal to noise ratio is approximated by the normal
+distribution! This is an *approximate* solution to the signal to noise
+ratio because our means approach a normal distribution as sample size
+increases - so for non-infinity sample sizes, they may not be perfectly
+normal!
+
+We can show that our signal is simply the mean from our data minus the
+mean under the null hypothesis, and including $\sigma$ in the
+denominator accounts for noise. We can make this more generalizable if
+we z-transform the data using the formula
+
+$$
+z=\frac{Y - \mu}{\sigma}
+$$
+
+After this transformation, the data is centered at 0 (think about it -
+if you subtract the mean from all data points...) and has a standard
+deviation of 1 (because you divided by the standard deviation!). This
+also makes the mean of transformed data equal to $\delta$ and the mean
+under the null hypothesis equal to zero. This also means \~68% of the
+data points lie between -1 and 1, while \~95% lie between -2 and 2
+(since the standard deviation is 1!).
+
+```{r, echo = F}
+#| label: fig-z-colored
+#| fig-cap: "~65% of the data lies with 1 standard deviation of the mean, ~95% lies within 2 standard deviations, and ~99% lies within 3 standard deviations of the mean"
+library(viridis)
+colors <- setNames( viridis(5), c("0-1","1-2", "2-3", "3-4", "4+"))
+
+
+#standard normal with 1-4 se highlighted ####
+ggplot(data = data.frame(x = c(-5, 5)), aes(x)) +
+   stat_function(aes(fill="4+"), fun = dnorm, args = list(mean = 0, sd = 1),
+                geom = "area") +
+  stat_function(aes(fill="3-4"),fun = dnorm, geom = "area", xlim =c(-4,4)) +
+  stat_function(aes(fill="2-3"),fun = dnorm, geom = "area", xlim =c(-3,3)) +
+  stat_function(aes(fill="1-2"),fun = dnorm, geom = "area", xlim =c(-2,2)) +
+  stat_function(aes(fill="0-1"),fun = dnorm, geom = "area", xlim =c(-1,1)) +
+  scale_x_continuous(breaks=seq(-5,5,1)) +
+  labs(y="Probablity",
+       x="Z score",
+       fill="SE from mean") 
+```
+
+We call this specific form of the normal distribution (N(0,1), showing
+the mean and standard deviation parameters) the Z distribution.
+Extending on this with some algebra, we can get a Z-score from any data
+using the equation
+
+$$
+z=\frac{\bar{x} - \mu}{\sigma}
+$$
+
+This transforms a given data point into a z-score on the z, or standard
+normal, distribution. We can then use the Z distribution to consider how
+unusual our z-scores are (i.e., get a p-value!). We call the approach
+that uses this distribution the z-test, and it can be carried out using
+the z.test function in the BDSA package.
 
 ```{r}
 library(BSDA)
@@ -252,71 +409,38 @@ Using this approach we get a p-value of .000005 - not 0, but very close!
 
 Although software now provides us exact (approximate) p-values,
 historically this was far more difficult. For this reason, people took
-advantage of a transformation so they could use a standardized table of
-p-values. For *any* normally-distributed population, we can get a z
-score (or statistic) using
-
-$$
-z=\frac{\bar{x} - \mu}{\sigma}
-$$
-
-This transforms a given data point into a z-score on the z, or standard
-normal, distribution. This distribution is centered at 0 (think about
-it - if you subtract the mean from all data points...) and has a
-standard deviation of 1 (because you divided by the standard
-deviation!). This also means \~68% of the data points lie between -1 and
-1, while \~95% lie between -2 and 2 (since the standard deviation is
-1!).
-
-```{r, echo = F}
-#| label: fig-z-colored
-#| fig-cap: "~65% of the data lies with 1 standard deviation of the mean, ~95% lies within 2 standard deviations, and ~99% lies within 3 standard deviations of the mean
-library(viridis)
-colors <- setNames( viridis(5), c("0-1","1-2", "2-3", "3-4", "4+"))
-
-
-#standard normal with 1-4 se highlighted ####
-ggplot(data = data.frame(x = c(-5, 5)), aes(x)) +
-   stat_function(aes(fill="4+"), fun = dnorm, args = list(mean = 0, sd = 1), size = 3,
-                geom = "area") +
-  stat_function(aes(fill="3-4"),fun = dnorm, geom = "area", xlim =c(-4,4)) +
-  stat_function(aes(fill="2-3"),fun = dnorm, geom = "area", xlim =c(-3,3)) +
-  stat_function(aes(fill="1-2"),fun = dnorm, geom = "area", xlim =c(-2,2)) +
-  stat_function(aes(fill="0-1"),fun = dnorm, geom = "area", xlim =c(-1,1)) +
-  scale_x_continuous(breaks=seq(-5,5,1)) +
-  labs(y="Probablity",
-       x="Z score",
-       fill="SE from mean") 
-```
-
-This method allowed any data that could be assumed to follow the note
-assumptions to be considered using a standard table such as this one:
+advantage of a transformation so they could use a standardized table
+like this one.
 
 [![Example of z-table. Jsmura, Creative Commons Attribution-Share Alike
 4.0 International
 licence](/images/Tabla_z.png){fig-align="center"}](https://commons.wikimedia.org/wiki/File:Tabla_z.png)
 
-In general would add the percentages (P above) of data points as or more
-extreme than what you observed to get a p-value. Some tables only had
-values \<0; for those you could find the value and multiple it by 2 for
-two-tailed tests since the distribution is symmetric. For our example,
-we got a z score of -4.8515. The table doesn't even go that low! In
-general this allowed one table to used for all normal distributions (and
-not different ones for all the possible combinations of means and
-variances).
+These tables showed how Z-scores related to p-values. Note these often
+showed the area to the left of the value, so two-tailed tests required
+one to multiple the given p-value by 2 (or, if focused on the upper
+tail, multiply (1-given p-value) by 2 since the distribution is
+symmetric. Similarly, some tables only had values \<0; for those you
+could find the score whose absolute value corresponed to the observed
+z-score and multiply the noted p-value by 2 for two-tailed tests .
+
+For our example, we got a z score of -4.8515. The table doesn't even go
+that low!
 
 ## Does the distribution of the data matter?
 
-Remember we are focusing on the distribution of the means. Given that
-and the central limit theorem, does the distribution of the data matter?
-Yes, but only in regards to the relationship between sample size and
-normality of the sample means. If the underlying data is normal, then
-the sampled means are distributed normally for almost *any* sample size,
-although sample size impacts the spread of the sample means.
+Remember we are focusing on the distribution of the means (both our
+sampling experiment and SSE calculations include the means of the sample
+and data under the null hyothesis!). Given that and the central limit
+theorem, does the distribution of the data matter? Yes, but only in
+regards to the relationship between sample size and normality of the
+sample means. If the underlying data is normal, then the sampled means
+are distributed normally for almost *any* sample size, although sample
+size impacts the spread of the sample means.
 
 ```{r, echo = F}
 #| label: fig-normal_draws
-#| fig-cap:  Means drawn from a normal distribution are normal regardless of sample size
+#| fig-cap:  "Means drawn from a normal distribution are normal regardless of sample size"
 number_of_simulations <- 1000
 sample_size=c("1","5","10", "20", "40", "80")
 
@@ -326,7 +450,7 @@ for(i in 1:number_of_simulations){
 sampling_experiment[i,k] = mean(rnorm(n=as.numeric(sample_size[k])))
 }
 }
-
+library(reshape2)
 sampling_experiment_long <- melt(sampling_experiment, variable.name = "Sample_size", value.name = "mean")
 sampling_experiment_long$Sample_size <- factor(sampling_experiment_long$Sample_size, levels =c("1","5","10", "20", "40", "80"))
 levels(sampling_experiment_long$Sample_size) <- paste("Sample size of ", levels(sampling_experiment_long$Sample_size))
@@ -440,19 +564,22 @@ or a z-test approach by finding a z-sore
 
 ```
 
-or a $\chi^2$ test, which is equivalent to a z_score but uses a squared
-Z distribution (note the p-values are the same!)
+or a $\chi^2$ test, which is similar to a z test but focuses on a sum of
+independent squared Z variates. The $\chi^2$ distribution is defined by
+a degrees of freedom, or df, parameter, which in this case isequal to
+the number of categories -1 (or 2-1=1 in this case). We will return to
+df multiple times! Note the p-values obtained from the Z and $\chi^2$
+tests are the same!
 
 ```{r}
 chisq.test(c(119,n-119))
-
 ```
 
 This may seem esoteric, but understanding these issues may help you
 interpret older papers while also choosing to employ more modern
 statistical methods.
 
-### QQ norm plots - commonly sed, but not needed, at this point!
+### QQ norm plots - commonly used, but not needed, at this point!
 
 In addition to considering the sample size and underlying distribution,
 quantile-quantile (Q-Q) plots are sometimes used to assess normality.
@@ -479,8 +606,8 @@ variance of the underlying population is rarely known!
 
 In the above examples, we actually used our *estimate* of variance from
 the sample to run our simulation experiment and z-test! While this works
-ok for large sample sizes (yay for central limit theorem!) (and is what
-statisticians relied upon historically), it doesn't work for well for
+ok for large sample sizes (yay for central limit theorem!) and is what
+statisticians relied upon historically, it doesn't work for well for
 smaller sample sizes (unless we somehow know the population variance).
 Our estimates for the population variance are less precise and
 potentially biased at small sample sizes.
@@ -500,12 +627,12 @@ $$
 
 It can be shown (though not here!) that the t-distribution is actually a
 specific form of the F distribution (which we'll see in ANOVAs). An
-F-distribution is the ration of two $\chi^2$ distributions, which are
-sums of squared Z distributions. The t distribution is the special case
-where you can take the square of an F distribution where the numerator
-(top) $\chi^2$ distribution has 1 degree of freedom and the denomintor
-(bottom) has n-1 degrees of freedom. In general, variance follows a
-$\chi^2$ distribution with n-1 degrees of freedom.
+F-distribution is the ration of two $\chi^2$ distributions, which (as
+noted above) are sums of squared Z distributions. The t distribution is
+the special case where you can take the square of an F distribution
+where the numerator (top) $\chi^2$ distribution has 1 degree of freedom
+and the denomintor (bottom) has n-1 degrees of freedom. In general,
+variance follows a $\chi^2$ distribution with n-1 degrees of freedom.
 
 Because it directly uses the estimate of the population variance,
 smaller sample sizes show more spread (and thus make null hypotheses
@@ -528,16 +655,22 @@ ggplot(data = data.frame(x = c(-3, 3)), aes(x)) +
                 geom = "line") +
   labs(y="Probablity",
        x="Score (t or z)",
-       color="Distribution")+
-  scale_color_manual()
+       color="Distribution")
 ```
 
 Note this means the t-distribution is actually a class of distributions.
-In older text books, you would have a t-table that showed p-values for
-multiple scores and multiple degrees of freedom. We can actually produce
-one in R.
+
+In older text books, you would have a t-table that showed t scores
+corresponding to commonly used values of $\alpha$ for multiple degrees
+of freedom. These published t scores are sometimes called critical
+values. Users would have compared their calculated t-score (or its
+absolute value in the case of negative values) to the appropriate
+critical values (often $\alpha/2$ for 2-sided tests) to determine if a
+finding was significant. We can actually produce a t table in R.
 
 ```{r}
+#| label: fig-t_table
+#| fig-cap: " Critical values"
 df <- 1:100
 cut_offs <- c(".1", ".05", ".025", ".01")
 t_table <- setNames(data.frame(matrix(ncol = length(cut_offs)+1, nrow = length(df))), c("df",cut_offs))
@@ -550,13 +683,14 @@ library(rmarkdown)
 paged_table(t_table)
 ```
 
-The sampling experiment is effectively what we (accidentally) carried
-out earlier. To calculate the test statistic, we can also use the
-*t.test* function.
+To calculate the test statistic in R, we can instead (thankfully!) use
+the *t.test* function.
 
 ```{r}
 t.test(iris[iris$Species == "virginica","Sepal.Length"], mu = 7, 
              sigma.x= sd(iris[iris$Species == "virginica","Sepal.Length"]))
 ```
+
+Note the t-test also provides confidence intervals. These use
 
 ## What if we don't trust the normal approximation?
