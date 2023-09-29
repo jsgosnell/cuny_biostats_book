@@ -498,6 +498,15 @@ $$
 t=\frac{\bar{x} - \mu}{\frac{s}{\sqrt{n}}} 
 $$
 
+It can be shown (though not here!) that the t-distribution is actually a
+specific form of the F distribution (which we'll see in ANOVAs). An
+F-distribution is the ration of two $\chi^2$ distributions, which are
+sums of squared Z distributions. The t distribution is the special case
+where you can take the square of an F distribution where the numerator
+(top) $\chi^2$ distribution has 1 degree of freedom and the denomintor
+(bottom) has n-1 degrees of freedom. In general, variance follows a
+$\chi^2$ distribution with n-1 degrees of freedom.
+
 Because it directly uses the estimate of the population variance,
 smaller sample sizes show more spread (and thus make null hypotheses
 more difficult to reject!). For example, note how small sample sizes
@@ -521,6 +530,24 @@ ggplot(data = data.frame(x = c(-3, 3)), aes(x)) +
        x="Score (t or z)",
        color="Distribution")+
   scale_color_manual()
+```
+
+Note this means the t-distribution is actually a class of distributions.
+In older text books, you would have a t-table that showed p-values for
+multiple scores and multiple degrees of freedom. We can actually produce
+one in R.
+
+```{r}
+df <- 1:100
+cut_offs <- c(".1", ".05", ".025", ".01")
+t_table <- setNames(data.frame(matrix(ncol = length(cut_offs)+1, nrow = length(df))), c("df",cut_offs))
+t_table$df <- df
+for (i in 1:length(df)){
+  for (j in 2:ncol(t_table))
+  t_table[i,j] <- round(abs(qt(as.numeric(colnames(t_table)[j]), df[i])),3)
+}
+library(rmarkdown)
+paged_table(t_table)
 ```
 
 The sampling experiment is effectively what we (accidentally) carried

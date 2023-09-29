@@ -1,30 +1,5 @@
 
 
-#spider example
-binom.test(31,41)
-library(binom)
-binom.confint(31,41)
-
-
-#compare t and normal distribution####
-ggplot(data = data.frame(x = c(-3, 3)), aes(x)) +
-  stat_function(fun = dnorm, n = 101, args = list(mean = 0, sd = 1), size = 3, color = "orange",
-                geom = "line") + 
-  stat_function(fun = dt, n = 101, args = list( df= 3), size = 3, color = "purple",
-                geom = "line") +
-  ylab("Probablity") +
-  xlab("")+
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32))
-
-#t-test with athlete data####
-t.test(sport[sport$Sex == "male", "Ht"], mu = 175.6)
-
 
 #temperature example####
 #show where -1.679 lies on t distribution #####
