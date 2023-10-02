@@ -987,7 +987,7 @@ Attaching package: 'boot'</code></pre>
     melanoma</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data=</span>boostrap_data, <span class="at">statistic =</span> <span class="cf">function</span>(x, inds) <span class="fu">mean</span>(x[inds]),</span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">R=</span><span class="dv">1000</span>)</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">R=</span>number_of_simulations)</span>
 <span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(results<span class="sc">$</span>t), <span class="fu">aes</span>(<span class="at">x=</span>results.t)) <span class="sc">+</span></span>
 <span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
 <span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Bootstrapped means of sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))),</span>
@@ -1000,13 +1000,16 @@ Attaching package: 'boot'</code></pre>
 <p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>and then use the <em>boot.ci</em> function to find a 95% confidence interval.</p>
+<p>and then find the 95% confidence interval. Like binomial data, there are a few ways to do this. One is to use the percentile, or quantile, method. This is intuitive. We rank the bootstrapped values from smallest to largest and then find points that cut off the bottom and top 2.5%.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>( results<span class="sc">$</span>t, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  2.5%  97.5% 
 6.4219 6.7781 </code></pre>
 </div>
+</div>
+<p>Though simple, these findings may also be biased. More advanced intervals are provided the <em>boot.ci</em> function.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in boot.ci(results): bootstrap variances needed for studentized
