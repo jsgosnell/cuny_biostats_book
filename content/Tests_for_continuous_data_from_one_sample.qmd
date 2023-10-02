@@ -780,7 +780,7 @@ ggplot(population_unif, aes(x=value)) +
 
 ```
 
-Now's let's samples of 50 from it a lot of times
+Now's let's take samples of 50 from it a lot of times
 (`r number_of_simulations` here) and plot the means of these samples.
 
 ```{r}
@@ -799,7 +799,12 @@ Now let's instead think of what might happen - we get a single sample of
 50.
 
 ```{r}
-actual_sample <- sample(population_unif$value,50, replace = F)
+actual_sample <- data.frame(sample = sample(population_unif$value,50, replace = F))
+ggplot(actual_sample, aes(x=sample)) +
+  geom_histogram(color="black") +
+  labs(title="Actual sample of size 50 from our imaginary population",
+       x= "Trait value",
+       y= "Frequency")
 ```
 
 Now (here's the odd part): Let's sample from that sample with
@@ -807,19 +812,19 @@ replacement to get "new" samples, then get those means, again,
 `r number_of_simulations` times.
 
 ```{r}
-boostrap_outcomes <- data.frame(mean = rep(NA, number_of_simulations), sd = NA)
+bootstrap_outcomes <- data.frame(mean = rep(NA, number_of_simulations), sd = NA)
 for (i in 1:number_of_simulations){
-example_bootstrap <-sample(actual_sample, length(actual_sample), replace = T)
-boostrap_outcomes$mean[i] <- mean(example_bootstrap)
-boostrap_outcomes$sd[i] <- sd(example_bootstrap)
+example_bootstrap <-sample(actual_sample$sample, length(actual_sample$sample), replace = T)
+bootstrap_outcomes$mean[i] <- mean(example_bootstrap)
+bootstrap_outcomes$sd[i] <- sd(example_bootstrap)
 }
 ```
 
-When we plot them we see it looks very much like our original
-distribution!
+When we plot them we see it looks very much like the distribution of
+means we obtained by re-sampling!
 
 ```{r}
-ggplot(boostrap_outcomes, aes(x=mean)) +
+ggplot(bootstrap_outcomes, aes(x=mean)) +
   geom_histogram(color="black") +
   labs(title="Bootstrapped means of size 50 from our imaginary population",
        x= "Trait value",
@@ -829,15 +834,15 @@ ggplot(boostrap_outcomes, aes(x=mean)) +
 Overall, this means we can use our sample to recreate our underlying
 distribution and explore its properties!
 
-Let's demonstrate this approach with our iris data. First, we make "new"
-datasets from our original data by sampling (with replacement) samples
-of the same size from our original dataset.
+Let's demonstrate this approach with our iris data. First, we can make
+"new" datasets from our original data by sampling (with replacement)
+samples of the same size from our original dataset.
 
 ```{r}
-boostrap_data<- iris[iris$Species == "virginica","Sepal.Length"]
-boostrap_outcomes <- data.frame(mean = rep(NA, number_of_simulations), sd = NA)
+bootstrap_data<- iris[iris$Species == "virginica","Sepal.Length"]
+bootstrap_outcomes <- data.frame(mean = rep(NA, number_of_simulations), sd = NA)
 for (i in 1:number_of_simulations){
-iris_bootstrap <-sample(boostrap_data, length(boostrap_data), replace = T)
+iris_bootstrap <-sample(bootstrap_data, length(bootstrap_data), replace = T)
 boostrap_outcomes$mean[i] <- mean(iris_bootstrap)
 boostrap_outcomes$sd[i] <- sd(iris_bootstrap)
 }
@@ -850,15 +855,17 @@ ggplot(boostrap_outcomes, aes(x=mean)) +
 ```
 
 We again (thanks to the central limit theorem) see the means follow a
-normal distribution. We can also carry this out using the *boot*
-package, though the functions may look a little odd.
+normal distribution.
+
+We can also carry this out using the *boot* package, though the
+functions may look a little odd.
 
 ```{r}
 library(boot)
-results <- boot(data=boostrap_data, statistic = function(x, inds) mean(x[inds]),
+results <- boot(data=bootstrap_data, statistic = function(x, inds) mean(x[inds]),
    R=number_of_simulations)
 ggplot(data.frame(results$t), aes(x=results.t)) +
-  geom_histogram( fill="blue", color="black") +
+  geom_histogram(color="black") +
   labs(title=expression(paste("Bootstrapped means of sepal lengths of ",italic("I. virginica"))),
        x= "Mean sepal length (cm)",
        y= "Frequency")
