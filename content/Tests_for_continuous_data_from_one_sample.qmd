@@ -856,7 +856,7 @@ package, though the functions may look a little odd.
 ```{r}
 library(boot)
 results <- boot(data=boostrap_data, statistic = function(x, inds) mean(x[inds]),
-   R=1000)
+   R=number_of_simulations)
 ggplot(data.frame(results$t), aes(x=results.t)) +
   geom_histogram( fill="blue", color="black") +
   labs(title=expression(paste("Bootstrapped means of sepal lengths of ",italic("I. virginica"))),
@@ -864,10 +864,20 @@ ggplot(data.frame(results$t), aes(x=results.t)) +
        y= "Frequency")
 ```
 
-and then use the *boot.ci* function to find a 95% confidence interval.
+and then find the 95% confidence interval. Like binomial data, there are
+a few ways to do this. One is to use the percentile, or quantile,
+method. This is intuitive. We rank the bootstrapped values from smallest
+to largest and then find points that cut off the bottom and top 2.5%.
 
 ```{r}
 quantile( results$t, probs=c(.025, .975) ) 
+
+```
+
+Though simple, these findings may also be biased. More advanced
+intervals are provided the *boot.ci* function.
+
+```{r}
 boot.ci(results)
 
 ```
