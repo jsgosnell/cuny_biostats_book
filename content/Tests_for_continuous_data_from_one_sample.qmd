@@ -738,7 +738,7 @@ function.
 wilcox.test(iris[iris$Species == "virginica","Sepal.Length"], mu = 7)
 ```
 
-### Sign test
+### Sign test (aka the median test)
 
 If the data are not symmetrically distributed, the sign test actually
 just counts those below the proposed mean. In theory, approximately half
@@ -751,201 +751,129 @@ SIGN.test(iris[iris$Species == "virginica","Sepal.Length"], md = 7)
 
 ### Bootstrapping
 
-#bootstrap####
+The final option we will review is a little different. For all our other
+hypothesis tests we've been resampling from a distribution that fits the
+parameters from the null hypothesis. However, its turns out we can
+resample from the actual data we collected to approximate the
+distribution of the sample (or the signal in most cases). You can then
+use that distribution to develop confidence intervals or hypothesis
+testing. The only requirement here is we have a large enough sample size
+to actually appropriately sample from (and that we have the means to do
+it!). This approach was developed in the 1990s given the increase in
+computing power and availability.
 
-#back to our fake uniform distributin from the estimation_lecture
+We can demonstate this with an imaginary population (and also
+demonstrate the central limit theorem). Let's make a population whose
+trait value of focus falls between 60 and 80 in a uniform manner.
 
-\#
+```{r}
+population_unif <- data.frame(id = 1:10000, 
+                              value = runif(10000, 60, 80))
+ggplot(population_unif, aes(x=value)) +
+  geom_histogram(color="black") +
+  labs(title="Our imaginary population",
+       x= "Trait value",
+       y= "Frequency")
 
-#create "population" of males
+```
 
-population_size \<- 10000
+Now's let's samples of 50 from it a lot of times
+(`r number_of_simulatons` here) and plot the means of these samples.
 
-set.seed(42)
-
-population_unif \<- data.frame(id = 1:population_size,
-
-height = runif(population_size, 60, 80))
-
-ggplot(population_unif, aes(height)) +
-
-geom_histogram(size=3) +
-
-xlab("Height (in)")+
-
-ylab("Frequency")+
-
-ggtitle("Height of all males in our fake uniform population")+
-
-theme(axis.title.x = element_text(face="bold", size=28),
-
-axis.title.y = element_text(face="bold", size=28),
-
-axis.text.y = element_text(size=20),
-
-axis.text.x = element_text(size=20),
-
-legend.text =element_text(size=20),
-
-legend.title = element_text(size=20, face="bold"),
-
-legend.position = "bottom",
-
-plot.title = element_text(hjust = 0.5, face="bold", size=32))
-
-#sample a 100 of these
-
-sample_unif_1 \<- population_unif\[sample(nrow(population_unif), 100),\]
-
-ggplot(sample_unif_1, aes(height)) +
-
-geom_histogram(size=3) +
-
-xlab("Height (in)")+
-
-ylab("Frequency")+
-
-ggtitle("Height of 100 random males in our fake uniform population")+
-
-theme(axis.title.x = element_text(face="bold", size=28),
-
-axis.title.y = element_text(face="bold", size=28),
-
-axis.text.y = element_text(size=20),
-
-axis.text.x = element_text(size=20),
-
-legend.text =element_text(size=20),
-
-legend.title = element_text(size=20, face="bold"),
-
-legend.position = "bottom",
-
-plot.title = element_text(hjust = 0.5, face="bold", size=32))
-
-#now do this a 1000 times and record it
-
-number_of_samples \<- 1000
-
-sample_outcomes \<- data.frame(mean = rep(NA, number_of_samples), sd =
-NA)
-
-for (i in 1:number_of_samples){
-
-sample_unif_1 \<- population_unif\[sample(nrow(population_unif), 100),\]
-
-sample_outcomes\$mean\[i\] \<- mean(sample_unif_1\$height)
-
-sample_outcomes\$sd\[i\] \<- sd(sample_unif_1\$height)
-
+```{r}
+sampling_experiment<- data.frame("observed_mean" = rep(NA, number_of_simulations))
+for(i in 1:number_of_simulations){
+sampling_experiment$observed_mean[i] <- mean(sample(population_unif$value,50, replace = F))
 }
+ggplot(sampling_experiment, aes(x=observed_mean)) +
+  geom_histogram(color="black") +
+  labs(title="Means from imaginary samples of size 50 from our imaginary population",
+       x= "Trait value",
+       y= "Frequency")
+```
 
-ggplot(sample_outcomes, aes(mean)) +
+Now let's instead think of what might happen - we get a single sample of
+50.
 
-geom_histogram(size=3) +
+```{r}
+actual_sample <- sample(population_unif$value,50, replace = F)
+```
 
-xlab("Mean height (in)")+
+Now (here's the odd part): Let's sample from that sample with
+replacement to get "new" samples, then get those means, again,
+`r number_of_simulation` times.
 
-ylab("Frequency")+
+```{r}
+boostrap_outcomes <- data.frame(mean = rep(NA, number_of_simulations), sd = NA)
+for (i in 1:number_of_simulations){
+example_bootstrap <-sample(actual_sample, length(actual_sample), replace = T)
+boostrap_outcomes$mean[i] <- mean(example_bootstrap)
+boostrap_outcomes$sd[i] <- sd(example_bootstrap)
+}
+```
 
-ggtitle("Mean height of 100 males in our uniform population samples")+
+When we plot them we see it looks very much like our original
+distribution!
 
-theme(axis.title.x = element_text(face="bold", size=28),
+```{r}
+ggplot(boostrap_outcomes, aes(x=mean)) +
+  geom_histogram(color="black") +
+  labs(title="Bootstrapped means of size 50 from our imaginary population",
+       x= "Trait value",
+       y= "Frequency")
+```
 
-axis.title.y = element_text(face="bold", size=28),
+Overall, this means we can use our sample to recreate our underlying
+distribution and explore its properties!
 
-axis.text.y = element_text(size=20),
+Let's demonstrate this approach with our iris data. First, we make "new"
+datasets from our original data by sampling (with replacement) samples
+of the same size from our original dataset.
 
-axis.text.x = element_text(size=20),
+```{r}
+boostrap_data<- iris[iris$Species == "virginica","Sepal.Length"]
+boostrap_outcomes <- data.frame(mean = rep(NA, number_of_simulations), sd = NA)
+for (i in 1:number_of_simulations){
+iris_bootstrap <-sample(boostrap_data, length(boostrap_data), replace = T)
+boostrap_outcomes$mean[i] <- mean(iris_bootstrap)
+boostrap_outcomes$sd[i] <- sd(iris_bootstrap)
+}
+ggplot(boostrap_outcomes, aes(x=mean)) +
+  geom_histogram(color="black") +
+  labs(title=expression(paste("Bootstrapped means of sepal lengths of ",italic("I. virginica"))),
+       x= "Mean sepal length (cm)",
+       y= "Frequency")
 
-legend.text =element_text(size=20),
+```
 
-legend.title = element_text(size=20, face="bold"),
+We again (thanks to the central limit theorem) see the means follow a
+normal distribution. We can also carry this out using the *boot*
+package, though the functions may look a little odd.
 
-legend.position = "bottom",
+```{r}
+library(boot)
+results <- boot(data=boostrap_data, statistic = function(x, inds) mean(x[inds]),
+   R=1000)
+ggplot(data.frame(results$t), aes(x=results.t)) +
+  geom_histogram( fill="blue", color="black") +
+  labs(title=expression(paste("Bootstrapped means of sepal lengths of ",italic("I. virginica"))),
+       x= "Mean sepal length (cm)",
+       y= "Frequency")
+```
 
-plot.title = element_text(hjust = 0.5, face="bold", size=32))
+and then use the *boot.ci* function to find a 95% confidence interval.
 
-\#
+```{r}
+quantile( results$t, probs=c(.025, .975) ) 
+boot.ci(results)
 
-#now bootstrap the signal using sample size of 100####
+```
 
-boot.smpl \<- matrix(runif(100,60,80),length(runif(100,60,80)),1000)
+Although p-values are sometimes connected to these methods, we won't
+develop those here. Just focus on getting the confidence interval for
+your signal using bootstrap.
 
-boot.smpl \<- apply(boot.smpl,2,sample,r=T)
+## Next steps
 
-boot.md \<- data.frame(mean = apply(boot.smpl,2,mean))
-
-ggplot(boot.md, aes(mean)) +
-
-geom_histogram(size=3) +
-
-xlab("Mean height (in)")+
-
-ylab("Frequency")+
-
-ggtitle("Bootstrap distribution of mean height for 100 males \\n in our
-uniform population samples")+
-
-theme(axis.title.x = element_text(face="bold", size=28),
-
-axis.title.y = element_text(face="bold", size=28),
-
-axis.text.y = element_text(size=20),
-
-axis.text.x = element_text(size=20),
-
-legend.text =element_text(size=20),
-
-legend.title = element_text(size=20, face="bold"),
-
-legend.position = "bottom",
-
-plot.title = element_text(hjust = 0.5, face="bold", size=32))
-
-#now bootstrap the signal using sample size of 25####
-
-boot.smpl \<- matrix(runif(25,60,80),length(runif(25,60,80)),1000)
-
-boot.smpl \<- apply(boot.smpl,2,sample,r=T)
-
-boot.md \<- data.frame(mean = apply(boot.smpl,2,mean))
-
-ggplot(boot.md, aes(mean)) +
-
-geom_histogram(size=3) +
-
-xlab("Mean height (in)")+
-
-ylab("Frequency")+
-
-ggtitle("Bootstrap distribution of mean height for 25 males \\n in our
-uniform population samples")+
-
-theme(axis.title.x = element_text(face="bold", size=28),
-
-axis.title.y = element_text(face="bold", size=28),
-
-axis.text.y = element_text(size=20),
-
-axis.text.x = element_text(size=20),
-
-legend.text =element_text(size=20),
-
-legend.title = element_text(size=20, face="bold"),
-
-legend.position = "bottom",
-
-plot.title = element_text(hjust = 0.5, face="bold", size=32))
-
-#bootstrapjsg function####
-
-#source from github
-
-##make sure you have the boot and simpleboot packages installed
-
-source("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/bootstrapjsg.R")
-
-#bootstrapping athlete data
-
-bootstrapjsg(data1=sport\[sport\$Sex == "male", "Ht"\], null=175.6)
+Now that we've covered dealing with categorical and continuous data, we
+will move to comparing populations to each other.
