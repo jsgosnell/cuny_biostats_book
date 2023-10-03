@@ -843,10 +843,10 @@ bootstrap_data<- iris[iris$Species == "virginica","Sepal.Length"]
 bootstrap_outcomes <- data.frame(mean = rep(NA, number_of_simulations), sd = NA)
 for (i in 1:number_of_simulations){
 iris_bootstrap <-sample(bootstrap_data, length(bootstrap_data), replace = T)
-boostrap_outcomes$mean[i] <- mean(iris_bootstrap)
-boostrap_outcomes$sd[i] <- sd(iris_bootstrap)
+bootstrap_outcomes$mean[i] <- mean(iris_bootstrap)
+bootstrap_outcomes$sd[i] <- sd(iris_bootstrap)
 }
-ggplot(boostrap_outcomes, aes(x=mean)) +
+ggplot(bootstrap_outcomes, aes(x=mean)) +
   geom_histogram(color="black") +
   labs(title=expression(paste("Bootstrapped means of sepal lengths of ",italic("I. virginica"))),
        x= "Mean sepal length (cm)",

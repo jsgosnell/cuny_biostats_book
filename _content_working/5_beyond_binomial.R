@@ -222,43 +222,7 @@ summary(fit_pois)
 
 
 
-#everest ####
-#make a data frame for ggplot2
-everest <- data.frame(Survived = c("Y","N","Y", "N"),
-                      Oxygen = c("Used", "Used", "Not used", "Not used"),
-                      Number = c(1045, 32, 88, 8))
-#mosaic plot####
-#
-ggplot(everest, aes(x= Survived, y = Number)) +
-  geom_col(aes(fill = Oxygen)) + 
-  xlab("Survived?") +
-  ylab("Occurences") +
-  ggtitle("Oxygen use impacts Everest descent outcomes") +
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32))
 
-#make a mosaic
-library(reshape2)
-number_oxygen <- dcast(everest, Survived ~ "total_that_survived_or_not", value.var = "Number", sum)
-everest <- merge (everest, number_oxygen)
-everest$Proportion <- everest$Number/everest$total_that_survived_or_not
-ggplot(everest, aes(x= Survived, y = Proportion)) +
-  geom_col(aes(fill = Oxygen)) + 
-  xlab("Survived?") +
-  ylab("Proportion") +
-  ggtitle("Oxygen use impacts Everest descent outcomes") +
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32))
 
 
 #added 2022 to give another perspective

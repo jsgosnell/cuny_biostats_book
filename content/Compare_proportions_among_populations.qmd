@@ -23,12 +23,48 @@ Commons](/images/Carpodacus_purpureus_CT3.jpg){fig-alt="Purple Finch (Carpodacus
 
 Let's start simple and just compare purple finches and dark-eyed juncos.
 Klem's sample of finches totalled 18, with 9 being older (after hatching
-year). For juncos, 4 of 11 sampled birds were older. Before we test
-this, we need to decide on an hypothesis. Although both species were
-predicted to occur at 3:1 ratios in the wild, that's not what we are
-considering here. Instead, we want to know if the likelihood of old vs
-young birds being in our samples differed for the species. If so, it
-could be because the age structure of the focal populations are
+year). For juncos, 4 of 11 sampled birds were older. We could put this
+data in a table.
+
++--------------+--------------+--------------+--------------+
+| **Observed** | **Cardinal** | **Junco**    | Totals       |
++--------------+--------------+--------------+--------------+
+| **Old**      | 9            | 4            | 13           |
++--------------+--------------+--------------+--------------+
+| **Young**    | 9            | 7            | 16           |
++--------------+--------------+--------------+--------------+
+| Totals       | 18           | 11           |              |
++--------------+--------------+--------------+--------------+
+
+First, we could plot our data
+
+```{r}
+birds <- data.frame(Old = c("Y","N","Y", "N"),
+                      Bird = c("Junco", "Junco", "Finch", "Finch"),
+                      Number = c(4, 7, 9, 9))
+#mosaic plot####
+#
+ggplot(birds, aes(x= Bird, y = Number)) +
+  geom_col(aes(fill = Old)) + 
+  xlab("Species") +
+  ylab("Frequency") +
+  ggtitle("Age at collision for juncos and finches")
+```
+
+Given the different sampling sizes, a mosaic plot might help in visually
+comparing ratios.
+
+```{r}
+ggplot(birds, aes(x= Bird, y = Number)) +
+  geom_col(aes(fill = Old), position = "fill")
+
+```
+
+Before we test this, we need to decide on an hypothesis. Although both
+species were predicted to occur at 3:1 ratios in the wild, that's not
+what we are considering here. Instead, we want to know if the likelihood
+of old vs young birds being in our samples differed for the species. If
+so, it could be because the age structure of the focal populations are
 different or because the birds differ in their relationship to glass at
 different ages. However, we are still testing a distribution-based
 parameter.
@@ -41,16 +77,149 @@ where \ p \ is \ likelihood \ of \ sampled \ bird \ being \ older \\
 \end{split}
 $$
 
-Put another way,we want to test if *p* is independent of species. This
-formulation is important, because it helps form our predictions under
-the null hypothesis. For our sample, we have 11 juncos and 18 cardinals.
+Put another way,we want to test if *p* is independent of species.
 
-|           |              |           |        |
-|-----------|--------------|-----------|--------|
-|           | **Cardinal** | **Junco** | Totals |
-| **Old**   | 9            | 4         | 13     |
-| **Young** | 9            | 7         | 16     |
-| Totals    | 18           | 11        |        |
+$$
+\begin{split}
+H_O: Probability \ of \ older \ bird \ hitting \ window \ is \ independent \ of \ species \\  
+H_A: Probability \ of \ older \ bird \ hitting \ window \ is \ dependent \ of \ species \\  
+\end{split}
+$$
+
+This formulation is important, because it helps form our predictions
+under the null hypothesis. What would we expect if *p* did not differ
+among species? If age and species were independent, we could expect
+
+$$
+Pr[ Old \ AND \ Given \ species\ use] = Pr[given \ species] * Pr[Old]
+$$
+
+Since we have 13/29 birds are old, we should expect
+
++-----------+-----------+-----------+-----------+
+|           |           | **Junco** | Totals    |
+| **E       | **C       |           |           |
+| xpected** | ardinal** |           |           |
++-----------+-----------+-----------+-----------+
+| **Old**   | 18\*13/29 | 11\*13/29 | 13        |
++-----------+-----------+-----------+-----------+
+| **Young** | 18\*16/29 | 11\*16/29 | 16        |
++-----------+-----------+-----------+-----------+
+| Totals    | 18        | 11        | 29        |
++-----------+-----------+-----------+-----------+
+
+In order to carry out a sampling experiment to consider noise from this
+expected outcome, we have to determine the p parameter to use for our
+population. This is because under the null hypothesis, there is only one
+population- any observed difference is just due to chance!
+
+However, we have an issue - we don't know p. In our binomial experiment
+it was set by our null hypothesis. Now we are comparing *p* among
+species, but that doesn't set a population distribution.
+
+To fix this, we go back to our normal approximations. We have shown for
+large sample sizes the binomial distribution follows the central limit
+theorem.
+
+```{r}
+sample_size=c("1","5","10", "20", "40", "80")
+number_of_simulations <- 1000
+sampling_experiment <- setNames(data.frame(matrix(ncol = length(sample_size), nrow = number_of_simulations)), sample_size)
+
+for(k in 1:length(sample_size)){
+for(i in 1:number_of_simulations){
+sampling_experiment[i,k] = rbinom(n=1, size=as.numeric(sample_size[k]), prob=.7)/as.numeric(sample_size[k])
+}
+}
+
+sampling_experiment_long <- melt(sampling_experiment, variable.name = "Sample_size", value.name = "mean")
+sampling_experiment_long$Sample_size <- factor(sampling_experiment_long$Sample_size, levels =c("1","5","10", "20", "40", "80"))
+levels(sampling_experiment_long$Sample_size) <- paste("Sample size of ", levels(sampling_experiment_long$Sample_size))
+
+ggplot(sampling_experiment_long,aes(x=mean)) +
+  geom_histogram(color="black") +
+  labs(title=paste("Observed means from ", number_of_simulations, " random draws"),
+       subtitle = "Binomial distribution, p=.7",  
+       x= "Mean",
+       y= "Frequency")+
+    facet_wrap(~Sample_size, nrow = 2)
+```
+
+So, we can replace the binomial distribution in our sampling experiment
+with a normal population. To use this approach, we estimate a value for
+*p*, $\hat{p}$, from the data, and let
+
+$$
+\begin{split}
+\mu = Np \\
+\sigma_\mu =\sqrt{Np(1-p)}
+\end{split}
+$$
+
+We then draw only 1 draws this distribution? Why only 1? Because we need
+to keep the sample sizes the same, so the row and column totals are set!
+Remember this for a moment. After we draw 1 number, we fill in the rest.
+
+Once we carry out the sampling experiment, we can Z-transform our cell
+data(because they are normal now!). The results for a single cell would
+follow a N(0,1) distribution (the Z). If we wanted, we could square
+these outcomes (which would then follow a $\chi^2$ distribution, by
+definition), and, since we have 4 cells, add them. The resulting variate
+would follow a $\chi^2$ distribution with 1 degree of freedom (since we
+drew 1 numbers for the free "cell" in our table). Finally, because of
+all the p's above, we could actually rewrite all of this as
+
+$$
+V=\sum{\frac{{Observed-Expected}^2}{Expected}}
+$$
+
+The resulting test is called a $\chi^2$ test. Note this takes
+count-based data and uses a continuous distribution to describe it, so
+it's an approximate test.The degrees of freedom associated with this
+test are based on the number of free cells (or, alternatively, the
+number of cells minus the parameters you had to fill in!). This
+typically can be calculated as (# of columns -1)\*(# of rows -1). We can
+carry out this test in R using the *chisq.test* function.
+
+```{r}
+num_of_simulations <- 10000
+num_of_buckets <- 4
+prop_est <- 13/29
+n <- 29
+mean_est <- n * prop_est
+sigma_est <- sqrt(n*prop_est*(1-prop_est))
+
+chi_sq_stats <- data.frame(chisq = rep(NA, num_of_simulations))
+for(i in 1:num_of_simulations){
+simulation <- table(sample(LETTERS[1:num_of_buckets], n, replace=T))
+chi_sq_stats$chisq[i] <- chisq.test(simulation)$statistic
+}
+library(ggplot2)
+ggplot(chi_sq_stats, aes(x=chisq)) +
+  geom_histogram(aes(y=..count../sum(..count..)), fill = "orange")+
+    stat_function(fun = dchisq, args = list(df = 2),color = "green")
+
+
+
+```
+
+```{r}
+n <- 29
+num_of_simulations <- 10000
+num_of_buckets <- 4
+chi_sq_stats <- data.frame(chisq = rep(NA, num_of_simulations))
+for(i in 1:num_of_simulations){
+simulation <- table(sample(LETTERS[1:num_of_buckets], n, replace=T))
+chi_sq_stats$chisq[i] <- chisq.test(simulation)$statistic
+}
+library(ggplot2)
+ggplot(chi_sq_stats, aes(x=chisq)) +
+  geom_histogram(aes(y=..count../sum(..count..)), fill = "orange")+
+    stat_function(fun = dchisq, args = list(df = 2),color = "green")
+```
+
+and, if we have large enough sample sizes, carry out a sampling
+experiment
 
 What have we done with data like this so far? You should know to
 calculate the proportion of each category impacting the probability of
@@ -318,23 +487,25 @@ $\alpha$ of .05,we would expect to see something this extreme by chance
 1 time out of 20! In other words, we can have errors. Think about it
 this way:
 
-+---------------------+---------------------+--------------------+
-|                     | **Biological        |                    |
-|                     | reality**           |                    |
-+---------------------+---------------------+--------------------+
-| \                   | **H~O~ True**       | **H~O~ False**     |
-|                     |                     |                    |
-| **Decision (based   |                     |                    |
-| on analysis of      |                     |                    |
-| sample data)**      |                     |                    |
-+---------------------+---------------------+--------------------+
-| **Reject H~O~**     | Type I error        | Power (1- $\beta$  |
-|                     | (P\[ɑ\])            | )                  |
-+---------------------+---------------------+--------------------+
-| **Do not reject     | Correct (P\[1- ɑ\]) | Type II Error (    |
-| H~O~**              |                     | Pr\                |
-|                     |                     | \[$\beta$\])       |
-+---------------------+---------------------+--------------------+
++--------------+--------------+--------------+
+|              | **Biological |              |
+|              | reality**    |              |
++--------------+--------------+--------------+
+| \            | **H~O~       | **H~O~       |
+|              | True**       | False**      |
+| **Decision   |              |              |
+| (based on    |              |              |
+| analysis of  |              |              |
+| sample       |              |              |
+| data)**      |              |              |
++--------------+--------------+--------------+
+| **Reject     | Type I error | Power (1-    |
+| H~O~**       | (P\[ɑ\])     | $\beta$ )    |
++--------------+--------------+--------------+
+| **Do not     | Correct      | Type II      |
+| reject       | (P\[1- ɑ\])  | Error ( Pr\  |
+| H~O~**       |              | \[$\beta$\]) |
++--------------+--------------+--------------+
 
 $\alpha$ sets the limit we are ok with for rejecting H~O~ when it is
 true (a *Type 1* error). Alternatively, a *Type II* error is when we do
@@ -627,18 +798,30 @@ However, we can instead decide we want to consider differences to one
 for our null and alternative hypotheses (note *C* is a constant value
 here!):
 
-+---------------+----------------+----------------+----------------+
-|               | -              | **Focused on   | **Focused on   |
-|               |    \*Two-sided | signals        | signals less   |
-|               |     (          | greater than   | than predicted |
-|               |                | predicted in   | in null**      |
-|               |                | null**         |                |
-|               |   typical)\*\* |                |                |
-+---------------+----------------+----------------+----------------+
-| **H~O~**      | p = C          | p \<= C        | p \>= C        |
-+---------------+----------------+----------------+----------------+
-| **H~A~**      | p $\neq$ C     | p \> C         | p \< C         |
-+---------------+----------------+----------------+----------------+
++---------+---------+---------+---------+
+|         | -   \   | -   \*  | -   \*  |
+|         |     \*  | Focused | Focused |
+|         |     T   |     on  |     on  |
+|         |     w   |         |         |
+|         | o-sided | signals | signals |
+|         |     (   |         |         |
+|         |         | greater |    less |
+|         | t y p i |         |         |
+|         | c       |    than |    than |
+|         | al)\*\* |     p   |     p   |
+|         |         |     r   |     r   |
+|         |         | edicted | edicted |
+|         |         |     in  |     in  |
+|         |         |     n   |     n   |
+|         |         | ull\*\* | ull\*\* |
++---------+---------+---------+---------+
+| *       | p = C   | p \<= C | p \>= C |
+| *H~O~** |         |         |         |
++---------+---------+---------+---------+
+| *       | p       | p \> C  | p \< C  |
+| *H~A~** | $\neq$  |         |         |
+|         | C       |         |         |
++---------+---------+---------+---------+
 
 For example, Claramunt et al @claramunt2022 wished to consider if roads
 impaired bird movement. To do they considered if banded birds were more
