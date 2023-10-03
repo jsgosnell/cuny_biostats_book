@@ -26,15 +26,16 @@ Klem's sample of finches totalled 18, with 9 being older (after hatching
 year). For juncos, 4 of 11 sampled birds were older. We could put this
 data in a table.
 
-+--------------+--------------+--------------+--------------+
-| **Observed** | **Cardinal** | **Junco**    | Totals       |
-+--------------+--------------+--------------+--------------+
-| **Old**      | 9            | 4            | 13           |
-+--------------+--------------+--------------+--------------+
-| **Young**    | 9            | 7            | 16           |
-+--------------+--------------+--------------+--------------+
-| Totals       | 18           | 11           |              |
-+--------------+--------------+--------------+--------------+
++-------------+-------------+-------------+-------------+
+| *           | *           | **Junco**   | Totals      |
+| *Observed** | *Cardinal** |             |             |
++-------------+-------------+-------------+-------------+
+| **Old**     | 9           | 4           | 13          |
++-------------+-------------+-------------+-------------+
+| **Young**   | 9           | 7           | 16          |
++-------------+-------------+-------------+-------------+
+| Totals      | 18          | 11          |             |
++-------------+-------------+-------------+-------------+
 
 First, we could plot our data
 
@@ -96,17 +97,18 @@ $$
 
 Since we have 13/29 birds are old, we should expect
 
-+-----------+-----------+-----------+-----------+
-|           |           | **Junco** | Totals    |
-| **E       | **C       |           |           |
-| xpected** | ardinal** |           |           |
-+-----------+-----------+-----------+-----------+
-| **Old**   | 18\*13/29 | 11\*13/29 | 13        |
-+-----------+-----------+-----------+-----------+
-| **Young** | 18\*16/29 | 11\*16/29 | 16        |
-+-----------+-----------+-----------+-----------+
-| Totals    | 18        | 11        | 29        |
-+-----------+-----------+-----------+-----------+
++----------+----------+----------+----------+
+| **Ex     | **Ca     | *        | Totals   |
+| pected** | rdinal** | *Junco** |          |
++----------+----------+----------+----------+
+| **Old**  | 1        | 1        | 13       |
+|          | 8\*13/29 | 1\*13/29 |          |
++----------+----------+----------+----------+
+| *        | 1        | 1        | 16       |
+| *Young** | 8\*16/29 | 1\*16/29 |          |
++----------+----------+----------+----------+
+| Totals   | 18       | 11       | 29       |
++----------+----------+----------+----------+
 
 In order to carry out a sampling experiment to consider noise from this
 expected outcome, we have to determine the p parameter to use for our
@@ -487,25 +489,28 @@ $\alpha$ of .05,we would expect to see something this extreme by chance
 1 time out of 20! In other words, we can have errors. Think about it
 this way:
 
-+--------------+--------------+--------------+
-|              | **Biological |              |
-|              | reality**    |              |
-+--------------+--------------+--------------+
-| \            | **H~O~       | **H~O~       |
-|              | True**       | False**      |
-| **Decision   |              |              |
-| (based on    |              |              |
-| analysis of  |              |              |
-| sample       |              |              |
-| data)**      |              |              |
-+--------------+--------------+--------------+
-| **Reject     | Type I error | Power (1-    |
-| H~O~**       | (P\[ɑ\])     | $\beta$ )    |
-+--------------+--------------+--------------+
-| **Do not     | Correct      | Type II      |
-| reject       | (P\[1- ɑ\])  | Error ( Pr\  |
-| H~O~**       |              | \[$\beta$\]) |
-+--------------+--------------+--------------+
++-------------+-------------+-------------+
+|             | *           |             |
+|             | *Biological |             |
+|             | reality**   |             |
++-------------+-------------+-------------+
+| \           | **H~O~      | **H~O~      |
+|             | True**      | False**     |
+| **Decision  |             |             |
+| (based on   |             |             |
+| analysis of |             |             |
+| sample      |             |             |
+| data)**     |             |             |
++-------------+-------------+-------------+
+| **Reject    | Type I      | Power (1-   |
+| H~O~**      | error       | $\beta$ )   |
+|             | (P\[ɑ\])    |             |
++-------------+-------------+-------------+
+| **Do not    | Correct     | Type II     |
+| reject      | (P\[1- ɑ\]) | Error ( Pr\ |
+| H~O~**      |             | \           |
+|             |             | [$\beta$\]) |
++-------------+-------------+-------------+
 
 $\alpha$ sets the limit we are ok with for rejecting H~O~ when it is
 true (a *Type 1* error). Alternatively, a *Type II* error is when we do
@@ -798,30 +803,34 @@ However, we can instead decide we want to consider differences to one
 for our null and alternative hypotheses (note *C* is a constant value
 here!):
 
-+---------+---------+---------+---------+
-|         | -   \   | -   \*  | -   \*  |
-|         |     \*  | Focused | Focused |
-|         |     T   |     on  |     on  |
-|         |     w   |         |         |
-|         | o-sided | signals | signals |
-|         |     (   |         |         |
-|         |         | greater |    less |
-|         | t y p i |         |         |
-|         | c       |    than |    than |
-|         | al)\*\* |     p   |     p   |
-|         |         |     r   |     r   |
-|         |         | edicted | edicted |
-|         |         |     in  |     in  |
-|         |         |     n   |     n   |
-|         |         | ull\*\* | ull\*\* |
-+---------+---------+---------+---------+
-| *       | p = C   | p \<= C | p \>= C |
-| *H~O~** |         |         |         |
-+---------+---------+---------+---------+
-| *       | p       | p \> C  | p \< C  |
-| *H~A~** | $\neq$  |         |         |
-|         | C       |         |         |
-+---------+---------+---------+---------+
++--------+--------+--------+--------+
+|        | -   \  | -   \* | -   \* |
+|        |     \* |     F  |     F  |
+|        |     T  | ocused | ocused |
+|        |     w  |     on |     on |
+|        |     o  |        |        |
+|        | -sided | s      | s      |
+|        |     (  | ignals | ignals |
+|        |        |        |        |
+|        | t y p  | g      | less   |
+|        | i c    | reater |        |
+|        | a      |        | than p |
+|        | l)\*\* | than p | r      |
+|        |        | r      | e      |
+|        |        | e      | dicted |
+|        |        | dicted | in n   |
+|        |        | in n   | u      |
+|        |        | u      | ll\*\* |
+|        |        | ll\*\* |        |
++--------+--------+--------+--------+
+| -      | p = C  | p \<=  | p \>=  |
+|   \*H~ |        | C      | C      |
+| O~\*\* |        |        |        |
++--------+--------+--------+--------+
+| -      | p      | p \> C | p \< C |
+|   \*H~ | $\neq$ |        |        |
+| A~\*\* | C      |        |        |
++--------+--------+--------+--------+
 
 For example, Claramunt et al @claramunt2022 wished to consider if roads
 impaired bird movement. To do they considered if banded birds were more
