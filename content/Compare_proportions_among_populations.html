@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Biostatistics! - Acquiring data</title>
+<title>Biostatistics! - Comparing proportions among groups</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -82,8 +82,6 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../content/summarizing_data.html" rel="next">
-<link href="../content/Introduction.html" rel="prev">
 <link href="../images/favicon.ico" rel="icon">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -117,6 +115,8 @@ div.csl-indent {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -129,7 +129,9 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../content/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../content/Acquiring_data.html">Acquiring data</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
+      Biostatistics: Concepts and approaches for collecting good data and  turning it into knowledge!
+      </li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -202,7 +204,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../content/Acquiring_data.html" class="sidebar-item-text sidebar-link active">
+  <a href="../content/Acquiring_data.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Acquiring data</span></a>
   </div>
 </li>
@@ -295,18 +297,17 @@ div.csl-indent {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#how-do-we-get-data" id="toc-how-do-we-get-data" class="nav-link active" data-scroll-target="#how-do-we-get-data">How do we get data?</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  <li><a href="#example-back-to-the-birds" id="toc-example-back-to-the-birds" class="nav-link active" data-scroll-target="#example-back-to-the-birds">Example: Back to the birds</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/Acquiring_data.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/Acquiring_data.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/Compare_proportions_among_populations.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/Compare_proportions_among_populations.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Acquiring data</h1>
-<p class="subtitle lead">Sampling and related issues</p>
+<h1 class="title">Comparing proportions among groups</h1>
+<p class="subtitle lead">Moving to multiple populations!</p>
 </div>
 
 
@@ -321,74 +322,285 @@ div.csl-indent {
 
 </header>
 
-<section id="how-do-we-get-data" class="level2">
-<h2 class="anchored" data-anchor-id="how-do-we-get-data">How do we get data?</h2>
-<p>Let’s start our statistics journey by thinking about the simplest scenario: We want to know something about a group. An example might be the average (or mean, we will define later if needed!) value for some trait, the minimum value, or the maximum value. We could also wish to know about the distribution of values for that trait in the group. These traits of the group are called <em>statistics:</em></p>
-<blockquote class="blockquote">
-<p>the numerical facts or data themselves - <em>Dictionary.com</em></p>
-</blockquote>
-<p>This means we have a target trait we are focused on, and we have defined a group of interest. We can call this group of interest a <em>population</em>. Note that while the term <em>population</em> may have specific meanings in some fields (such as ecology), here population is just the group of interest. It could be a population of Goliath grouper in Florida, a population of flowers in Virginia, or people from a certain country or demographic group. We could want to know something about all of these groups!</p>
-<p>As we’ve already noted, in a perfect world we know everything (or at least our trait value) for every member of the focal population. However, we often don’t or can’t measure every member of a population. It may be too difficult or expensive to measure every member of the population. In fact, we may not even know how large the population is!</p>
-<p>In the cases where we can’t measure every member of the population, we collect data on the focal trait(s) from a <em>sample</em>. A sample is the subset of the population of interest. Data can be collected from samples used in experimental studies, where researchers manipulate something to see how it impacts the focal trait. Researchers may expose organisms to different stimuli in a controlled lab, field, or mesocosm study to see what happens. For example, researchers interested in impacts of an invasive crayfish (<em>Pacifastacus leniusculus</em>) on Mazama newts (<em>Taricha granulosa mazamae</em>) collected newts and crayfish.; they then placed either just newts or newts and crayfish in in large tanks to observe interactions <span class="citation" data-cites="girdner2018">Girdner et al. (<a href="#ref-girdner2018" role="doc-biblioref">2018</a>)</span>.</p>
-<div id="fig-nps_mesocosm" class="quarto-figure quarto-figure-center anchored">
+<p>Now that we’ve covered hypothesis testing for both discrete and continous data, we’ll extend these ideas to compare differences among groups. In addition considering these differences, the same test we’ll let us consider if proportions follow a given ratio.</p>
+<section id="example-back-to-the-birds" class="level2">
+<h2 class="anchored" data-anchor-id="example-back-to-the-birds">Example: Back to the birds</h2>
+<p>Let’s return to our bird example <span class="citation" data-cites="klem1989">Klem (<a href="#ref-klem1989" role="doc-biblioref">1989</a>)</span>. We previously found that purple finches did not strike windows at proportions that might be predicted by population demographics using a binomial test. However, what if instead we wanted to compare the collision rate of old vs young birds among several species?</p>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://www.nps.gov/articles/parkscience32_1_5-12_buktenica_et_al_3815.htm"><img src="https://www.nps.gov/common/uploads/stories/images/nri/20160414/articles/E3D75BF5-1DD8-B71B-0BAA0D9A58F1307A/E3D75BF5-1DD8-B71B-0BAA0D9A58F1307A.jpg" class="img-fluid figure-img" alt="Image of people filling large black tanks on dock near lake."></a></p>
-<figcaption class="figure-caption">Figure&nbsp;1: Experimental mesocosms used to evaluate Mazama newt and signal crayfish behavior on Wizard Island, Crater Lake, Oregon. A team of NPS scientists observed the interaction between newts and crayfish in tanks designed to mimic natural habitat.</figcaption>
+<p><a href="https://commons.wikimedia.org/wiki/File:Carpodacus_purpureus_CT3.jpg"><img src="../images/Carpodacus_purpureus_CT3.jpg" class="img-fluid figure-img" alt="Purple Finch (Carpodacus purpureus) male, Cap Tourmente National Wildlife Area, Quebec, Canada."></a></p>
+<figcaption class="figure-caption">Cephas, CC BY-SA 3.0 &lt;https://creativecommons.org/licenses/by-sa/3.0&gt;, via Wikimedia Commons</figcaption>
 </figure>
 </div>
-<p>Data can also be collected from observational studies, where researchers simply measure outcomes and other traits without manipulating anything. For example, scientists interested in impacts of climate change on species ranges surveyed sites for species presence and abundance and compared it to historical data (<span class="citation" data-cites="sagarin1999">Sagarin et al. (<a href="#ref-sagarin1999" role="doc-biblioref">1999</a>)</span>).</p>
-<p>Different types of studies change what we can use the data for. In general, experimental studies are more commonly used to ascertain causation (something makes something happen), whereas observational studies are used to assess correlation (something happens when something else happens). However, these can be hard to disentangle, especially since studies can only be observational since experiments would be unethical or impossible to carry out. As XKCD puts it</p>
-<div id="fig-XKCD552" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><a href="https://xkcd.com/552/"><img src="https://imgs.xkcd.com/comics/correlation.png" class="img-fluid figure-img" alt="Picture of two stick figures chatting.  One says, &quot;I used to think correlation implied causation. Then I took a statistics course. Now I don't.&quot; The other figure responds &quot;Sounds like the class helped.&quot;, To which the first figure responds, &quot;Maybe.&quot;"></a></p>
-<figcaption class="figure-caption">Figure&nbsp;2: XKCD: Correlation. Title text (text that pops up when you hover over the comic): Correlation doesn't imply causation, but it does waggle its eyebrows suggestively and gesture furtively while mouthing ‘look over there’.</figcaption>
-</figure>
-</div>
-<blockquote class="blockquote">
-<p>Correlation doesn’t imply causation, but it does waggle its eyebrows suggestively and gesture furtively while mouthing ‘look over there’ - XKCD #552</p>
-</blockquote>
-<p>Once we have the sample, we can measure the trait of interest in it, and use that to estimate the statistic of interest for the actual population. This is the science of statistics, which can actually be defined as</p>
-<blockquote class="blockquote">
-<p>the practice or science of collecting and analyzing numerical data in large quantities, especially for the purpose of inferring proportions in a whole from those in a representative sample. - <em>Oxford English Dictionary</em></p>
-</blockquote>
-<p>If the whole idea of statistics is to infer something about the population from our sample, we need to make sure the sample is <em>representative</em> of the population. That means it should not be <em>biased</em>. <em>Bias</em> occurs if the trait values we measure in our sample differ from the population in a consistent way. This can happen with samples of convenience, or when researchers select samples that are easy to measure but may not be representative of the population. Classic examples include estimating the amount of time students spend studying by surveying students at a campus library.</p>
-<p>Bias may also be related to issues of independence. In a good sampling design, every member of the population has the same chance of being included in a sample. Samples of convenience violate this premise, and often the underlying issue is that the samples are not independent. A perfect solution is to randomly choose members of the population to be in the sample, but that is often not possible. Again, it requires knowing every member of the population! Indepence also means each data point is not related to any others!</p>
-<div id="fig-XKCD2533" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><a href="https://xkcd.com/2533/"><img src="https://imgs.xkcd.com/comics/slope_hypothesis_testing_2x.png" class="img-fluid figure-img" alt="Comic strip where 2 figures discuss relationship between how loud students scream and exam grades."></a></p>
-<figcaption class="figure-caption">Figure&nbsp;3: XKCD: Slope Hypothesis Testing. Don’t worry, we’ll come back to significance - but what is the independence issue?</figcaption>
-</figure>
-</div>
-<p>In some cases linkages among samples are impossible to avoid. We will cover ways to address that using blocking factors or random effects later.</p>
-<p>Notice in discussing bias we are not directly focusing on the quality of the measurements! For that, we could discuss accuracy (how well we measure the underlying trait in regards to its true value, which we typically don’t know) and precision (how repeatable our measurement technique is). Obviously we need good data to make good estimates, but these ideas are different from our current focus on picking a good sample.</p>
-<p>Even if we have a proper way to measure a trait (accurate and precise) in a good sample (not biased), we will still be producing an estimate of the population statistic! This is due to <em>sampling error</em>. Sampling error refers to the fact that every sample will produce a slightly different estimate of the statistic. Imagine this - there a 1000 fish in a lake. We sample 50 of them, measure their length, and use it calculate the average fish length. If we took a different sample, do you think it would have exactly the same average?</p>
-<p>We can demonstrate this in R - you won’t understand the code below yet, so just trust me for now, but this will let you start seeing code and thinking about how to use it.</p>
-<p>Let’s generate a population of fish. We’ll store their lengths in a vector called <em>lengths</em>.</p>
+<p>Let’s start simple and just compare purple finches and dark-eyed juncos. Klem’s sample of finches totalled 18, with 9 being older (after hatching year). For juncos, 4 of 11 sampled birds were older. We could put this data in a table.</p>
+<table class="table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 18%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><ul>
+<li>*Ob served**</li>
+</ul></td>
+<td><ul>
+<li>*Ca rdinal**</li>
+</ul></td>
+<td><strong>Junco</strong></td>
+<td>Totals</td>
+</tr>
+<tr class="even">
+<td><strong>Old</strong></td>
+<td>9</td>
+<td>4</td>
+<td>13</td>
+</tr>
+<tr class="odd">
+<td><strong>Young</strong></td>
+<td>9</td>
+<td>7</td>
+<td>16</td>
+</tr>
+<tr class="even">
+<td>Totals</td>
+<td>18</td>
+<td>11</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>First, we could plot our data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>lengths <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n=</span><span class="dv">1000</span>, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>birds <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Age =</span> <span class="fu">c</span>(<span class="st">"Old"</span>,<span class="st">"Young"</span>,<span class="st">"Old"</span>, <span class="st">"Young"</span>),</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">Species =</span> <span class="fu">c</span>(<span class="st">"Junco"</span>, <span class="st">"Junco"</span>, <span class="st">"Finch"</span>, <span class="st">"Finch"</span>),</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">Number =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="dv">9</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(birds, <span class="fu">aes</span>(<span class="at">x=</span> Species, <span class="at">y =</span> Number)) <span class="sc">+</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Age)) <span class="sc">+</span> </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Species"</span>) <span class="sc">+</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Frequency"</span>) <span class="sc">+</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Age at collision for juncos and finches"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Compare_proportions_among_populations_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
 </div>
-<p>The average length of fish in this population is 10 cm. We can then simulate a sample from this population. In fact, let’s simulate 2 and compare the means of each.</p>
+</div>
+<p>Given the different sampling sizes, a mosaic plot might help in visually comparing ratios.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sample_1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(lengths,<span class="dv">50</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sample_2 <span class="ot">&lt;-</span><span class="fu">sample</span>(lengths, <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(birds, <span class="fu">aes</span>(<span class="at">x=</span> Species, <span class="at">y =</span> Number)) <span class="sc">+</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Age), <span class="at">position =</span> <span class="st">"fill"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Compare_proportions_among_populations_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
-<p>The mean length for fish in sample 1 is 10.23 cm, while that in sample 2 is 10 cm (Note: if you view this on the webpage you will see a number, but in the actual qmd file you see R code here - this is an example of merging code and text!). These are both close to the true value, but they are also both slightly different - this is sampling error!</p>
-<p>Sampling error always exists, and a major part of statistics is to quantify it. One thing that reduces sampling error is to have large samples! Remember, if we measure every member of the population we don’t even need statistics, so the closer we get to that (implying larger samples) the better!</p>
-</section>
-<section id="next-steps" class="level2">
-<h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
-<p>Now that we have data, we’ll discuss summarizing it in the next section (and actually define <em>mean</em> and some of the other terms we’ve started to use!).</p>
+</div>
+<p>Before we test this, we need to decide on an hypothesis. Although both species were predicted to occur at 3:1 ratios in the wild, that’s not what we are considering here. Instead, we want to know if the likelihood of old vs young birds being in our samples differed for the species. If so, it could be because the age structure of the focal populations are different or because the birds differ in their relationship to glass at different ages. However, we are still testing a distribution-based parameter.</p>
+<p><span class="math display">\[
+\begin{split}
+H_O: p_{finches} = p_{juncos} \\  
+H_A: p_{finches} \neq p_{juncos} \\
+where \ p \ is \ likelihood \ of \ sampled \ bird \ being \ older \\
+\end{split}
+\]</span></p>
+<p>Put another way,we want to test if <em>p</em> is independent of species.</p>
+<p><span class="math display">\[
+\begin{split}
+H_O: Probability \ of \ older \ bird \ hitting \ window \ is \ independent \ of \ species \\  
+H_A: Probability \ of \ older \ bird \ hitting \ window \ is \ dependent \ of \ species \\  
+\end{split}
+\]</span></p>
+<p>This formulation is important, because it helps form our predictions under the null hypothesis. What would we expect if <em>p</em> did not differ among species? If age and species were independent, we could expect</p>
+<p><span class="math display">\[
+Pr[ Old \ AND \ Given \ species\ use] = Pr[given \ species] * Pr[Old]
+\]</span></p>
+<p>Since we have 13/29 birds are old, we should expect</p>
+<table class="table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Exp ected</strong></td>
+<td><strong>Car dinal</strong></td>
+<td><strong> Junco</strong></td>
+<td>Totals</td>
+</tr>
+<tr class="even">
+<td><strong>Old</strong></td>
+<td>18 *13/29</td>
+<td>11 *13/29</td>
+<td>13</td>
+</tr>
+<tr class="odd">
+<td><strong> Young</strong></td>
+<td>18 *16/29</td>
+<td>11 *16/29</td>
+<td>16</td>
+</tr>
+<tr class="even">
+<td>Totals</td>
+<td>18</td>
+<td>11</td>
+<td>29</td>
+</tr>
+</tbody>
+</table>
+<p>In order to carry out a sampling experiment to consider noise from this expected outcome, we have to determine the p parameter to use for our population. This is because under the null hypothesis, there is only one population- any observed difference is just due to chance!</p>
+<p>However, we have an issue - we don’t know p.&nbsp;In our binomial experiment it was set by our null hypothesis. Now we are comparing <em>p</em> among species, but that doesn’t set a population distribution.</p>
+<p>To fix this, we go back to our normal approximations. We have shown for large sample sizes the binomial distribution follows the central limit theorem.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sample_size<span class="ot">=</span><span class="fu">c</span>(<span class="st">"1"</span>,<span class="st">"5"</span>,<span class="st">"10"</span>, <span class="st">"20"</span>, <span class="st">"40"</span>, <span class="st">"80"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>number_of_simulations <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sampling_experiment <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="at">ncol =</span> <span class="fu">length</span>(sample_size), <span class="at">nrow =</span> number_of_simulations)), sample_size)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(sample_size)){</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>number_of_simulations){</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>sampling_experiment[i,k] <span class="ot">=</span> <span class="fu">rbinom</span>(<span class="at">n=</span><span class="dv">1</span>, <span class="at">size=</span><span class="fu">as.numeric</span>(sample_size[k]), <span class="at">prob=</span>.<span class="dv">7</span>)<span class="sc">/</span><span class="fu">as.numeric</span>(sample_size[k])</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>sampling_experiment_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(sampling_experiment, <span class="at">variable.name =</span> <span class="st">"Sample_size"</span>, <span class="at">value.name =</span> <span class="st">"mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No id variables; using all as measure variables</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sampling_experiment_long<span class="sc">$</span>Sample_size <span class="ot">&lt;-</span> <span class="fu">factor</span>(sampling_experiment_long<span class="sc">$</span>Sample_size, <span class="at">levels =</span><span class="fu">c</span>(<span class="st">"1"</span>,<span class="st">"5"</span>,<span class="st">"10"</span>, <span class="st">"20"</span>, <span class="st">"40"</span>, <span class="st">"80"</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(sampling_experiment_long<span class="sc">$</span>Sample_size) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"Sample size of "</span>, <span class="fu">levels</span>(sampling_experiment_long<span class="sc">$</span>Sample_size))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sampling_experiment_long,<span class="fu">aes</span>(<span class="at">x=</span>mean)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">paste</span>(<span class="st">"Observed means from "</span>, number_of_simulations, <span class="st">" random draws"</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Binomial distribution, p=.7"</span>,  </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Mean"</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>Sample_size, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Compare_proportions_among_populations_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>So, we can replace the binomial distribution in our sampling experiment with a normal population. To use this approach, we estimate a value for <em>p</em>, <span class="math inline">\(\hat{p}\)</span>, from the data, and let</p>
+<p><span class="math display">\[
+\begin{split}
+\mu = Np \\
+\sigma_\mu =\sqrt{Np(1-p)}
+\end{split}
+\]</span></p>
+<p>We then draw only 1 draws this distribution? Why only 1? Because we need to keep the sample sizes the same, so the row and column totals are set! Remember this for a moment. After we draw 1 number, we fill in the rest.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>num_of_simulations <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>num_of_buckets <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>chi_sq_stats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">chisq =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, num_of_simulations))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>num_of_simulations){</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>simulation <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="fu">sample</span>(LETTERS[<span class="dv">1</span><span class="sc">:</span>num_of_buckets], n, <span class="at">replace=</span>T))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>chi_sq_stats<span class="sc">$</span>chisq[i] <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(simulation)<span class="sc">$</span>statistic</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chi_sq_stats, <span class="fu">aes</span>(<span class="at">x=</span>chisq)) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..count..<span class="sc">/</span><span class="fu">sum</span>(..count..)), <span class="at">fill =</span> <span class="st">"orange"</span>)<span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_function</span>(<span class="at">fun =</span> dchisq, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df =</span> <span class="dv">2</span>),<span class="at">color =</span> <span class="st">"green"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Once we carry out the sampling experiment, we can Z-transform our cell data(because they are normal now!). The results for a single cell would follow a N(0,1) distribution (the Z). If we wanted, we could square these outcomes (which would then follow a <span class="math inline">\(\chi^2\)</span> distribution, by definition), and, since we have 4 cells, add them. The resulting variate would follow a <span class="math inline">\(\chi^2\)</span> distribution with 1 degree of freedom (since we drew 1 numbers for the free “cell” in our table). Finally, because of all the p’s above, we could actually rewrite all of this as</p>
+<p><span class="math display">\[
+V=\sum{\frac{{Observed-Expected}^2}{Expected}}
+\]</span></p>
+<p>The resulting test is called a <span class="math inline">\(\chi^2\)</span> test. Note this takes count-based data and uses a continuous distribution to describe it, so it’s an approximate test.The degrees of freedom associated with this test are based on the number of free cells (or, alternatively, the number of cells minus the parameters you had to fill in!). This typically can be calculated as (# of columns -1)*(# of rows -1). We can carry out this test in R using the <em>chisq.test</em> function.</p>
+<p>This function requires a matrix of aggregated values (counts for each cell). Currently we have a data frame (birds). To make this work, we have a few options.</p>
+<p>Input it directly</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">7</span>), <span class="dv">2</span>, <span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in chisq.test(matrix(c(9, 4, 9, 7), 2, 2, byrow = T)): Chi-squared
+approximation may be incorrect</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test with Yates' continuity correction
+
+data:  matrix(c(9, 4, 9, 7), 2, 2, byrow = T)
+X-squared = 0.11002, df = 1, p-value = 0.7401</code></pre>
+</div>
+</div>
+<p>same as</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>birds_long <span class="ot">&lt;-</span> <span class="fu">dcast</span>(birds, Age<span class="sc">~</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using Number as value column: use value.var to override.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(birds_long<span class="sc">$</span>Junco, birds_long<span class="sc">$</span>Finch), <span class="at">nrow =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in chisq.test(matrix(c(birds_long$Junco, birds_long$Finch), nrow = 2)):
+Chi-squared approximation may be incorrect</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test with Yates' continuity correction
+
+data:  matrix(c(birds_long$Junco, birds_long$Finch), nrow = 2)
+X-squared = 0.11002, df = 1, p-value = 0.7401</code></pre>
+</div>
+</div>
+<p>or</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(birds_long<span class="sc">$</span>Finch, birds_long<span class="sc">$</span>Junco), <span class="at">nrow =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in chisq.test(matrix(c(birds_long$Finch, birds_long$Junco), nrow = 2)):
+Chi-squared approximation may be incorrect</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test with Yates' continuity correction
+
+data:  matrix(c(birds_long$Finch, birds_long$Junco), nrow = 2)
+X-squared = 0.11002, df = 1, p-value = 0.7401</code></pre>
+</div>
+</div>
+<p>or</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">cbind</span>(birds_long<span class="sc">$</span>Junco, birds_long<span class="sc">$</span>Finch))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in chisq.test(cbind(birds_long$Junco, birds_long$Finch)): Chi-squared
+approximation may be incorrect</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test with Yates' continuity correction
+
+data:  cbind(birds_long$Junco, birds_long$Finch)
+X-squared = 0.11002, df = 1, p-value = 0.7401</code></pre>
+</div>
+</div>
+<p>but not the same as…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>birds_long <span class="ot">&lt;-</span> <span class="fu">dcast</span>(birds, Species<span class="sc">~</span>Age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using Number as value column: use value.var to override.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(birds_long<span class="sc">$</span>Young, birds_long<span class="sc">$</span>Age), <span class="at">nrow =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Chi-squared test for given probabilities
+
+data:  matrix(c(birds_long$Young, birds_long$Age), nrow = 2)
+X-squared = 0.25, df = 1, p-value = 0.6171</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">knit_exit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-girdner2018" class="csl-entry" role="listitem">
-Girdner, Scott F., Andrew M. Ray, Mark W. Buktenica, David K. Hering, Jeremy A. Mack, and John W. Umek. 2018. <span>“Replacement of a Unique Population of Newts (Taricha Granulosa Mazamae) by Introduced Signal Crayfish (Pacifastacus Leniusculus) in Crater Lake, Oregon.”</span> <em>Biological Invasions</em> 20 (3): 721–40. <a href="https://doi.org/10.1007/s10530-017-1570-6">https://doi.org/10.1007/s10530-017-1570-6</a>.
-</div>
-<div id="ref-sagarin1999" class="csl-entry" role="listitem">
-Sagarin, Raphael D., James P. Barry, Sarah E. Gilman, and Charles H. Baxter. 1999. <span>“Climate-Related Change in an Intertidal Community over Short and Long Time Scales.”</span> <em>Ecological Monographs</em> 69 (4): 465–90. <a href="https://doi.org/10.2307/2657226">https://doi.org/10.2307/2657226</a>.
+<div id="ref-klem1989" class="csl-entry" role="listitem">
+Klem, D. 1989. <span>“Bird: Window Collisions.”</span> <em>The Wilson Bulletin</em> 101 (4): 606–20. <a href="https://www.jstor.org/stable/4162790">https://www.jstor.org/stable/4162790</a>.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -739,18 +951,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../content/Introduction.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Introduction</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../content/summarizing_data.html" class="pagination-link">
-        <span class="nav-page-text">Summarizing data</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
