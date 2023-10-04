@@ -26,27 +26,26 @@ Klem's sample of finches totalled 18, with 9 being older (after hatching
 year). For juncos, 4 of 11 sampled birds were older. We could put this
 data in a table.
 
-+-------------+-------------+-------------+-------------+
-| *           | *           | **Junco**   | Totals      |
-| *Observed** | *Cardinal** |             |             |
-+-------------+-------------+-------------+-------------+
-| **Old**     | 9           | 4           | 13          |
-+-------------+-------------+-------------+-------------+
-| **Young**   | 9           | 7           | 16          |
-+-------------+-------------+-------------+-------------+
-| Totals      | 18          | 11          |             |
-+-------------+-------------+-------------+-------------+
++------------+------------+------------+------------+
+| -   \*Ob   | -   \*Ca   | **Junco**  | Totals     |
+| served\*\* | rdinal\*\* |            |            |
++------------+------------+------------+------------+
+| **Old**    | 9          | 4          | 13         |
++------------+------------+------------+------------+
+| **Young**  | 9          | 7          | 16         |
++------------+------------+------------+------------+
+| Totals     | 18         | 11         |            |
++------------+------------+------------+------------+
 
 First, we could plot our data
 
 ```{r}
-birds <- data.frame(Old = c("Y","N","Y", "N"),
-                      Bird = c("Junco", "Junco", "Finch", "Finch"),
+birds <- data.frame(Age = c("Old","Young","Old", "Young"),
+                      Species = c("Junco", "Junco", "Finch", "Finch"),
                       Number = c(4, 7, 9, 9))
-#mosaic plot####
-#
-ggplot(birds, aes(x= Bird, y = Number)) +
-  geom_col(aes(fill = Old)) + 
+library(ggplot2)
+ggplot(birds, aes(x= Species, y = Number)) +
+  geom_col(aes(fill = Age)) + 
   xlab("Species") +
   ylab("Frequency") +
   ggtitle("Age at collision for juncos and finches")
@@ -56,8 +55,8 @@ Given the different sampling sizes, a mosaic plot might help in visually
 comparing ratios.
 
 ```{r}
-ggplot(birds, aes(x= Bird, y = Number)) +
-  geom_col(aes(fill = Old), position = "fill")
+ggplot(birds, aes(x= Species, y = Number)) +
+  geom_col(aes(fill = Age), position = "fill")
 
 ```
 
@@ -97,18 +96,18 @@ $$
 
 Since we have 13/29 birds are old, we should expect
 
-+----------+----------+----------+----------+
-| **Ex     | **Ca     | *        | Totals   |
-| pected** | rdinal** | *Junco** |          |
-+----------+----------+----------+----------+
-| **Old**  | 1        | 1        | 13       |
-|          | 8\*13/29 | 1\*13/29 |          |
-+----------+----------+----------+----------+
-| *        | 1        | 1        | 16       |
-| *Young** | 8\*16/29 | 1\*16/29 |          |
-+----------+----------+----------+----------+
-| Totals   | 18       | 11       | 29       |
-+----------+----------+----------+----------+
++---------+---------+---------+---------+
+| **Exp   | **Car   | **      | Totals  |
+| ected** | dinal** | Junco** |         |
++---------+---------+---------+---------+
+| **Old** | 18      | 11      | 13      |
+|         | \*13/29 | \*13/29 |         |
++---------+---------+---------+---------+
+| **      | 18      | 11      | 16      |
+| Young** | \*16/29 | \*16/29 |         |
++---------+---------+---------+---------+
+| Totals  | 18      | 11      | 29      |
++---------+---------+---------+---------+
 
 In order to carry out a sampling experiment to consider noise from this
 expected outcome, we have to determine the p parameter to use for our
@@ -133,7 +132,7 @@ for(i in 1:number_of_simulations){
 sampling_experiment[i,k] = rbinom(n=1, size=as.numeric(sample_size[k]), prob=.7)/as.numeric(sample_size[k])
 }
 }
-
+library(reshape2)
 sampling_experiment_long <- melt(sampling_experiment, variable.name = "Sample_size", value.name = "mean")
 sampling_experiment_long$Sample_size <- factor(sampling_experiment_long$Sample_size, levels =c("1","5","10", "20", "40", "80"))
 levels(sampling_experiment_long$Sample_size) <- paste("Sample size of ", levels(sampling_experiment_long$Sample_size))
@@ -162,6 +161,20 @@ We then draw only 1 draws this distribution? Why only 1? Because we need
 to keep the sample sizes the same, so the row and column totals are set!
 Remember this for a moment. After we draw 1 number, we fill in the rest.
 
+```{r, eval=F}
+num_of_simulations <- 10000
+num_of_buckets <- 4
+chi_sq_stats <- data.frame(chisq = rep(NA, num_of_simulations))
+for(i in 1:num_of_simulations){
+simulation <- table(sample(LETTERS[1:num_of_buckets], n, replace=T))
+chi_sq_stats$chisq[i] <- chisq.test(simulation)$statistic
+}
+library(ggplot2)
+ggplot(chi_sq_stats, aes(x=chisq)) +
+  geom_histogram(aes(y=..count../sum(..count..)), fill = "orange")+
+    stat_function(fun = dchisq, args = list(df = 2),color = "green")
+```
+
 Once we carry out the sampling experiment, we can Z-transform our cell
 data(because they are normal now!). The results for a single cell would
 follow a N(0,1) distribution (the Z). If we wanted, we could square
@@ -182,6 +195,47 @@ test are based on the number of free cells (or, alternatively, the
 number of cells minus the parameters you had to fill in!). This
 typically can be calculated as (# of columns -1)\*(# of rows -1). We can
 carry out this test in R using the *chisq.test* function.
+
+This function requires a matrix of aggregated values (counts for each
+cell). Currently we have a data frame (birds). To make this work, we
+have a few options.
+
+Input it directly
+
+```{r}
+chisq.test(matrix(c(9,4,9,7), 2, 2, byrow=T))
+```
+
+same as
+
+```{r}
+library(reshape2)
+birds_long <- dcast(birds, Age~Species)
+chisq.test(matrix(c(birds_long$Junco, birds_long$Finch), nrow = 2))
+```
+
+or
+
+```{r}
+chisq.test(matrix(c(birds_long$Finch, birds_long$Junco), nrow = 2))
+```
+
+or
+
+```{r}
+chisq.test(cbind(birds_long$Junco, birds_long$Finch))
+```
+
+but not the same as...
+
+```{r}
+birds_long <- dcast(birds, Species~Age)
+chisq.test(matrix(c(birds_long$Young, birds_long$Age), nrow = 2))
+```
+
+```{r}
+knitr::knit_exit()
+```
 
 ```{r}
 num_of_simulations <- 10000
@@ -489,28 +543,31 @@ $\alpha$ of .05,we would expect to see something this extreme by chance
 1 time out of 20! In other words, we can have errors. Think about it
 this way:
 
-+-------------+-------------+-------------+
-|             | *           |             |
-|             | *Biological |             |
-|             | reality**   |             |
-+-------------+-------------+-------------+
-| \           | **H~O~      | **H~O~      |
-|             | True**      | False**     |
-| **Decision  |             |             |
-| (based on   |             |             |
-| analysis of |             |             |
-| sample      |             |             |
-| data)**     |             |             |
-+-------------+-------------+-------------+
-| **Reject    | Type I      | Power (1-   |
-| H~O~**      | error       | $\beta$ )   |
-|             | (P\[ɑ\])    |             |
-+-------------+-------------+-------------+
-| **Do not    | Correct     | Type II     |
-| reject      | (P\[1- ɑ\]) | Error ( Pr\ |
-| H~O~**      |             | \           |
-|             |             | [$\beta$\]) |
-+-------------+-------------+-------------+
++------------+------------+------------+
+|            | -   \*     |            |
+|            | Biological |            |
+|            |     r      |            |
+|            | eality\*\* |            |
++------------+------------+------------+
+| \          | **H~O~     | **H~O~     |
+|            | True**     | False**    |
+| **Decision |            |            |
+| (based on  |            |            |
+| analysis   |            |            |
+| of sample  |            |            |
+| data)**    |            |            |
++------------+------------+------------+
+| **Reject   | Type I     | Power (1-  |
+| H~O~**     | error      | $\beta$ )  |
+|            | (P\[ɑ\])   |            |
++------------+------------+------------+
+| **Do not   | Correct    | Type II    |
+| reject     | (P\[1-     | Error (    |
+| H~O~**     | ɑ\])       | Pr\        |
+|            |            | \          |
+|            |            | \[         |
+|            |            | $\beta$\]) |
++------------+------------+------------+
 
 $\alpha$ sets the limit we are ok with for rejecting H~O~ when it is
 true (a *Type 1* error). Alternatively, a *Type II* error is when we do
@@ -803,34 +860,44 @@ However, we can instead decide we want to consider differences to one
 for our null and alternative hypotheses (note *C* is a constant value
 here!):
 
-+--------+--------+--------+--------+
-|        | -   \  | -   \* | -   \* |
-|        |     \* |     F  |     F  |
-|        |     T  | ocused | ocused |
-|        |     w  |     on |     on |
-|        |     o  |        |        |
-|        | -sided | s      | s      |
-|        |     (  | ignals | ignals |
-|        |        |        |        |
-|        | t y p  | g      | less   |
-|        | i c    | reater |        |
-|        | a      |        | than p |
-|        | l)\*\* | than p | r      |
-|        |        | r      | e      |
-|        |        | e      | dicted |
-|        |        | dicted | in n   |
-|        |        | in n   | u      |
-|        |        | u      | ll\*\* |
-|        |        | ll\*\* |        |
-+--------+--------+--------+--------+
-| -      | p = C  | p \<=  | p \>=  |
-|   \*H~ |        | C      | C      |
-| O~\*\* |        |        |        |
-+--------+--------+--------+--------+
-| -      | p      | p \> C | p \< C |
-|   \*H~ | $\neq$ |        |        |
-| A~\*\* | C      |        |        |
-+--------+--------+--------+--------+
++-------+-------+-------+-------+
+|       | -   \ | -     | -     |
+|       |       |    \* |    \* |
+|       |    \* |     F |     F |
+|       |     T |     o |     o |
+|       |     w | cused | cused |
+|       |     o |       |       |
+|       |     - |    on |    on |
+|       | sided |       |       |
+|       |     ( | s     | s     |
+|       |       | i     | i     |
+|       | t y p | gnals | gnals |
+|       | i c a |       |       |
+|       | l     | g     | less  |
+|       | )\*\* | r     |       |
+|       |       | eater | than  |
+|       |       |       | p r e |
+|       |       | than  | d     |
+|       |       | p r e | icted |
+|       |       | d     | in n  |
+|       |       | icted | u     |
+|       |       | in n  | l     |
+|       |       | u     | l\*\* |
+|       |       | l     |       |
+|       |       | l\*\* |       |
++-------+-------+-------+-------+
+| -     | p = C | p \<= | p \>= |
+| \*H\~ |       | C     | C     |
+|       |       |       |       |
+|    O\ |       |       |       |
+| ~\*\* |       |       |       |
++-------+-------+-------+-------+
+| -     | p     | p \>  | p \<  |
+| \*H\~ | $     | C     | C     |
+|       | \neq$ |       |       |
+|    A\ | C     |       |       |
+| ~\*\* |       |       |       |
++-------+-------+-------+-------+
 
 For example, Claramunt et al @claramunt2022 wished to consider if roads
 impaired bird movement. To do they considered if banded birds were more
