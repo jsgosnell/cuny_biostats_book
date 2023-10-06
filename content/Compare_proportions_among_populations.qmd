@@ -26,17 +26,17 @@ Klem's sample of finches totalled 18, with 9 being older (after hatching
 year). For juncos, 4 of 11 sampled birds were older. We could put this
 data in a table.
 
-+-----------+-----------+-----------+-----------+
-| -   \*Ob  | -   \*Ca  | **Junco** | Totals    |
-|     s     |     r     |           |           |
-| erved\*\* | dinal\*\* |           |           |
-+-----------+-----------+-----------+-----------+
-| **Old**   | 9         | 4         | 13        |
-+-----------+-----------+-----------+-----------+
-| **Young** | 9         | 7         | 16        |
-+-----------+-----------+-----------+-----------+
-| Totals    | 18        | 11        |           |
-+-----------+-----------+-----------+-----------+
++----------+----------+----------+----------+
+| **Ob     | *        | *        | Totals   |
+| served** | *Finch** | *Junco** |          |
++----------+----------+----------+----------+
+| **Old**  | 9        | 4        | 13       |
++----------+----------+----------+----------+
+| *        | 9        | 7        | 16       |
+| *Young** |          |          |          |
++----------+----------+----------+----------+
+| Totals   | 18       | 11       |          |
++----------+----------+----------+----------+
 
 First, we could plot our data
 
@@ -97,21 +97,22 @@ $$
 
 Since we have 13/29 birds are old, we should expect
 
-+--------+--------+--------+--------+
-| **Exp  | **Car  |        | Totals |
-| e      | d      | **J    |        |
-| cted** | inal** | unco** |        |
-+--------+--------+--------+--------+
-| *      | 18     | 11     | 13     |
-| *Old** | \      | \      |        |
-|        | *13/29 | *13/29 |        |
-+--------+--------+--------+--------+
-|        | 18     | 11     | 16     |
-| **Y    | \      | \      |        |
-| oung** | *16/29 | *16/29 |        |
-+--------+--------+--------+--------+
-| Totals | 18     | 11     | 29     |
-+--------+--------+--------+--------+
++-------+-------+-------+-------+
+| **    | **Fi  | **Ju  | T     |
+| Expec | nch** | nco** | otals |
+| ted** |       |       |       |
++-------+-------+-------+-------+
+| -     | 18\   | 11\   | 13    |
+|  \*Ol | \*    | \*    |       |
+| d\*\* | 13/29 | 13/29 |       |
++-------+-------+-------+-------+
+| **Y   | 18\   | 11\   | 16    |
+| o     | \*    | \*    |       |
+| ung** | 16/29 | 16/29 |       |
++-------+-------+-------+-------+
+| T     | 18    | 11    | 29    |
+| otals |       |       |       |
++-------+-------+-------+-------+
 
 In order to carry out a sampling experiment to consider noise from this
 expected outcome, we have to determine the p parameter to use for our
@@ -329,7 +330,182 @@ important caveats.
 -   **More importantly**, if we reject the null hypothesis we need to do
     follow-up tests.
 
-Let's explore this idea with the Klem data.
+Let's explore this idea with the Klem data. In addition to considering
+impacts of age, Klem also recorded the sex (coded as male/female) for
+each bird. He had data on 4 species.
+
++-----------------+-----------------+-----------------+--------+--------+
+| **Observed**    | **Finch**       | **Junco**       | **Card | **R    |
+|                 |                 |                 | inal** | obin** |
++-----------------+-----------------+-----------------+--------+--------+
+| **Male**        | 6               | 5               | 7      | 7      |
++-----------------+-----------------+-----------------+--------+--------+
+| **Female**      | 12              | 7               | 11     | 3      |
++-----------------+-----------------+-----------------+--------+--------+
+
+We can use the same approaches to test this.
+
+```{r}
+chisq.test(matrix(c(6,5,7,7,12,7,11,3), nrow=2, byrow=T))
+```
+
+Note our sample size is still a potential issue, but only 1/8 cells has
+a predicted value less than 1.
+
+```{r}
+chisq.test(matrix(c(6,5,7,7,12,7,11,3), nrow=2, byrow=T))$expected
+```
+
+which means the approximation is fine. We could use the other tests if
+we preferred.
+
+```{r}
+fisher.test(matrix(c(6,5,7,7,12,7,11,3), nrow=2, byrow=T))
+GTest(matrix(c(6,5,7,7,12,7,11,3), nrow=2, byrow=T))
+```
+
+Regardless, we see all p\>.05. What does this mean?
+
+When we compared one group to a set value or two groups to each other,
+this was easy: it meant our focal parameter was the same between the
+groups or between expected and observed values. For more than 2 groups,
+it means the parameters is also means the parameter of interest does not
+differ among the groups.
+
+Here, this means all species have similar male/female ratios (at least
+given our samples). This is an example of a very useful *insignificant*
+result. This study would have been interesting regardless of outcome.
+
+However, let's imagine we had data on another species (catbirds in the
+table below).
+
++----------+----------+----------+-----------+-----------+-----------+
+| **Ob     | *        | *        | **C       | **Robin** | **C       |
+| served** | *Finch** | *Junco** | ardinal** |           | atbirds** |
++----------+----------+----------+-----------+-----------+-----------+
+| **Male** | 6        | 5        | 7         | 7         | 30        |
++----------+----------+----------+-----------+-----------+-----------+
+| **       | 12       | 7        | 11        | 3         | 7         |
+| Female** |          |          |           |           |           |
++----------+----------+----------+-----------+-----------+-----------+
+
+When we run the test (notice I immediately checked expected values, or
+assumptions, which is a good habit to get into)
+
+```{r}
+chisq.test(matrix(c(6,5,7,7,30,12,7,11,3,7), nrow=2, byrow=T))
+chisq.test(matrix(c(6,5,7,7,30,12,7,11,3,7), nrow=2, byrow=T))$expected
+```
+
+We now have a significant p-value (.002). What does this mean now?
+
+A significant p-value from a multi-population test means the parameter
+is not the same for **all** groups. However, it does not necessarily
+mean the parameter is different for every group. Make sure you process
+the difference.
+
+In the above example, we know there was no difference before we added
+catbirds. So, we might assume the only "different" group in relation to
+the male/female ratio is catbirds. But we need to test that.
+
+In general, after obtaining a significant p-value from a
+multi-population question, we follow up with **post-hoc** specific
+comparisons. There are many ways to do this. For example, you can do
+compare all possible pairs or just certain combinations. Why would this
+matter?
+
+The answer has to do with family-wise error rate (FWER). Remember, for
+every test we run we have an $\alpha$% chance of a type 1 error. If we
+run many tests, the likelihood of making a type 1 error increases (the
+rate of increase depends on how independent the tests are, but we need
+to control for it.
+
+[![XKCD 882:
+Significant](https://imgs.xkcd.com/comics/significant.png)](https://xkcd.com/882)
+
+For this reason, we modify our "used" $\alpha$ for our post-hoc tests.
+There are many approaches to doing this, but they all depend on how many
+tests we run.
+
+We will first use a very simple method that is no longer recommended but
+is useful as a starting point. One options is to control the FWER by
+dividing $\alpha$ by the number of post-hoc tests we intend to run. For
+the above example, if we do all pairs comparisons we would be running 10
+comparison (4+3+2+1...). So instead of using .05 as a cutoff, we would
+use .005.
+
+First, it helps to make a table with row and column names (which are
+slightly different than headers and very different than a column of
+names in R).
+
+```{r}
+bird_ratio_table <- matrix(c(6,5,7,7,30,12,7,11,3,7), nrow=2, byrow=T)
+colnames(bird_ratio_table) <- c("Finch", "Junco", "Cardinal", "Robin", "Catbird")
+rownames(bird_ratio_table) <- c("Male", "Female")
+
+```
+
+Then we can run the test with the *pairwiseNominalIndependence* function
+from the **rcompanion** package. Note the function needs a table or
+matrix and to know which method to use to compare rows or columns.
+Looking at the table
+
+```{r}
+bird_ratio_table
+```
+
+Let' s us see we want to compare columns.
+
+```{r}
+
+library(rcompanion)
+bonf_correct <- pairwiseNominalIndependence(bird_ratio_table, compare="col", method = "bonf")
+bonf_correct
+
+```
+
+The test then shows all-pair comparisons with regular (what we should
+compare to .005 now, but we don't usually know that!) and adjusted
+p-values (which have compensated for multiple tests so we can use our
+normal .05 cutoff- use this one!) for each test we have covered (you
+should use a post-hoc that matches what you did for the overall, or
+*omnibus*, comparison).
+
+You can order and display these differently if it helps. For example, if
+we used the $\chi^2$ test.
+
+```{r}
+bonf_correct[order(bonf_correct$p.adj.Chisq), c("Comparison", "p.adj.Chisq")]
+```
+
+We see that catbirds different from finches and cardinals in the
+proportion of males and females, while all other species do not differ.
+Note the unadjusted p-value for this comparison pair is the same we
+would have found from just comparing the two groups
+
+```{r}
+chisq.test(matrix(c(6,30,12,7), nrow=2, byrow=T))
+bonf_correct[bonf_correct$Comparison=="Finch : Catbird", "p.Chisq"]
+
+```
+
+This me
+
+```{library(rcompanion)}
+bonf_correct <- pairwiseNominalIndependence(bird_ratio, method = "bonf")
+
+
+
+```
+
+```{r}
+bonf_correct[order(bonf_correct$p.adj.Fisher),]
+
+holm_correct <- pairwiseNominalIndependence(travel_table, method = "holm")
+holm_correct[order(holm_correct$p.adj.Fisher),]
+fdr_correct <- pairwiseNominalIndependence(travel_table, method = "fdr")
+fdr_correct[order(fdr_correct$p.adj.Fisher),]
+```
 
 ```{r}
 knitr::knit_exit()
@@ -641,35 +817,42 @@ $\alpha$ of .05,we would expect to see something this extreme by chance
 1 time out of 20! In other words, we can have errors. Think about it
 this way:
 
-+-----------+-----------+-----------+
-|           | -   \*    |           |
-|           |     B     |           |
-|           | iological |           |
-|           |     r     |           |
-|           |     e     |           |
-|           | ality\*\* |           |
-+-----------+-----------+-----------+
-| \         | **H~O~    | **H~O~    |
-|           | True**    | False**   |
-| *         |           |           |
-| *Decision |           |           |
-| (based on |           |           |
-| analysis  |           |           |
-| of sample |           |           |
-| data)**   |           |           |
-+-----------+-----------+-----------+
-| **Reject  | Type I    | Power (1- |
-| H~O~**    | error     | $\beta$ ) |
-|           | (P\[ɑ\])  |           |
-+-----------+-----------+-----------+
-| **Do not  | Correct   | Type II   |
-| reject    | (P\[1-    | Error (   |
-| H~O~**    | ɑ\])      | Pr\       |
-|           |           | \         |
-|           |           | \[        |
-|           |           | $         |
-|           |           | \beta$\]) |
-+-----------+-----------+-----------+
++----------+----------+----------+
+|          | -   \* B |          |
+|          |     i    |          |
+|          | ological |          |
+|          |     r e  |          |
+|          |     a    |          |
+|          | lity\*\* |          |
++----------+----------+----------+
+| \        | **H~O~   | **H~O~   |
+|          | True**   | False**  |
+| -   \*   |          |          |
+| Decision |          |          |
+|          |          |          |
+|   (based |          |          |
+|     on   |          |          |
+|          |          |          |
+| analysis |          |          |
+|     of   |          |          |
+|          |          |          |
+|   sample |          |          |
+|     d    |          |          |
+| ata)\*\* |          |          |
++----------+----------+----------+
+| **Reject | Type I   | Power    |
+| H~O~**   | error    | (1-      |
+|          | (P\[ɑ\]) | $\beta$  |
+|          |          | )        |
++----------+----------+----------+
+| **Do not | Correct  | Type II  |
+| reject   | (P\[1-   | Error (  |
+| H~O~**   | ɑ\])     | Pr\      |
+|          |          | \        |
+|          |          | \[ \$    |
+|          |          | \b       |
+|          |          | eta\$\]) |
++----------+----------+----------+
 
 $\alpha$ sets the limit we are ok with for rejecting H~O~ when it is
 true (a *Type 1* error). Alternatively, a *Type II* error is when we do
@@ -962,58 +1145,78 @@ However, we can instead decide we want to consider differences to one
 for our null and alternative hypotheses (note *C* is a constant value
 here!):
 
-+------+------+------+------+
-|      | -    | -    | -    |
-|      |    \ |   \* |   \* |
-|      |      |      |      |
-|      | \* T |    F |    F |
-|      | w    |      |      |
-|      | o -  |    o |    o |
-|      | s    |      |      |
-|      | ided |    c |    c |
-|      | (    | used | used |
-|      |      |      |      |
-|      | t y  |      |      |
-|      | p i  |   on |   on |
-|      | c a  |      |      |
-|      | l    | s i  | s i  |
-|      | )    | g    | g    |
-|      | \*\* | nals | nals |
-|      |      |      |      |
-|      |      | g r  | less |
-|      |      | e    |      |
-|      |      | ater | than |
-|      |      |      | p r  |
-|      |      | than | e d  |
-|      |      | p r  | i    |
-|      |      | e d  | cted |
-|      |      | i    | in n |
-|      |      | cted | u l  |
-|      |      | in n | l    |
-|      |      | u l  | \*\* |
-|      |      | l    |      |
-|      |      | \*\* |      |
-+------+------+------+------+
-| -    | p =  | p    | p    |
-|    \ | C    | \<=  | \>=  |
-| *H\~ |      | C    | C    |
-|      |      |      |      |
-|      |      |      |      |
-|   O\ |      |      |      |
-|      |      |      |      |
-|   \~ |      |      |      |
-| \*\* |      |      |      |
-+------+------+------+------+
-| -    | p \$ | p \> | p \< |
-|    \ | \n   | C    | C    |
-| *H\~ | eq\$ |      |      |
-|      | C    |      |      |
-|      |      |      |      |
-|   A\ |      |      |      |
-|      |      |      |      |
-|   \~ |      |      |      |
-| \*\* |      |      |      |
-+------+------+------+------+
++-----+-----+-----+-----+
+|     | -   | -   | -   |
+|     |   \ |  \* |  \* |
+|     |     |     |     |
+|     | \*  |     |     |
+|     | T w |   F |   F |
+|     | o - |     |     |
+|     | s   |     |     |
+|     | i   |   o |   o |
+|     | ded |     |     |
+|     | (   |     |     |
+|     |     |   c |   c |
+|     | t y |     |     |
+|     | p i |   u |   u |
+|     | c a | sed | sed |
+|     | l ) |     |     |
+|     | \   |     |     |
+|     | *\* |  on |  on |
+|     |     |     |     |
+|     |     | s i | s i |
+|     |     | g   | g   |
+|     |     | n   | n   |
+|     |     | als | als |
+|     |     |     |     |
+|     |     | g r | l   |
+|     |     | e   | ess |
+|     |     | a   |     |
+|     |     | ter | t   |
+|     |     |     | han |
+|     |     | t   | p r |
+|     |     | han | e d |
+|     |     | p r | i   |
+|     |     | e d | c   |
+|     |     | i   | ted |
+|     |     | c   | in  |
+|     |     | ted | n u |
+|     |     | in  | l l |
+|     |     | n u | \   |
+|     |     | l l | *\* |
+|     |     | \   |     |
+|     |     | *\* |     |
++-----+-----+-----+-----+
+| -   | p = | p   | p   |
+|   \ | C   | \<= | \>= |
+|     |     | C   | C   |
+|  \* |     |     |     |
+| H\~ |     |     |     |
+|     |     |     |     |
+|     |     |     |     |
+|  O\ |     |     |     |
+|     |     |     |     |
+|     |     |     |     |
+|  \~ |     |     |     |
+|     |     |     |     |
+|   \ |     |     |     |
+| *\* |     |     |     |
++-----+-----+-----+-----+
+| -   | p   | p   | p   |
+|   \ | \$  | \>  | \<  |
+|     | \n  | C   | C   |
+|  \* | e   |     |     |
+| H\~ | q\$ |     |     |
+|     | C   |     |     |
+|     |     |     |     |
+|  A\ |     |     |     |
+|     |     |     |     |
+|     |     |     |     |
+|  \~ |     |     |     |
+|     |     |     |     |
+|   \ |     |     |     |
+| *\* |     |     |     |
++-----+-----+-----+-----+
 
 For example, Claramunt et al @claramunt2022 wished to consider if roads
 impaired bird movement. To do they considered if banded birds were more

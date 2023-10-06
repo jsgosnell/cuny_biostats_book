@@ -313,7 +313,7 @@ chisq.test(travel_table)$expected #actually not ok (3/12 =25% < 5)
 fisher.test(travel_table, simulate.p.value = T, B = 10000)
 
 library(rcompanion)
-bonf_correct <- pairwiseNominalIndependence(travel_table, method = "bonf")
+bonf_correct <- pairwiseNominalIndependence(travel_table, compare="col", method = "bonf")
 bonf_correct[order(bonf_correct$p.adj.Fisher),]
 holm_correct <- pairwiseNominalIndependence(travel_table, method = "holm")
 holm_correct[order(holm_correct$p.adj.Fisher),]
