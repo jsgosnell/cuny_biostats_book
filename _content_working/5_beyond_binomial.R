@@ -226,15 +226,7 @@ summary(fit_pois)
 
 
 
-#each row is group
-#does survival dependon oxygen use?
-results <- chisq.test(x = matrix(c(1045, 88, 32, 8), 2, 2, byrow = T))
-results$expected
-results
-
-#fisher's exact test
-fisher.test(x = matrix(c(1045, 88, 32, 8), 2, 2, byrow = T))
-
+#
 #relative risk
 (32/(32+1045))/(8/(8+88))
 
