@@ -366,11 +366,17 @@ GTest(matrix(c(6,5,7,7,12,7,11,3), nrow=2, byrow=T))
 
 Regardless, we see all p\>.05. What does this mean?
 
+### Post-hoc comparisons: Controlling for the FWER
+
 When we compared one group to a set value or two groups to each other,
 this was easy: it meant our focal parameter was the same between the
 groups or between expected and observed values. For more than 2 groups,
 it means the parameters is also means the parameter of interest does not
-differ among the groups.
+differ among the groups. In other words, our null hypothesis is
+
+$$
+H_O: p_{finch} = p_{junco} = p_{cardinal} = p_{robin}, where p is proportion of population that is male
+$$
 
 Here, this means all species have similar male/female ratios (at least
 given our samples). This is an example of a very useful *insignificant*
@@ -401,18 +407,25 @@ We now have a significant p-value (.002). What does this mean now?
 
 A significant p-value from a multi-population test means the parameter
 is not the same for **all** groups. However, it does not necessarily
-mean the parameter is different for every group. Make sure you process
-the difference.
+mean the parameter is different for every group. Remember, our null
+hypothesis is
+
+$$
+H_O: p_{finch} = p_{junco} = p_{cardinal} = p_{robin}, where p is proportion of population that is male
+$$
+
+We would reject this if we have evidence **any** of these qualities are
+not true.
 
 In the above example, we know there was no difference before we added
 catbirds. So, we might assume the only "different" group in relation to
-the male/female ratio is catbirds. But we need to test that.
-
-In general, after obtaining a significant p-value from a
-multi-population question, we follow up with **post-hoc** specific
-comparisons. There are many ways to do this. For example, you can do
-compare all possible pairs or just certain combinations. Why would this
-matter?
+the male/female ratio is catbirds. But we need to test that. In other
+words, after we show using an overall, or *omnibus*, test that there is
+a different among populations, we need to determine which ones actually
+defer from the others. We do this using post-hoc specific comparisons.
+We cantechnically choose which comparisons to focus on. For example, you
+can do compare all possible pairs or just certain combinations. Why
+would this matter?
 
 The answer has to do with family-wise error rate (FWER). Remember, for
 every test we run we have an $\alpha$% chance of a type 1 error. If we
@@ -425,14 +438,15 @@ Significant](https://imgs.xkcd.com/comics/significant.png)](https://xkcd.com/882
 
 For this reason, we modify our "used" $\alpha$ for our post-hoc tests.
 There are many approaches to doing this, but they all depend on how many
-tests we run.
+tests we run - so the more post-hoc comparisons we include, the harder
+it may be to find a significant difference among focal pairs.
 
-We will first use a very simple method that is no longer recommended but
-is useful as a starting point. One options is to control the FWER by
-dividing $\alpha$ by the number of post-hoc tests we intend to run. For
-the above example, if we do all pairs comparisons we would be running 10
-comparison (4+3+2+1...). So instead of using .05 as a cutoff, we would
-use .005.
+To illustrate this, we will first use a very simple method that is no
+longer recommended but is useful as a starting point. One options is to
+control the FWER by dividing $\alpha$ by the number of post-hoc tests we
+intend to run. For the above example, if we do all pairs comparisons we
+would be running 10 comparison (4+3+2+1...). So instead of using .05 as
+a cutoff, we would use .005.
 
 First, it helps to make a table with row and column names (which are
 slightly different than headers and very different than a column of
@@ -480,7 +494,7 @@ bonf_correct[order(bonf_correct$p.adj.Chisq), c("Comparison", "p.adj.Chisq")]
 
 We see that catbirds different from finches and cardinals in the
 proportion of males and females, while all other species do not differ.
-Note the unadjusted p-value for this comparison pair is the same we
+Note the un-adjusted p-value for this comparison pair is the same we
 would have found from just comparing the two groups
 
 ```{r}
@@ -489,17 +503,30 @@ bonf_correct[bonf_correct$Comparison=="Finch : Catbird", "p.Chisq"]
 
 ```
 
-This me
+However, this comparison is very conservative. Many other options exist,
+and we will explore two here.
 
-```{library(rcompanion)}
-bonf_correct <- pairwiseNominalIndependence(bird_ratio, method = "bonf")
+The sequential Bonferroni, or Holm's, method, allocates your $\alpha$ to
+accept as many tests as signficant as possible while still controlling
+for the FWER. To do this, it orders the post-hoc tests by p-value,
+smallest to largest. It then rejects the null hypothesis attached to the
+smallest p-value and subtracts that p-value from $\alpha$. It continues
+to do this until $\alpha$ is too small to reject the next smallest
+p-value. I think of it as buying p-values with $\alpha$.
 
+We can use this approach by simply changing the method. Let's also order
+our results again for viewing.
 
+```{r}
+bonf_correct <- pairwiseNominalIndependence(bird_ratio_table, compare="col", method = "holm")
+bonf_correct[order(bonf_correct$p.adj.Chisq), c("Comparison", "p.adj.Chisq")]
+```
+
+```{bonf_correct <- pairwiseNominalIndependence(bird_ratio,}
 
 ```
 
 ```{r}
-bonf_correct[order(bonf_correct$p.adj.Fisher),]
 
 holm_correct <- pairwiseNominalIndependence(travel_table, method = "holm")
 holm_correct[order(holm_correct$p.adj.Fisher),]
