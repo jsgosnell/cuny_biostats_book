@@ -224,58 +224,6 @@ summary(fit_pois)
 
 
 
-
-
-#
-#relative risk
-(32/(32+1045))/(8/(8+88))
-
-#likelihood####
-#example from http://www.johnmyleswhite.com/notebook/2010/04/21/doing-maximum-likelihood-estimation-by-hand-in-r/
-#
-#determine most likely value of p for a bernoulli variable
-p.parameter <- runif(1)
-sequence <- rbinom(10, 1, p.parameter)
-#
-#write a likelihood function to solve for likelihood
-likelihood <- function(sequence, p.parameter)
-{
-  likelihood <- 1
-  
-  for (i in 1:length(sequence))
-  {
-    if (sequence[i] == 1)
-    {
-      likelihood <- likelihood * p.parameter
-    }
-    else
-    {
-      likelihood <- likelihood * (1 - p.parameter)
-    }
-  }
-  
-  return(likelihood)
-}
-
-#then solve and plot
-possible.p <- seq(0, 1, by = 0.001)
-library('ggplot2')
-likelihood_plot <- qplot(possible.p,
-      sapply(possible.p, function (p) {likelihood(sequence, p)}),
-      geom = 'line',
-      main = paste('Likelihood as a Function of P when p = ', p.parameter),
-      xlab = 'P',
-      ylab = 'Likelihood')
-likelihood_plot +
-      theme(axis.title.x = element_text(face="bold", size=28), 
-            axis.title.y = element_text(face="bold", size=28), 
-            axis.text.y  = element_text(size=20),
-            axis.text.x  = element_text(size=20), 
-            legend.text =element_text(size=20),
-            legend.title = element_text(size=20, face="bold"),
-            plot.title = element_text(hjust = 0.5, face="bold", size=32))
-  
-
 #gtest####
 library(DescTools)
 GTest(x = matrix(c(1045, 88, 32, 8), 2, 2, byrow = T))
@@ -294,31 +242,6 @@ fisher.test(x=matrix (c(299, (673- 299), 403, (735 - 403)), 2, 2, byrow = T))
 #relative risk
 (299/(673))/(403/(735))
 
-#dolphin activity####
-dolphin <- read.table("http://www.statsci.org/data/general/dolpacti.txt", sep="", header = T)
-#More info on data @ 
-#http://www.statsci.org/data/general/dolpacti.html
-#difference in activity among time periods
-#easier if you make a table
-travel_table <- as.table(matrix(c(6, 28, 38,
-                                  6, 4, 5,
-                                  14, 0, 9,
-                                  13, 56, 10), nrow = 4, byrow = T))
-colnames(travel_table) = c("travel", "feed", "social")
-rownames(travel_table) = c("morning", "noon", "afternoon", "night")
-#now look at it
-travel_table
-chisq.test(travel_table)
-chisq.test(travel_table)$expected #actually not ok (3/12 =25% < 5)
-fisher.test(travel_table, simulate.p.value = T, B = 10000)
-
-library(rcompanion)
-bonf_correct <- pairwiseNominalIndependence(travel_table, compare="col", method = "bonf")
-bonf_correct[order(bonf_correct$p.adj.Fisher),]
-holm_correct <- pairwiseNominalIndependence(travel_table, method = "holm")
-holm_correct[order(holm_correct$p.adj.Fisher),]
-fdr_correct <- pairwiseNominalIndependence(travel_table, method = "fdr")
-fdr_correct[order(fdr_correct$p.adj.Fisher),]
 
 
 #how to use get data in for these tests####
