@@ -773,12 +773,27 @@ the $\chi^2$ test. This same approach (comparing expected vs observed
 values) can also be used to see if a single sample follows a specific
 distribution.
 
-For example, we used a binomial test in earlier chapters to see
+For example, we used a binomial test in earlier chapters to see if our
+observed number of old (9) and young (9) finches matched a probability
+of .75.
 
 ```{r}
 binom.test(x=9, n=18, p=.75)
+```
+
+Note we instead consider what we observed vs what we expected using a
+$\chi^2$ test.
+
+```{r}
 chisq.test(c(9,9), p=c(.75,.25))
 ```
+
+Both p values are \< .05, so we reject the null hypothesis, $H_O: p=.75$
+. However, the p values are different? Do you remember why?
+
+The $\chi^2$ test is an approximation! Thus, we prefer the binomial test
+to the $\chi^2$ test when we only have 2 categories (binomial data) but
+for more groups we can use the $\chi^2$ test.
 
 ## Next steps
 
