@@ -528,7 +528,7 @@ sampling_experiment <- setNames(data.frame(matrix(ncol = length(sample_size), nr
 
 for(k in 1:length(sample_size)){
 for(i in 1:number_of_simulations){
-sampling_experiment[i,k] = rbinom(n=1, size=as.numeric(sample_size[k]), prob=.7)/as.numeric(sample_size[k])
+sampling_experiment[i,k] = rbinom(n=1, size=as.numeric(sample_size[k]), prob=.7)
 }
 }
 
@@ -538,7 +538,7 @@ levels(sampling_experiment_long$Sample_size) <- paste("Sample size of ", levels(
 
 ggplot(sampling_experiment_long,aes(x=mean)) +
   geom_histogram(color="black") +
-  labs(title=paste("Observed means from ", number_of_simulations, " random draws"),
+    labs(title=paste("Observed number of successes from ", number_of_simulations, " random draws"),
        subtitle = "Binomial distribution, p=.7",  
        x= "Mean",
        y= "Frequency")+

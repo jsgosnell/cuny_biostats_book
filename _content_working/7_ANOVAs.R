@@ -122,30 +122,7 @@ ggplot(iris, aes(Species,Sepal.Length)) +
 #
 #p value via simulation ####
 #get overall variance and mean estimate
-variance_estimate <- sum((function_output$N -1) * (function_output$sd)^2)/(sum(function_output$N)-length(function_output$N))
-mean_sepal <- mean(iris$Sepal.Length)
-#sample
-  ratio <- data.frame(rep = 1:10000, mse = rep(NA,10000), 
-                      msg = rep(NA,10000), ratio = rep(NA,10000))
-for(i in 1:10000){
-    setosa <- rnorm(50, mean_sepal, sd= sqrt(variance_estimate))
-    versicolor <- rnorm(50, mean_sepal, sd= sqrt(variance_estimate))
-    virginica <- rnorm(50, mean_sepal, sd= sqrt(variance_estimate))
-    mean_overall <- mean(c(setosa, versicolor, virginica))
-    ratio$mse[i] <- (49 * var(setosa) + 49 * var(versicolor) + 49 * var(virginica))/(150 - 3)
-    ratio$msg[i] <- (50 * (mean(setosa)-mean_overall)^2 + 
-                 50 * (mean(versicolor)-mean_overall)^2 + 
-                 50 * (mean (virginica)-mean_overall)^2)/2
-    ratio$ratio[i] <- ratio$msg[i]/ratio$mse[i]
-}
-  
-summary(lm(Sepal.Length~Species, iris))$fstatistic[1]
-  
-  
-ggplot(ratio, aes(ratio)) +
-    geom_histogram(aes(y=..count../sum(..count..)), fill = "orange", bins = 15) +
-    ggtitle("Ratio under null hypothesis") +
-    ylab("Probability") +
+ +
     theme(axis.title.x = element_text(face="bold", size=28), 
           axis.title.y = element_text(face="bold", size=28), 
           axis.text.y  = element_text(size=20),

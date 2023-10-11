@@ -1,15 +1,116 @@
 ---
-title: Comparing proportions among groups
-subtitle: Moving to multiple populations!
+title: Comparing means among groups
+subtitle: More multiple populations!
 bibliography: references.bib
 ---
 
-Now that we've covered hypothesis testing for both discrete and
-continous data, we'll extend these ideas to compare differences among
-groups. In addition considering these differences, the same test we'll
-let us consider if proportions follow a given ratio.
+In the last chapter we introduced the idea of comparing parameteres among 
+populations. Now we will extend those ideas to instances when continuous data is 
+collected.  
 
-## Example: Back to the birds
+## Example: Back to the iris
+
+When we introduced NHST for continous data, we focused on sepal length from 
+*I. virginica*.
+
+```{r}
+set.seed(42)
+library(ggplot2)
+ggplot(iris[iris$Species == "virginica",],
+              aes(x=Sepal.Length)) +
+  geom_histogram( fill="blue", color="black") +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"))),
+       x= "Sepal length (cm)",
+       y= "Frequency")
+```
+
+and tested if it was equal to a given value (7.0 cm)
+
+$$
+\begin{split}
+H_O: \mu_{height} = 7 \ cm \\ 
+H_A: \mu_{height} \neq 7 \ cm 
+\end{split}
+$$
+
+We then considered how to assess these hypotheses using z, t, Wilcoxon, and sign
+tests.
+
+However, as we noted in the last chapter, we often instead have data from 
+multiple populations.  For example, we may have data from 3 species of flowers.
+
+```{r}
+library(Rmisc)
+function_output <- summarySE(iris, measurevar="Sepal.Length", groupvars =
+                               c("Species"))
+
+ggplot(function_output, aes(y=Sepal.Length, x=Species, fill=Species)) +
+  geom_col(aes(fill=Species)) +
+    geom_errorbar(aes(ymin=Sepal.Length-ci, ymax=Sepal.Length+ci)) +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species")
+```
+
+What do we test now and how?
+
+## Welcome to ANOVAs
+
+As previously noted, we can't compare heights among group. Height is a random
+variable, and it's highly unlikely they will be exactly the same. So we 
+typically focus on a parameter, which is often the mean. Just like binomial
+data, our hypotheses are then
+
+$$
+\begin{split}
+H_O: \mu_{height, setosa} = \mu_{height, virginica} = \mu_{height, versicolor}\\  
+H_A: \mu_{height, setosa} \neq \mu_{height, virginica} \neq \mu_{height, versicolor}\\ 
+\end{split}
+$$
+
+To test this, we can (as always) carry out a sampling experiment. The general
+idea is that species doe snot matter (just like we saw in contingency analysis).
+Given that, we can draw samples that match our respective sample sizes for each
+population from a single population.  The mean can be set as the pooled mean for
+the data (since under the null tested factors don't matter). Since we don't know
+or set sigma, we can again estimate it from the data.  
+
+This follows our previous work, but we are now stuck with a new question: 
+What is our test statistic?
+
+In general, using a difference among means makes sense for cases when we have 
+2 populations, and we will return to that. However, it does not work for 3+ 
+populations, so we will need a different approach.
+
+```{r}
+variance_estimate <- sum((function_output$N -1) * (function_output$sd)^2)/(sum(function_output$N)-length(function_output$N))
+mean_sepal <- mean(iris$Sepal.Length)
+#sample
+  ratio <- data.frame(rep = 1:10000, mse = rep(NA,10000), 
+                      msg = rep(NA,10000), ratio = rep(NA,10000))
+for(i in 1:10000){
+    setosa <- rnorm(50, mean_sepal, sd= sqrt(variance_estimate))
+    versicolor <- rnorm(50, mean_sepal, sd= sqrt(variance_estimate))
+    virginica <- rnorm(50, mean_sepal, sd= sqrt(variance_estimate))
+    mean_overall <- mean(c(setosa, versicolor, virginica))
+    ratio$mse[i] <- (49 * var(setosa) + 49 * var(versicolor) + 49 * var(virginica))/(150 - 3)
+    ratio$msg[i] <- (50 * (mean(setosa)-mean_overall)^2 + 
+                 50 * (mean(versicolor)-mean_overall)^2 + 
+                 50 * (mean (virginica)-mean_overall)^2)/2
+    ratio$ratio[i] <- ratio$msg[i]/ratio$mse[i]
+}
+  
+summary(lm(Sepal.Length~Species, iris))$fstatistic[1]
+  
+  
+ggplot(ratio, aes(ratio)) +
+    geom_histogram(aes(y=..count../sum(..count..)), fill = "orange", bins = 15) +
+    ggtitle("Ratio under null hypothesis") +
+    ylab("Probability")
+```
+
+
+
 
 Let's return to our bird example @klem1989. We previously found that
 purple finches did not strike windows at proportions that might be
