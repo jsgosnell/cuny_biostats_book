@@ -50,9 +50,9 @@ birds_original <- data.frame(Age = c("Old","Young","Old", "Young"),
 library(ggplot2)
 ggplot(birds_original, aes(x= Species, y = Number)) +
   geom_col(aes(fill = Age)) + 
-  xlab("Species") +
-  ylab("Frequency") +
-  ggtitle("Age at collision for juncos and finches")
+  labs(x="Species", 
+       y="Frequency", 
+       main ="Age at collision for juncos and finches")
 ```
 
 Given the different sampling sizes, a mosaic plot might help in visually
@@ -60,7 +60,10 @@ comparing ratios.
 
 ```{r}
 ggplot(birds_original, aes(x= Species, y = Number)) +
-  geom_col(aes(fill = Age), position = "fill")
+  geom_col(aes(fill = Age), position = "fill")+
+    labs(x="Species", 
+       y="Proportion", 
+       main ="Age at collision for juncos and finches")
 
 ```
 

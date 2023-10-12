@@ -4,14 +4,14 @@ subtitle: More multiple populations!
 bibliography: references.bib
 ---
 
-In the last chapter we introduced the idea of comparing parameteres among 
-populations. Now we will extend those ideas to instances when continuous data is 
-collected.  
+In the last chapter we introduced the idea of comparing parameters among
+populations. Now we will extend those ideas to instances when continuous
+data is collected.
 
 ## Example: Back to the iris
 
-When we introduced NHST for continous data, we focused on sepal length from 
-*I. virginica*.
+When we introduced NHST for continuous data, we focused on sepal length
+from *I. virginica*.
 
 ```{r}
 set.seed(42)
@@ -33,13 +33,15 @@ H_A: \mu_{height} \neq 7 \ cm
 \end{split}
 $$
 
-We then considered how to assess these hypotheses using z, t, Wilcoxon, and sign
-tests.
+We then considered how to assess these types of hypotheses using z, t,
+Wilcoxon, and sign tests.
 
-However, as we noted in the last chapter, we often instead have data from 
-multiple populations.  For example, we may have data from 3 species of flowers.
+However, as we noted in the last chapter, we often instead have data
+from multiple populations. For example, we may have data from 3 species
+of flowers. We commonly see this data plotted as a bar chart with error
+bars
 
-```{r}
+```{r, echo = F}
 library(Rmisc)
 function_output <- summarySE(iris, measurevar="Sepal.Length", groupvars =
                                c("Species"))
@@ -56,10 +58,21 @@ What do we test now and how?
 
 ## Welcome to ANOVAs
 
-As previously noted, we can't compare heights among group. Height is a random
-variable, and it's highly unlikely they will be exactly the same. So we 
-typically focus on a parameter, which is often the mean. Just like binomial
-data, our hypotheses are then
+As previously noted, we can't compare heights among group. Height is a
+random variable, and it's highly unlikely they will be exactly the same.
+Seeing the actual data may help us remember this.
+
+```{r}
+ggplot(iris, aes(y=Sepal.Length, x=Species, color=Species)) +
+  geom_jitter() +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species")
+```
+
+So we typically focus on a parameter that describes the distribution of
+a focal trait, such as the mean. Just like binomial data, our hypotheses
+are then
 
 $$
 \begin{split}
@@ -68,23 +81,128 @@ H_A: \mu_{height, setosa} \neq \mu_{height, virginica} \neq \mu_{height, versico
 \end{split}
 $$
 
-To test this, we can (as always) carry out a sampling experiment. The general
-idea is that species doe snot matter (just like we saw in contingency analysis).
-Given that, we can draw samples that match our respective sample sizes for each
-population from a single population.  The mean can be set as the pooled mean for
-the data (since under the null tested factors don't matter). Since we don't know
-or set sigma, we can again estimate it from the data.  
+Given that, our overall idea is to consider if the data are better
+explained by an overall group average or by species-specific averages.
+To visualize this, we could use
 
-This follows our previous work, but we are now stuck with a new question: 
-What is our test statistic?
+```{r}
+colors <- c("group means" = "black", "overall average" = "orange")
+ggplot(iris, aes(Species,Sepal.Length)) + 
+  geom_jitter(aes(colour=Species), size = 3) +
+  ylab("Sepal Length (cm)")+ggtitle("Sepal Length of various iris species")+
+  theme(axis.title.x = element_text(face="bold", size=28), 
+        axis.title.y = element_text(face="bold", size=28), 
+        axis.text.y  = element_text(size=20),
+        axis.text.x  = element_text(size=20), 
+        legend.text =element_text(size=20),
+        legend.title = element_text(size=20, face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  geom_errorbar(aes(ymin=Sepal.Length, ymax=Sepal.Length, color="group means"), 
+                data = function_output) +
+    geom_hline(aes(yintercept=mean(Sepal.Length),  color = "overall average"))+
+  scale_color_manual(values=colors)
+```
 
-In general, using a difference among means makes sense for cases when we have 
-2 populations, and we will return to that. However, it does not work for 3+ 
-populations, so we will need a different approach.
+Like our earlier considerations of variance and SSE, the data will
+obviously be fit better by species-specific averages. Its impossible for
+them to do worse than the overall average, and at worst they all *are*
+the group average. However, we should also remember that these are
+samples, so we know sampling error is an issue. Therefore, we have to
+consider if the species-specific averages do enough of a better job
+explaining the data to warrant using them. To put this in our SSE and
+hypothesis framework, we need to consider if a more complicated view of
+the world is worth it.
+
+To test this, we can (as always) carry out a sampling experiment. The
+general idea is that species does snot matter (just like we saw in
+contingency analysis). Given that, we can draw samples that match our
+respective sample sizes for each population from a single population.
+The mean can be set as the pooled mean for the data (since under the
+null tested factors don't matter). Since we don't know or set sigma, we
+can again estimate it from the data. One such sample might look like
 
 ```{r}
 variance_estimate <- sum((function_output$N -1) * (function_output$sd)^2)/(sum(function_output$N)-length(function_output$N))
 mean_sepal <- mean(iris$Sepal.Length)
+simulated_data <- data.frame(Species=c(rep("setosa", 50), 
+                                       rep("versicolor", 50),
+                                       rep("virginica",50)),
+                             Sepal.Length=rnorm(150, mean_sepal, 
+                                          sd= sqrt(variance_estimate)))
+
+function_output <- summarySE(simulated_data, measurevar="Sepal.Length", groupvars =
+                               c("Species"))
+
+ggplot(simulated_data, aes(Species,Sepal.Length)) + 
+  geom_jitter(aes(colour=Species), size = 3) +
+  ylab("Sepal Length (cm)")+ggtitle("Sepal Length of various iris species")+
+  theme(axis.title.x = element_text(face="bold", size=28), 
+        axis.title.y = element_text(face="bold", size=28), 
+        axis.text.y  = element_text(size=20),
+        axis.text.x  = element_text(size=20), 
+        legend.text =element_text(size=20),
+        legend.title = element_text(size=20, face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  geom_errorbar(aes(ymin=Sepal.Length, ymax=Sepal.Length, color="group means"), 
+                data = function_output) +
+    geom_hline(aes(yintercept=mean(Sepal.Length),  color = "overall average"))+
+  scale_color_manual(values=colors)
+```
+
+As expected, under the null hypothesis the overall and species-specific
+averages are closer. Now that we have the data, however, we are stuck
+with a new question: What is our test statistic?
+
+In general, using a difference among means makes sense for cases when we
+have only 2 populations. This will be used when we introduce t-tests.
+However, it does not work for 3+ populations, so we will need a
+different approach.
+
+ANOVAs offer an approach that can be used for any group of 2+
+populations when certain assumptions are met. ANOVAs stands for
+*analysis of variance* which may seem odd given our hypotheses are
+focused on means. However, the idea (not fully developed here) is that
+we can get an overall estimate of variance by
+
+-   calculating variance for each point around its respective
+    group-specific mean
+
+    -   this leads to 3 estimates of variance, which we can multiple by
+        (n-1) to account for differences in sample size and then divide
+        by the number of groups to get an overall estimate of variance
+        -   this is referred to as mean square error
+
+    $$
+    \begin{split}
+    \textrm{Remember, }s^2 = \frac{\sum_{i=1}^{n} (Y_{i}-\overline{Y})^2}{n-1} \sim \sigma^2\\
+    \textrm{So if we have j groups, for each group we can see}\\
+     s_j^2 = \frac{\sum_{i=1}^{n_j} (Y_{ij}-\overline{Y_j})^2}{n_j-1} \sim \sigma_j^2\\
+     \textrm{which we can combine to estimate }\sigma_{overall}\\
+     \frac{(n_1-1)s_1^2 + (n_2-1)s_2^2 ...(n_j-1)s_j^2}{n_1+n_2+...n_j-1} = s_{overall}^2\\
+    \end{split}
+    $$
+
+-   calculating variance for each group mean around the overall mean
+
+\$\$
+
+```{=tex}
+\begin{split}
+\frac{\sum_{j=1}^{j} (\overline{Y_j}-Y_{overall}{i})^2}{j-1} = \frac{s^2}{n}\\
+\textrm{where j is the number of groups. This can be multiplied by n to get s^2}
+\end{split}
+```
+\$\$ \* this is called mean square treatment
+
+In other words, variance among groups should be equal to variance within
+groups. You should also note this means we can partition the variance
+for any given observation as its distance from its group mean and its
+group means distance from the overall
+
+Under the null hypothesis, the ratio of these estimates should tend
+towards 1. We can see this using a sampling experiment.
+
+```{r}
 #sample
   ratio <- data.frame(rep = 1:10000, mse = rep(NA,10000), 
                       msg = rep(NA,10000), ratio = rep(NA,10000))
@@ -104,938 +222,199 @@ summary(lm(Sepal.Length~Species, iris))$fstatistic[1]
   
   
 ggplot(ratio, aes(ratio)) +
+    geom_histogram(aes(y=..count../sum(..count..)), fill = "orange", bins=15)+
+    labs(main = "Ratio under null hypothesis", y= "Probability")
+```
+
+Using this approach, we could determine how unusual our data were (get a
+p-value!). However, finding a distribution that approximates this shape
+would make future work easier. It turns out all the squared terms above
+lead to this being a rato of $\chi^2$ distributions, where the numerator
+has degrees of freedom j-1 (# of groups - 1) and the numerator had
+degrees of freedom n-j-1; the "lost" degrees of freedom are used to
+estimate group and overall means.
+
+```{r}
+ggplot(ratio, aes(ratio)) +
     geom_histogram(aes(y=..count../sum(..count..)), fill = "orange", bins = 15) +
-    ggtitle("Ratio under null hypothesis") +
-    ylab("Probability")
-```
-
-
-
-
-Let's return to our bird example @klem1989. We previously found that
-purple finches did not strike windows at proportions that might be
-predicted by population demographics using a binomial test. However,
-what if instead we wanted to compare the collision rate of old vs young
-birds among several species?
-
-[![Cephas, CC BY-SA 3.0
-\<https://creativecommons.org/licenses/by-sa/3.0\>, via Wikimedia
-Commons](/images/Carpodacus_purpureus_CT3.jpg){fig-alt="Purple Finch (Carpodacus purpureus) male, Cap Tourmente National Wildlife Area, Quebec, Canada."}](https://commons.wikimedia.org/wiki/File:Carpodacus_purpureus_CT3.jpg)
-
-Let's start simple and just compare purple finches and dark-eyed juncos.
-
-[\[Becky Matsubara from El Sobrante, California, CC BY 2.0
-\<https://creativecommons.org/licenses/by/2.0\>, via Wikimedia
-Commons\>, via Wikimedia Commons\]
-(/images/Dark-eyed_Junco\_(Oregon)\_(39651044095).jpg){fig-alt="Dark-eyed
-Junco (Junco hyemalis), Sobrante Ridge Regional Reserve, Richmond,
-California."}](https://commons.wikimedia.org/wiki/File:Dark-eyed_Junco_%28Oregon%29_%2839651044095%29.jpg)
-
-Klem's sample of finches totaled 18, with 9 being older (after hatching
-year). For juncos, 4 of 11 sampled birds were older. We could put this
-data in a table.
-
-|                   | **Observed** |         |                |
-|-------------------|--------------|---------|----------------|
-|                   | *Finch*      | *Junco* | **Row Totals** |
-|                   | 9            | 4       | 13             |
-|                   | 9            | 7       | 16             |
-| **Column Totals** | 9            | 9       | N = 29         |
-
-First, we could plot our data
-
-```{r}
-birds_original <- data.frame(Age = c("Old","Young","Old", "Young"),
-                      Species = c("Junco", "Junco", "Finch", "Finch"),
-                      Number = c(4, 7, 9, 9))
-library(ggplot2)
-ggplot(birds_original, aes(x= Species, y = Number)) +
-  geom_col(aes(fill = Age)) + 
-  xlab("Species") +
-  ylab("Frequency") +
-  ggtitle("Age at collision for juncos and finches")
-```
-
-Given the different sampling sizes, a mosaic plot might help in visually
-comparing ratios.
-
-```{r}
-ggplot(birds_original, aes(x= Species, y = Number)) +
-  geom_col(aes(fill = Age), position = "fill")
+    labs(main = "Ratio under null hypothesis", y= "Probability")+
+    stat_function(fun = df, args = list(df1 =2, df2 = 147), color = "green")   
 
 ```
 
-Before we test this, we need to decide on an hypothesis. Although both
-species were predicted to occur at 3:1 ratios in the wild, that's not
-what we are considering here. Instead, we want to know if the likelihood
-of old vs young birds being in our samples differed for the species. Put
-another way, we are asking if the proportion of young vs old is
-*contingent* on species. These tests are often called contingency
-analysis, and the table we started with may be referred to as a to as a
-contingency table.
+In our data, we found a signal of
+`r as.character(summary(lm(Sepal.Length~Species, iris))$fstatistic[1])`!
+This is going to lead to a very low p-value.
 
-If the proportion of old vs young birds differ among species, it could
-be because the age structure of the focal populations are different or
-because the birds differ in their relationship to glass at different
-ages. However, we are still testing a distribution-based parameter.
+## Welcome to the linear model
+
+An ANOVA is just one case of a linear model. We will fully explore these
+later, but noting this now is useful in that all linear models have the
+same sets of assumptions. In general, linear models assume the
+*residuals* of the model are are independent, identically distributed,
+and follow a normal distribution. You'll sometime see this written as
 
 $$
-\begin{split}
-H_O: p_{finches} = p_{juncos} \\  
-H_A: p_{finches} \neq p_{juncos} \\
-\textrm{ where p is likelihood of sampled bird being older}\\
-\end{split}
-$$
+\epsilon \approx i.i.d.\ N(\mu,\sigma)
+$$ But what does this mean?
 
-Put another way,we want to test if *p* is independent of species.
+Residuals are the distance between a measurement and its model-predicted
+value. A closely related term, error, is actually the distance between a
+measurement and the unknown population mean for a group. Linear models
+assume the residuals are independent of each other (this follows from
+independent data points) and that their spread (around their predicted
+values) is normally distributed and similar for all points.
 
-$$
-\begin{split}
-H_O: \textrm{Probability of older bird hitting window is independent of species} \\  
-H_A: \textrm{Probability of older bird hitting window is dependent of species} \\  
-\end{split}
-$$
+Understanding this explains two key points. The residuals, not the data,
+need to be normally distributed. Also, we have to build the model to get
+the residuals, then we check the assumptions.
 
-This formulation is important, because it helps form our predictions
-under the null hypothesis. What would we expect if *p* did not differ
-among species? If age and species were independent, we could expect
+We can do this in R using the *lm* function. This approach also lets us
+use a single set of functions to build many model types. As always,
+there are many ways to do anything in R, so there are specific ANOVA
+functions that we will not introduce here.
 
-$$
-\textrm{Pr[ Old AND Given speciesuse] = Pr[given species] * Pr[Old]}
-$$
-
-Since we have 13/29 birds are old, we should expect
-
-|                   | **Observed** |             |                |
-|-------------------|--------------|-------------|----------------|
-|                   | *Finch*      | *Junco*     | **Row Totals** |
-|                   | 18 \* 13/29  | 11 \* 13/29 | 13             |
-|                   | 18 \* 16/29  | 11 \* 16/29 | 16             |
-| **Column Totals** | 9            | 9           | N = 29         |
-
-In order to carry out a sampling experiment to consider noise from this
-expected outcome, we have to determine the p parameter to use for our
-population. This is because under the null hypothesis, there is only one
-population- any observed difference is just due to chance!
-
-However, we have an issue - we don't know p. In our binomial experiment
-it was set by our null hypothesis. Now we are comparing *p* among
-species, but that doesn't set a population distribution.
-
-To fix this, we go back to our normal approximations. We have shown for
-large sample sizes the binomial distribution follows the central limit
-theorem, with $Np$ and $p$ both showing a normal distribution.
+For our data, we can build an lm object
 
 ```{r}
-sample_size=c("1","5","10", "20", "40", "80")
-number_of_simulations <- 1000
-sampling_experiment <- setNames(data.frame(matrix(ncol = length(sample_size), nrow = number_of_simulations)), sample_size)
-
-for(k in 1:length(sample_size)){
-for(i in 1:number_of_simulations){
-sampling_experiment[i,k] = rbinom(n=1, size=as.numeric(sample_size[k]), prob=.7)
-}
-}
-library(reshape2)
-sampling_experiment_long <- melt(sampling_experiment, variable.name = "Sample_size", value.name = "mean")
-sampling_experiment_long$Sample_size <- factor(sampling_experiment_long$Sample_size, levels =c("1","5","10", "20", "40", "80"))
-levels(sampling_experiment_long$Sample_size) <- paste("Sample size of ", levels(sampling_experiment_long$Sample_size))
-
-ggplot(sampling_experiment_long,aes(x=mean)) +
-  geom_histogram(color="black") +
-  labs(title=paste("Observed number of successes from ", number_of_simulations, " random draws"),
-       subtitle = "Binomial distribution, p=.7",  
-       x= "Mean",
-       y= "Frequency")+
-    facet_wrap(~Sample_size, nrow = 2)
+iris_anova <- lm(Sepal.Length~Species, iris)
 ```
 
-So, we can replace the binomial distribution in our sampling experiment
-with a normal population. To use this approach, we estimate a value for
-*p*, $\hat{p}$, from the data, and let
-
-$$
-\begin{split}
-\mu = Np \\
-\sigma_\mu =\sqrt{Np(1-p)}
-\end{split}
-$$
-
-We then draw only 1 draws this distribution. Why only 1? Because we need
-to keep the sample sizes the same, so the row and column totals are set!
-Remember this for a moment. After we draw 1 number, we fill in the rest.
-
-```{r, warning=F}
-num_of_simulations <- 10000
-simulations <- r2dtable(num_of_simulations,c(13,16),c(18,11))
-chi_sq_stats <- data.frame(chisq = rep(NA, num_of_simulations))
-for(i in 1:num_of_simulations){
-chi_sq_stats$chisq[i] <- chisq.test(matrix(unlist(simulations[i]),nrow=2, byrow=T))$statistic
-}
-
-colors <- c("distribution" = "green", "simulated data" = "orange")
-ggplot(chi_sq_stats, aes(x=chisq)) +
-  geom_histogram(aes(y=..count../sum(..count..), color = "simulated data", fill="simulated data")) +
-  labs(y=paste("Probability under ", num_of_simulations, " simulations", 
-sep =""), x=expression(chi^2), color="Source")+guides(fill=F)+
-  scale_color_manual(values = colors)+
-  scale_fill_manual(values=colors)
-```
-
-Once we carry out the sampling experiment, we can Z-transform our cell
-data(because they are normal now!). The results for a single cell would
-follow a N(0,1) distribution (the Z). If we wanted, we could square
-these outcomes (which would then follow a $\chi^2$ distribution, by
-definition), and, since we have 4 cells, add them. The resulting variate
-would follow a $\chi^2$ distribution with 1 degree of freedom (since we
-drew 1 numbers for the free "cell" in our table). Finally, because of
-all the p's above, we could actually rewrite all of this as
-
-$$
-V=\sum_{i=1}^{n}{\frac{{(Observed-Expected)}^2}{Expected}} \textrm{where n is number of cells}
-$$
-
-## Contingency analysis using the $\chi^2$ test
-
-The resulting test is called a $\chi^2$ test. Note this takes
-count-based data and uses a continuous distribution to describe it, so
-it's an approximate test.
+then use *plot* to check the assumptions.
 
 ```{r}
-ggplot(chi_sq_stats, aes(x=chisq)) +
-  geom_histogram(aes(y=..count../sum(..count..), color = "simulated data", fill="simulated data")) +
-  stat_function(fun = dchisq, args = list(df = 1),aes(color ="distribution")) +
-  labs(y=paste("Probability under ", num_of_simulations, " simulations", 
-sep =""), x=expression(chi^2), color="Source")+guides(fill=F)+
-  scale_color_manual(values = colors)+
-  scale_fill_manual(values=colors)
+plot(iris_anova)
 ```
 
-We can carry out this test in R using the *chisq.test* function.
+These 4 plots focus on the residuals (not the data).
 
-This function requires a matrix of aggregated values (counts for each
-cell). Currently we have a data frame (birds). To make this work, we
-have a few options.
+-   The **Residuals vs fitted** plot allows us to see if the residuals
+    are identically distributed - we want to see a flat red line and no
+    structure to the residuals in regards to their spread or location.
+    Note we only have 3 fitted values here (matching our 3 group means),
+    so will see "lines" of data in one-way ANOVAs (another name for what
+    we are doing here).\
+-   The **Q-Q Residuals** plot allows us to assess normality - points
+    should be on the line
+-   The other 2 graphs give show different forms of residuals against
+    the fitted values. We will return to them later.
 
-We can input the data directly as a matrix, specifying the string, the
-number of rows and columns, and how we entered the data in regards to
-rows (remember ?chisq.test)
+If our assumptions are met, we can look at the output. One way to do
+this is using the *summary* function.
 
 ```{r}
-chisq.test(matrix(c(9,4,9,7), 2, 2, byrow=T))
+summary(iris_anova)
 ```
 
-If the data is in *wide* data frame (meaning more than one measured
-outcome per row, so measuring the young and old as columns in the data
-frame) or we make it look like that, we can use the data directly from
-the data frame. Consider the difference in format. This is long data
-(one measure per row):
+This output may be confusing, however. The overall p value shown in the
+bottom right is for the entire model - that works for now, but soon
+won't. We also see individual p values for 2 levels of species, plus an
+odd intercept term.
+
+These are model artifacts and may be confusing. R lets the first factor
+level (typically alphabetical) be an intercept for the linear model, and
+then considers the other factor levels as deviations from that. It also
+shows if all the resulting *Estimates* are significantly different from
+0. Note this means a significant intercept term does not mean your
+groups actually differ.
+
+Given these issues, why use the summary command? It does present some
+other useful information. For example, the R^2^ values is a measure of
+how variation the model explains. It can range from 0 (the model
+explains nothing) to 1 (all residuals are zero, in this case meaning all
+members of a given species have the exact same height). The
+adjusted-R^2^ value is similar, but it adjusts the measure to account
+for the fact more complex models will always explain more variation.
+
+You can also remove the intercept to get group estimates for all groups
 
 ```{r}
-birds_original
+summary(lm(Sepal.Length~Species-1, iris))
 ```
 
-and this wide
+Note these match our group means, which is good, but the overall p value
+is now less useful (it compares our data to a null that assumes
+everything is equal to 0), and the output is still confusing.
+
+Since we are doing an omnibus test, what we typically want is a single p
+value associated with our factor of interest (species in this case). To
+get that, we'll use the *Anova* function from the **car** package.
 
 ```{r}
-library(reshape2) 
-birds_wide <- dcast(birds_original, Age~Species) 
-birds_wide
+library(car)
+Anova(iris_anova, type="III")
 ```
 
-We can make the matrix with wide data
+<details>
+
+<summary>What does type="III" mean</summary>
+
+Residuals can be calculated in multiple ways. For simple models (those
+with one variable) most calculations lead to the same answer. When we
+start adding multiple factors to a model and/or interactions, however,
+they differ. In short, Type I residuals consider the order in which
+factors are added to a model, and type 2 do not consider interactions.
+We will stick with type III for this class.
+
+\<\details\>
+
+Doing this we see Species has a significant impact on explaining
+variation in the data (and our very high F value). So we reject the null
+hypothesis that mean sepal length does not differ among species. Now
+what?
+
+## Post-hoc tests
+
+Just like for a multi-population $\chi^2$ tests, we need to do follow-up
+tests to compare groups while controlling for the FWER. For linear
+models (and more), we will use the *glht* function from the **multcomp**
+package to conduce these tests.
 
 ```{r}
-chisq.test(matrix(c(birds_wide$Junco, birds_wide$Finch), nrow = 2))
+library(multcomp)
+compare_cont_tukey <- glht(iris_anova, linfct = mcp(Species = "Tukey"))
+summary(compare_cont_tukey)
 ```
 
-For our 2x2 table, notice the order of input does not matter (because it
-wouldn't impact the expected values. Consider
+Our first approach uses a new (to us) method known as Tukey's method,
+Tukey's Honestly Significant Difference/HSD, Tukey-Kramer method, and
+many other names. It focuses on all possible pair-wise comparisons and
+controls for the FWER using a studentized range approach (not fully
+developed here, but similar to z-transform but focused on the range of
+means and using the estimated standard deviation; similar to t-statistic
+in this aspect and also developed by Student). Using this approach we
+see that all species differ significantly from all others; the output
+also provides estimates of the differences, which match up with our
+model summary output.
+
+WE can also use the methods we previously discussed such as Bonferroni
+and FDR. These requre us to set up the comparisons, which also means we
+can limit our number of tests if so desired. For example, we could focus
+only on differences with *I. virginica*.
 
 ```{r}
-chisq.test(matrix(c(birds_wide$Finch, birds_wide$Junco), nrow = 2))
+compare_virginica_only <- glht(iris_anova, linfct = mcp(Species = 
+                                                                c("virginica - versicolor = 0", 
+                                                                  "virginica - setosa = 0")))
 ```
 
-Using *cbind* is also an option.
+After setting up the comparison, we can specify the method to use to
+correct for FWER,
 
 ```{r}
-chisq.test(cbind(birds_wide$Finch, birds_wide$Junco))
+summary(compare_virginica_only, test=adjusted("holm")) 
+summary(compare_virginica_only, test=adjusted("fdr")) 
 ```
 
-As long as we specify the table, we are ok. Note each of these tests
-notes 1 df. The degrees of freedom associated with this test are based
-on the number of free cells (or, alternatively, the number of cells
-minus the parameters you had to fill in!). This typically can be
-calculated as (# of columns -1)\*(# of rows -1). They each also note a
-p-value greater than .05. This would suggest we should fail to reject
-the null hypothesis.
+Note for our small number of tests and relatively large differences in
+means and large sample sizes, differences in p values are minimal.
 
-Each result also tells you this is an approximation (as we already
-noted!). Since the test is approximate, by default R applies Yate's
-continuity correction to data focused on 2x2 tables. Some argue this
-correction is too strict, and you can turn it off in R (correct=F
-argument). You can also choose to simulate the outcome instead
-(simulate.p.value = T), but note this will still be an approximate
-answer since we can't do every single sample.
+There are instances when FWER are not an issue and thus p values do not
+need to be adjusted. This occurs when we explore *orthogonal contrasts*.
 
-The output also indicate the results may be incorrect? Why? In order for
-our normal approximation to work, we need large samples and a $\hat{p}$
-that is not near 0 or 1. Together, these mean our expected values for
-most cells (actually, \>80%) can not be less than 5., and no cell can
-have an expected value of less than 1. If these assumption are not
-met(or are close), R will warn us. We can check expected values using
+## A little deeper into linear models
 
-```{r}
-chisq.test(matrix(c(9,4,9,7), 2, 2, byrow=T))$expected
-```
-
-In this case, 25% of the cells (1/4) has an expected value of less than
-5.
-
-## Other options
-
-### Fisher's test
-
-If this is the case for a 2x2 table, we can use a Fisher's test instead
-
-```{r}
-fisher.test(matrix(c(9,4,9,7), 2, 2, byrow=T))
-```
-
-As opposed to resampling from a null distribution, Fisher's test
-considers all (or lots) of ways the data could be re-arranged (or
-*permuted*) and then computes a p-value using that approach. This means
-Fisher's test works for any sample size. It is an exact test *if* all
-possible combinations are considered (but they rarely are).
-
-Notice the output reports the odds ratio. This ratio is found by
-dividing odds in one group by odds in another (thus a ratio). Odds are
-the probability of one outcome over another. For our data, this could be
-considered (old/young(finches)) divided by (old/young(juncos)),
-(9/9)/(4/7)=63/36. This is close to what we saw in the output; slight
-differences occur since the *fisher.test* function returns a conditional
-estimate of the odds ratio.
-
-Note odds differ from relative risks, which compare the probability of
-an event occurring (or not) among 2 groups. The results are similar for
-rare events (think about why!) but not for common events. For more, see
-@altman1998 @davies1998 or this \[video and
-paper\]{<https://www.bmj.com/content/348/bmj.f7450>}(target="\_blank")
-@grant2014.
-
-### G test
-
-Another option, the G test, uses a slightly different approach as well.
-Instead of resampling, the test uses likelihood to compare outcomes.
-Likelihood asks how likely we were to observed a given set of data given
-parameter values.
-
-For an easy example of likelihood, let's go back to a one-sample example
-and focus on just our new finch data. We have 9 old and 9 young birds,
-so we have a signal of .5 for *p*. We can use likelihood to calculate
-how likely our data was under multiple values of p (ranging from 0 - 1,
-the only options here) and compare the *likelihood* of those outcomes
-@white.
-
-```{r, echo=F}
-#what we observed in a vector
-sequence <- c(rep(0,9), rep(1,9))
-#
-#write a likelihood function to solve for likelihood
-likelihood <- function(sequence, p.parameter)
-{
-  likelihood <- 1
-  
-  for (i in 1:length(sequence))
-  {
-    if (sequence[i] == 1)
-    {
-      likelihood <- likelihood * p.parameter
-    }
-    else
-    {
-      likelihood <- likelihood * (1 - p.parameter)
-    }
-  }
-  
-  return(likelihood)
-}
-
-#then solve and plot
-likelihood_df <- data.frame(possible.p = seq(0, 1, by = 0.001))
-likelihood_df$likelihood <- likelihood(sequence, likelihood_df$p)
-ggplot(likelihood_df, aes(x=possible.p, y=likelihood))+
-  geom_line()+
-  labs(title ='Likelihood as a Function of P when p = .5', 
-       x = 'P',
-       y = 'Likelihood')
-
-```
-
-Similar to calculating sum square errors from models, what is most
-likely is what we saw, but we know there is always noise in the data.
-Thankfully, it turns out the ratio of likelihood values follow a
-$\chi^2$ distribution and can thus provide a p-value to compare possible
-models. We will return to likelihood-based approaches later, in fact, as
-they can be used for any dataset we can generate a model for and can be
-used to compare multiple models.
-
-For our current contingency analysis, we can develop a model where a
-*species* parameter impacts the likelihood and one where it does not
-(not fully shown here, but shown by @patrone2022).
-
-```{r, eval=F, echo=F}
-#still developing
-GTest(c(9,9),p=c(.75,.25))
-likelihood_df$log_likelihood <- -log(likelihood_df$likelihood)
-likelihood_df[likelihood_df$possible.p==.5, "log_likelihood"]
-likelihood_df[likelihood_df$possible.p==.75, "log_likelihood"]
-pchisq(2*likelihood_df[likelihood_df$possible.p==.75, "log_likelihood"]/likelihood_df[likelihood_df$possible.p==.75, "log_likelihood"], 1)
-```
-
-The *GTest* function from the **DescTools** package to employ this test
-(function is directly used here due to issue with rendering via github).
-
-```{r echo=F}
-GTest <- function (x, y = NULL, correct = c("none", "williams", "yates"), 
-    p = rep(1/length(x), length(x)), rescale.p = FALSE) 
-{
-    DNAME <- deparse(substitute(x))
-    if (is.data.frame(x)) 
-        x <- as.matrix(x)
-    if (is.matrix(x)) {
-        if (min(dim(x)) == 1) 
-            x <- as.vector(x)
-    }
-    if (!is.matrix(x) && !is.null(y)) {
-        if (length(x) != length(y)) 
-            stop("x and y must have the same length")
-        DNAME <- paste(DNAME, "and", deparse(substitute(y)))
-        OK <- complete.cases(x, y)
-        x <- as.factor(x[OK])
-        y <- as.factor(y[OK])
-        if ((nlevels(x) < 2) || (nlevels(y) < 2)) 
-            stop("x and y must have at least 2 levels")
-        x <- table(x, y)
-    }
-    if (any(x < 0) || any(is.na(x))) 
-        stop("all entries of x must be nonnegative and finite")
-    if ((n <- sum(x)) == 0) 
-        stop("at least one entry of x must be positive")
-    correct <- match.arg(correct)
-    if (is.matrix(x)) {
-        nrows <- nrow(x)
-        ncols <- ncol(x)
-        if (correct == "yates") {
-            if (dim(x)[1] != 2 || dim(x)[2] != 2) 
-                stop("Yates' correction requires a 2 x 2 matrix")
-            if ((x[1, 1] * x[2, 2]) - (x[1, 2] * x[2, 1]) > 0) {
-                x <- x + 0.5
-                diag(x) <- diag(x) - 1
-            }
-            else {
-                x <- x - 0.5
-                diag(x) <- diag(x) + 1
-            }
-        }
-        sr <- apply(x, 1, sum)
-        sc <- apply(x, 2, sum)
-        E <- outer(sr, sc, "*")/n
-        g <- 0
-        for (i in 1:nrows) {
-            for (j in 1:ncols) {
-                if (x[i, j] != 0) 
-                  g <- g + x[i, j] * log(x[i, j]/E[i, j])
-            }
-            q <- 1
-            if (correct == "williams") {
-                row.tot <- col.tot <- 0
-                for (i in 1:nrows) {
-                  row.tot <- row.tot + 1/(sum(x[i, ]))
-                }
-                for (j in 1:ncols) {
-                  col.tot <- col.tot + 1/(sum(x[, j]))
-                }
-                q <- 1 + ((n * row.tot - 1) * (n * col.tot - 
-                  1))/(6 * n * (ncols - 1) * (nrows - 1))
-            }
-            STATISTIC <- G <- 2 * g/q
-            PARAMETER <- (nrow(x) - 1) * (ncol(x) - 1)
-            PVAL <- 1 - pchisq(STATISTIC, df = PARAMETER)
-            if (correct == "none") 
-                METHOD <- "Log likelihood ratio (G-test) test of independence without correction"
-            if (correct == "williams") 
-                METHOD <- "Log likelihood ratio (G-test) test of independence with Williams' correction"
-            if (correct == "yates") 
-                METHOD <- "Log likelihood ratio (G-test) test of independence with Yates' correction"
-        }
-    }
-    else {
-        METHOD <- "Log likelihood ratio (G-test) goodness of fit test"
-        if (length(dim(x)) > 2L) 
-            stop("invalid 'x'")
-        if (length(x) == 1L) 
-            stop("x must at least have 2 elements")
-        if (length(x) != length(p)) 
-            stop("'x' and 'p' must have the same number of elements")
-        if (any(p < 0)) 
-            stop("probabilities must be non-negative.")
-        if (abs(sum(p) - 1) > sqrt(.Machine$double.eps)) {
-            if (rescale.p) 
-                p <- p/sum(p)
-            else stop("probabilities must sum to 1.")
-        }
-        E <- n * p
-        if (correct == "yates") {
-            if (length(x) != 2) 
-                stop("Yates' correction requires 2 data values")
-            if ((x[1] - E[1]) > 0.25) {
-                x[1] <- x[1] - 0.5
-                x[2] <- x[2] + 0.5
-            }
-            else if ((E[1] - x[1]) > 0.25) {
-                x[1] <- x[1] + 0.5
-                x[2] <- x[2] - 0.5
-            }
-        }
-        names(E) <- names(x)
-        g <- 0
-        for (i in 1:length(x)) {
-            if (x[i] != 0) 
-                g <- g + x[i] * log(x[i]/E[i])
-        }
-        q <- 1
-        if (correct == "williams") {
-            q <- 1 + (length(x) + 1)/(6 * n)
-        }
-        STATISTIC <- G <- 2 * g/q
-        PARAMETER <- length(x) - 1
-        PVAL <- pchisq(STATISTIC, PARAMETER, lower.tail = FALSE)
-    }
-    names(STATISTIC) <- "G"
-    names(PARAMETER) <- "X-squared df"
-    names(PVAL) <- "p.value"
-    structure(list(statistic = STATISTIC, parameter = PARAMETER, 
-        p.value = PVAL, method = METHOD, data.name = DNAME, observed = x, 
-        expected = E), class = "htest")
-}
-
-```
-
-```{r}
-GTest(x = matrix(c(9,7,9,4), 2, 2, byrow = T))
-
-```
-
-## What about more than 2 groups?
-
-These ideas can be extended to compare more than 2 groups with a few
-important caveats.
-
--   The Fisher test is even less exact since all permutations of the
-    data can seldom be explored
-
--   **More importantly**, if we reject the null hypothesis we need to do
-    follow-up tests.
-
-Let's explore this idea with the Klem data. In addition to considering
-impacts of age, Klem also recorded the sex (coded as male/female) for
-each bird. He had data on 4 species.
-
-|     | **Observed** |         |         |            |
-|-----|--------------|---------|---------|------------|
-|     | *Finch*      | *Junco* | *Robin* | *Cardinal* |
-|     | 6            | 5       | 7       | 7          |
-|     | 12           | 7       | 11      | 3          |
-
-We can use the same approaches to test this.
-
-```{r}
-chisq.test(matrix(c(6,5,7,7,12,7,11,3), nrow=2, byrow=T))
-```
-
-Note our sample size is still a potential issue, but only 1/8 cells has
-a predicted value less than 1.
-
-```{r}
-chisq.test(matrix(c(6,5,7,7,12,7,11,3), nrow=2, byrow=T))$expected
-```
-
-which means the approximation is fine. We could use the other tests if
-we preferred.
-
-```{r}
-fisher.test(matrix(c(6,5,7,7,12,7,11,3), nrow=2, byrow=T))
-GTest(matrix(c(6,5,7,7,12,7,11,3), nrow=2, byrow=T))
-```
-
-Regardless, we see all p\>.05. What does this mean?
-
-### Post-hoc comparisons: Controlling for the FWER
-
-When we compared one group to a set value or two groups to each other,
-this was easy: it meant our focal parameter was the same between the
-groups or between expected and observed values. For more than 2 groups,
-it means the parameters is also means the parameter of interest does not
-differ among the groups. In other words, our null hypothesis is
-
-$$
-H_O: p_{finch} = p_{junco} = p_{cardinal} = p_{robin}
-$$
-
-where *p* is the proportion of the population that are males. Here, this
-means all species have similar male/female ratios (at least given our
-samples). This is an example of a very useful *insignificant* result.
-This study would have been interesting regardless of outcome.
-
-However, let's imagine we had data on another species (catbirds in the
-table below).
-
-|        | **Observed** |         |         |            |           |
-|--------|--------------|---------|---------|------------|-----------|
-|        | *Finch*      | *Junco* | *Robin* | *Cardinal* | *Catbird* |
-| Male   | 6            | 5       | 7       | 7          | 30        |
-| Female | 12           | 7       | 11      | 3          | 7         |
-
-When we run the test (notice I immediately checked expected values, or
-assumptions, which is a good habit to get into)
-
-```{r}
-chisq.test(matrix(c(6,5,7,7,30,12,7,11,3,7), nrow=2, byrow=T))
-chisq.test(matrix(c(6,5,7,7,30,12,7,11,3,7), nrow=2, byrow=T))$expected
-```
-
-We now have a significant p-value (.002). What does this mean now?
-
-A significant p-value from a multi-population test means the parameter
-is not the same for **all** groups. However, it does not necessarily
-mean the parameter is different for every group. Remember, our null
-hypothesis is (now)
-
-$$
-H_O: p_{finch} = p_{junco} = p_{cardinal} = p_{robin} = p_{catbird}
-$$
-
-We would reject this if we have evidence **any** of these qualities are
-not true. For example, focusing on catbird comparisons for now, we may
-find
-
-$$
-\begin{split}
-p_{catbird} \neq p_{junco} \\
-p_{catbird} \neq p_{cardinal} \\
-p_{catbird} \neq p_{robin} \\
-p_{catbird} \neq p_{finch} \\
-\end{split}
-$$
-
-or we may find
-
-$$
-\begin{split}
-p_{catbird} \neq p_{junco} \\
-p_{catbird} \neq p_{cardinal} \\
-p_{catbird} = p_{robin} \\
-p_{catbird} = p_{finch} \\
-\end{split}
-$$
-
-Either of these outcomes would reject the null hypothesis that
-proportions were the same for all species, but they mean different
-things.
-
-In general, after we show using an overall, or *omnibus*, test that
-there is a difference among populations, we need to determine which ones
-actually differ from the others. We do this using post-hoc comparisons
-to compare specific groups.
-
-We can technically choose which comparisons to focus on. For example,
-you can do compare all possible pairs or just certain combinations. Why
-would this matter?
-
-The answer has to do with family-wise error rate (FWER). Remember, for
-every test we run we have an $\alpha$% chance of a type 1 error. If we
-run many tests, the likelihood of making a type 1 error increases (the
-rate of increase depends on how independent the tests are, but we need
-to control for it.
-
-[![XKCD 882:
-Significant](https://imgs.xkcd.com/comics/significant.png)](https://xkcd.com/882)
-
-For this reason, we modify our "used" $\alpha$ for our post-hoc tests.
-There are many approaches to doing this, but they all depend on how many
-tests we run - so the more post-hoc comparisons we include, the harder
-it may be to find a significant difference among focal pairs.
-
-To illustrate this, we will first use a very simple method that is no
-longer recommended but is useful as a starting point. One options is to
-control the FWER by dividing $\alpha$ by the number of post-hoc tests we
-intend to run. For the above example, if we do all pairs comparisons we
-would be running 10 comparison (4+3+2+1...). So instead of using .05 as
-a cutoff, we would use .005.
-
-First, it helps to make a table with row and column names (which are
-slightly different than headers and very different than a column of
-names in R).
-
-```{r}
-bird_ratio_table <- matrix(c(6,5,7,7,30,12,7,11,3,7), nrow=2, byrow=T)
-colnames(bird_ratio_table) <- c("Finch", "Junco", "Cardinal", "Robin", "Catbird")
-rownames(bird_ratio_table) <- c("Male", "Female")
-
-```
-
-Then we can run the test with the *pairwiseNominalIndependence* function
-from the **rcompanion** package. Loaded here due to issues with github
-rendering.
-
-```{r}
-pairwiseNominalIndependence <- function (x, compare = "row", fisher = TRUE, gtest = TRUE, chisq = TRUE, 
-    method = "fdr", correct = "none", stats = FALSE, cramer = FALSE, 
-    digits = 3, ...) 
-{
-    if (compare == "row") {
-        n = nrow(x)
-    }
-    if (compare == "column" | compare == "col") {
-        n = ncol(x)
-    }
-    N = n * (n - 1)/2
-    Z = data.frame(Comparison = rep("A", N), stringsAsFactors = FALSE)
-    p.Fisher = rep(NA, N)
-    p.Gtest = rep(NA, N)
-    p.Chisq = rep(NA, N)
-    Cramer = rep(NA, N)
-    Chisq = rep(NA, N)
-    df = rep(NA, N)
-    G = rep(NA, N)
-    k = 0
-    for (i in 1:(n - 1)) {
-        for (j in (i + 1):n) {
-            k = k + 1
-            if (compare == "row") {
-                Namea = as.character(rownames(x)[i])
-                Nameb = as.character(rownames(x)[j])
-                Dataz = matrix(c(x[i, ], x[j, ]), nrow = 2, byrow = TRUE)
-            }
-            if (compare == "column" | compare == "col") {
-                Namea = as.character(colnames(x)[i])
-                Nameb = as.character(colnames(x)[j])
-                Dataz = matrix(c(x[, i], x[, j]), ncol = 2, byrow = FALSE)
-            }
-            Z$Comparison[k] = paste0(Namea, " : ", Nameb)
-            if (fisher == TRUE) {
-                p.Fisher[k] = signif(fisher.test(Dataz, ...)$p.value, 
-                  digits = digits)
-            }
-            if (gtest == TRUE) {
-                p.Gtest[k] = signif(GTest(Dataz, correct = correct, 
-                  ...)$p.value, digits = digits)
-            }
-            if (chisq == TRUE) {
-                p.Chisq[k] = signif(chisq.test(Dataz, ...)$p.value, 
-                  digits = digits)
-            }
-            if (cramer == TRUE) {
-                Cramer[k] = cramerV(Dataz, digits = digits)
-            }
-            if (stats == TRUE) {
-                Chisq[k] = signif(suppressWarnings(chisq.test(Dataz, 
-                  ...))$statistic, digits = digits)
-                df[k] = signif(suppressWarnings(chisq.test(Dataz, 
-                  ...))$parameter, digits = digits)
-                G[k] = signif(GTest(Dataz, ...)$statistic, digits = digits)
-            }
-        }
-    }
-    if (stats == TRUE) {
-        Z$Chisq = Chisq
-        Z$df = df
-        Z$G = G
-    }
-    if (fisher == TRUE) {
-        Z$p.Fisher = p.Fisher
-        Z$p.adj.Fisher = signif(p.adjust(Z$p.Fisher, method = method), 
-            digits = digits)
-    }
-    if (gtest == TRUE) {
-        Z$p.Gtest = p.Gtest
-        Z$p.adj.Gtest = signif(p.adjust(Z$p.Gtest, method = method), 
-            digits = digits)
-    }
-    if (chisq == TRUE) {
-        Z$p.Chisq = p.Chisq
-        Z$p.adj.Chisq = signif(p.adjust(Z$p.Chisq, method = method), 
-            digits = digits)
-    }
-    if (cramer == TRUE) {
-        Z$Cramer.V = Cramer
-    }
-    return(Z)
-}
-```
-
-Note the function needs a table or matrix and to know which method to
-use to compare rows or columns. Looking at the table
-
-```{r}
-bird_ratio_table
-```
-
-Let' s us see we want to compare columns.
-
-```{r}
-bonf_correct <- pairwiseNominalIndependence(bird_ratio_table, compare="col", method = "bonf")
-bonf_correct
-
-```
-
-The test then shows all-pair comparisons with regular (what we should
-compare to .005 now, but we don't usually know that!) and adjusted
-p-values (which have compensated for multiple tests so we can use our
-normal .05 cutoff- use this one!) for each test we have covered (you
-should use a post-hoc that matches what you did for the overall, or
-*omnibus*, comparison).
-
-You can order and display these differently if it helps. For example, if
-we used the $\chi^2$ test.
-
-```{r}
-bonf_correct[order(bonf_correct$p.adj.Chisq), c("Comparison", "p.adj.Chisq")]
-```
-
-We see that catbirds different from finches and cardinals in the
-proportion of males and females, while all other species do not differ.
-Note the un-adjusted p-value for this comparison pair is the same we
-would have found from just comparing the two groups
-
-```{r}
-chisq.test(matrix(c(6,30,12,7), nrow=2, byrow=T))
-bonf_correct[bonf_correct$Comparison=="Finch : Catbird", "p.Chisq"]
-
-```
-
-However, this comparison is very conservative. Many other options exist,
-and we will explore two here.
-
-The sequential Bonferroni, or Holm's, method, allocates your $\alpha$ to
-accept as many tests as signficant as possible while still controlling
-for the FWER. To do this, it orders the post-hoc tests by p-value,
-smallest to largest. It then rejects the null hypothesis attached to the
-smallest p-value and subtracts that p-value from $\alpha$. It continues
-to do this until $\alpha$ is too small to reject the next smallest
-p-value. I think of it as buying p-values with $\alpha$.
-
-We can use this approach by simply changing the method. Let's also order
-our results again for viewing.
-
-```{r}
-holm_correct <- pairwiseNominalIndependence(bird_ratio_table, compare="col", method = "holm")
-holm_correct[order(holm_correct$p.adj.Chisq), c("Comparison", "p.adj.Chisq")]
-```
-
-Although we still reject the same null hypotheses, notice the adjusted
-p-value for the junco:catbird comparison is slightly lower. This is due
-to the "holm" approach.
-
-A final approach we will demonstrate is called the False Discovery Rate,
-or FDR, approach. It's similar to the Holm's approach in that it starts
-by ordering the post-hoc tests by p-value, smallest to largest. However,
-it then rejects the null hypothesis attached to the largest p-value that
-is \< $\alpha$ and subsequently rejects all null hypotheses attached to
-smaller p-values. It is thus less conservative but basically attempts to
-maximize the number of hypotheses you reject given a set $\alpha$.
-
-```{r}
-fdr_correct <- pairwiseNominalIndependence(bird_ratio_table, compare="col", method = "fdr")
-fdr_correct[order(fdr_correct$p.adj.Chisq), c("Comparison", "p.adj.Chisq")]
-```
-
-Again, we reject the same null hypotheses, but again you also observe a
-slight change in p-values. This indicates the important point here is
-controlling for the FWER. In later chapters we will expand this idea
-further by focusing on specific subsets of tests or comparisons,
-although these approaches are less commonly used.
-
-## Goodness of fit tests
-
-Above we focused on comparing proportions among multiple groups using
-the $\chi^2$ test. This same approach (comparing expected vs observed
-values) can also be used to see if a single sample follows a specific
-distribution. In general, these tests are used to test hypotheses in the
-form of:
-
-$$
-\begin{split}
-H_O: \textrm{data come from a particular discrete probability distribution} \\
-H_A: \textrm{data do not come from a particular discrete probability distribution} \\
-\end{split}
-$$
-
-For example, we used a binomial test in earlier chapters to see if our
-observed number of old (9) and young (9) finches matched a probability
-of .75.
-
-```{r}
-binom.test(x=9, n=18, p=.75)
-```
-
-Note we instead consider what we observed vs what we expected using a
-$\chi^2$ test.
-
-```{r}
-chisq.test(c(9,9), p=c(.75,.25))
-```
-
-Both p values are \< .05, so we reject the null hypothesis, $H_O: p=.75$
-. However, the p values are different? Do you remember why?
-
-The $\chi^2$ test is an approximation! Thus, we prefer the binomial test
-to the $\chi^2$ test when we only have 2 categories (binomial data) but
-for more groups we can use the $\chi^2$ test. Since we are still using a
-$\chi^2$ test, these goodness-of-fit tests have the same assumptions as
-contingency analysis. If this isn't true, we can combine categories as
-needed (note the binomial distribution is the extreme form of combining
-categories!), or we can use a G-test.
-
-The main issue with goodness-of-fit tests is understanding how many
-degrees of freedom should be used for the null distribution. It usually
-depends on how many parameters you are estimating. Note, if parameters
-are determined outside of R, the software may not give appropriate
-answers.
-
-For example, Klem wanted to know if bird strikes differed among months.
-The null hypothesis was no difference among months, which he tested by
-assuming a single probability described the likelihood of strikes
-regardless of month. An alternative (attached to a full model) would
-have assumed different probabilities for different months.
-
-In this case, we estimated one parameter (p), or the number of
-collisions in one month is determined by the others due to our sample
-size, so we have 12-1=11 degrees of freedom. If we instead compared our
-data to a binomial distribution, we might need to estimate *p* and have
-one value set by the others. Another common use of goodness-of-fit tests
-is to determine if the number of offspring (or seeds) match ratios
-predicted by Punnet square crosses.
-
-Another common distribution that data are tested against is the Poisson
-distribution. It describes the probability that a certain number of
-events occur in a block of time (or space), when those events happen
-independently of each other and occur with equal probability at every
-point in time or space. The Poisson distribution thus matches a null
-hypothesis that incidents are randomly distributed in space or time. The
-Poisson distribution is an extension of binomial that occurs when p is
-very low and n is large. When this occurs, note N-S \~ N (and a few
-other things happen), which lead to the entire distribution being
-described by a single parameter $\mu \approx Np$, which is the mean and
-variance.
-
-These traits also allow you to determine if data are random, clumped, or
-uniform. If the mean of a dataset is approximately the same as the
-variance, the points may be randomly distributed. If the variance is
-much greater than the mean, the data may be clumped. Alternatively, if
-the variance is much less than the mean, the data may be uniformly
-distributed.
+## T-test connections
 
 ## Next steps
 
