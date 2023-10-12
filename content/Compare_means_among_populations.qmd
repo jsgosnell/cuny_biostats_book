@@ -414,6 +414,110 @@ need to be adjusted. This occurs when we explore *orthogonal contrasts*.
 
 ## A little deeper into linear models
 
+Let's return to linear models to help explain orthogonal contrasts (and
+some other things). Linear models are a sysem of equations (a matrix),
+where
+
+$$
+\begin{split}
+Y=X\beta+\epsilon, \textrm{ where }\\
+\textrm{Y is our observations (an nx1 matrix)}\\
+\textrm{X is a matrix showing our explanatory variables (an nxk matrix)}\\
+\beta \textrm{ is our coefficient matrix(an kx1 matrix)}\\
+\epsilon \textrm{is a matrix (an nx1) of residuals)}\\
+\end{split}
+$$
+
+In our case, $\beta$ is simply a 3x1 matrix where each entry is a
+species average (or one is an intercept and other two are distances from
+it - same thing) and X is a matrix with dummy variables (1 or 0)
+indicating which group each observation belongs too. X is sometimes
+called a model or design matrix. We can see this using R. First, we can
+pull the design matrix from our model object
+
+```{r}
+library(rmarkdown)
+paged_table(data.frame(model.matrix(iris_anova)))
+```
+
+We can also pull the model coefficients, which form our $\beta$ matrix,
+and place them in the correct orientation.
+
+```{r}
+matrix(as.numeric(iris_anova$coefficients), ncol=1)
+
+```
+
+So for our first observation, which is
+
+```{r}
+iris[1,]
+```
+
+We would multiply (remember, rows get multiplied by columns in matrices)
+
+```{r}
+1*5.006 + 0*.930+0*1.58
+```
+
+This explains why all our fitted values are one of three values! We can
+also see our observation minus prediction
+
+```{r}
+iris[1,"Sepal.Length"]-1*5.006 + 0*.930+0*1.58
+```
+
+matches our first model residual
+
+```{r}
+iris_anova$residuals[1]
+```
+
+Understanding this general setup explains a few things. When models get
+more complicated you may see errors or warnings related to singularity.
+This occurs when X^T^X isn't invertible(linear algebra!), which it needs
+to be to find $\beta$. This occurs if columns in your design matrix are
+not independent and are actually linear combinations of each other. This
+happens when you have highly related measurements (we'll discuss
+correlation eventually so you can actually measure this!). We will use
+similar manipulations to eventually find the $\hat{H}$ matrix when we
+consider Cook's Distance (in regression chapter). Degrees of freedom are
+similarly related to the number of estimated coefficients the model
+required (the number of rows in the $\beta$ matrix).
+
+Returning to our contrasts, note when we do post-hoc tests we are
+effectively testing for differences in $\beta$ values. We can put these
+"tests" in a similar system of equations/matrix. For these tests, the
+coefficients have to equal 0. For pair comparisons, that means we have 1
+for one coeffcient and -1 for the other (for example, (1,-1,0). However,
+we can also compare one coefficient to the average of the others
+(2,-1,-1). We could write these two contrasts as
+
+$$
+\begin{bmatrix}
+1 & -1 & 0 \\
+2 & 1 & 1 \\
+\end{bmatrix}
+$$
+
+A group of contrasts are orthogonal if the sum of the multiplied
+coefficients from each column equals zero. In this case
+
+```{r}
+1*2 + -1*1 + 0*1
+```
+
+does not equal 0, so these are not orthogonal contrasts. This is also
+because I can add add the first and third column and get the second
+(columns are not independent). However, if we instead compared
+
+$$
+\begin{bmatrix}
+1 & -1 & 0 \\
+1 & 0 & 1 \\
+\end{bmatrix}
+$$
+
 ## T-test connections
 
 ## Next steps
