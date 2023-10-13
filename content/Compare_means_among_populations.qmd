@@ -376,16 +376,22 @@ compare_cont_tukey <- glht(iris_anova, linfct = mcp(Species = "Tukey"))
 summary(compare_cont_tukey)
 ```
 
-Our first approach uses a new (to us) method known as Tukey's method,
-Tukey's Honestly Significant Difference/HSD, Tukey-Kramer method, and
-many other names. It focuses on all possible pair-wise comparisons and
-controls for the FWER using a studentized range approach (not fully
-developed here, but similar to z-transform but focused on the range of
-means and using the estimated standard deviation; similar to t-statistic
-in this aspect and also developed by Student). Using this approach we
-see that all species differ significantly from all others; the output
-also provides estimates of the differences, which match up with our
-model summary output.
+Our first approach uses a new (to us) method. It is **not exactly**
+Tukey's method (very confusing) but is closely related to it. Tukey's
+method is focuses on all possible pair-wise comparisons and controls for
+the FWER using a studentized range approach (not fully developed here,
+but similar to z-transform but focused on the range of means and using
+the estimated standard deviation; similar to t-statistic in this aspect
+and also developed by Student). It is also called Tukey's Honestly
+Significant Difference/HSD, Tukey-Kramer method, and many other names.
+In *glht*, specifying "Tukey" tells the program to do all possible pairs
+comparison (like Tukey's method). The post-hoc control for FWER,
+however, uses a slightly different approach that can handle interactions
+(still to be explained) and some other things a little bit easier.
+
+Using this approach we see that all species differ significantly from
+all others; the output also provides estimates of the differences, which
+match up with our model summary output.
 
 WE can also use the methods we previously discussed such as Bonferroni
 and FDR. These requre us to set up the comparisons, which also means we
@@ -509,16 +515,74 @@ coefficients from each column equals zero. In this case
 
 does not equal 0, so these are not orthogonal contrasts. This is also
 because I can add add the first and third column and get the second
-(columns are not independent). However, if we instead compared
+(columns are not independent). However, if we instead carried out these
+contrasts
 
 $$
 \begin{bmatrix}
 1 & -1 & 0 \\
-1 & 0 & 1 \\
+1 & 1 & -2 \\
 \end{bmatrix}
 $$
 
+they would be independent. Resulting p values would not required
+correction for FWER.
+
+## Displaying output of post-hoc tests
+
+Output from post-hoc tests is often displayed using compact letter
+display. Groups that are not significantly differently share the same
+letter (so in this case they all have different letters).
+
+```{r}
+cld_output <- fortify(cld(compare_cont_tukey))
+cld_output$Species <- cld_output$lhs
+
+function_output <- summarySE(iris, measurevar="Sepal.Length", groupvars =
+                               c("Species"))
+
+function_output <- merge(function_output, cld_output)
+
+ggplot(function_output, aes(y=Sepal.Length, x=Species, fill=Species)) +
+  geom_col(aes(fill=Species)) +
+    geom_errorbar(aes(ymin=Sepal.Length-ci, ymax=Sepal.Length+ci)) +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species")+
+  geom_text(aes(label=letters,y=Sepal.Length+3*ci))
+```
+
+Other options include plotting the differences in means
+
+```{r}
+plot(compare_cont_tukey)
+```
+
+Another option using the ggstatsplot package.
+
+```{r}
+library(ggstatsplot)
+ggstatsplot::ggbetweenstats(
+  data = PlantGrowth,
+  x = group,
+  y = weight,
+  pairwise.comparisons = TRUE,
+  pairwise.display = "all",
+  p.adjust.method = "Tukey"
+)
+```
+
+### emmeans: another option
+
+Another popular package for conducting posthoc comparison in R is
+emmeans. The package has a great starters guide
+[here](https://cran.r-project.org/web/packages/emmeans/vignettes/AQuickStart.html){target="_blank"}
+
 ## T-test connections
+
+So far we have focused on comparing means among multiple groups. This
+can include include comparing means between only 2 groups (which we
+already do for the
 
 ## Next steps
 
