@@ -393,7 +393,7 @@ Using this approach we see that all species differ significantly from
 all others; the output also provides estimates of the differences, which
 match up with our model summary output.
 
-WE can also use the methods we previously discussed such as Bonferroni
+We can also use the methods we previously discussed such as Bonferroni
 and FDR. These requre us to set up the comparisons, which also means we
 can limit our number of tests if so desired. For example, we could focus
 only on differences with *I. virginica*.
@@ -520,13 +520,34 @@ contrasts
 
 $$
 \begin{bmatrix}
-1 & -1 & 0 \\
-1 & 1 & -2 \\
+2 & -1 & -1 \\
+0 & 1 & -1\\
 \end{bmatrix}
 $$
 
-they would be independent. Resulting p values would not required
-correction for FWER.
+they would be independent. There are other options as well, as we can
+always find a number of orthogonal contrasts equal to the number of
+groups being compared minus one.
+
+Resulting p values would not required correction for FWER. We can
+specify contrasts like this using *glht*. Below I do the same matrix,
+but note I set the maximum entry to 1 so that estimate of mean
+differences aren't doubled.
+
+```{r}
+contr <- rbind("versicolor - virginica - setosa" = c(1, -.5,-.5),
+               "virginica - setosa" = c(0,1,-1))
+summary(glht(iris_anova, linfct = mcp(Species = contr)), test=adjusted("none"))
+```
+
+Note this is the same as
+
+```{r}
+iris$is_versicolor <- iris$Species
+iris$is_versicolor <- revalue(iris$is_versicolor, c("versicolor"="yes",
+                                                    "setosa"="no",
+                                                    "virginica"="no"))
+```
 
 ## Displaying output of post-hoc tests
 
@@ -558,9 +579,9 @@ Other options include plotting the differences in means
 plot(compare_cont_tukey)
 ```
 
-Another option using the ggstatsplot package.
-
-```{r}
+```{r, eval=F, echo=F}
+#hidden for now as library not working
+#Another option using the ggstatsplot package.  
 library(ggstatsplot)
 ggstatsplot::ggbetweenstats(
   data = PlantGrowth,
@@ -582,7 +603,25 @@ emmeans. The package has a great starters guide
 
 So far we have focused on comparing means among multiple groups. This
 can include include comparing means between only 2 groups (which we
-already do for the
+already do for the post-hoc tests). In doing this we also introduced new
+post-hoc tests and the ideas of a linear model.
+
+The linear model framework will unify most of the remaining tests we
+learn in class. In fact, several tests we've already learned can be
+formulated this way. This is extremely useful given we want statistics
+to be a related set of tests in a comprehensive framework.
+
+There are many ways to teach statistics, however, and a long history of
+tests. Many textbooks and approaches build up from one sample tests by
+moving to two sample t-tests. These tests bridge the logic noted above
+and the approach we used for single-sample t-tests. This is because the
+t-distribution is a special case of the F distribution.
+
+To prove this, let's only consider two species.
+
+```{r}
+two_species_subset <- iris[iris$Species!=]
+```
 
 ## Next steps
 
