@@ -857,8 +857,8 @@ ggplot(bootstrap_outcomes, aes(x=mean)) +
 We again (thanks to the central limit theorem) see the means follow a
 normal distribution.
 
-We can also carry this out using the *boot* package, though the
-functions may look a little odd.
+We can also carry this out using the *boot* function (in the **boot**
+package), though the functions may look a little odd.
 
 ```{r}
 library(boot)
@@ -889,9 +889,14 @@ boot.ci(results)
 
 ```
 
-Although p-values are sometimes connected to these methods, we won't
-develop those here. Just focus on getting the confidence interval for
-your signal using bootstrap.
+The *boot.t.test* function in the **MKinfer** package offers another way
+to calculate bootstrap statistics for single-sample continuous data. It
+returns the percentile confidence intervals and also offers a p value.
+
+```{r}
+library(MKinfer)
+boot.t.test(iris[iris$Species == "virginica","Sepal.Length"], mu = 7)
+```
 
 ## Next steps
 

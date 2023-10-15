@@ -590,7 +590,7 @@ Another popular package for conducting posthoc comparison in R is
 emmeans. The package has a great starters guide
 [here](https://cran.r-project.org/web/packages/emmeans/vignettes/AQuickStart.html){target="_blank"}
 
-## T-test and non-parametric connections
+## T-test connections
 
 So far we have focused on comparing means among multiple groups. This
 can include include comparing means between only 2 groups (which we
@@ -606,7 +606,16 @@ There are many ways to teach statistics, however, and a long history of
 tests. Many textbooks and approaches build up from one sample tests by
 moving to two-sample t-tests. These tests bridge the logic noted above
 and the approach we used for single-sample t-test. This is because the
-t-distribution is a special case of the F distribution.
+t-distribution is a special case of the F distribution. It occurs when
+the square root of an F distribution with 1 degree of freedom in the
+numerator is considered. Thus the degrees of freedom associated with a
+t-test will be equal to the degrees of freedom associated with the
+denominator of the associated F-test.
+
+2-sample t-tests may also an easier approach to first considering
+differences among groups since with only 2 populations the difference in
+means may be considered. However, it can be shown (not here) this is
+simply a rearrangement of our exploration of variances.
 
 To demonstrate this, let's only consider two species. Note
 
@@ -621,27 +630,26 @@ yields the same p-value as
 Anova(lm(Sepal.Length ~ Species, two_species_subset), type="III")
 ```
 
-Also note the relationship among the F and t statistic
+Also note the t statistic is the square root of the F statistic.
 
 ```{r}
 -5.6292^2
 ```
 
-The t statistic is the square root of the F statistic. Note the t.test
-function can also use columns holding data from each population as
-arguments as opposed to the formula interface, but we will not use that
-approach here.
+Note the t.test function can also use columns holding data from each
+population as arguments as opposed to the formula interface, but we will
+not use that approach here.
 
 The var.equal=T argument, however, is not the default in R, and this
-assumption is one of the major differences in the tests. Remember,
-ANOVAs and t-tests both require estimates for sigma. If we do not assume
-the variances are equal for each group, then the best way to estimate
-the variance is to calculate the variance for each group and take a
-weighted (by sample size mean). This approach is known as the
+assumption is one of the major differences in 2-sample t-tests and F
+tests. Remember, ANOVAs and t-tests both require estimates for sigma. If
+we do not assume the variances are equal for each group, then the best
+way to estimate the variance is to calculate the variance for each group
+and take a weighted (by sample size mean). This approach is known as the
 Behren-Fisher or Welsh t-test. The resulting statistics has a
 distrubtion that can be approximated by a t-distribution, but the
 associated degrees of freedom can can be non-integer (decimal) and less
-than n1 + n2 - 2.
+than (n~1~+ n~2~ - 2).
 
 This means the basic assumptions for 2-sample t-tests are independent
 data points, groups show the same variance, and means are normally
@@ -649,7 +657,15 @@ distributed. Much like the one-sample t-test, the central limit theorem
 implies assumptions about the mean distribution are commonly met.
 However, if they are not met, we have a few common options.
 
-### Wilcoxon/Mann-Whitney U test
+## Non-parametric connections
+
+Options for when assumptions of the t- and F-tests (ANOVAs) are
+presented below. Note given the history of t-tests being considered
+apart from ANOVAs, some functions only work with less than 2 populations
+while others work with three or more. However, the overall approaches
+are similar.
+
+### Ranks: Wilcoxon/Mann-Whitney U and Kruskal-Wallis test
 
 We can extend the Wilcoxon test to 2-samples. To do so, we rank the data
 points from smallest to largest. The ranks are then used to calculate a
@@ -663,21 +679,33 @@ then taken and used to compute a p value. We can calculate this using
 the *wilcox.test* function,
 
 ```{r}
-wilcox.test(Sepal.Length ~ Species, two_species_subset, var.equal=T)
+wilcox.test(Sepal.Length ~ Species, two_species_subset)
 ```
 
 This test assumes the two distributions being considered have similar
-shape (not that the resulting means are normally-distributed).
+shape (not that the resulting means are normally-distributed). If you
+remove the default continuity correction (applied as we approximate
+discrete data with a continuous distribution)
 
-For 3+ populations, a similar rank-based option is known as the
-Kruskal-Wallis test.
+```{r}
+wilcox.test(Sepal.Length ~ Species, two_species_subset, correct=F)
+```
+
+We get the same result as the Kruskal-Wallis test
+
+```{r}
+kruskal.test(Sepal.Length ~ Species, two_species_subset)
+```
+
+which is a rank-based test that can be applied to 3+ populations.
 
 ```{r}
 kruskal.test(Sepal.Length ~ Species, data = iris)
 ```
 
-If this omnibus test reveals a significant p-value, we can follow it up
-with appropriate post-hoc tests.
+If we have more than three populations and this omnibus test reveals a
+significant p-value, we can follow it up with appropriate post-hoc
+tests.
 
 ```{r}
 pairwise.wilcox.test(iris$Sepal.Length, 
@@ -687,27 +715,70 @@ pairwise.wilcox.test(iris$Sepal.Length,
 
 ### Bootstrapping
 
-Another option is to extend the bootstrapping option. We can do this
-using the *boot* function.
+Another option is to extend the bootstrapping option. Although we could
+again develop a simulation using the *boot* function again, here we
+again use the **MKinfer** package.
 
 ```{r}
-library(boot)
+library(MKinfer)
+boot.t.test(Sepal.Length ~ Species, two_species_subset)
+```
 
-results <- boot(data=bootstrap_data, statistic = function(x, inds) mean(x[inds]),
-   R=number_of_simulations)
+note we can also run this test without assuming variances are
+differenct.
+
+```{r}
+boot.t.test(Sepal.Length ~ Species, two_species_subset, var.equal=T)
+```
+
+Both these approaches also show the corresponding t-test results, but
+note you should choose which test you plan to use before seeing the
+results!
+
+For more than 2 groups, the *t1waybt* function in the **WRS2** package
+can allow comparison.
+
+```{r}
+library(WRS2)
+t1waybt(Sepal.Length~Species, iris)
+```
+
+If needed, the *mcppb20* package allows for appropriate post-hoc
+comparisons.
+
+```{r}
+bootstrap_post_hoc <- mcppb20(Sepal.Length~Species, iris)
+p.adjust(as.numeric(bootstrap_post_hoc$comp[,6]), "holm")
+
 ```
 
 ### Permutation
+
+A new option when comparing groups (2 or more) is known as the
+permutation test. We encountered a similar approach when we learned
+about the Fisher's test for binomial data. Using this approach, we can
+move the measurements between measured populations, calculate test
+statistics, and consider how unusual our observed statistic was (a p
+value!). We can do this for 2
 
 ```{r}
 library(coin)
 independence_test(Sepal.Length ~ Species, data =  two_species_subset)
 ```
 
-For 3+ populations, we can use
+or 3+ populations
 
 ```{r}
 independence_test(Sepal.Length ~ Species, data =  iris)
+```
+
+Post-hoc test options are available in the **rcompanion** package.
+
+```{r}
+library(rcompanion)
+pairwisePermutationTest(Sepal.Length ~ Species,
+                             data = iris,
+                             method="holm")
 ```
 
 ## Next steps

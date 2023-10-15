@@ -6,6 +6,7 @@
 
 
 
+
 #building to bootstrap options####
 library(WRS2)
 #first, just using trimmed means, which help
