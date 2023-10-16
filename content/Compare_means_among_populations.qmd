@@ -179,7 +179,8 @@ we can get an overall estimate of variance by
     $$
 
 -   calculating variance for each group mean around the overall mean
-    * this is called mean square treatment
+
+    -   this is called mean square treatment
 
 
 $$
@@ -189,6 +190,9 @@ $$
 \end{split}
 $$
 
+$$
+\frac{\sum_{j=1}^{j} (\overline{Y_j}-Y_{overall}{i})^2}{j-1} = \frac{s^2}{n}
+$$
 
 In other words, variance among groups should be equal to variance within
 groups. You should also note this means we can partition the variance
@@ -642,16 +646,15 @@ tests. Remember, ANOVAs and t-tests both require estimates for sigma. If
 we do not assume the variances are equal for each group, then the best
 way to estimate the variance is to calculate the variance for each group
 and take a weighted (by sample size mean). This approach is known as the
-Behren-Fisher or Welsh t-test. 
+Behren-Fisher or Welsh t-test.
 
 ```{r}
 t.test(Sepal.Length ~ Species, two_species_subset)
 ```
 
-The resulting statistics has a
-distrubtion that can be approximated by a t-distribution, but the
-associated degrees of freedom can can be non-integer (decimal) and less
-than (n~1~+ n~2~ - 2).
+The resulting statistics has a distrubtion that can be approximated by a
+t-distribution, but the associated degrees of freedom can can be
+non-integer (decimal) and less than (n~1~+ n~2~ - 2).
 
 This means the basic assumptions for 2-sample t-tests are independent
 data points, groups show the same variance, and means are normally
