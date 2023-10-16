@@ -395,136 +395,10 @@ likelihood_df[likelihood_df$possible.p==.75, "log_likelihood"]
 pchisq(2*likelihood_df[likelihood_df$possible.p==.75, "log_likelihood"]/likelihood_df[likelihood_df$possible.p==.75, "log_likelihood"], 1)
 ```
 
-The *GTest* function from the **DescTools** package to employ this test
-(function is directly used here due to issue with rendering via github).
-
-```{r echo=F}
-GTest <- function (x, y = NULL, correct = c("none", "williams", "yates"), 
-    p = rep(1/length(x), length(x)), rescale.p = FALSE) 
-{
-    DNAME <- deparse(substitute(x))
-    if (is.data.frame(x)) 
-        x <- as.matrix(x)
-    if (is.matrix(x)) {
-        if (min(dim(x)) == 1) 
-            x <- as.vector(x)
-    }
-    if (!is.matrix(x) && !is.null(y)) {
-        if (length(x) != length(y)) 
-            stop("x and y must have the same length")
-        DNAME <- paste(DNAME, "and", deparse(substitute(y)))
-        OK <- complete.cases(x, y)
-        x <- as.factor(x[OK])
-        y <- as.factor(y[OK])
-        if ((nlevels(x) < 2) || (nlevels(y) < 2)) 
-            stop("x and y must have at least 2 levels")
-        x <- table(x, y)
-    }
-    if (any(x < 0) || any(is.na(x))) 
-        stop("all entries of x must be nonnegative and finite")
-    if ((n <- sum(x)) == 0) 
-        stop("at least one entry of x must be positive")
-    correct <- match.arg(correct)
-    if (is.matrix(x)) {
-        nrows <- nrow(x)
-        ncols <- ncol(x)
-        if (correct == "yates") {
-            if (dim(x)[1] != 2 || dim(x)[2] != 2) 
-                stop("Yates' correction requires a 2 x 2 matrix")
-            if ((x[1, 1] * x[2, 2]) - (x[1, 2] * x[2, 1]) > 0) {
-                x <- x + 0.5
-                diag(x) <- diag(x) - 1
-            }
-            else {
-                x <- x - 0.5
-                diag(x) <- diag(x) + 1
-            }
-        }
-        sr <- apply(x, 1, sum)
-        sc <- apply(x, 2, sum)
-        E <- outer(sr, sc, "*")/n
-        g <- 0
-        for (i in 1:nrows) {
-            for (j in 1:ncols) {
-                if (x[i, j] != 0) 
-                  g <- g + x[i, j] * log(x[i, j]/E[i, j])
-            }
-            q <- 1
-            if (correct == "williams") {
-                row.tot <- col.tot <- 0
-                for (i in 1:nrows) {
-                  row.tot <- row.tot + 1/(sum(x[i, ]))
-                }
-                for (j in 1:ncols) {
-                  col.tot <- col.tot + 1/(sum(x[, j]))
-                }
-                q <- 1 + ((n * row.tot - 1) * (n * col.tot - 
-                  1))/(6 * n * (ncols - 1) * (nrows - 1))
-            }
-            STATISTIC <- G <- 2 * g/q
-            PARAMETER <- (nrow(x) - 1) * (ncol(x) - 1)
-            PVAL <- 1 - pchisq(STATISTIC, df = PARAMETER)
-            if (correct == "none") 
-                METHOD <- "Log likelihood ratio (G-test) test of independence without correction"
-            if (correct == "williams") 
-                METHOD <- "Log likelihood ratio (G-test) test of independence with Williams' correction"
-            if (correct == "yates") 
-                METHOD <- "Log likelihood ratio (G-test) test of independence with Yates' correction"
-        }
-    }
-    else {
-        METHOD <- "Log likelihood ratio (G-test) goodness of fit test"
-        if (length(dim(x)) > 2L) 
-            stop("invalid 'x'")
-        if (length(x) == 1L) 
-            stop("x must at least have 2 elements")
-        if (length(x) != length(p)) 
-            stop("'x' and 'p' must have the same number of elements")
-        if (any(p < 0)) 
-            stop("probabilities must be non-negative.")
-        if (abs(sum(p) - 1) > sqrt(.Machine$double.eps)) {
-            if (rescale.p) 
-                p <- p/sum(p)
-            else stop("probabilities must sum to 1.")
-        }
-        E <- n * p
-        if (correct == "yates") {
-            if (length(x) != 2) 
-                stop("Yates' correction requires 2 data values")
-            if ((x[1] - E[1]) > 0.25) {
-                x[1] <- x[1] - 0.5
-                x[2] <- x[2] + 0.5
-            }
-            else if ((E[1] - x[1]) > 0.25) {
-                x[1] <- x[1] + 0.5
-                x[2] <- x[2] - 0.5
-            }
-        }
-        names(E) <- names(x)
-        g <- 0
-        for (i in 1:length(x)) {
-            if (x[i] != 0) 
-                g <- g + x[i] * log(x[i]/E[i])
-        }
-        q <- 1
-        if (correct == "williams") {
-            q <- 1 + (length(x) + 1)/(6 * n)
-        }
-        STATISTIC <- G <- 2 * g/q
-        PARAMETER <- length(x) - 1
-        PVAL <- pchisq(STATISTIC, PARAMETER, lower.tail = FALSE)
-    }
-    names(STATISTIC) <- "G"
-    names(PARAMETER) <- "X-squared df"
-    names(PVAL) <- "p.value"
-    structure(list(statistic = STATISTIC, parameter = PARAMETER, 
-        p.value = PVAL, method = METHOD, data.name = DNAME, observed = x, 
-        expected = E), class = "htest")
-}
-
-```
+The *GTest* function from the **DescTools** package to employ this test.
 
 ```{r}
+library(DescTools)
 GTest(x = matrix(c(9,7,9,4), 2, 2, byrow = T))
 
 ```
@@ -688,97 +562,9 @@ rownames(bird_ratio_table) <- c("Male", "Female")
 ```
 
 Then we can run the test with the *pairwiseNominalIndependence* function
-from the **rcompanion** package. Loaded here due to issues with github
-rendering.
-
-```{r}
-pairwiseNominalIndependence <- function (x, compare = "row", fisher = TRUE, gtest = TRUE, chisq = TRUE, 
-    method = "fdr", correct = "none", stats = FALSE, cramer = FALSE, 
-    digits = 3, ...) 
-{
-    if (compare == "row") {
-        n = nrow(x)
-    }
-    if (compare == "column" | compare == "col") {
-        n = ncol(x)
-    }
-    N = n * (n - 1)/2
-    Z = data.frame(Comparison = rep("A", N), stringsAsFactors = FALSE)
-    p.Fisher = rep(NA, N)
-    p.Gtest = rep(NA, N)
-    p.Chisq = rep(NA, N)
-    Cramer = rep(NA, N)
-    Chisq = rep(NA, N)
-    df = rep(NA, N)
-    G = rep(NA, N)
-    k = 0
-    for (i in 1:(n - 1)) {
-        for (j in (i + 1):n) {
-            k = k + 1
-            if (compare == "row") {
-                Namea = as.character(rownames(x)[i])
-                Nameb = as.character(rownames(x)[j])
-                Dataz = matrix(c(x[i, ], x[j, ]), nrow = 2, byrow = TRUE)
-            }
-            if (compare == "column" | compare == "col") {
-                Namea = as.character(colnames(x)[i])
-                Nameb = as.character(colnames(x)[j])
-                Dataz = matrix(c(x[, i], x[, j]), ncol = 2, byrow = FALSE)
-            }
-            Z$Comparison[k] = paste0(Namea, " : ", Nameb)
-            if (fisher == TRUE) {
-                p.Fisher[k] = signif(fisher.test(Dataz, ...)$p.value, 
-                  digits = digits)
-            }
-            if (gtest == TRUE) {
-                p.Gtest[k] = signif(GTest(Dataz, correct = correct, 
-                  ...)$p.value, digits = digits)
-            }
-            if (chisq == TRUE) {
-                p.Chisq[k] = signif(chisq.test(Dataz, ...)$p.value, 
-                  digits = digits)
-            }
-            if (cramer == TRUE) {
-                Cramer[k] = cramerV(Dataz, digits = digits)
-            }
-            if (stats == TRUE) {
-                Chisq[k] = signif(suppressWarnings(chisq.test(Dataz, 
-                  ...))$statistic, digits = digits)
-                df[k] = signif(suppressWarnings(chisq.test(Dataz, 
-                  ...))$parameter, digits = digits)
-                G[k] = signif(GTest(Dataz, ...)$statistic, digits = digits)
-            }
-        }
-    }
-    if (stats == TRUE) {
-        Z$Chisq = Chisq
-        Z$df = df
-        Z$G = G
-    }
-    if (fisher == TRUE) {
-        Z$p.Fisher = p.Fisher
-        Z$p.adj.Fisher = signif(p.adjust(Z$p.Fisher, method = method), 
-            digits = digits)
-    }
-    if (gtest == TRUE) {
-        Z$p.Gtest = p.Gtest
-        Z$p.adj.Gtest = signif(p.adjust(Z$p.Gtest, method = method), 
-            digits = digits)
-    }
-    if (chisq == TRUE) {
-        Z$p.Chisq = p.Chisq
-        Z$p.adj.Chisq = signif(p.adjust(Z$p.Chisq, method = method), 
-            digits = digits)
-    }
-    if (cramer == TRUE) {
-        Z$Cramer.V = Cramer
-    }
-    return(Z)
-}
-```
-
-Note the function needs a table or matrix and to know which method to
-use to compare rows or columns. Looking at the table
+from the **rcompanion** package. Note the function needs a table or
+matrix and to know which method to use to compare rows or columns.
+Looking at the table
 
 ```{r}
 bird_ratio_table
@@ -787,6 +573,7 @@ bird_ratio_table
 Let' s us see we want to compare columns.
 
 ```{r}
+library(rcompanion)
 bonf_correct <- pairwiseNominalIndependence(bird_ratio_table, compare="col", method = "bonf")
 bonf_correct
 
