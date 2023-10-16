@@ -475,12 +475,9 @@ s_j^2 = \frac{\sum_{i=1}^{n_j} (Y_{ij}-\overline{Y_j})^2}{n_j-1} \sim \sigma_j^2
 </ul>
 <p><span class="math display">\[
 \begin{split}
-\frac{\sum_{j=1}^{j} (\overline{Y_j}-Y_{overall}{i})^2}{j-1} = \frac{s^2}{n}\\
-\textrm{where j is the number of groups. This can be multiplied by n to get s^2}\\
+\frac{\sum_{j=1}^{j} (\overline{Y_j}-Y_{overall}{i})^2}{j-1} = \frac{s^2}{n} \\
+\textrm{where j is the number of groups. This can be multiplied by n to get }s^2 \\
 \end{split}
-\]</span></p>
-<p><span class="math display">\[
-\frac{\sum_{j=1}^{j} (\overline{Y_j}-Y_{overall}{i})^2}{j-1} = \frac{s^2}{n}
 \]</span></p>
 <p>In other words, variance among groups should be equal to variance within groups. You should also note this means we can partition the variance for any given observation as its distance from its group mean and its group means distance from the overall</p>
 <p>Under the null hypothesis, the ratio of these estimates should tend towards 1. We can see this using a sampling experiment.</p>
@@ -1107,9 +1104,28 @@ Effect size: 0.846 </code></pre>
 <p>If needed, the <em>mcppb20</em> package allows for appropriate post-hoc comparisons.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc <span class="ot">&lt;-</span> <span class="fu">mcppb20</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span>
-<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(<span class="fu">as.numeric</span>(bootstrap_post_hoc<span class="sc">$</span>comp[,<span class="dv">6</span>]), <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df <span class="ot">&lt;-</span><span class="fu">data.frame</span>(bootstrap_post_hoc<span class="sc">$</span>comp)</span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>adjusted_p <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(<span class="fu">as.numeric</span>(bootstrap_post_hoc<span class="sc">$</span>comp[,<span class="dv">6</span>]), <span class="st">"holm"</span>)</span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group <span class="ot">&lt;-</span> <span class="fu">factor</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group)</span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plyr)</span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group <span class="ot">&lt;-</span> <span class="fu">revalue</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group,</span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">setNames</span>(                                      bootstrap_post_hoc<span class="sc">$</span>fnames,<span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(bootstrap_post_hoc<span class="sc">$</span>fnames))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following `from` values were not present in `x`: 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">factor</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span>)</span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">revalue</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span>,</span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">setNames</span>(                                      bootstrap_post_hoc<span class="sc">$</span>fnames,<span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(bootstrap_post_hoc<span class="sc">$</span>fnames))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following `from` values were not present in `x`: 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0 0 0</code></pre>
+<pre><code>       Group    Group.1     psihat  ci.lower   ci.upper p.value adjusted_p
+1     setosa versicolor -0.9100000 -1.143333 -0.7266667       0          0
+2     setosa  virginica -1.5466667 -1.836667 -1.3066667       0          0
+3 versicolor  virginica -0.6366667 -0.930000 -0.3666667       0          0</code></pre>
 </div>
 </div>
 </section>
@@ -1117,11 +1133,11 @@ Effect size: 0.846 </code></pre>
 <h3 class="anchored" data-anchor-id="permutation">Permutation</h3>
 <p>A new option when comparing groups (2 or more) is known as the permutation test. We encountered a similar approach when we learned about the Fisher’s test for binomial data. Using this approach, we can move the measurements between measured populations, calculate test statistics, and consider how unusual our observed statistic was (a p value!). We can do this for 2</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(coin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(coin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'coin' was built under R version 4.3.1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">independence_test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span>  two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">independence_test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span>  two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Asymptotic General Independence Test
@@ -1133,7 +1149,7 @@ alternative hypothesis: two.sided</code></pre>
 </div>
 <p>or 3+ populations</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">independence_test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span>  iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">independence_test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span>  iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Asymptotic General Independence Test
@@ -1145,7 +1161,7 @@ alternative hypothesis: two.sided</code></pre>
 </div>
 <p>Post-hoc test options are available in the <strong>rcompanion</strong> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'rcompanion' was built under R version 4.3.1</code></pre>
 </div>
@@ -1158,9 +1174,9 @@ Attaching package: 'rcompanion'</code></pre>
 
     quantileCI</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwisePermutationTest</span>(Sepal.Length <span class="sc">~</span> Species,</span>
-<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">data =</span> iris,</span>
-<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">method=</span><span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwisePermutationTest</span>(Sepal.Length <span class="sc">~</span> Species,</span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">data =</span> iris,</span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">method=</span><span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  Comparison   Stat   p.value  p.adjust
 1    setosa - versicolor = 0 -7.246  4.28e-13 8.560e-13
