@@ -28,8 +28,8 @@ and tested if it was equal to a given value (7.0 cm)
 
 $$
 \begin{split}
-H_O: \mu_{height} = 7 \ cm \\ 
-H_A: \mu_{height} \neq 7 \ cm 
+H_O: \mu_{sepal \ length} = 7 \ cm \\ 
+H_A: \mu_{sepal \ length} \neq 7 \ cm 
 \end{split}
 $$
 
@@ -76,8 +76,8 @@ are then
 
 $$
 \begin{split}
-H_O: \mu_{height, setosa} = \mu_{height, virginica} = \mu_{height, versicolor}\\  
-H_A: \mu_{height, setosa} \neq \mu_{height, virginica} \neq \mu_{height, versicolor}\\ 
+H_O: \mu_{sepal \ length, \ setosa} = \mu_{sepal \ length, \ virginica} = \mu_{sepal \ length, \ versicolor}\\  
+H_A: \mu_{sepal \ length, \ setosa} \neq \mu_{sepal \ length, \ virginica} \neq \mu_{sepal \ length, \ versicolor}\\ 
 \end{split}
 $$
 
@@ -89,18 +89,14 @@ To visualize this, we could use
 colors <- c("group means" = "black", "overall average" = "orange")
 ggplot(iris, aes(Species,Sepal.Length)) + 
   geom_jitter(aes(colour=Species), size = 3) +
-  ylab("Sepal Length (cm)")+ggtitle("Sepal Length of various iris species")+
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold")) +
   geom_errorbar(aes(ymin=Sepal.Length, ymax=Sepal.Length, color="group means"), 
                 data = function_output) +
     geom_hline(aes(yintercept=mean(Sepal.Length),  color = "overall average"))+
-  scale_color_manual(values=colors)
+  scale_color_manual(values=colors)+
+    labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species", 
+       color= "Focus")
 ```
 
 Like our earlier considerations of variance and SSE, the data will
