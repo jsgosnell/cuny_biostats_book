@@ -750,8 +750,17 @@ comparisons.
 
 ```{r}
 bootstrap_post_hoc <- mcppb20(Sepal.Length~Species, iris)
-p.adjust(as.numeric(bootstrap_post_hoc$comp[,6]), "holm")
+bootstrap_post_hoc_df <-data.frame(bootstrap_post_hoc$comp)
+bootstrap_post_hoc_df$adjusted_p <- p.adjust(as.numeric(bootstrap_post_hoc$comp[,6]), "holm")
+bootstrap_post_hoc_df$Group <- factor(bootstrap_post_hoc_df$Group)
+library(plyr)
+bootstrap_post_hoc_df$Group <- revalue(bootstrap_post_hoc_df$Group,
+                                       setNames(                                      bootstrap_post_hoc$fnames,as.character(1:length(bootstrap_post_hoc$fnames))))
+bootstrap_post_hoc_df$Group.1 <- factor(bootstrap_post_hoc_df$Group.1)
 
+bootstrap_post_hoc_df$Group.1 <- revalue(bootstrap_post_hoc_df$Group.1,
+                                       setNames(                                      bootstrap_post_hoc$fnames,as.character(1:length(bootstrap_post_hoc$fnames))))
+bootstrap_post_hoc_df
 ```
 
 ### Permutation
