@@ -1,0 +1,801 @@
+---
+title: More ANOVAs
+subtitle: Dealing with multiple group membership and interactions
+bibliography: references.bib
+---
+
+In the last chapter we introduced the idea of comparing means among
+populations (one-way ANOVAs, our first linear models). However, the
+units that we measure may belong to multiple groups. We will extend our
+analysis of variance to consider multiple group membership and
+interactions in this chapter.
+
+## Example: Back to the birds
+
+One of the last chapters practice problems.
+
+When we introduced NHST for continuous data, we focused on sepal length
+from *I. virginica*.
+
+```{r}
+set.seed(42)
+library(ggplot2)
+ggplot(iris[iris$Species == "virginica",],
+              aes(x=Sepal.Length)) +
+  geom_histogram( fill="blue", color="black") +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"))),
+       x= "Sepal length (cm)",
+       y= "Frequency")
+```
+
+and tested if it was equal to a given value (7.0 cm)
+
+$$
+\begin{split}
+H_O: \mu_{sepal \ length} = 7 \ cm \\ 
+H_A: \mu_{sepal \ length} \neq 7 \ cm 
+\end{split}
+$$
+
+We then considered how to assess these types of hypotheses using z, t,
+Wilcoxon, and sign tests.
+
+However, as we noted in the last chapter, we often instead have data
+from multiple populations. For example, we may have data from 3 species
+of flowers. We commonly see this data plotted as a bar chart with error
+bars
+
+```{r, echo = F}
+library(Rmisc)
+function_output <- summarySE(iris, measurevar="Sepal.Length", groupvars =
+                               c("Species"))
+
+ggplot(function_output, aes(y=Sepal.Length, x=Species, fill=Species)) +
+  geom_col(aes(fill=Species)) +
+    geom_errorbar(aes(ymin=Sepal.Length-ci, ymax=Sepal.Length+ci)) +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species")
+```
+
+What do we test now and how?
+
+## Welcome to ANOVAs
+
+As previously noted, we can't compare heights among group. Height is a
+random variable, and it's highly unlikely they will be exactly the same.
+Seeing the actual data may help us remember this.
+
+```{r}
+ggplot(iris, aes(y=Sepal.Length, x=Species, color=Species)) +
+  geom_jitter() +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species")
+```
+
+So we typically focus on a parameter that describes the distribution of
+a focal trait, such as the mean. Just like binomial data, our hypotheses
+are then
+
+$$
+\begin{split}
+H_O: \mu_{sepal \ length, \ setosa} = \mu_{sepal \ length, \ virginica} = \mu_{sepal \ length, \ versicolor}\\  
+H_A: \mu_{sepal \ length, \ setosa} \neq \mu_{sepal \ length, \ virginica} \neq \mu_{sepal \ length, \ versicolor}\\ 
+\end{split}
+$$
+
+Given that, our overall idea is to consider if the data are better
+explained by an overall group average or by species-specific averages.
+To visualize this, we could use
+
+```{r}
+colors <- c("group means" = "black", "overall average" = "orange")
+ggplot(iris, aes(Species,Sepal.Length)) + 
+  geom_jitter(aes(colour=Species), size = 3) +
+  geom_errorbar(aes(ymin=Sepal.Length, ymax=Sepal.Length, color="group means"), 
+                data = function_output) +
+    geom_hline(aes(yintercept=mean(Sepal.Length),  color = "overall average"))+
+  scale_color_manual(values=colors)+
+    labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species", 
+       color= "Focus")
+```
+
+Like our earlier considerations of variance and SSE, the data will
+obviously be fit better by species-specific averages. Its impossible for
+them to do worse than the overall average, and at worst they all *are*
+the group average. However, we should also remember that these are
+samples, so we know sampling error is an issue. Therefore, we have to
+consider if the species-specific averages do enough of a better job
+explaining the data to warrant using them. To put this in our SSE and
+hypothesis framework, we need to consider if a more complicated view of
+the world is worth it.
+
+To test this, we can (as always) carry out a sampling experiment. The
+general idea is that species does snot matter (just like we saw in
+contingency analysis). Given that, we can draw samples that match our
+respective sample sizes for each population from a single population.
+The mean can be set as the pooled mean for the data (since under the
+null tested factors don't matter). Since we don't know or set sigma, we
+can again estimate it from the data. One such sample might look like
+
+```{r}
+variance_estimate <- sum((function_output$N -1) * (function_output$sd)^2)/(sum(function_output$N)-length(function_output$N))
+mean_sepal <- mean(iris$Sepal.Length)
+simulated_data <- data.frame(Species=c(rep("setosa", 50), 
+                                       rep("versicolor", 50),
+                                       rep("virginica",50)),
+                             Sepal.Length=rnorm(150, mean_sepal, 
+                                          sd= sqrt(variance_estimate)))
+
+function_output <- summarySE(simulated_data, measurevar="Sepal.Length", groupvars =
+                               c("Species"))
+
+ggplot(simulated_data, aes(Species,Sepal.Length)) + 
+  geom_jitter(aes(colour=Species), size = 3) +
+  ylab("Sepal Length (cm)")+ggtitle("Sepal Length of various iris species")+
+  theme(axis.title.x = element_text(face="bold", size=28), 
+        axis.title.y = element_text(face="bold", size=28), 
+        axis.text.y  = element_text(size=20),
+        axis.text.x  = element_text(size=20), 
+        legend.text =element_text(size=20),
+        legend.title = element_text(size=20, face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  geom_errorbar(aes(ymin=Sepal.Length, ymax=Sepal.Length, color="group means"), 
+                data = function_output) +
+    geom_hline(aes(yintercept=mean(Sepal.Length),  color = "overall average"))+
+  scale_color_manual(values=colors)
+```
+
+As expected, under the null hypothesis the overall and species-specific
+averages are closer. Now that we have the data, however, we are stuck
+with a new question: What is our test statistic?
+
+In general, using a difference among means makes sense for cases when we
+have only 2 populations. This will be used when we introduce t-tests.
+However, it does not work for 3+ populations, so we will need a
+different approach.
+
+ANOVAs offer an approach that can be used for any group of 2+
+populations when certain assumptions are met. ANOVAs stands for
+*analysis of variance* which may seem odd given our hypotheses are
+focused on means. However, the idea (not fully developed here) is that
+we can get an overall estimate of variance by
+
+-   calculating variance for each point around its respective
+    group-specific mean
+
+    -   this leads to 3 estimates of variance, which we can multiple by
+        (n-1) to account for differences in sample size and then divide
+        by the number of groups to get an overall estimate of variance
+        -   this is referred to as mean square error
+
+    $$
+    \begin{split}
+    \textrm{Remember, }s^2 = \frac{\sum_{i=1}^{n} (Y_{i}-\overline{Y})^2}{n-1} \sim \sigma^2\\
+    \textrm{So if we have j groups, for each group we can see}\\
+     s_j^2 = \frac{\sum_{i=1}^{n_j} (Y_{ij}-\overline{Y_j})^2}{n_j-1} \sim \sigma_j^2\\
+     \textrm{which we can combine to estimate }\sigma_{overall}\\
+     \frac{(n_1-1)s_1^2 + (n_2-1)s_2^2 ...(n_j-1)s_j^2}{n_1+n_2+...n_j-1} = s_{overall}^2\\
+    \end{split}
+    $$
+
+-   calculating variance for each group mean around the overall mean
+
+    -   this is called mean square treatment
+
+$$
+\begin{split}
+\frac{\sum_{j=1}^{j} (\overline{Y_j}-Y_{overall}{i})^2}{j-1} = \frac{s^2}{n} \\
+\textrm{where j is the number of groups. This can be multiplied by n to get }s^2 \\
+\end{split}
+$$
+
+In other words, variance among groups should be equal to variance within
+groups. You should also note this means we can partition the variance
+for any given observation as its distance from its group mean and its
+group means distance from the overall
+
+Under the null hypothesis, the ratio of these estimates should tend
+towards 1. We can see this using a sampling experiment.
+
+```{r}
+#sample
+  ratio <- data.frame(rep = 1:10000, mse = rep(NA,10000), 
+                      msg = rep(NA,10000), ratio = rep(NA,10000))
+for(i in 1:10000){
+    setosa <- rnorm(50, mean_sepal, sd= sqrt(variance_estimate))
+    versicolor <- rnorm(50, mean_sepal, sd= sqrt(variance_estimate))
+    virginica <- rnorm(50, mean_sepal, sd= sqrt(variance_estimate))
+    mean_overall <- mean(c(setosa, versicolor, virginica))
+    ratio$mse[i] <- (49 * var(setosa) + 49 * var(versicolor) + 49 * var(virginica))/(150 - 3)
+    ratio$msg[i] <- (50 * (mean(setosa)-mean_overall)^2 + 
+                 50 * (mean(versicolor)-mean_overall)^2 + 
+                 50 * (mean (virginica)-mean_overall)^2)/2
+    ratio$ratio[i] <- ratio$msg[i]/ratio$mse[i]
+}
+  
+summary(lm(Sepal.Length~Species, iris))$fstatistic[1]
+  
+  
+ggplot(ratio, aes(ratio)) +
+    geom_histogram(aes(y=..count../sum(..count..)), fill = "orange", bins=15)+
+    labs(main = "Ratio under null hypothesis", y= "Probability")
+```
+
+Using this approach, we could determine how unusual our data were (get a
+p-value!). However, finding a distribution that approximates this shape
+would make future work easier. It turns out all the squared terms above
+lead to this being a rato of $\chi^2$ distributions, where the numerator
+has degrees of freedom j-1 (# of groups - 1) and the numerator had
+degrees of freedom n-j-1; the "lost" degrees of freedom are used to
+estimate group and overall means.
+
+```{r}
+ggplot(ratio, aes(ratio)) +
+    geom_histogram(aes(y=..count../sum(..count..)), fill = "orange", bins = 15) +
+    labs(main = "Ratio under null hypothesis", y= "Probability")+
+    stat_function(fun = df, args = list(df1 =2, df2 = 147), color = "green")   
+
+```
+
+In our data, we found a signal of
+`r as.character(summary(lm(Sepal.Length~Species, iris))$fstatistic[1])`!
+This is going to lead to a very low p-value.
+
+## Welcome to the linear model
+
+An ANOVA is just one case of a linear model. We will fully explore these
+later, but noting this now is useful in that all linear models have the
+same sets of assumptions. In general, linear models assume the
+*residuals* of the model are are independent, identically distributed,
+and follow a normal distribution. You'll sometime see this written as
+
+$$
+\epsilon \approx i.i.d.\ N(\mu,\sigma)
+$$ But what does this mean?
+
+Residuals are the distance between a measurement and its model-predicted
+value. A closely related term, error, is actually the distance between a
+measurement and the unknown population mean for a group. Linear models
+assume the residuals are independent of each other (this follows from
+independent data points) and that their spread (around their predicted
+values) is normally distributed and similar for all points.
+
+Understanding this explains two key points. The residuals, not the data,
+need to be normally distributed. Also, we have to build the model to get
+the residuals, then we check the assumptions.
+
+We can do this in R using the *lm* function. This approach also lets us
+use a single set of functions to build many model types. As always,
+there are many ways to do anything in R, so there are specific ANOVA
+functions that we will not introduce here.
+
+For our data, we can build an lm object
+
+```{r}
+iris_anova <- lm(Sepal.Length~Species, iris)
+```
+
+then use *plot* to check the assumptions.
+
+```{r}
+plot(iris_anova)
+```
+
+These 4 plots focus on the residuals (not the data).
+
+-   The **Residuals vs fitted** plot allows us to see if the residuals
+    are identically distributed - we want to see a flat red line and no
+    structure to the residuals in regards to their spread or location.
+    Note we only have 3 fitted values here (matching our 3 group means),
+    so will see "lines" of data in one-way ANOVAs (another name for what
+    we are doing here).\
+-   The **Q-Q Residuals** plot allows us to assess normality - points
+    should be on the line
+-   The other 2 graphs give show different forms of residuals against
+    the fitted values. We will return to them later.
+
+If our assumptions are met, we can look at the output. One way to do
+this is using the *summary* function.
+
+```{r}
+summary(iris_anova)
+```
+
+This output may be confusing, however. The overall p value shown in the
+bottom right is for the entire model - that works for now, but soon
+won't. We also see individual p values for 2 levels of species, plus an
+odd intercept term.
+
+These are model artifacts and may be confusing. R lets the first factor
+level (typically alphabetical) be an intercept for the linear model, and
+then considers the other factor levels as deviations from that. It also
+shows if all the resulting *Estimates* are significantly different from
+0. Note this means a significant intercept term does not mean your
+groups actually differ.
+
+Given these issues, why use the summary command? It does present some
+other useful information. For example, the R^2^ values is a measure of
+how variation the model explains. It can range from 0 (the model
+explains nothing) to 1 (all residuals are zero, in this case meaning all
+members of a given species have the exact same height). The
+adjusted-R^2^ value is similar, but it adjusts the measure to account
+for the fact more complex models will always explain more variation.
+
+You can also remove the intercept to get group estimates for all groups
+
+```{r}
+summary(lm(Sepal.Length~Species-1, iris))
+```
+
+Note these match our group means, which is good, but the overall p value
+is now less useful (it compares our data to a null that assumes
+everything is equal to 0), and the output is still confusing.
+
+Since we are doing an omnibus test, what we typically want is a single p
+value associated with our factor of interest (species in this case). To
+get that, we'll use the *Anova* function from the **car** package.
+
+```{r}
+library(car)
+Anova(iris_anova, type="III")
+```
+
+<details>
+
+<summary>What does type="III" mean</summary>
+
+Residuals can be calculated in multiple ways. For simple models (those
+with one variable) most calculations lead to the same answer. When we
+start adding multiple factors to a model and/or interactions, however,
+they differ. In short, Type I residuals consider the order in which
+factors are added to a model, and type 2 do not consider interactions.
+We will stick with type III for this class.
+
+\<\details\>
+
+Doing this we see Species has a significant impact on explaining
+variation in the data (and our very high F value). So we reject the null
+hypothesis that mean sepal length does not differ among species. Now
+what?
+
+## Post-hoc tests
+
+Just like for a multi-population $\chi^2$ tests, we need to do follow-up
+tests to compare groups while controlling for the FWER. For linear
+models (and more), we will use the *glht* function from the **multcomp**
+package to conduce these tests.
+
+```{r}
+library(multcomp)
+compare_cont_tukey <- glht(iris_anova, linfct = mcp(Species = "Tukey"))
+summary(compare_cont_tukey)
+```
+
+Our first approach uses a new (to us) method. It is **not exactly**
+Tukey's method (very confusing) but is closely related to it. Tukey's
+method is focuses on all possible pair-wise comparisons and controls for
+the FWER using a studentized range approach (not fully developed here,
+but similar to z-transform but focused on the range of means and using
+the estimated standard deviation; similar to t-statistic in this aspect
+and also developed by Student). It is also called Tukey's Honestly
+Significant Difference/HSD, Tukey-Kramer method, and many other names.
+In *glht*, specifying "Tukey" tells the program to do all possible pairs
+comparison (like Tukey's method). The post-hoc control for FWER,
+however, uses a slightly different approach that can handle interactions
+(still to be explained) and some other things a little bit easier.
+
+Using this approach we see that all species differ significantly from
+all others; the output also provides estimates of the differences, which
+match up with our model summary output.
+
+We can also use the methods we previously discussed such as Bonferroni
+and FDR. These requre us to set up the comparisons, which also means we
+can limit our number of tests if so desired. For example, we could focus
+only on differences with *I. virginica*.
+
+```{r}
+compare_virginica_only <- glht(iris_anova, linfct = mcp(Species = 
+                                                                c("virginica - versicolor = 0", 
+                                                                  "virginica - setosa = 0")))
+```
+
+After setting up the comparison, we can specify the method to use to
+correct for FWER,
+
+```{r}
+summary(compare_virginica_only, test=adjusted("holm")) 
+summary(compare_virginica_only, test=adjusted("fdr")) 
+```
+
+Note for our small number of tests and relatively large differences in
+means and large sample sizes, differences in p values are minimal.
+
+There are instances when FWER are not an issue and thus p values do not
+need to be adjusted. This occurs when we explore *orthogonal contrasts*.
+
+## A little deeper into linear models
+
+Let's return to linear models to help explain orthogonal contrasts (and
+some other things). Linear models are a sysem of equations (a matrix),
+where
+
+$$
+\begin{split}
+Y=X\beta+\epsilon, \textrm{ where }\\
+\textrm{Y is our observations (an nx1 matrix)}\\
+\textrm{X is a matrix showing our explanatory variables (an nxk matrix)}\\
+\beta \textrm{ is our coefficient matrix(an kx1 matrix)}\\
+\epsilon \textrm{is a matrix (an nx1) of residuals)}\\
+\end{split}
+$$
+
+In our case, $\beta$ is simply a 3x1 matrix where each entry is a
+species average (or one is an intercept and other two are distances from
+it - same thing) and X is a matrix with dummy variables (1 or 0)
+indicating which group each observation belongs too. X is sometimes
+called a model or design matrix. We can see this using R. First, we can
+pull the design matrix from our model object
+
+```{r}
+library(rmarkdown)
+paged_table(data.frame(model.matrix(iris_anova)))
+```
+
+We can also pull the model coefficients, which form our $\beta$ matrix,
+and place them in the correct orientation.
+
+```{r}
+matrix(as.numeric(iris_anova$coefficients), ncol=1)
+
+```
+
+So for our first observation, which is
+
+```{r}
+iris[1,]
+```
+
+We would multiply (remember, rows get multiplied by columns in matrices)
+
+```{r}
+1*5.006 + 0*.930+0*1.58
+```
+
+This explains why all our fitted values are one of three values! We can
+also see our observation minus prediction
+
+```{r}
+iris[1,"Sepal.Length"]-1*5.006 + 0*.930+0*1.58
+```
+
+matches our first model residual
+
+```{r}
+iris_anova$residuals[1]
+```
+
+Understanding this general setup explains a few things. When models get
+more complicated you may see errors or warnings related to singularity.
+This occurs when X^T^X isn't invertible(linear algebra!), which it needs
+to be to find $\beta$. This occurs if columns in your design matrix are
+not independent and are actually linear combinations of each other. This
+happens when you have highly related measurements (we'll discuss
+correlation eventually so you can actually measure this!). We will use
+similar manipulations to eventually find the $\hat{H}$ matrix when we
+consider Cook's Distance (in regression chapter). Degrees of freedom are
+similarly related to the number of estimated coefficients the model
+required (the number of rows in the $\beta$ matrix).
+
+Returning to our contrasts, note when we do post-hoc tests we are
+effectively testing for differences in $\beta$ values. We can put these
+"tests" in a similar system of equations/matrix. For these tests, the
+coefficients have to equal 0. For pair comparisons, that means we have 1
+for one coeffcient and -1 for the other (for example, (1,-1,0). However,
+we can also compare one coefficient to the average of the others
+(2,-1,-1). We could write these two contrasts as
+
+$$
+\begin{bmatrix}
+1 & -1 & 0 \\
+2 & 1 & 1 \\
+\end{bmatrix}
+$$
+
+A group of contrasts are orthogonal if the sum of the multiplied
+coefficients from each column equals zero. In this case
+
+```{r}
+1*2 + -1*1 + 0*1
+```
+
+does not equal 0, so these are not orthogonal contrasts. This is also
+because I can add add the first and third column and get the second
+(columns are not independent). However, if we instead carried out these
+contrasts
+
+$$
+\begin{bmatrix}
+2 & -1 & -1 \\
+0 & 1 & -1\\
+\end{bmatrix}
+$$
+
+they would be independent. There are other options as well, as we can
+always find a number of orthogonal contrasts equal to the number of
+groups being compared minus one.
+
+Resulting p values would not required correction for FWER. We can
+specify contrasts like this using *glht*. Below I do the same matrix,
+but note I set the maximum entry to 1 so that estimate of mean
+differences aren't doubled.
+
+```{r}
+contr <- rbind("setosa - versicolor - virginica" = c(1, -.5,-.5),
+               "versicolor - virginica" = c(0,1,-1))
+summary(glht(iris_anova, linfct = mcp(Species = contr)), test=adjusted("none"))
+```
+
+## Displaying output of post-hoc tests
+
+Output from post-hoc tests is often displayed using compact letter
+display. Groups that are not significantly differently share the same
+letter (so in this case they all have different letters).
+
+```{r}
+cld_output <- fortify(cld(compare_cont_tukey))
+cld_output$Species <- cld_output$lhs
+
+function_output <- summarySE(iris, measurevar="Sepal.Length", groupvars =
+                               c("Species"))
+
+function_output <- merge(function_output, cld_output)
+
+ggplot(function_output, aes(y=Sepal.Length, x=Species, fill=Species)) +
+  geom_col(aes(fill=Species)) +
+    geom_errorbar(aes(ymin=Sepal.Length-ci, ymax=Sepal.Length+ci)) +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species")+
+  geom_text(aes(label=letters,y=Sepal.Length+3*ci))
+```
+
+Other options include plotting the differences in means
+
+```{r}
+plot(compare_cont_tukey)
+```
+
+```{r, eval=F, echo=F}
+#hidden for now as library not working
+#Another option using the ggstatsplot package.  
+library(ggstatsplot)
+ggstatsplot::ggbetweenstats(
+  data = PlantGrowth,
+  x = group,
+  y = weight,
+  pairwise.comparisons = TRUE,
+  pairwise.display = "all",
+  p.adjust.method = "Tukey"
+)
+```
+
+### emmeans: another option
+
+Another popular package for conducting posthoc comparison in R is
+emmeans. The package has a great starters guide
+[here](https://cran.r-project.org/web/packages/emmeans/vignettes/AQuickStart.html){target="_blank"}
+
+## T-test connections
+
+So far we have focused on comparing means among multiple groups. This
+can include include comparing means between only 2 groups (which we
+already do for the post-hoc tests). In doing this we also introduced new
+post-hoc tests and the ideas of a linear model.
+
+The linear model framework will unify most of the remaining tests we
+learn in class. In fact, several tests we've already learned can be
+formulated this way. This is extremely useful given we want statistics
+to be a related set of tests in a comprehensive framework.
+
+There are many ways to teach statistics, however, and a long history of
+tests. Many textbooks and approaches build up from one sample tests by
+moving to two-sample t-tests. These tests bridge the logic noted above
+and the approach we used for single-sample t-test. This is because the
+t-distribution is a special case of the F distribution. It occurs when
+the square root of an F distribution with 1 degree of freedom in the
+numerator is considered. Thus the degrees of freedom associated with a
+t-test will be equal to the degrees of freedom associated with the
+denominator of the associated F-test.
+
+2-sample t-tests may also an easier approach to first considering
+differences among groups since with only 2 populations the difference in
+means may be considered. However, it can be shown (not here) this is
+simply a rearrangement of our exploration of variances.
+
+To demonstrate this, let's only consider two species. Note
+
+```{r}
+two_species_subset <- iris[iris$Species!="setosa",]
+t.test(Sepal.Length ~ Species, two_species_subset, var.equal=T)
+```
+
+yields the same p-value as
+
+```{r}
+Anova(lm(Sepal.Length ~ Species, two_species_subset), type="III")
+```
+
+Also note the t statistic is the square root of the F statistic.
+
+```{r}
+-5.6292^2
+```
+
+Note the t.test function can also use columns holding data from each
+population as arguments as opposed to the formula interface, but we will
+not use that approach here.
+
+The var.equal=T argument, however, is not the default in R, and this
+assumption is one of the major differences in 2-sample t-tests and F
+tests. Remember, ANOVAs and t-tests both require estimates for sigma. If
+we do not assume the variances are equal for each group, then the best
+way to estimate the variance is to calculate the variance for each group
+and take a weighted (by sample size mean). This approach is known as the
+Behren-Fisher or Welsh t-test.
+
+```{r}
+t.test(Sepal.Length ~ Species, two_species_subset)
+```
+
+The resulting statistics has a distrubtion that can be approximated by a
+t-distribution, but the associated degrees of freedom can can be
+non-integer (decimal) and less than (n~1~+ n~2~ - 2).
+
+This means the basic assumptions for 2-sample t-tests are independent
+data points, groups show the same variance, and means are normally
+distributed. Much like the one-sample t-test, the central limit theorem
+implies assumptions about the mean distribution are commonly met.
+However, if they are not met, we have a few common options.
+
+## Non-parametric connections
+
+Options for when assumptions of the t- and F-tests (ANOVAs) are
+presented below. Note given the history of t-tests being considered
+apart from ANOVAs, some functions only work with less than 2 populations
+while others work with three or more. However, the overall approaches
+are similar.
+
+### Ranks: Wilcoxon/Mann-Whitney U and Kruskal-Wallis test
+
+We can extend the Wilcoxon test to 2-samples. To do so, we rank the data
+points from smallest to largest. The ranks are then used to calculate a
+U statistic. The statistic sums the ranks for each group (r), then uses
+them to calculate
+
+$$
+U_1 = n_1n_2+\frac{n_1(n_1+1)}{2}-r_1
+$$ The U statistics is calculated for each group. The larger U value is
+then taken and used to compute a p value. We can calculate this using
+the *wilcox.test* function,
+
+```{r}
+wilcox.test(Sepal.Length ~ Species, two_species_subset)
+```
+
+This test assumes the two distributions being considered have similar
+shape (not that the resulting means are normally-distributed). If you
+remove the default continuity correction (applied as we approximate
+discrete data with a continuous distribution)
+
+```{r}
+wilcox.test(Sepal.Length ~ Species, two_species_subset, correct=F)
+```
+
+We get the same result as the Kruskal-Wallis test
+
+```{r}
+kruskal.test(Sepal.Length ~ Species, two_species_subset)
+```
+
+which is a rank-based test that can be applied to 3+ populations.
+
+```{r}
+kruskal.test(Sepal.Length ~ Species, data = iris)
+```
+
+If we have more than three populations and this omnibus test reveals a
+significant p-value, we can follow it up with appropriate post-hoc
+tests.
+
+```{r}
+pairwise.wilcox.test(iris$Sepal.Length, 
+                          iris$Species, 
+                          p.adjust.method="holm")
+```
+
+### Bootstrapping
+
+Another option is to extend the bootstrapping option. Although we could
+again develop a simulation using the *boot* function again, here we
+again use the **MKinfer** package.
+
+```{r}
+library(MKinfer)
+boot.t.test(Sepal.Length ~ Species, two_species_subset)
+```
+
+note we can also run this test without assuming variances are
+differenct.
+
+```{r}
+boot.t.test(Sepal.Length ~ Species, two_species_subset, var.equal=T)
+```
+
+Both these approaches also show the corresponding t-test results, but
+note you should choose which test you plan to use before seeing the
+results!
+
+For more than 2 groups, the *t1waybt* function in the **WRS2** package
+can allow comparison.
+
+```{r}
+library(WRS2)
+t1waybt(Sepal.Length~Species, iris)
+```
+
+If needed, the *mcppb20* package allows for appropriate post-hoc
+comparisons.
+
+```{r}
+bootstrap_post_hoc <- mcppb20(Sepal.Length~Species, iris)
+bootstrap_post_hoc_df <-data.frame(bootstrap_post_hoc$comp)
+bootstrap_post_hoc_df$adjusted_p <- p.adjust(as.numeric(bootstrap_post_hoc$comp[,6]), "holm")
+bootstrap_post_hoc_df$Group <- factor(bootstrap_post_hoc_df$Group)
+library(plyr)
+bootstrap_post_hoc_df$Group <- revalue(bootstrap_post_hoc_df$Group,
+                                       setNames(                                      bootstrap_post_hoc$fnames,as.character(1:length(bootstrap_post_hoc$fnames))))
+bootstrap_post_hoc_df$Group.1 <- factor(bootstrap_post_hoc_df$Group.1)
+
+bootstrap_post_hoc_df$Group.1 <- revalue(bootstrap_post_hoc_df$Group.1,
+                                       setNames(                                      bootstrap_post_hoc$fnames,as.character(1:length(bootstrap_post_hoc$fnames))))
+bootstrap_post_hoc_df
+```
+
+### Permutation
+
+A new option when comparing groups (2 or more) is known as the
+permutation test. We encountered a similar approach when we learned
+about the Fisher's test for binomial data. Using this approach, we can
+move the measurements between measured populations, calculate test
+statistics, and consider how unusual our observed statistic was (a p
+value!). We can do this for 2
+
+```{r}
+library(coin)
+independence_test(Sepal.Length ~ Species, data =  two_species_subset)
+```
+
+or 3+ populations
+
+```{r}
+independence_test(Sepal.Length ~ Species, data =  iris)
+```
+
+Post-hoc test options are available in the **rcompanion** package.
+
+```{r}
+library(rcompanion)
+pairwisePermutationTest(Sepal.Length ~ Species,
+                             data = iris,
+                             method="holm")
+```
+
+## Next steps
+
+Our following chapters will extend ANOVAs to consider the impact of
+multiple measured categories. In doing so, we will also explain paired
+t-tests and sign tests for paired data.
