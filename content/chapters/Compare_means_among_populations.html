@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Biostatistics! - Comparing means among groups</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../content/acknowledgements.html" rel="next">
+<link href="../../content/Compare_proportions_among_populations.html" rel="prev">
+<link href="../../images/favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/Compare_means_among_populations.html">Compare means among groups</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header sidebar-header-stacked">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../images/image-from-rawpixel-id-547642-jpeg.jpg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Biostatistics: Concepts and approaches for collecting good data and turning it into knowledge!</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://www.gosnelllab.com/" rel="" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
+    <a href="https://github.com/jsgosnell" rel="" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Getting started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/getting_started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Before the first class</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Chapters</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Acquiring_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acquiring data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/summarizing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Summarizing data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Estimation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Probability</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Binomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hypothesis testing starting with binomial tests</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Tests_for_continuous_data_from_one_sample.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tests for continuous data from one sample</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Compare_proportions_among_populations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compare proportions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Compare_means_among_populations.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Compare means among groups</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/acknowledgements.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acknowledgements</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/additional_resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Additional resources</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/references.bib" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Download a full reference list!</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Practice Problems</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/6_Comparing_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compare means among groups</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Intro_to_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting started with R!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Intro_to_Rmd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting started with Rmarkdown!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Intro_to_ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting started with ggpplot2!</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#example-back-to-the-iris" id="toc-example-back-to-the-iris" class="nav-link active" data-scroll-target="#example-back-to-the-iris">Example: Back to the iris</a></li>
+  <li><a href="#welcome-to-anovas" id="toc-welcome-to-anovas" class="nav-link" data-scroll-target="#welcome-to-anovas">Welcome to ANOVAs</a></li>
+  <li><a href="#welcome-to-the-linear-model" id="toc-welcome-to-the-linear-model" class="nav-link" data-scroll-target="#welcome-to-the-linear-model">Welcome to the linear model</a></li>
+  <li><a href="#post-hoc-tests" id="toc-post-hoc-tests" class="nav-link" data-scroll-target="#post-hoc-tests">Post-hoc tests</a></li>
+  <li><a href="#a-little-deeper-into-linear-models" id="toc-a-little-deeper-into-linear-models" class="nav-link" data-scroll-target="#a-little-deeper-into-linear-models">A little deeper into linear models</a></li>
+  <li><a href="#displaying-output-of-post-hoc-tests" id="toc-displaying-output-of-post-hoc-tests" class="nav-link" data-scroll-target="#displaying-output-of-post-hoc-tests">Displaying output of post-hoc tests</a>
+  <ul class="collapse">
+  <li><a href="#emmeans-another-option" id="toc-emmeans-another-option" class="nav-link" data-scroll-target="#emmeans-another-option">emmeans: another option</a></li>
+  </ul></li>
+  <li><a href="#t-test-connections" id="toc-t-test-connections" class="nav-link" data-scroll-target="#t-test-connections">T-test connections</a></li>
+  <li><a href="#non-parametric-connections" id="toc-non-parametric-connections" class="nav-link" data-scroll-target="#non-parametric-connections">Non-parametric connections</a>
+  <ul class="collapse">
+  <li><a href="#ranks-wilcoxonmann-whitney-u-and-kruskal-wallis-test" id="toc-ranks-wilcoxonmann-whitney-u-and-kruskal-wallis-test" class="nav-link" data-scroll-target="#ranks-wilcoxonmann-whitney-u-and-kruskal-wallis-test">Ranks: Wilcoxon/Mann-Whitney U and Kruskal-Wallis test</a></li>
+  <li><a href="#bootstrapping" id="toc-bootstrapping" class="nav-link" data-scroll-target="#bootstrapping">Bootstrapping</a></li>
+  <li><a href="#permutation" id="toc-permutation" class="nav-link" data-scroll-target="#permutation">Permutation</a></li>
+  </ul></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Compare_means_among_populations.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Compare_means_among_populations.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Comparing means among groups</h1>
+<p class="subtitle lead">More multiple populations!</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>In the last chapter we introduced the idea of comparing parameters among populations. Now we will extend those ideas to instances when continuous data is collected.</p>
+<section id="example-back-to-the-iris" class="level2">
+<h2 class="anchored" data-anchor-id="example-back-to-the-iris">Example: Back to the iris</h2>
+<p>When we introduced NHST for continuous data, we focused on sepal length from <em>I. virginica</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length)) <span class="sc">+</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>and tested if it was equal to a given value (7.0 cm)</p>
+<p><span class="math display">\[
+\begin{split}
+H_O: \mu_{sepal \ length} = 7 \ cm \\
+H_A: \mu_{sepal \ length} \neq 7 \ cm
+\end{split}
+\]</span></p>
+<p>We then considered how to assess these types of hypotheses using z, t, Wilcoxon, and sign tests.</p>
+<p>However, as we noted in the last chapter, we often instead have data from multiple populations. For example, we may have data from 3 species of flowers. We commonly see this data plotted as a bar chart with error bars</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lattice</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: plyr</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>What do we test now and how?</p>
+</section>
+<section id="welcome-to-anovas" class="level2">
+<h2 class="anchored" data-anchor-id="welcome-to-anovas">Welcome to ANOVAs</h2>
+<p>As previously noted, we can’t compare heights among group. Height is a random variable, and it’s highly unlikely they will be exactly the same. Seeing the actual data may help us remember this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>Species, <span class="at">color=</span>Species)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. species"</span>))),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>So we typically focus on a parameter that describes the distribution of a focal trait, such as the mean. Just like binomial data, our hypotheses are then</p>
+<p><span class="math display">\[
+\begin{split}
+H_O: \mu_{sepal \ length, \ setosa} = \mu_{sepal \ length, \ virginica} = \mu_{sepal \ length, \ versicolor}\\  
+H_A: \mu_{sepal \ length, \ setosa} \neq \mu_{sepal \ length, \ virginica} \neq \mu_{sepal \ length, \ versicolor}\\
+\end{split}
+\]</span></p>
+<p>Given that, our overall idea is to consider if the data are better explained by an overall group average or by species-specific averages. To visualize this, we could use</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"group means"</span> <span class="ot">=</span> <span class="st">"black"</span>, <span class="st">"overall average"</span> <span class="ot">=</span> <span class="st">"orange"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(Species,Sepal.Length)) <span class="sc">+</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">colour=</span>Species), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Sepal.Length, <span class="at">ymax=</span>Sepal.Length, <span class="at">color=</span><span class="st">"group means"</span>), </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> function_output) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(Sepal.Length),  <span class="at">color =</span> <span class="st">"overall average"</span>))<span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span>colors)<span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. species"</span>))),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>, </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span> <span class="st">"Focus"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Like our earlier considerations of variance and SSE, the data will obviously be fit better by species-specific averages. Its impossible for them to do worse than the overall average, and at worst they all <em>are</em> the group average. However, we should also remember that these are samples, so we know sampling error is an issue. Therefore, we have to consider if the species-specific averages do enough of a better job explaining the data to warrant using them. To put this in our SSE and hypothesis framework, we need to consider if a more complicated view of the world is worth it.</p>
+<p>To test this, we can (as always) carry out a sampling experiment. The general idea is that species does snot matter (just like we saw in contingency analysis). Given that, we can draw samples that match our respective sample sizes for each population from a single population. The mean can be set as the pooled mean for the data (since under the null tested factors don’t matter). Since we don’t know or set sigma, we can again estimate it from the data. One such sample might look like</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>variance_estimate <span class="ot">&lt;-</span> <span class="fu">sum</span>((function_output<span class="sc">$</span>N <span class="sc">-</span><span class="dv">1</span>) <span class="sc">*</span> (function_output<span class="sc">$</span>sd)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>(<span class="fu">sum</span>(function_output<span class="sc">$</span>N)<span class="sc">-</span><span class="fu">length</span>(function_output<span class="sc">$</span>N))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mean_sepal <span class="ot">&lt;-</span> <span class="fu">mean</span>(iris<span class="sc">$</span>Sepal.Length)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>simulated_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Species=</span><span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"setosa"</span>, <span class="dv">50</span>), </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">rep</span>(<span class="st">"versicolor"</span>, <span class="dv">50</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">rep</span>(<span class="st">"virginica"</span>,<span class="dv">50</span>)),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">Sepal.Length=</span><span class="fu">rnorm</span>(<span class="dv">150</span>, mean_sepal, </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">sd=</span> <span class="fu">sqrt</span>(variance_estimate)))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>function_output <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(simulated_data, <span class="at">measurevar=</span><span class="st">"Sepal.Length"</span>, <span class="at">groupvars =</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">c</span>(<span class="st">"Species"</span>))</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(simulated_data, <span class="fu">aes</span>(Species,Sepal.Length)) <span class="sc">+</span> </span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">colour=</span>Species), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Sepal Length (cm)"</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Sepal Length of various iris species"</span>)<span class="sc">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">28</span>), </span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">28</span>), </span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y  =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>),</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x  =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>), </span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>),</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>, <span class="at">face=</span><span class="st">"bold"</span>),</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face=</span><span class="st">"bold"</span>)) <span class="sc">+</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Sepal.Length, <span class="at">ymax=</span>Sepal.Length, <span class="at">color=</span><span class="st">"group means"</span>), </span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> function_output) <span class="sc">+</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(Sepal.Length),  <span class="at">color =</span> <span class="st">"overall average"</span>))<span class="sc">+</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span>colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>As expected, under the null hypothesis the overall and species-specific averages are closer. Now that we have the data, however, we are stuck with a new question: What is our test statistic?</p>
+<p>In general, using a difference among means makes sense for cases when we have only 2 populations. This will be used when we introduce t-tests. However, it does not work for 3+ populations, so we will need a different approach.</p>
+<p>ANOVAs offer an approach that can be used for any group of 2+ populations when certain assumptions are met. ANOVAs stands for <em>analysis of variance</em> which may seem odd given our hypotheses are focused on means. However, the idea (not fully developed here) is that we can get an overall estimate of variance by</p>
+<ul>
+<li><p>calculating variance for each point around its respective group-specific mean</p>
+<ul>
+<li>this leads to 3 estimates of variance, which we can multiple by (n-1) to account for differences in sample size and then divide by the number of groups to get an overall estimate of variance
+<ul>
+<li>this is referred to as mean square error</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+\textrm{Remember, }s^2 = \frac{\sum_{i=1}^{n} (Y_{i}-\overline{Y})^2}{n-1} \sim \sigma^2\\
+\textrm{So if we have j groups, for each group we can see}\\
+s_j^2 = \frac{\sum_{i=1}^{n_j} (Y_{ij}-\overline{Y_j})^2}{n_j-1} \sim \sigma_j^2\\
+\textrm{which we can combine to estimate }\sigma_{overall}\\
+\frac{(n_1-1)s_1^2 + (n_2-1)s_2^2 ...(n_j-1)s_j^2}{n_1+n_2+...n_j-1} = s_{overall}^2\\
+\end{split}
+\]</span></p></li>
+<li><p>calculating variance for each group mean around the overall mean</p>
+<ul>
+<li>this is called mean square treatment</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+\frac{\sum_{j=1}^{j} (\overline{Y_j}-Y_{overall}{i})^2}{j-1} = \frac{s^2}{n} \\
+\textrm{where j is the number of groups. This can be multiplied by n to get }s^2 \\
+\end{split}
+\]</span></p>
+<p>In other words, variance among groups should be equal to variance within groups. You should also note this means we can partition the variance for any given observation as its distance from its group mean and its group means distance from the overall</p>
+<p>Under the null hypothesis, the ratio of these estimates should tend towards 1. We can see this using a sampling experiment.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#sample</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  ratio <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">rep =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>, <span class="at">mse =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">10000</span>), </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">msg =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">10000</span>), <span class="at">ratio =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">10000</span>))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>){</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    setosa <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, mean_sepal, <span class="at">sd=</span> <span class="fu">sqrt</span>(variance_estimate))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    versicolor <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, mean_sepal, <span class="at">sd=</span> <span class="fu">sqrt</span>(variance_estimate))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    virginica <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, mean_sepal, <span class="at">sd=</span> <span class="fu">sqrt</span>(variance_estimate))</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    mean_overall <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">c</span>(setosa, versicolor, virginica))</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    ratio<span class="sc">$</span>mse[i] <span class="ot">&lt;-</span> (<span class="dv">49</span> <span class="sc">*</span> <span class="fu">var</span>(setosa) <span class="sc">+</span> <span class="dv">49</span> <span class="sc">*</span> <span class="fu">var</span>(versicolor) <span class="sc">+</span> <span class="dv">49</span> <span class="sc">*</span> <span class="fu">var</span>(virginica))<span class="sc">/</span>(<span class="dv">150</span> <span class="sc">-</span> <span class="dv">3</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    ratio<span class="sc">$</span>msg[i] <span class="ot">&lt;-</span> (<span class="dv">50</span> <span class="sc">*</span> (<span class="fu">mean</span>(setosa)<span class="sc">-</span>mean_overall)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                 <span class="dv">50</span> <span class="sc">*</span> (<span class="fu">mean</span>(versicolor)<span class="sc">-</span>mean_overall)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                 <span class="dv">50</span> <span class="sc">*</span> (<span class="fu">mean</span> (virginica)<span class="sc">-</span>mean_overall)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    ratio<span class="sc">$</span>ratio[i] <span class="ot">&lt;-</span> ratio<span class="sc">$</span>msg[i]<span class="sc">/</span>ratio<span class="sc">$</span>mse[i]</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal.Length<span class="sc">~</span>Species, iris))<span class="sc">$</span>fstatistic[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   value 
+119.2645 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ratio, <span class="fu">aes</span>(ratio)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..count..<span class="sc">/</span><span class="fu">sum</span>(..count..)), <span class="at">fill =</span> <span class="st">"orange"</span>, <span class="at">bins=</span><span class="dv">15</span>)<span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">main =</span> <span class="st">"Ratio under null hypothesis"</span>, <span class="at">y=</span> <span class="st">"Probability"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The dot-dot notation (`..count..`) was deprecated in ggplot2 3.4.0.
+ℹ Please use `after_stat(count)` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Using this approach, we could determine how unusual our data were (get a p-value!). However, finding a distribution that approximates this shape would make future work easier. It turns out all the squared terms above lead to this being a rato of <span class="math inline">\(\chi^2\)</span> distributions, where the numerator has degrees of freedom j-1 (# of groups - 1) and the numerator had degrees of freedom n-j-1; the “lost” degrees of freedom are used to estimate group and overall means.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ratio, <span class="fu">aes</span>(ratio)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..count..<span class="sc">/</span><span class="fu">sum</span>(..count..)), <span class="at">fill =</span> <span class="st">"orange"</span>, <span class="at">bins =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">main =</span> <span class="st">"Ratio under null hypothesis"</span>, <span class="at">y=</span> <span class="st">"Probability"</span>)<span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_function</span>(<span class="at">fun =</span> df, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df1 =</span><span class="dv">2</span>, <span class="at">df2 =</span> <span class="dv">147</span>), <span class="at">color =</span> <span class="st">"green"</span>)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>In our data, we found a signal of 119.264502184505! This is going to lead to a very low p-value.</p>
+</section>
+<section id="welcome-to-the-linear-model" class="level2">
+<h2 class="anchored" data-anchor-id="welcome-to-the-linear-model">Welcome to the linear model</h2>
+<p>An ANOVA is just one case of a linear model. We will fully explore these later, but noting this now is useful in that all linear models have the same sets of assumptions. In general, linear models assume the <em>residuals</em> of the model are are independent, identically distributed, and follow a normal distribution. You’ll sometime see this written as</p>
+<p><span class="math display">\[
+\epsilon \approx i.i.d.\ N(\mu,\sigma)
+\]</span> But what does this mean?</p>
+<p>Residuals are the distance between a measurement and its model-predicted value. A closely related term, error, is actually the distance between a measurement and the unknown population mean for a group. Linear models assume the residuals are independent of each other (this follows from independent data points) and that their spread (around their predicted values) is normally distributed and similar for all points.</p>
+<p>Understanding this explains two key points. The residuals, not the data, need to be normally distributed. Also, we have to build the model to get the residuals, then we check the assumptions.</p>
+<p>We can do this in R using the <em>lm</em> function. This approach also lets us use a single set of functions to build many model types. As always, there are many ways to do anything in R, so there are specific ANOVA functions that we will not introduce here.</p>
+<p>For our data, we can build an lm object</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>iris_anova <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>then use <em>plot</em> to check the assumptions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-9-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>These 4 plots focus on the residuals (not the data).</p>
+<ul>
+<li>The <strong>Residuals vs fitted</strong> plot allows us to see if the residuals are identically distributed - we want to see a flat red line and no structure to the residuals in regards to their spread or location. Note we only have 3 fitted values here (matching our 3 group means), so will see “lines” of data in one-way ANOVAs (another name for what we are doing here).<br>
+</li>
+<li>The <strong>Q-Q Residuals</strong> plot allows us to assess normality - points should be on the line</li>
+<li>The other 2 graphs give show different forms of residuals against the fitted values. We will return to them later.</li>
+</ul>
+<p>If our assumptions are met, we can look at the output. One way to do this is using the <em>summary</em> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(iris_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Sepal.Length ~ Species, data = iris)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.6880 -0.3285 -0.0060  0.3120  1.3120 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)         5.0060     0.0728  68.762  &lt; 2e-16 ***
+Speciesversicolor   0.9300     0.1030   9.033 8.77e-16 ***
+Speciesvirginica    1.5820     0.1030  15.366  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.5148 on 147 degrees of freedom
+Multiple R-squared:  0.6187,    Adjusted R-squared:  0.6135 
+F-statistic: 119.3 on 2 and 147 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>This output may be confusing, however. The overall p value shown in the bottom right is for the entire model - that works for now, but soon won’t. We also see individual p values for 2 levels of species, plus an odd intercept term.</p>
+<p>These are model artifacts and may be confusing. R lets the first factor level (typically alphabetical) be an intercept for the linear model, and then considers the other factor levels as deviations from that. It also shows if all the resulting <em>Estimates</em> are significantly different from 0. Note this means a significant intercept term does not mean your groups actually differ.</p>
+<p>Given these issues, why use the summary command? It does present some other useful information. For example, the R<sup>2</sup> values is a measure of how variation the model explains. It can range from 0 (the model explains nothing) to 1 (all residuals are zero, in this case meaning all members of a given species have the exact same height). The adjusted-R<sup>2</sup> value is similar, but it adjusts the measure to account for the fact more complex models will always explain more variation.</p>
+<p>You can also remove the intercept to get group estimates for all groups</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal.Length<span class="sc">~</span>Species<span class="dv">-1</span>, iris))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Sepal.Length ~ Species - 1, data = iris)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.6880 -0.3285 -0.0060  0.3120  1.3120 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+Speciessetosa       5.0060     0.0728   68.76   &lt;2e-16 ***
+Speciesversicolor   5.9360     0.0728   81.54   &lt;2e-16 ***
+Speciesvirginica    6.5880     0.0728   90.49   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.5148 on 147 degrees of freedom
+Multiple R-squared:  0.9925,    Adjusted R-squared:  0.9924 
+F-statistic:  6522 on 3 and 147 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Note these match our group means, which is good, but the overall p value is now less useful (it compares our data to a null that assumes everything is equal to 0), and the output is still confusing.</p>
+<p>Since we are doing an omnibus test, what we typically want is a single p value associated with our factor of interest (species in this case). To get that, we’ll use the <em>Anova</em> function from the <strong>car</strong> package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: carData</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(iris_anova, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal.Length
+             Sum Sq  Df F value    Pr(&gt;F)    
+(Intercept) 1253.00   1 4728.16 &lt; 2.2e-16 ***
+Species       63.21   2  119.26 &lt; 2.2e-16 ***
+Residuals     38.96 147                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<details>
+<summary>
+What does type=“III” mean
+</summary>
+<p>Residuals can be calculated in multiple ways. For simple models (those with one variable) most calculations lead to the same answer. When we start adding multiple factors to a model and/or interactions, however, they differ. In short, Type I residuals consider the order in which factors are added to a model, and type 2 do not consider interactions. We will stick with type III for this class.</p>
+<p>&lt;&gt;</p>
+<p>Doing this we see Species has a significant impact on explaining variation in the data (and our very high F value). So we reject the null hypothesis that mean sepal length does not differ among species. Now what?</p>
+</details></section>
+<section id="post-hoc-tests" class="level2">
+<h2 class="anchored" data-anchor-id="post-hoc-tests">Post-hoc tests</h2>
+<p>Just like for a multi-population <span class="math inline">\(\chi^2\)</span> tests, we need to do follow-up tests to compare groups while controlling for the FWER. For linear models (and more), we will use the <em>glht</em> function from the <strong>multcomp</strong> package to conduce these tests.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: mvtnorm</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: survival</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: TH.data</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: MASS</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'TH.data'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:MASS':
+
+    geyser</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>compare_cont_tukey <span class="ot">&lt;-</span> <span class="fu">glht</span>(iris_anova, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Species =</span> <span class="st">"Tukey"</span>))</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(compare_cont_tukey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lm(formula = Sepal.Length ~ Species, data = iris)
+
+Linear Hypotheses:
+                            Estimate Std. Error t value Pr(&gt;|t|)    
+versicolor - setosa == 0       0.930      0.103   9.033   &lt;1e-08 ***
+virginica - setosa == 0        1.582      0.103  15.366   &lt;1e-08 ***
+virginica - versicolor == 0    0.652      0.103   6.333   &lt;1e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+(Adjusted p values reported -- single-step method)</code></pre>
+</div>
+</div>
+<p>Our first approach uses a new (to us) method. It is <strong>not exactly</strong> Tukey’s method (very confusing) but is closely related to it. Tukey’s method is focuses on all possible pair-wise comparisons and controls for the FWER using a studentized range approach (not fully developed here, but similar to z-transform but focused on the range of means and using the estimated standard deviation; similar to t-statistic in this aspect and also developed by Student). It is also called Tukey’s Honestly Significant Difference/HSD, Tukey-Kramer method, and many other names. In <em>glht</em>, specifying “Tukey” tells the program to do all possible pairs comparison (like Tukey’s method). The post-hoc control for FWER, however, uses a slightly different approach that can handle interactions (still to be explained) and some other things a little bit easier.</p>
+<p>Using this approach we see that all species differ significantly from all others; the output also provides estimates of the differences, which match up with our model summary output.</p>
+<p>We can also use the methods we previously discussed such as Bonferroni and FDR. These requre us to set up the comparisons, which also means we can limit our number of tests if so desired. For example, we could focus only on differences with <em>I. virginica</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>compare_virginica_only <span class="ot">&lt;-</span> <span class="fu">glht</span>(iris_anova, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Species =</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                                                                <span class="fu">c</span>(<span class="st">"virginica - versicolor = 0"</span>, </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                                                                  <span class="st">"virginica - setosa = 0"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After setting up the comparison, we can specify the method to use to correct for FWER,</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(compare_virginica_only, <span class="at">test=</span><span class="fu">adjusted</span>(<span class="st">"holm"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: User-defined Contrasts
+
+
+Fit: lm(formula = Sepal.Length ~ Species, data = iris)
+
+Linear Hypotheses:
+                            Estimate Std. Error t value Pr(&gt;|t|)    
+virginica - versicolor == 0    0.652      0.103   6.333 2.77e-09 ***
+virginica - setosa == 0        1.582      0.103  15.366  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+(Adjusted p values reported -- holm method)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(compare_virginica_only, <span class="at">test=</span><span class="fu">adjusted</span>(<span class="st">"fdr"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: User-defined Contrasts
+
+
+Fit: lm(formula = Sepal.Length ~ Species, data = iris)
+
+Linear Hypotheses:
+                            Estimate Std. Error t value Pr(&gt;|t|)    
+virginica - versicolor == 0    0.652      0.103   6.333 2.77e-09 ***
+virginica - setosa == 0        1.582      0.103  15.366  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+(Adjusted p values reported -- fdr method)</code></pre>
+</div>
+</div>
+<p>Note for our small number of tests and relatively large differences in means and large sample sizes, differences in p values are minimal.</p>
+<p>There are instances when FWER are not an issue and thus p values do not need to be adjusted. This occurs when we explore <em>orthogonal contrasts</em>.</p>
+</section>
+<section id="a-little-deeper-into-linear-models" class="level2">
+<h2 class="anchored" data-anchor-id="a-little-deeper-into-linear-models">A little deeper into linear models</h2>
+<p>Let’s return to linear models to help explain orthogonal contrasts (and some other things). Linear models are a sysem of equations (a matrix), where</p>
+<p><span class="math display">\[
+\begin{split}
+Y=X\beta+\epsilon, \textrm{ where }\\
+\textrm{Y is our observations (an nx1 matrix)}\\
+\textrm{X is a matrix showing our explanatory variables (an nxk matrix)}\\
+\beta \textrm{ is our coefficient matrix(an kx1 matrix)}\\
+\epsilon \textrm{is a matrix (an nx1) of residuals)}\\
+\end{split}
+\]</span></p>
+<p>In our case, <span class="math inline">\(\beta\)</span> is simply a 3x1 matrix where each entry is a species average (or one is an intercept and other two are distances from it - same thing) and X is a matrix with dummy variables (1 or 0) indicating which group each observation belongs too. X is sometimes called a model or design matrix. We can see this using R. First, we can pull the design matrix from our model object</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(<span class="fu">data.frame</span>(<span class="fu">model.matrix</span>(iris_anova)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["X.Intercept."],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Speciesversicolor"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Speciesvirginica"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"0","3":"0","_rn_":"1"},{"1":"1","2":"0","3":"0","_rn_":"2"},{"1":"1","2":"0","3":"0","_rn_":"3"},{"1":"1","2":"0","3":"0","_rn_":"4"},{"1":"1","2":"0","3":"0","_rn_":"5"},{"1":"1","2":"0","3":"0","_rn_":"6"},{"1":"1","2":"0","3":"0","_rn_":"7"},{"1":"1","2":"0","3":"0","_rn_":"8"},{"1":"1","2":"0","3":"0","_rn_":"9"},{"1":"1","2":"0","3":"0","_rn_":"10"},{"1":"1","2":"0","3":"0","_rn_":"11"},{"1":"1","2":"0","3":"0","_rn_":"12"},{"1":"1","2":"0","3":"0","_rn_":"13"},{"1":"1","2":"0","3":"0","_rn_":"14"},{"1":"1","2":"0","3":"0","_rn_":"15"},{"1":"1","2":"0","3":"0","_rn_":"16"},{"1":"1","2":"0","3":"0","_rn_":"17"},{"1":"1","2":"0","3":"0","_rn_":"18"},{"1":"1","2":"0","3":"0","_rn_":"19"},{"1":"1","2":"0","3":"0","_rn_":"20"},{"1":"1","2":"0","3":"0","_rn_":"21"},{"1":"1","2":"0","3":"0","_rn_":"22"},{"1":"1","2":"0","3":"0","_rn_":"23"},{"1":"1","2":"0","3":"0","_rn_":"24"},{"1":"1","2":"0","3":"0","_rn_":"25"},{"1":"1","2":"0","3":"0","_rn_":"26"},{"1":"1","2":"0","3":"0","_rn_":"27"},{"1":"1","2":"0","3":"0","_rn_":"28"},{"1":"1","2":"0","3":"0","_rn_":"29"},{"1":"1","2":"0","3":"0","_rn_":"30"},{"1":"1","2":"0","3":"0","_rn_":"31"},{"1":"1","2":"0","3":"0","_rn_":"32"},{"1":"1","2":"0","3":"0","_rn_":"33"},{"1":"1","2":"0","3":"0","_rn_":"34"},{"1":"1","2":"0","3":"0","_rn_":"35"},{"1":"1","2":"0","3":"0","_rn_":"36"},{"1":"1","2":"0","3":"0","_rn_":"37"},{"1":"1","2":"0","3":"0","_rn_":"38"},{"1":"1","2":"0","3":"0","_rn_":"39"},{"1":"1","2":"0","3":"0","_rn_":"40"},{"1":"1","2":"0","3":"0","_rn_":"41"},{"1":"1","2":"0","3":"0","_rn_":"42"},{"1":"1","2":"0","3":"0","_rn_":"43"},{"1":"1","2":"0","3":"0","_rn_":"44"},{"1":"1","2":"0","3":"0","_rn_":"45"},{"1":"1","2":"0","3":"0","_rn_":"46"},{"1":"1","2":"0","3":"0","_rn_":"47"},{"1":"1","2":"0","3":"0","_rn_":"48"},{"1":"1","2":"0","3":"0","_rn_":"49"},{"1":"1","2":"0","3":"0","_rn_":"50"},{"1":"1","2":"1","3":"0","_rn_":"51"},{"1":"1","2":"1","3":"0","_rn_":"52"},{"1":"1","2":"1","3":"0","_rn_":"53"},{"1":"1","2":"1","3":"0","_rn_":"54"},{"1":"1","2":"1","3":"0","_rn_":"55"},{"1":"1","2":"1","3":"0","_rn_":"56"},{"1":"1","2":"1","3":"0","_rn_":"57"},{"1":"1","2":"1","3":"0","_rn_":"58"},{"1":"1","2":"1","3":"0","_rn_":"59"},{"1":"1","2":"1","3":"0","_rn_":"60"},{"1":"1","2":"1","3":"0","_rn_":"61"},{"1":"1","2":"1","3":"0","_rn_":"62"},{"1":"1","2":"1","3":"0","_rn_":"63"},{"1":"1","2":"1","3":"0","_rn_":"64"},{"1":"1","2":"1","3":"0","_rn_":"65"},{"1":"1","2":"1","3":"0","_rn_":"66"},{"1":"1","2":"1","3":"0","_rn_":"67"},{"1":"1","2":"1","3":"0","_rn_":"68"},{"1":"1","2":"1","3":"0","_rn_":"69"},{"1":"1","2":"1","3":"0","_rn_":"70"},{"1":"1","2":"1","3":"0","_rn_":"71"},{"1":"1","2":"1","3":"0","_rn_":"72"},{"1":"1","2":"1","3":"0","_rn_":"73"},{"1":"1","2":"1","3":"0","_rn_":"74"},{"1":"1","2":"1","3":"0","_rn_":"75"},{"1":"1","2":"1","3":"0","_rn_":"76"},{"1":"1","2":"1","3":"0","_rn_":"77"},{"1":"1","2":"1","3":"0","_rn_":"78"},{"1":"1","2":"1","3":"0","_rn_":"79"},{"1":"1","2":"1","3":"0","_rn_":"80"},{"1":"1","2":"1","3":"0","_rn_":"81"},{"1":"1","2":"1","3":"0","_rn_":"82"},{"1":"1","2":"1","3":"0","_rn_":"83"},{"1":"1","2":"1","3":"0","_rn_":"84"},{"1":"1","2":"1","3":"0","_rn_":"85"},{"1":"1","2":"1","3":"0","_rn_":"86"},{"1":"1","2":"1","3":"0","_rn_":"87"},{"1":"1","2":"1","3":"0","_rn_":"88"},{"1":"1","2":"1","3":"0","_rn_":"89"},{"1":"1","2":"1","3":"0","_rn_":"90"},{"1":"1","2":"1","3":"0","_rn_":"91"},{"1":"1","2":"1","3":"0","_rn_":"92"},{"1":"1","2":"1","3":"0","_rn_":"93"},{"1":"1","2":"1","3":"0","_rn_":"94"},{"1":"1","2":"1","3":"0","_rn_":"95"},{"1":"1","2":"1","3":"0","_rn_":"96"},{"1":"1","2":"1","3":"0","_rn_":"97"},{"1":"1","2":"1","3":"0","_rn_":"98"},{"1":"1","2":"1","3":"0","_rn_":"99"},{"1":"1","2":"1","3":"0","_rn_":"100"},{"1":"1","2":"0","3":"1","_rn_":"101"},{"1":"1","2":"0","3":"1","_rn_":"102"},{"1":"1","2":"0","3":"1","_rn_":"103"},{"1":"1","2":"0","3":"1","_rn_":"104"},{"1":"1","2":"0","3":"1","_rn_":"105"},{"1":"1","2":"0","3":"1","_rn_":"106"},{"1":"1","2":"0","3":"1","_rn_":"107"},{"1":"1","2":"0","3":"1","_rn_":"108"},{"1":"1","2":"0","3":"1","_rn_":"109"},{"1":"1","2":"0","3":"1","_rn_":"110"},{"1":"1","2":"0","3":"1","_rn_":"111"},{"1":"1","2":"0","3":"1","_rn_":"112"},{"1":"1","2":"0","3":"1","_rn_":"113"},{"1":"1","2":"0","3":"1","_rn_":"114"},{"1":"1","2":"0","3":"1","_rn_":"115"},{"1":"1","2":"0","3":"1","_rn_":"116"},{"1":"1","2":"0","3":"1","_rn_":"117"},{"1":"1","2":"0","3":"1","_rn_":"118"},{"1":"1","2":"0","3":"1","_rn_":"119"},{"1":"1","2":"0","3":"1","_rn_":"120"},{"1":"1","2":"0","3":"1","_rn_":"121"},{"1":"1","2":"0","3":"1","_rn_":"122"},{"1":"1","2":"0","3":"1","_rn_":"123"},{"1":"1","2":"0","3":"1","_rn_":"124"},{"1":"1","2":"0","3":"1","_rn_":"125"},{"1":"1","2":"0","3":"1","_rn_":"126"},{"1":"1","2":"0","3":"1","_rn_":"127"},{"1":"1","2":"0","3":"1","_rn_":"128"},{"1":"1","2":"0","3":"1","_rn_":"129"},{"1":"1","2":"0","3":"1","_rn_":"130"},{"1":"1","2":"0","3":"1","_rn_":"131"},{"1":"1","2":"0","3":"1","_rn_":"132"},{"1":"1","2":"0","3":"1","_rn_":"133"},{"1":"1","2":"0","3":"1","_rn_":"134"},{"1":"1","2":"0","3":"1","_rn_":"135"},{"1":"1","2":"0","3":"1","_rn_":"136"},{"1":"1","2":"0","3":"1","_rn_":"137"},{"1":"1","2":"0","3":"1","_rn_":"138"},{"1":"1","2":"0","3":"1","_rn_":"139"},{"1":"1","2":"0","3":"1","_rn_":"140"},{"1":"1","2":"0","3":"1","_rn_":"141"},{"1":"1","2":"0","3":"1","_rn_":"142"},{"1":"1","2":"0","3":"1","_rn_":"143"},{"1":"1","2":"0","3":"1","_rn_":"144"},{"1":"1","2":"0","3":"1","_rn_":"145"},{"1":"1","2":"0","3":"1","_rn_":"146"},{"1":"1","2":"0","3":"1","_rn_":"147"},{"1":"1","2":"0","3":"1","_rn_":"148"},{"1":"1","2":"0","3":"1","_rn_":"149"},{"1":"1","2":"0","3":"1","_rn_":"150"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>We can also pull the model coefficients, which form our <span class="math inline">\(\beta\)</span> matrix, and place them in the correct orientation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="fu">as.numeric</span>(iris_anova<span class="sc">$</span>coefficients), <span class="at">ncol=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      [,1]
+[1,] 5.006
+[2,] 0.930
+[3,] 1.582</code></pre>
+</div>
+</div>
+<p>So for our first observation, which is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>iris[<span class="dv">1</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa</code></pre>
+</div>
+</div>
+<p>We would multiply (remember, rows get multiplied by columns in matrices)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">*</span><span class="fl">5.006</span> <span class="sc">+</span> <span class="dv">0</span><span class="sc">*</span>.<span class="dv">930</span><span class="sc">+</span><span class="dv">0</span><span class="sc">*</span><span class="fl">1.58</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.006</code></pre>
+</div>
+</div>
+<p>This explains why all our fitted values are one of three values! We can also see our observation minus prediction</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>iris[<span class="dv">1</span>,<span class="st">"Sepal.Length"</span>]<span class="sc">-</span><span class="dv">1</span><span class="sc">*</span><span class="fl">5.006</span> <span class="sc">+</span> <span class="dv">0</span><span class="sc">*</span>.<span class="dv">930</span><span class="sc">+</span><span class="dv">0</span><span class="sc">*</span><span class="fl">1.58</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.094</code></pre>
+</div>
+</div>
+<p>matches our first model residual</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>iris_anova<span class="sc">$</span>residuals[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    1 
+0.094 </code></pre>
+</div>
+</div>
+<p>Understanding this general setup explains a few things. When models get more complicated you may see errors or warnings related to singularity. This occurs when X<sup>T</sup>X isn’t invertible(linear algebra!), which it needs to be to find <span class="math inline">\(\beta\)</span>. This occurs if columns in your design matrix are not independent and are actually linear combinations of each other. This happens when you have highly related measurements (we’ll discuss correlation eventually so you can actually measure this!). We will use similar manipulations to eventually find the <span class="math inline">\(\hat{H}\)</span> matrix when we consider Cook’s Distance (in regression chapter). Degrees of freedom are similarly related to the number of estimated coefficients the model required (the number of rows in the <span class="math inline">\(\beta\)</span> matrix).</p>
+<p>Returning to our contrasts, note when we do post-hoc tests we are effectively testing for differences in <span class="math inline">\(\beta\)</span> values. We can put these “tests” in a similar system of equations/matrix. For these tests, the coefficients have to equal 0. For pair comparisons, that means we have 1 for one coeffcient and -1 for the other (for example, (1,-1,0). However, we can also compare one coefficient to the average of the others (2,-1,-1). We could write these two contrasts as</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+1 &amp; -1 &amp; 0 \\
+2 &amp; 1 &amp; 1 \\
+\end{bmatrix}
+\]</span></p>
+<p>A group of contrasts are orthogonal if the sum of the multiplied coefficients from each column equals zero. In this case</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">*</span><span class="dv">2</span> <span class="sc">+</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">*</span><span class="dv">1</span> <span class="sc">+</span> <span class="dv">0</span><span class="sc">*</span><span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>does not equal 0, so these are not orthogonal contrasts. This is also because I can add add the first and third column and get the second (columns are not independent). However, if we instead carried out these contrasts</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+2 &amp; -1 &amp; -1 \\
+0 &amp; 1 &amp; -1\\
+\end{bmatrix}
+\]</span></p>
+<p>they would be independent. There are other options as well, as we can always find a number of orthogonal contrasts equal to the number of groups being compared minus one.</p>
+<p>Resulting p values would not required correction for FWER. We can specify contrasts like this using <em>glht</em>. Below I do the same matrix, but note I set the maximum entry to 1 so that estimate of mean differences aren’t doubled.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>contr <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="st">"setosa - versicolor - virginica"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span>.<span class="dv">5</span>,<span class="sc">-</span>.<span class="dv">5</span>),</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">"versicolor - virginica"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">glht</span>(iris_anova, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Species =</span> contr)), <span class="at">test=</span><span class="fu">adjusted</span>(<span class="st">"none"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: User-defined Contrasts
+
+
+Fit: lm(formula = Sepal.Length ~ Species, data = iris)
+
+Linear Hypotheses:
+                                     Estimate Std. Error t value Pr(&gt;|t|)    
+setosa - versicolor - virginica == 0 -1.25600    0.08916 -14.086  &lt; 2e-16 ***
+versicolor - virginica == 0          -0.65200    0.10296  -6.333 2.77e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+(Adjusted p values reported -- none method)</code></pre>
+</div>
+</div>
+</section>
+<section id="displaying-output-of-post-hoc-tests" class="level2">
+<h2 class="anchored" data-anchor-id="displaying-output-of-post-hoc-tests">Displaying output of post-hoc tests</h2>
+<p>Output from post-hoc tests is often displayed using compact letter display. Groups that are not significantly differently share the same letter (so in this case they all have different letters).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>cld_output <span class="ot">&lt;-</span> <span class="fu">fortify</span>(<span class="fu">cld</span>(compare_cont_tukey))</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>cld_output<span class="sc">$</span>Species <span class="ot">&lt;-</span> cld_output<span class="sc">$</span>lhs</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>function_output <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(iris, <span class="at">measurevar=</span><span class="st">"Sepal.Length"</span>, <span class="at">groupvars =</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">c</span>(<span class="st">"Species"</span>))</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>function_output <span class="ot">&lt;-</span> <span class="fu">merge</span>(function_output, cld_output)</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(function_output, <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>Species, <span class="at">fill=</span>Species)) <span class="sc">+</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Species)) <span class="sc">+</span></span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Sepal.Length<span class="sc">-</span>ci, <span class="at">ymax=</span>Sepal.Length<span class="sc">+</span>ci)) <span class="sc">+</span></span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. species"</span>))),</span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>)<span class="sc">+</span></span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span>letters,<span class="at">y=</span>Sepal.Length<span class="sc">+</span><span class="dv">3</span><span class="sc">*</span>ci))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Other options include plotting the differences in means</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(compare_cont_tukey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="emmeans-another-option" class="level3">
+<h3 class="anchored" data-anchor-id="emmeans-another-option">emmeans: another option</h3>
+<p>Another popular package for conducting posthoc comparison in R is emmeans. The package has a great starters guide <a href="https://cran.r-project.org/web/packages/emmeans/vignettes/AQuickStart.html" target="_blank">here</a></p>
+</section>
+</section>
+<section id="t-test-connections" class="level2">
+<h2 class="anchored" data-anchor-id="t-test-connections">T-test connections</h2>
+<p>So far we have focused on comparing means among multiple groups. This can include include comparing means between only 2 groups (which we already do for the post-hoc tests). In doing this we also introduced new post-hoc tests and the ideas of a linear model.</p>
+<p>The linear model framework will unify most of the remaining tests we learn in class. In fact, several tests we’ve already learned can be formulated this way. This is extremely useful given we want statistics to be a related set of tests in a comprehensive framework.</p>
+<p>There are many ways to teach statistics, however, and a long history of tests. Many textbooks and approaches build up from one sample tests by moving to two-sample t-tests. These tests bridge the logic noted above and the approach we used for single-sample t-test. This is because the t-distribution is a special case of the F distribution. It occurs when the square root of an F distribution with 1 degree of freedom in the numerator is considered. Thus the degrees of freedom associated with a t-test will be equal to the degrees of freedom associated with the denominator of the associated F-test.</p>
+<p>2-sample t-tests may also an easier approach to first considering differences among groups since with only 2 populations the difference in means may be considered. However, it can be shown (not here) this is simply a rearrangement of our exploration of variances.</p>
+<p>To demonstrate this, let’s only consider two species. Note</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>two_species_subset <span class="ot">&lt;-</span> iris[iris<span class="sc">$</span>Species<span class="sc">!=</span><span class="st">"setosa"</span>,]</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset, <span class="at">var.equal=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Two Sample t-test
+
+data:  Sepal.Length by Species
+t = -5.6292, df = 98, p-value = 1.725e-07
+alternative hypothesis: true difference in means between group versicolor and group virginica is not equal to 0
+95 percent confidence interval:
+ -0.8818516 -0.4221484
+sample estimates:
+mean in group versicolor  mean in group virginica 
+                   5.936                    6.588 </code></pre>
+</div>
+</div>
+<p>yields the same p-value as</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset), <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal.Length
+             Sum Sq Df  F value    Pr(&gt;F)    
+(Intercept) 1761.80  1 5253.038 &lt; 2.2e-16 ***
+Species       10.63  1   31.688 1.725e-07 ***
+Residuals     32.87 98                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Also note the t statistic is the square root of the F statistic.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fl">5.6292</span><span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -31.68789</code></pre>
+</div>
+</div>
+<p>Note the t.test function can also use columns holding data from each population as arguments as opposed to the formula interface, but we will not use that approach here.</p>
+<p>The var.equal=T argument, however, is not the default in R, and this assumption is one of the major differences in 2-sample t-tests and F tests. Remember, ANOVAs and t-tests both require estimates for sigma. If we do not assume the variances are equal for each group, then the best way to estimate the variance is to calculate the variance for each group and take a weighted (by sample size mean). This approach is known as the Behren-Fisher or Welsh t-test.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  Sepal.Length by Species
+t = -5.6292, df = 94.025, p-value = 1.866e-07
+alternative hypothesis: true difference in means between group versicolor and group virginica is not equal to 0
+95 percent confidence interval:
+ -0.8819731 -0.4220269
+sample estimates:
+mean in group versicolor  mean in group virginica 
+                   5.936                    6.588 </code></pre>
+</div>
+</div>
+<p>The resulting statistics has a distrubtion that can be approximated by a t-distribution, but the associated degrees of freedom can can be non-integer (decimal) and less than (n<sub>1</sub>+ n<sub>2</sub> - 2).</p>
+<p>This means the basic assumptions for 2-sample t-tests are independent data points, groups show the same variance, and means are normally distributed. Much like the one-sample t-test, the central limit theorem implies assumptions about the mean distribution are commonly met. However, if they are not met, we have a few common options.</p>
+</section>
+<section id="non-parametric-connections" class="level2">
+<h2 class="anchored" data-anchor-id="non-parametric-connections">Non-parametric connections</h2>
+<p>Options for when assumptions of the t- and F-tests (ANOVAs) are presented below. Note given the history of t-tests being considered apart from ANOVAs, some functions only work with less than 2 populations while others work with three or more. However, the overall approaches are similar.</p>
+<section id="ranks-wilcoxonmann-whitney-u-and-kruskal-wallis-test" class="level3">
+<h3 class="anchored" data-anchor-id="ranks-wilcoxonmann-whitney-u-and-kruskal-wallis-test">Ranks: Wilcoxon/Mann-Whitney U and Kruskal-Wallis test</h3>
+<p>We can extend the Wilcoxon test to 2-samples. To do so, we rank the data points from smallest to largest. The ranks are then used to calculate a U statistic. The statistic sums the ranks for each group (r), then uses them to calculate</p>
+<p><span class="math display">\[
+U_1 = n_1n_2+\frac{n_1(n_1+1)}{2}-r_1
+\]</span> The U statistics is calculated for each group. The larger U value is then taken and used to compute a p value. We can calculate this using the <em>wilcox.test</em> function,</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Wilcoxon rank sum test with continuity correction
+
+data:  Sepal.Length by Species
+W = 526, p-value = 5.869e-07
+alternative hypothesis: true location shift is not equal to 0</code></pre>
+</div>
+</div>
+<p>This test assumes the two distributions being considered have similar shape (not that the resulting means are normally-distributed). If you remove the default continuity correction (applied as we approximate discrete data with a continuous distribution)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset, <span class="at">correct=</span>F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Wilcoxon rank sum test
+
+data:  Sepal.Length by Species
+W = 526, p-value = 5.765e-07
+alternative hypothesis: true location shift is not equal to 0</code></pre>
+</div>
+</div>
+<p>We get the same result as the Kruskal-Wallis test</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kruskal.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Kruskal-Wallis rank sum test
+
+data:  Sepal.Length by Species
+Kruskal-Wallis chi-squared = 24.989, df = 1, p-value = 5.765e-07</code></pre>
+</div>
+</div>
+<p>which is a rank-based test that can be applied to 3+ populations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kruskal.test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span> iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Kruskal-Wallis rank sum test
+
+data:  Sepal.Length by Species
+Kruskal-Wallis chi-squared = 96.937, df = 2, p-value &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>If we have more than three populations and this omnibus test reveals a significant p-value, we can follow it up with appropriate post-hoc tests.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.wilcox.test</span>(iris<span class="sc">$</span>Sepal.Length, </span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>                          iris<span class="sc">$</span>Species, </span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">p.adjust.method=</span><span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
+
+data:  iris$Sepal.Length and iris$Species 
+
+           setosa  versicolor
+versicolor 1.7e-13 -         
+virginica  &lt; 2e-16 5.9e-07   
+
+P value adjustment method: holm </code></pre>
+</div>
+</div>
+</section>
+<section id="bootstrapping" class="level3">
+<h3 class="anchored" data-anchor-id="bootstrapping">Bootstrapping</h3>
+<p>Another option is to extend the bootstrapping option. Although we could again develop a simulation using the <em>boot</em> function again, here we again use the <strong>MKinfer</strong> package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MKinfer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'MKinfer' was built under R version 4.2.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.t.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Bootstrap Welch Two Sample t-test
+
+data:  Sepal.Length by Species
+bootstrap p-value &lt; 2.2e-16 
+bootstrap difference of means (SE) = -0.6487257 (0.1144229) 
+95 percent bootstrap percentile confidence interval:
+ -0.8760 -0.4239
+
+Results without bootstrap:
+t = -5.6292, df = 94.025, p-value = 1.866e-07
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.8819731 -0.4220269
+sample estimates:
+mean in group versicolor  mean in group virginica 
+                   5.936                    6.588 </code></pre>
+</div>
+</div>
+<p>note we can also run this test without assuming variances are differenct.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.t.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset, <span class="at">var.equal=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Bootstrap Two Sample t-test
+
+data:  Sepal.Length by Species
+bootstrap p-value &lt; 2.2e-16 
+bootstrap difference of means (SE) = -0.652117 (0.1316271) 
+95 percent bootstrap percentile confidence interval:
+ -0.910 -0.396
+
+Results without bootstrap:
+t = -5.6292, df = 98, p-value = 1.725e-07
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.8818516 -0.4221484
+sample estimates:
+mean in group versicolor  mean in group virginica 
+                   5.936                    6.588 </code></pre>
+</div>
+</div>
+<p>Both these approaches also show the corresponding t-test results, but note you should choose which test you plan to use before seeing the results!</p>
+<p>For more than 2 groups, the <em>t1waybt</em> function in the <strong>WRS2</strong> package can allow comparison.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(WRS2)</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t1waybt</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+t1waybt(formula = Sepal.Length ~ Species, data = iris)
+
+Effective number of bootstrap samples was 599.
+
+Test statistic: 111.9502 
+p-value: 0 
+Variance explained: 0.716 
+Effect size: 0.846 </code></pre>
+</div>
+</div>
+<p>If needed, the <em>mcppb20</em> package allows for appropriate post-hoc comparisons.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc <span class="ot">&lt;-</span> <span class="fu">mcppb20</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df <span class="ot">&lt;-</span><span class="fu">data.frame</span>(bootstrap_post_hoc<span class="sc">$</span>comp)</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>adjusted_p <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(<span class="fu">as.numeric</span>(bootstrap_post_hoc<span class="sc">$</span>comp[,<span class="dv">6</span>]), <span class="st">"holm"</span>)</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group <span class="ot">&lt;-</span> <span class="fu">factor</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group)</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plyr)</span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group <span class="ot">&lt;-</span> <span class="fu">revalue</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group,</span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">setNames</span>(                                      bootstrap_post_hoc<span class="sc">$</span>fnames,<span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(bootstrap_post_hoc<span class="sc">$</span>fnames))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following `from` values were not present in `x`: 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">factor</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span>)</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">revalue</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span>,</span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">setNames</span>(                                      bootstrap_post_hoc<span class="sc">$</span>fnames,<span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(bootstrap_post_hoc<span class="sc">$</span>fnames))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following `from` values were not present in `x`: 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Group    Group.1     psihat  ci.lower   ci.upper p.value adjusted_p
+1     setosa versicolor -0.9100000 -1.143333 -0.7266667       0          0
+2     setosa  virginica -1.5466667 -1.836667 -1.3066667       0          0
+3 versicolor  virginica -0.6366667 -0.930000 -0.3666667       0          0</code></pre>
+</div>
+</div>
+</section>
+<section id="permutation" class="level3">
+<h3 class="anchored" data-anchor-id="permutation">Permutation</h3>
+<p>A new option when comparing groups (2 or more) is known as the permutation test. We encountered a similar approach when we learned about the Fisher’s test for binomial data. Using this approach, we can move the measurements between measured populations, calculate test statistics, and consider how unusual our observed statistic was (a p value!). We can do this for 2</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(coin)</span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">independence_test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span>  two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Asymptotic General Independence Test
+
+data:  Sepal.Length by Species (versicolor, virginica)
+Z = -4.9183, p-value = 8.731e-07
+alternative hypothesis: two.sided</code></pre>
+</div>
+</div>
+<p>or 3+ populations</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">independence_test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span>  iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Asymptotic General Independence Test
+
+data:  Sepal.Length by Species (setosa, versicolor, virginica)
+maxT = 8.7572, p-value &lt; 2.2e-16
+alternative hypothesis: two.sided</code></pre>
+</div>
+</div>
+<p>Post-hoc test options are available in the <strong>rcompanion</strong> package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'rcompanion' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'rcompanion'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:MKinfer':
+
+    quantileCI</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwisePermutationTest</span>(Sepal.Length <span class="sc">~</span> Species,</span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">data =</span> iris,</span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">method=</span><span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  Comparison   Stat   p.value  p.adjust
+1    setosa - versicolor = 0 -7.246  4.28e-13 8.560e-13
+2     setosa - virginica = 0 -8.368 5.883e-17 1.765e-16
+3 versicolor - virginica = 0 -4.918 8.731e-07 8.731e-07</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
+<p>Our following chapters will extend ANOVAs to consider the impact of multiple measured categories. In doing so, we will also explain paired t-tests and sign tests for paired data.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../content/Compare_proportions_among_populations.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Compare proportions</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../content/acknowledgements.html" class="pagination-link">
+        <span class="nav-page-text">Acknowledgements</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© CC BY-NC-SA 4.0</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a>.</div>
+  </div>
+</footer>
+
+
+
+</body></html>
