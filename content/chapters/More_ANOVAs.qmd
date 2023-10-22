@@ -4,6 +4,8 @@ subtitle: Dealing with multiple group membership and interactions
 bibliography: ../references.bib
 ---
 
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
@@ -336,8 +338,8 @@ notation. We'll focus on below ground biomass for this example (the
 paper measured 9 response variables!)
 
 ```{r}
-valdez_2003 <- read.csv("data/Spartina_alterniflora_traits.csv")
-valdez_model <-lm(below.biomass..g.~Snail.Level + Nitrogen.level + Snail.Level:Nitrogen.level, valdez_2003)
+valdez_2023 <- read.csv("data/Spartina_alterniflora_traits.csv")
+valdez_model <-lm(below.biomass..g.~Snail.Level + Nitrogen.level + Snail.Level:Nitrogen.level, valdez_2023)
 ```
 
 Just like before, we first check model assumptions.
@@ -356,7 +358,7 @@ Anova(valdez_model, type="III")
 But we got an error! What happened? Let's look at the data
 
 ```{r}
-paged_table(valdez_2003)
+paged_table(valdez_2023)
 ```
 
 ## Next steps
