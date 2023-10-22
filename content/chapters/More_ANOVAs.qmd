@@ -4,6 +4,11 @@ subtitle: Dealing with multiple group membership and interactions
 bibliography: ../references.bib
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
 In the last chapter we introduced the idea of comparing means among
 populations (one-way ANOVAs, our first linear models). However, the
 units that we measure may belong to multiple groups. We will extend our
@@ -327,20 +332,31 @@ plots while having no impact on ambient plots.
 
 Fortunately, these are easy to consider in our linear model framework.
 We simply add the interaction between two variables using the ":"
-notation.
+notation. We'll focus on below ground biomass for this example (the
+paper measured 9 response variables!)
 
 ```{r}
-valdez_2003 <- read.csv("./data/Spartina_ alterniflora_Traits.csv")
+valdez_2003 <- read.csv("data/Spartina_alterniflora_traits.csv")
+valdez_model <-lm(below.biomass..g.~Snail.Level + Nitrogen.level + Snail.Level:Nitrogen.level, valdez_2003)
 ```
 
-```{r}
-library(readr)
-Spartina_alterniflora_Traits <- read_csv("data/Spartina_ alterniflora_Traits.csv")
-View(Spartina_alterniflora_Traits)
-```
+Just like before, we first check model assumptions.
 
 ```{r}
-getwd()
+plot(valdez_model)
+```
+
+These look ok. There may be a slight increase in variance with fitted
+values, but we can work with this.
+
+```{r, error = T}
+Anova(valdez_model, type="III")
+```
+
+But we got an error! What happened? Let's look at the data
+
+```{r}
+paged_table(valdez_2003)
 ```
 
 ## Next steps
