@@ -20,7 +20,7 @@ studying feather color in Northern flickers (*Colaptes auratus*),
 feathers. They decided to compare the color of these odd and "typical"
 feathers.
 
-[![Northern Flicker. Mike\'s Birds, CC BY-SA 2.0
+[![Northern Flicker. Mike's Birds, CC BY-SA 2.0
 \<https://creativecommons.org/licenses/by-sa/2.0\>, via Wikimedia
 Commons](/images/Northern_Flicker_(4508135578).jpg)](https://commons.wikimedia.org/wiki/File:Northern_Flicker_(4508135578).jpg)
 
@@ -230,7 +230,8 @@ t.test(Color_index ~ Feather_type, data=feather, paired=TRUE)
 ```
 
 and get the same results as above (note we don't even have to consider
-corrections like the Welch approach since this a one-sample test)
+corrections like the Welch approach since this a one-sample test).
+Common examples of paired t-tests include before-after and twin studies.
 
 In an earlier chapters we considered options for one- and two-sample
 tests when t-tests assumptions were not met. For two-sample tests, one
@@ -307,6 +308,41 @@ Doing so can let us consider the **main effects** of multiple variables
 and potential **interactions** among them in what is often called a
 **factorial ANOVA**.
 
+For example, @valdez2023 wanted to consider the impact of top-down
+(snail grazing) and bottom- up (nutrient availability) on marsh plant
+(*Spartina alterniflora*) growth. To do this, they assigned plots to one
+of 3 grazer treatments and one of 2 nitrogen treatments.
+
+[![Fig 1 from Valdez et al. 2003. Map and conceptual illustration of
+experimental
+design.](/images/journal.pone.0286327.g001.PNG){fig-alt="Map of study site on Hog Island, Virginia, USA and conceptual illustration of experimental design with the following treatments: 1) Nitrogen addition with ambient snails, 2) nitrogen addition with three times ambient snails, 3) nitrogen addition without snails, 4) ambient nitrogen with ambient snails, 5) ambient nitrogen with three times ambient snails, and 6) ambient nitrogen without snails. The figure also depicts cage controls and uncaged plots used to assess caging effects on marsh plants. The map in the figure was created in R using ggmap [33] from ©OpenStreetMap under a ODb license, with permission from OpenStreetMapFoundation, original copyright 2018. https://www.openstreetmap.org/copyright."}](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0286327)
+
+This design is different from the bird example. No two measurements for
+a given trait were taken on the same plot. In this case, we likely care
+about the main effects, or impacts, of both variables. However, we may
+also need to consider interactions among the variables. Interactions
+occur when the impact of one variable depends on the level of another.
+For example, snail removal might have major impacts on nitrogen-enriched
+plots while having no impact on ambient plots.
+
+Fortunately, these are easy to consider in our linear model framework.
+We simply add the interaction between two variables using the ":"
+notation.
+
+```{r}
+valdez_2003 <- read.csv("./data/Spartina_ alterniflora_Traits.csv")
+```
+
+```{r}
+library(readr)
+Spartina_alterniflora_Traits <- read_csv("data/Spartina_ alterniflora_Traits.csv")
+View(Spartina_alterniflora_Traits)
+```
+
+```{r}
+getwd()
+```
+
 ## Next steps
 
 Our following chapters will extend ANOVAs to consider the impact of
@@ -315,5 +351,3 @@ t-tests and sign tests for paired data. For this test, the sign of the
 differences among paired observations is considered (negative or not)
 and a binomial test is then used to compare the now binary data to .5
 (expectation under the null hypothesis).
-
-@valdez2023
