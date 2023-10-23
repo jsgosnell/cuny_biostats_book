@@ -27,7 +27,7 @@ studying feather color in Northern flickers (*Colaptes auratus*),
 feathers. They decided to compare the color of these odd and "typical"
 feathers.
 
-[![Northern Flicker. Mike\'s Birds, CC BY-SA 2.0
+[![Northern Flicker. Mike's Birds, CC BY-SA 2.0
 \<https://creativecommons.org/licenses/by-sa/2.0\>, via Wikimedia
 Commons](/images/Northern_Flicker_(4508135578).jpg)](https://commons.wikimedia.org/wiki/File:Northern_Flicker_(4508135578).jpg)
 
@@ -335,9 +335,9 @@ even more hypotheses:
 
 $$
 \begin{split}
-H_O: \mu_\textrm{plant growth, no fertilizer} = \mu_textrm{plant growth, fertilizer}\\
-H_O: \mu_\textrm{plant growth, snails removed} = \mu_textrm{plant growth, control snails}= \mu_textrm{plant growth, snails added}\\
-H_O: \textrm{ impact of snail grazing does not depend on nitrogen level}\\
+H_O: \mu_\textrm{plant growth, no fertilizer} = \mu_\textrm{plant growth, fertilizer}\\
+H_O: \mu_\textrm{plant growth, snails removed} = \mu_\textrm{plant growth, control snails}= \mu_\textrm{plant growth, snails added}\\
+H_O: \textrm{impact of snail grazing does not depend on nitrogen level}\\
 \end{split}
 $$
 
@@ -496,7 +496,7 @@ For example, when @valdez2023 analyzed standing dead mass, they found a
 significant interaction term:
 
 ```{r}
-sdm_model <-lm(Leaf.litter..dry.weight..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",])
+sdm_model <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",])
 plot(sdm_model)
 Anova(sdm_model, type="III")
 ```
@@ -520,6 +520,61 @@ Anova(sdm_model_not_fertilized, type= "III")
 
 ```
 
+Since interactions were significant, we could also choose to compare all
+groups. the **emmeans** package offers this approach (and was likely
+used in the Valdez et al. 2023 paper).
+
+```{r}
+library(emmeans)
+emmeans(sdm_model, pairwise ~ Snail.Level*Nitrogen.level)
+
+```
+
+## Other options
+
+Bootstrapping and permutation tests options may also be used for two-way
+ANOVAs when assumptions are not met, though there is implementation is
+more complicated than single-sample designs due to the need to
+randomize/permute interaction impacts.
+
+Another option is to use weighted-least squares regression - this
+approach specifically helps when residuals are not evenly distributed
+among groups. For example, we could take the sdm_model (just as an
+example of use! it's not needed here!) This approach assume you built
+the model and then noted an issue with heteroscedasticity. If so, we can
+calculate a weight for each residual that is based on its variance -
+below makes a value that increases with low variance.
+
+```{r}
+wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2
+```
+
+We can then add a new argument to the *lm* function to use these
+weights.
+
+```{r}
+sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)
+```
+
+We can then continue on our normal route:
+
+```{r}
+plot(sdm_model_wls)
+Anova(sdm_model_wls, type="III")
+```
+
+If you compare the two models you notice slight differences - these are
+minimal here due to lack of differences in variance.
+
+```{r}
+summary(sdm_model)
+summary(sdm_model_wls)
+```
+
+Why not just always do this? Because weighted least squares implicitly
+assumes we *know* the weights. We are actually estimating them, so small
+datasets may lead to bad estimates and outcomes.
+
 ## Plotting outcomes
 
 Results from two-way ANOVAs are often plotted similarly to one-way
@@ -527,27 +582,22 @@ ANOVAs, but with colors or other aesthetics representing the additional
 group.
 
 ```{r}
-litter_summary <- summarySE(valdez_2023[valdez_2023$Snail.Level != "uncaged",], measurevar = "Leaf.litter..dry.weight..m2.", groupvars = c("Snail.Level", "Nitrogen.level"))
-litter_summary
+sdm_summary <- summarySE(valdez_2023[valdez_2023$Snail.Level != "uncaged",], measurevar = "Standing.Dead..dry..m2.", groupvars = c("Snail.Level", "Nitrogen.level"))
+sdm_summary
 ```
 
 ```{r}
-litter_summary$Snail.Level <- relevel(litter_summary$Snail.Level, "removal")
+sdm_summary$Snail.Level <- relevel(sdm_summary$Snail.Level, "removal")
 
-ggplot(litter_summary, aes(x=Snail.Level, 
-                           y=Leaf.litter..dry.weight..m2.,
+ggplot(sdm_summary, aes(x=Snail.Level, 
+                           y=Standing.Dead..dry..m2.,
                            fill=Nitrogen.level)) +
   geom_col(color="black", position=position_dodge()) +
-  geom_errorbar(aes(ymin=Leaf.litter..dry.weight..m2., ymax=Leaf.litter..dry.weight..m2.+ci), position = position_dodge()) +
-  labs(main="Grazing impacts depend on nitrogen levels",
+  geom_errorbar(aes(ymin=Standing.Dead..dry..m2., ymax=Standing.Dead..dry..m2.+ci), position = position_dodge()) +
+  labs(title="Grazing impacts depend on nitrogen levels",
        x= "Grazing level",
-       y= expression(paste("Leaf litter (" , g^{-1}, m^{-2}, ")")))
+       y= expression(paste("Standing dry mass (" , g^{-1}, m^{-2}, ")")))
 ```
-
-## Other options
-
-Bootstrapping and permutation tests options may be used for two-way
-ANOVAs when assumptions are not met.
 
 ## Next steps
 
