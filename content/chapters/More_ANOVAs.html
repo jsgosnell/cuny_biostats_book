@@ -347,8 +347,8 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#intepreting-interactions" id="toc-intepreting-interactions" class="nav-link" data-scroll-target="#intepreting-interactions">Intepreting interactions</a></li>
   </ul></li>
-  <li><a href="#plotting-outcomes" id="toc-plotting-outcomes" class="nav-link" data-scroll-target="#plotting-outcomes">Plotting outcomes</a></li>
   <li><a href="#other-options" id="toc-other-options" class="nav-link" data-scroll-target="#other-options">Other options</a></li>
+  <li><a href="#plotting-outcomes" id="toc-plotting-outcomes" class="nav-link" data-scroll-target="#plotting-outcomes">Plotting outcomes</a></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/More_ANOVAs.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/More_ANOVAs.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
@@ -382,7 +382,7 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><a href="https://commons.wikimedia.org/wiki/File:Northern_Flicker_(4508135578).jpg"><img src="../..\images/Northern_Flicker_(4508135578).jpg" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Northern Flicker. Mike's Birds, CC BY-SA 2.0 &lt;https://creativecommons.org/licenses/by-sa/2.0&gt;, via Wikimedia Commons</figcaption>
+<figcaption class="figure-caption">Northern Flicker. Mike’s Birds, CC BY-SA 2.0 &lt;https://creativecommons.org/licenses/by-sa/2.0&gt;, via Wikimedia Commons</figcaption>
 </figure>
 </div>
 <p>Example and data provided by <span class="citation" data-cites="mcdonald2014">McDonald (<a href="#ref-mcdonald2014" role="doc-biblioref">2014</a>)</span>.</p>
@@ -758,7 +758,14 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <figcaption class="figure-caption">Fig 1 from Valdez et al.&nbsp;2003. Map and conceptual illustration of experimental design.</figcaption>
 </figure>
 </div>
-<p>This design is different from the bird example. No two measurements for a given trait were taken on the same plot. In this case, we likely care about the main effects, or impacts, of both variables. However, we may also need to consider interactions among the variables. Interactions occur when the impact of one variable depends on the level of another. For example, snail removal might have major impacts on nitrogen-enriched plots while having no impact on ambient plots.</p>
+<p>This design is different from the bird example. No two measurements for a given trait were taken on the same plot. In this case, we likely care about the main effects, or impacts, of both variables. However, we may also need to consider interactions among the variables. Interactions occur when the impact of one variable depends on the level of another. For example, snail removal might have major impacts on nitrogen-enriched plots while having no impact on ambient plots. Due to this, we now have even more hypotheses:</p>
+<p><span class="math display">\[
+\begin{split}
+H_O: \mu_\textrm{plant growth, no fertilizer} = \mu_\textrm{plant growth, fertilizer}\\
+H_O: \mu_\textrm{plant growth, snails removed} = \mu_\textrm{plant growth, control snails}= \mu_\textrm{plant growth, snails added}\\
+H_O: \textrm{impact of snail grazing does not depend on nitrogen level}\\
+\end{split}
+\]</span></p>
 <p>Fortunately, these are easy to consider in our linear model framework. We simply add the interaction between two variables using the “:” notation. We’ll focus on below-ground biomass (standardized to m<sup>2</sup>) for this example (the paper measured 9 response variables!)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>valdez_2023 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Spartina_alterniflora_traits.csv"</span>, <span class="at">stringsAsFactors =</span> T)</span>
@@ -1108,7 +1115,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <p>If the interaction term is significant, it means the main effects can not be interpreted. This is because the impact of a given variable depends on the level of another. When this happens, the data is typically divided into subset and analyzed using one-way ANOVAs. Another less-used approach is to interpret interaction terms.</p>
 <p>For example, when <span class="citation" data-cites="valdez2023">Valdez et al. (<a href="#ref-valdez2023" role="doc-biblioref">2023</a>)</span> analyzed standing dead mass, they found a significant interaction term:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>sdm_model <span class="ot">&lt;-</span><span class="fu">lm</span>(Leaf.litter..dry.weight..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,])</span>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>sdm_model <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,])</span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
@@ -1126,13 +1133,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
-Response: Leaf.litter..dry.weight..m2.
+Response: Standing.Dead..dry..m2.
                             Sum Sq Df F value    Pr(&gt;F)    
-(Intercept)                 6.3365  1 21.4155 0.0005824 ***
-Snail.Level                 2.3748  2  4.0130 0.0462947 *  
-Nitrogen.level              2.3064  1  7.7949 0.0162859 *  
-Snail.Level:Nitrogen.level 12.0396  2 20.3451 0.0001395 ***
-Residuals                   3.5506 12                      
+(Intercept)                1050.19  1 328.463 4.392e-10 ***
+Snail.Level                 300.82  2  47.042 2.095e-06 ***
+Nitrogen.level              348.39  1 108.963 2.248e-07 ***
+Snail.Level:Nitrogen.level  200.90  2  31.417 1.700e-05 ***
+Residuals                    38.37 12                      
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -1215,51 +1222,217 @@ Residuals    7.783  6
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
+<p>Since interactions were significant, we could also choose to compare all groups. the <strong>emmeans</strong> package offers this approach (and was likely used in the Valdez et al.&nbsp;2023 paper).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'emmeans' was built under R version 4.2.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(sdm_model, pairwise <span class="sc">~</span> Snail.Level<span class="sc">*</span>Nitrogen.level)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$emmeans
+ Snail.Level    Nitrogen.level emmean   SE df lower.CL upper.CL
+ control snails Fertilized      18.71 1.03 12    16.46    20.96
+ removal        Fertilized       4.56 1.03 12     2.31     6.81
+ snail addition Fertilized      11.14 1.03 12     8.89    13.39
+ control snails without          3.47 1.03 12     1.22     5.72
+ removal        without          5.47 1.03 12     3.22     7.72
+ snail addition without          6.26 1.03 12     4.01     8.51
+
+Confidence level used: 0.95 
+
+$contrasts
+ contrast                                              estimate   SE df t.ratio
+ control snails Fertilized - removal Fertilized          14.150 1.46 12   9.692
+ control snails Fertilized - snail addition Fertilized    7.567 1.46 12   5.183
+ control snails Fertilized - control snails without      15.240 1.46 12  10.439
+ control snails Fertilized - removal without             13.237 1.46 12   9.066
+ control snails Fertilized - snail addition without      12.450 1.46 12   8.528
+ removal Fertilized - snail addition Fertilized          -6.583 1.46 12  -4.509
+ removal Fertilized - control snails without              1.090 1.46 12   0.747
+ removal Fertilized - removal without                    -0.913 1.46 12  -0.626
+ removal Fertilized - snail addition without             -1.700 1.46 12  -1.164
+ snail addition Fertilized - control snails without       7.673 1.46 12   5.256
+ snail addition Fertilized - removal without              5.670 1.46 12   3.884
+ snail addition Fertilized - snail addition without       4.883 1.46 12   3.345
+ control snails without - removal without                -2.003 1.46 12  -1.372
+ control snails without - snail addition without         -2.790 1.46 12  -1.911
+ removal without - snail addition without                -0.787 1.46 12  -0.539
+ p.value
+  &lt;.0001
+  0.0024
+  &lt;.0001
+  &lt;.0001
+  &lt;.0001
+  0.0072
+  0.9716
+  0.9868
+  0.8450
+  0.0021
+  0.0206
+  0.0512
+  0.7419
+  0.4406
+  0.9932
+
+P value adjustment: tukey method for comparing a family of 6 estimates </code></pre>
+</div>
+</div>
 </section>
 </section>
+</section>
+<section id="other-options" class="level2">
+<h2 class="anchored" data-anchor-id="other-options">Other options</h2>
+<p>Bootstrapping and permutation tests options may also be used for two-way ANOVAs when assumptions are not met, though there is implementation is more complicated than single-sample designs due to the need to randomize/permute interaction impacts.</p>
+<p>Another option is to use weighted-least squares regression - this approach specifically helps when residuals are not evenly distributed among groups. For example, we could take the sdm_model (just as an example of use! it’s not needed here!) This approach assume you built the model and then noted an issue with heteroscedasticity. If so, we can calculate a weight for each residual that is based on its variance - below makes a value that increases with low variance.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>wt_sdm <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">lm</span>(<span class="fu">abs</span>(sdm_model<span class="sc">$</span>residuals) <span class="sc">~</span> sdm_model<span class="sc">$</span>fitted.values)<span class="sc">$</span>fitted.values<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can then add a new argument to the <em>lm</em> function to use these weights.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>sdm_model_wls <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,], <span class="at">weights =</span> wt_sdm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can then continue on our normal route:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model_wls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-39-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-39-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-39-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model_wls, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Standing.Dead..dry..m2.
+                            Sum Sq Df F value    Pr(&gt;F)    
+(Intercept)                203.228  1  76.442 1.497e-06 ***
+Snail.Level                157.447  2  29.611 2.288e-05 ***
+Nitrogen.level             130.416  1  49.054 1.427e-05 ***
+Snail.Level:Nitrogen.level 143.013  2  26.896 3.681e-05 ***
+Residuals                   31.903 12                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>If you compare the two models you notice slight differences - these are minimal here due to lack of differences in variance.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Standing.Dead..dry..m2. ~ Snail.Level * Nitrogen.level, 
+    data = valdez_2023[valdez_2023$Snail.Level != "uncaged", 
+        ])
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.5800 -0.8350 -0.0317  0.6600  3.7400 
+
+Coefficients:
+                                                Estimate Std. Error t value
+(Intercept)                                       18.710      1.032  18.124
+Snail.Levelremoval                               -14.150      1.460  -9.692
+Snail.Levelsnail addition                         -7.567      1.460  -5.183
+Nitrogen.levelwithout                            -15.240      1.460 -10.439
+Snail.Levelremoval:Nitrogen.levelwithout          16.153      2.065   7.824
+Snail.Levelsnail addition:Nitrogen.levelwithout   10.357      2.065   5.016
+                                                Pr(&gt;|t|)    
+(Intercept)                                     4.39e-10 ***
+Snail.Levelremoval                              5.02e-07 ***
+Snail.Levelsnail addition                       0.000228 ***
+Nitrogen.levelwithout                           2.25e-07 ***
+Snail.Levelremoval:Nitrogen.levelwithout        4.72e-06 ***
+Snail.Levelsnail addition:Nitrogen.levelwithout 0.000301 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.788 on 12 degrees of freedom
+Multiple R-squared:  0.9284,    Adjusted R-squared:  0.8986 
+F-statistic: 31.14 on 5 and 12 DF,  p-value: 1.792e-06</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model_wls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Standing.Dead..dry..m2. ~ Snail.Level * Nitrogen.level, 
+    data = valdez_2023[valdez_2023$Snail.Level != "uncaged", 
+        ], weights = wt_sdm)
+
+Weighted Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.31784 -0.89013 -0.03702  0.92266  2.46121 
+
+Coefficients:
+                                                Estimate Std. Error t value
+(Intercept)                                       18.710      2.140   8.743
+Snail.Levelremoval                               -14.150      2.202  -6.426
+Snail.Levelsnail addition                         -7.567      2.490  -3.039
+Nitrogen.levelwithout                            -15.240      2.176  -7.004
+Snail.Levelremoval:Nitrogen.levelwithout          16.153      2.322   6.956
+Snail.Levelsnail addition:Nitrogen.levelwithout   10.357      2.620   3.953
+                                                Pr(&gt;|t|)    
+(Intercept)                                     1.50e-06 ***
+Snail.Levelremoval                              3.27e-05 ***
+Snail.Levelsnail addition                        0.01030 *  
+Nitrogen.levelwithout                           1.43e-05 ***
+Snail.Levelremoval:Nitrogen.levelwithout        1.53e-05 ***
+Snail.Levelsnail addition:Nitrogen.levelwithout  0.00192 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.631 on 12 degrees of freedom
+Multiple R-squared:  0.8747,    Adjusted R-squared:  0.8225 
+F-statistic: 16.75 on 5 and 12 DF,  p-value: 4.789e-05</code></pre>
+</div>
+</div>
+<p>Why not just always do this? Because weighted least squares implicitly assumes we <em>know</em> the weights. We are actually estimating them, so small datasets may lead to bad estimates and outcomes.</p>
 </section>
 <section id="plotting-outcomes" class="level2">
 <h2 class="anchored" data-anchor-id="plotting-outcomes">Plotting outcomes</h2>
 <p>Results from two-way ANOVAs are often plotted similarly to one-way ANOVAs, but with colors or other aesthetics representing the additional group.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>litter_summary <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,], <span class="at">measurevar =</span> <span class="st">"Leaf.litter..dry.weight..m2."</span>, <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"Snail.Level"</span>, <span class="st">"Nitrogen.level"</span>))</span>
-<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>litter_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>sdm_summary <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,], <span class="at">measurevar =</span> <span class="st">"Standing.Dead..dry..m2."</span>, <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"Snail.Level"</span>, <span class="st">"Nitrogen.level"</span>))</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>sdm_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     Snail.Level Nitrogen.level N Leaf.litter..dry.weight..m2.         sd
-1 control snails     Fertilized 3                    1.4533333 1.06307729
-2 control snails        without 3                    0.2133333 0.08326664
-3        removal     Fertilized 3                    0.4133333 0.18903263
-4        removal        without 3                    2.7746667 0.68923533
-5 snail addition     Fertilized 3                    1.5466667 0.24440404
-6 snail addition        without 3                    0.5866667 0.26025628
-          se        ci
-1 0.61376796 2.6408304
-2 0.04807402 0.2068458
-3 0.10913804 0.4695831
-4 0.39793020 1.7121555
-5 0.14110674 0.6071333
-6 0.15025904 0.6465124</code></pre>
+<pre><code>     Snail.Level Nitrogen.level N Standing.Dead..dry..m2.        sd        se
+1 control snails     Fertilized 3               18.710000 3.6626220 2.1146158
+2 control snails        without 3                3.470000 1.0013491 0.5781292
+3        removal     Fertilized 3                4.560000 0.4250882 0.2454248
+4        removal        without 3                5.473333 1.4150029 0.8169523
+5 snail addition     Fertilized 3               11.143333 1.3025104 0.7520047
+6 snail addition        without 3                6.260000 0.9417006 0.5436911
+        ci
+1 9.098457
+2 2.487489
+3 1.055978
+4 3.515062
+5 3.235615
+6 2.339314</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>litter_summary<span class="sc">$</span>Snail.Level <span class="ot">&lt;-</span> <span class="fu">relevel</span>(litter_summary<span class="sc">$</span>Snail.Level, <span class="st">"removal"</span>)</span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(litter_summary, <span class="fu">aes</span>(<span class="at">x=</span>Snail.Level, </span>
-<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">y=</span>Leaf.litter..dry.weight..m2.,</span>
-<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fill=</span>Nitrogen.level)) <span class="sc">+</span></span>
-<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">position=</span><span class="fu">position_dodge</span>()) <span class="sc">+</span></span>
-<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Leaf.litter..dry.weight..m2., <span class="at">ymax=</span>Leaf.litter..dry.weight..m2.<span class="sc">+</span>ci), <span class="at">position =</span> <span class="fu">position_dodge</span>()) <span class="sc">+</span></span>
-<span id="cb85-8"><a href="#cb85-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">main=</span><span class="st">"Grazing impacts depend on nitrogen levels"</span>,</span>
-<span id="cb85-9"><a href="#cb85-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Grazing level"</span>,</span>
-<span id="cb85-10"><a href="#cb85-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Leaf litter ("</span> , g<span class="sc">^</span>{<span class="sc">-</span><span class="dv">1</span>}, m<span class="sc">^</span>{<span class="sc">-</span><span class="dv">2</span>}, <span class="st">")"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>sdm_summary<span class="sc">$</span>Snail.Level <span class="ot">&lt;-</span> <span class="fu">relevel</span>(sdm_summary<span class="sc">$</span>Snail.Level, <span class="st">"removal"</span>)</span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sdm_summary, <span class="fu">aes</span>(<span class="at">x=</span>Snail.Level, </span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">y=</span>Standing.Dead..dry..m2.,</span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fill=</span>Nitrogen.level)) <span class="sc">+</span></span>
+<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">position=</span><span class="fu">position_dodge</span>()) <span class="sc">+</span></span>
+<span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Standing.Dead..dry..m2., <span class="at">ymax=</span>Standing.Dead..dry..m2.<span class="sc">+</span>ci), <span class="at">position =</span> <span class="fu">position_dodge</span>()) <span class="sc">+</span></span>
+<span id="cb98-8"><a href="#cb98-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Grazing impacts depend on nitrogen levels"</span>,</span>
+<span id="cb98-9"><a href="#cb98-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Grazing level"</span>,</span>
+<span id="cb98-10"><a href="#cb98-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Standing dry mass ("</span> , g<span class="sc">^</span>{<span class="sc">-</span><span class="dv">1</span>}, m<span class="sc">^</span>{<span class="sc">-</span><span class="dv">2</span>}, <span class="st">")"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</section>
-<section id="other-options" class="level2">
-<h2 class="anchored" data-anchor-id="other-options">Other options</h2>
-<p>Bootstrapping and permutation tests options may be used for two-way ANOVAs when assumptions are not met.</p>
 </section>
 <section id="next-steps" class="level2">
 <h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
