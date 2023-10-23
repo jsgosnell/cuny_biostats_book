@@ -27,7 +27,7 @@ studying feather color in Northern flickers (*Colaptes auratus*),
 feathers. They decided to compare the color of these odd and "typical"
 feathers.
 
-[![Northern Flicker. Mike's Birds, CC BY-SA 2.0
+[![Northern Flicker. Mike\'s Birds, CC BY-SA 2.0
 \<https://creativecommons.org/licenses/by-sa/2.0\>, via Wikimedia
 Commons](/images/Northern_Flicker_(4508135578).jpg)](https://commons.wikimedia.org/wiki/File:Northern_Flicker_(4508135578).jpg)
 
@@ -330,29 +330,50 @@ about the main effects, or impacts, of both variables. However, we may
 also need to consider interactions among the variables. Interactions
 occur when the impact of one variable depends on the level of another.
 For example, snail removal might have major impacts on nitrogen-enriched
-plots while having no impact on ambient plots.
+plots while having no impact on ambient plots. Due to this, we now have
+even more hypotheses:
+
+$$
+\begin{split}
+H_O: \mu_\textrm{plant growth, no fertilizer} = \mu_textrm{plant growth, fertilizer}\\
+H_O: \mu_\textrm{plant growth, snails removed} = \mu_textrm{plant growth, control snails}= \mu_textrm{plant growth, snails added}\\
+H_O: \textrm{ impact of snail grazing does not depend on nitrogen level}\\
+\end{split}
+$$
 
 Fortunately, these are easy to consider in our linear model framework.
 We simply add the interaction between two variables using the ":"
-notation. We'll focus on below ground biomass for this example (the
-paper measured 9 response variables!)
+notation. We'll focus on below-ground biomass (standardized to m^2^) for
+this example (the paper measured 9 response variables!)
 
 ```{r}
-valdez_2023 <- read.csv("data/Spartina_alterniflora_traits.csv")
-valdez_model <-lm(below.biomass..g.~Snail.Level + Nitrogen.level + Snail.Level:Nitrogen.level, valdez_2023)
+valdez_2023 <- read.csv("data/Spartina_alterniflora_traits.csv", stringsAsFactors = T)
+bgb_model <-lm(below.biomass.g.meter.sq..m2..~Snail.Level + Nitrogen.level + Snail.Level:Nitrogen.level, valdez_2023)
 ```
 
-Just like before, we first check model assumptions.
+For shorthand, note that if we put *main effect \* main effect* in a
+model, it automatically adds the interaction term.
 
 ```{r}
-plot(valdez_model)
+bgb_model_shorthand <-lm(below.biomass.g.meter.sq..m2..~Snail.Level * Nitrogen.level, valdez_2023)
+summary(bgb_model)
+summary(bgb_model_shorthand)
+```
+
+You may note a weird NA here (we'll come back to it) but we should
+really check model assumptions before looking at output.
+
+```{r}
+plot(bgb_model)
 ```
 
 These look ok. There may be a slight increase in variance with fitted
-values, but we can work with this.
+values, but we can work with this. Let's return to our summary and build
+an ANOVA table.
 
 ```{r, error = T}
-Anova(valdez_model, type="III")
+summary(bgb_model)
+Anova(bgb_model, type="III")
 ```
 
 But we got an error! What happened? Let's look at the data
@@ -361,11 +382,175 @@ But we got an error! What happened? Let's look at the data
 paged_table(valdez_2023)
 ```
 
+A summary may help more. Note we can summarize across multiple factors.
+
+```{r}
+library(Rmisc)
+summarySE(valdez_2023, measurevar = "below.biomass.g.meter.sq..m2..", groupvars = c("Snail.Level", "Nitrogen.level"))
+```
+
+Note the *uncaged* treatment only has *without* for the nitrogen impact.
+It was a control! While we often need these in experiments, they can
+create analysis problems. This is because we can't consider how nutrient
+level depends on snail treatment for the control level! You could note
+we have the same issue for our initial bird analysis:
+
+```{r,error=T}
+two_way_anova_example_int <- lm(Color_index ~ Feather_type * Bird, data=feather)
+Anova(two_way_anova_example_int, type="III")
+```
+
+On a positive note, this means R will typically not consider
+interactions when it shouldn't, but you need to know why in order to fix
+it.
+
+The NAs in the model summary
+
+```{r}
+summary(bgb_model)
+```
+
+Occur for the same reason. Interactions can not be calculated for some
+levels.
+
+To fix this (and deal with controls), we need to consider the data.
+@valdez2023 used t-tests (why?) to consider differences between cage and
+cage control plots (note %in% and the fact they did not focus on
+above-ground biomass (maybe because uncaged plots had little..).
+
+```{r}
+?'%in%'
+```
+
+```{r}
+t.test(below.biomass.g.meter.sq..m2..~Snail.Level, valdez_2023[valdez_2023$Snail.Level %in% c("uncaged","control snails") & valdez_2023$Nitrogen.level == "without",])
+```
+
+To consider interactions, we can remove the controls
+
+```{r}
+bgb_model_cont_removed <-lm(below.biomass.g.meter.sq..m2..~Snail.Level + Nitrogen.level + Snail.Level:Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",])
+```
+
+We can consider the assumptions
+
+```{r}
+plot(bgb_model_cont_removed)
+```
+
+and now note ...
+
+```{r}
+Anova(bgb_model_cont_removed, type="III")
+```
+
+...that the ANOVA table works.
+
+### Intepreting interactions
+
+#### When not significant
+
+If interactions are not significant, they can be handled in 2 ways.
+
+1.  We can remove the interaction from the model, re-run it, and
+    interpret main effect
+
+    ```{r}
+    bgb_model_cont_removed_int_removed <- update(bgb_model_cont_removed, .~.-Snail.Level:Nitrogen.level)
+    Anova(bgb_model_cont_removed_int_removed, type="III")
+    ```
+
+2.  We can leave the interaction in the model and interpret main effects
+    immediately
+
+The benefit of approach 1 is we "increase" the degrees of freedom
+associated with the residuals, which ends up reducing the the MST. This
+is because in 2-way ANOVA's we allocate degrees of freedom to
+calculating main effects and interactions. This approach was likely used
+in the original manuscript.
+
+The second approach is to simply use the provided output and not perform
+another series of tests, which may increase chances for a Type 1 error.
+We will return to this discussion when we get to model selection.
+
+Regardless, we can interpret main effects (though with possibly
+different outcomes). Using the approach were we drop insignificant
+interactions, we see both nitrogen and grazing levels impact below
+ground biomass. Since there are 3 levels of grazing and no interactions,
+we can consider the general impact of grazing levels:
+
+```{r}
+summary(glht(bgb_model_cont_removed_int_removed, linfct = mcp(Snail.Level = "Tukey")))
+
+```
+
+#### When significant
+
+If the interaction term is significant, it means the main effects can
+not be interpreted. This is because the impact of a given variable
+depends on the level of another. When this happens, the data is
+typically divided into subset and analyzed using one-way ANOVAs. Another
+less-used approach is to interpret interaction terms.
+
+For example, when @valdez2023 analyzed standing dead mass, they found a
+significant interaction term:
+
+```{r}
+sdm_model <-lm(Leaf.litter..dry.weight..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",])
+plot(sdm_model)
+Anova(sdm_model, type="III")
+```
+
+Following this, you could investigate impacts in plots with nitrogen,
+where you find snail manipulation had a significant impact,
+
+```{r}
+sdm_model_fertilized <-lm(Standing.Dead..dry..m2.~Snail.Level, valdez_2023[valdez_2023$Snail.Level != "uncaged" & valdez_2023$Nitrogen.level == "Fertilized",])
+plot(sdm_model_fertilized)
+Anova(sdm_model_fertilized, type= "III")
+summary(glht(sdm_model_fertilized, linfct = mcp(Snail.Level= "Tukey")))
+```
+
+and plots without added nutrients, where you find snail addition did not
+
+```{r}
+sdm_model_not_fertilized <-lm(Standing.Dead..dry..m2.~Snail.Level, valdez_2023[valdez_2023$Snail.Level != "uncaged" & valdez_2023$Nitrogen.level == "without",])
+plot(sdm_model_not_fertilized)
+Anova(sdm_model_not_fertilized, type= "III")
+
+```
+
+## Plotting outcomes
+
+Results from two-way ANOVAs are often plotted similarly to one-way
+ANOVAs, but with colors or other aesthetics representing the additional
+group.
+
+```{r}
+litter_summary <- summarySE(valdez_2023[valdez_2023$Snail.Level != "uncaged",], measurevar = "Leaf.litter..dry.weight..m2.", groupvars = c("Snail.Level", "Nitrogen.level"))
+litter_summary
+```
+
+```{r}
+litter_summary$Snail.Level <- relevel(litter_summary$Snail.Level, "removal")
+
+ggplot(litter_summary, aes(x=Snail.Level, 
+                           y=Leaf.litter..dry.weight..m2.,
+                           fill=Nitrogen.level)) +
+  geom_col(color="black", position=position_dodge()) +
+  geom_errorbar(aes(ymin=Leaf.litter..dry.weight..m2., ymax=Leaf.litter..dry.weight..m2.+ci), position = position_dodge()) +
+  labs(main="Grazing impacts depend on nitrogen levels",
+       x= "Grazing level",
+       y= expression(paste("Leaf litter (" , g^{-1}, m^{-2}, ")")))
+```
+
+## Other options
+
+Bootstrapping and permutation tests options may be used for two-way
+ANOVAs when assumptions are not met.
+
 ## Next steps
 
-Our following chapters will extend ANOVAs to consider the impact of
-multiple measured categories. In doing so, we will also explain paired
-t-tests and sign tests for paired data. For this test, the sign of the
-differences among paired observations is considered (negative or not)
-and a binomial test is then used to compare the now binary data to .5
-(expectation under the null hypothesis).
+In the next chapters we will carry our linear model approach to consider
+the relationship between continous outcomes and continuous predictor
+variables.

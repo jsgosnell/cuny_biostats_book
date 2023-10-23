@@ -1,26 +1,8 @@
 
 
-Anova(lm(Color_index ~ Feather + Bird, data=feather), type= "III")
-
-library(multcomp)
-compare <- glht(lm(Color_index ~ Feather + Bird, data=feather), linfct = mcp("Feather" = "Tukey"))
-summary(compare)
-
-#note comparison doesn't work
-Anova(lm(Color_index ~ Feather * Bird, data=feather), type= "III")
 
 
 
-
-#what if we care about other factor
-#2-way ANOVA ####
-memory <- read.table("http://www.statsci.org/data/general/eysenck.txt", header = T,
-                     stringsAsFactors = T)
-library(plyr)
-memory$Age <- relevel(memory$Age, "Younger")
-
-#graph data with line but no error bar
-#add extra call to groupvars in summarySE
 library(Rmisc)
 
 function_output <- summarySE(memory, measurevar="Words", groupvars =
