@@ -152,12 +152,17 @@ ggplot(feather, aes(x=Feather_type, y= Color_index, color=Feather_type, group=Bi
   guides(color=F)
 ```
 
-When this is true, we need to consider these connections.
+This may also occur if we measure outcomes with-in a single unit (e.g.,
+a study of fertilizer impacts using multiple fields) or over time (e.g.,
+before/after studies). Regardless of the reason, when our experimental
+design has led to measurements being connected/not independent, we need
+to consider these connections in order to properly note (and sometimes
+even observe) impacts of focal variables.
 
 ## Blocking, two-way ANOVAs,and paired t-tests
 
-In this case the connections may be considered artifacts of the data. We
-didn't assign birds. We also made a choice to compare odd and typical
+In this case, the connections may be considered artifacts of the data.
+We didn't assign birds. We also made a choice to compare odd and typical
 feathers from the same bird - why? In general, accounting for extra
 variation in the data will give you a better answer about how a given
 variable influences outcomes. This may be called *blocking*. Although
@@ -309,16 +314,83 @@ summary(compare)
 
 In the bird example, one of our categories (bird) was un-intential. We
 chose to measure odd and typical feathers, and accounting for variation
-among birds was an appropriate step given lack of independece in
-measurements. However, we can also assign units to multiple groups.
-Doing so can let us consider the **main effects** of multiple variables
-and potential **interactions** among them in what is often called a
-**factorial ANOVA**.
+among birds was an appropriate step given lack of independence in
+measurements. However, we can also assign units to multiple groups
+(instead of making multiple measurements within one unit).
 
-For example, @valdez2023 wanted to consider the impact of top-down
-(snail grazing) and bottom- up (nutrient availability) on marsh plant
-(*Spartina alterniflora*) growth. To do this, they assigned plots to one
-of 3 grazer treatments and one of 2 nitrogen treatments.
+Consider if we ran an experiment focused on the impact of factors A and
+B on some trait. We can fully cross the factors in an experiment. Doing
+so can let us consider the **main effects** of multiple variables and
+potential **interactions** among them in what is often called a
+**factorial ANOVA.** For starters, let each factor have only 2 levels,
+and let the levels be the absence or presence of the factor.
+
+|              |                  |                        |
+|--------------|------------------|------------------------|
+|              | **Factor A**     |                        |
+| **Factor B** | *Absent*         | *Present*              |
+| *Absent*     | Control          | Impact of A only       |
+| *Present*    | Impact of B only | Combined impact of A+B |
+
+<details><summary> Experimental design notes</summary>
+
+For a factorial ANOVA, we need to assign each unit randomly to a level
+of factor A. Then each level of factor B is randomly assigned to
+subjects at each level of factor A. This is different than randomly
+assigning treatments of A and B, as that could lead to outcomes where
+some level of factor B is not represented in some level of factor A.
+
+We also need multiple units (3+) assigned to each combination.
+
+</details>
+
+When both are absent we have a classic control outcome. When one is
+present and the other absent we see **main effects** impacts of only one
+factor. Note we previously analyzed experiments that considered *only*
+one factor using ANOVAs or t-tests (linear models), but now we have
+multiple factors. **We should not analyze the main effects of each using
+2 one-way ANOVAs**. Doing so cuts our data in half, meaning our
+estimates of variances are less precise and we increase our chance of
+making a type 1 error. More importantly, we wouldn't be able to properly
+consider the combined impacts of A + B. What could these be?
+
+```{r}
+example_interaction <- data.frame(Treatment = c(rep("Control",6),
+                                                rep("Impact of A only",6),
+                                                rep("Impact of B only",6),
+                                                rep("A+B Additive",6), 
+                                                rep("A+B Synergistic", 6),
+                                                rep("A+B Antagonistic", 6)), 
+                                  Cause= rep(c("Control","Factor A","Factor B", "Additive", "Synergistic", "Antagonistic"), 6),
+                                  Impact = c(5,0,0,0,0,0,
+                                             5,2,0,0,0,0,
+                                             5,0,3,0,0,0,
+                                             5,2,3,0,0,0,
+                                             5,2,3,0,10,0,
+                                             0,0,0,0,0,6))
+example_interaction$Treatment <- factor(example_interaction$Treatment, levels=c("Control","Impact of A only","Impact of B only", "A+B Additive", "A+B Synergistic", "A+B Antagonistic"))
+example_interaction$Cause <- factor(example_interaction$Cause, levels=c("Control","Factor A","Factor B", "Additive", "Synergistic", "Antagonistic"))
+ggplot(example_interaction, aes(x=Treatment, y= Impact, fill= Cause))+
+  geom_col(position = position_stack(reverse = TRUE))+
+  theme(axis.text.x = element_text(angle = -45))
+  
+```
+
+As shown in the graph (Inspired by [@fong2017]), A and B could have
+additive effects (where they simply stack), synergistic effects (the
+combined impact is more than the sum of the two), or antagonistic
+effects (the combined impacts is less than the sum of the two).
+Synergistic and antagonistic impacts are both examples of
+**interactions**. Interactions occur when the impact of one variable
+depends on the level of another.
+
+### Example: Impacts of grazing and fertilization
+
+We can extend this example to consider more than 2 levels for one or
+more factors. For example, @valdez2023 wanted to consider the impact of
+top-down (snail grazing) and bottom- up (nutrient availability) on marsh
+plant (*Spartina alterniflora*) growth. To do this, they assigned plots
+to one of 3 grazer treatments and one of 2 nitrogen treatments.
 
 [![Fig 1 from Valdez et al. 2003. Map and conceptual illustration of
 experimental
