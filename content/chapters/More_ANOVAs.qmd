@@ -355,21 +355,21 @@ making a type 1 error. More importantly, we wouldn't be able to properly
 consider the combined impacts of A + B. What could these be?
 
 ```{r}
-example_interaction <- data.frame(Treatment = c(rep("Control",6),
-                                                rep("Impact of A only",6),
-                                                rep("Impact of B only",6),
-                                                rep("A+B Additive",6), 
-                                                rep("A+B Synergistic", 6),
-                                                rep("A+B Antagonistic", 6)), 
-                                  Cause= rep(c("Control","Factor A","Factor B", "Additive", "Synergistic", "Antagonistic"), 6),
-                                  Impact = c(5,0,0,0,0,0,
-                                             5,2,0,0,0,0,
-                                             5,0,3,0,0,0,
-                                             5,2,3,0,0,0,
-                                             5,2,3,0,10,0,
-                                             0,0,0,0,0,6))
+example_interaction <- data.frame(Treatment = c(rep("Control",5),
+                                                rep("Impact of A only",5),
+                                                rep("Impact of B only",5),
+                                                rep("A+B Additive",5), 
+                                                rep("A+B Synergistic", 5),
+                                                rep("A+B Antagonistic", 5)), 
+                                  Cause= rep(c("Control","Factor A","Factor B", "Synergistic", "Antagonistic"), 6),
+                                  Impact = c(5,0,0,0,0,
+                                             5,2,0,0,0,
+                                             5,0,3,0,0,
+                                             5,2,3,0,0,
+                                             0,0,0,20,0,
+                                             0,0,0,0,6))
 example_interaction$Treatment <- factor(example_interaction$Treatment, levels=c("Control","Impact of A only","Impact of B only", "A+B Additive", "A+B Synergistic", "A+B Antagonistic"))
-example_interaction$Cause <- factor(example_interaction$Cause, levels=c("Control","Factor A","Factor B", "Additive", "Synergistic", "Antagonistic"))
+example_interaction$Cause <- factor(example_interaction$Cause, levels=c("Control","Factor A","Factor B", "Synergistic", "Antagonistic"))
 ggplot(example_interaction, aes(x=Treatment, y= Impact, fill= Cause))+
   geom_col(position = position_stack(reverse = TRUE))+
   theme(axis.text.x = element_text(angle = -45))
@@ -424,7 +424,8 @@ bgb_model <-lm(below.biomass.g.meter.sq..m2..~Snail.Level + Nitrogen.level + Sna
 ```
 
 For shorthand, note that if we put *main effect \* main effect* in a
-model, it automatically adds the interaction term.
+model, it automatically adds the interaction term. You can see the model
+summary is the same.
 
 ```{r}
 bgb_model_shorthand <-lm(below.biomass.g.meter.sq..m2..~Snail.Level * Nitrogen.level, valdez_2023)
@@ -432,19 +433,17 @@ summary(bgb_model)
 summary(bgb_model_shorthand)
 ```
 
-You may note a weird NA here (we'll come back to it) but we should
-really check model assumptions before looking at output.
+You may note a weird NA here (we'll come back to it), but remember we
+should really check model assumptions before looking at output.
 
 ```{r}
 plot(bgb_model)
 ```
 
 These look ok. There may be a slight increase in variance with fitted
-values, but we can work with this. Let's return to our summary and build
-an ANOVA table.
+values, but we can work with this. Let's build an ANOVA table.
 
 ```{r, error = T}
-summary(bgb_model)
 Anova(bgb_model, type="III")
 ```
 
@@ -458,14 +457,22 @@ A summary may help more. Note we can summarize across multiple factors.
 
 ```{r}
 library(Rmisc)
-summarySE(valdez_2023, measurevar = "below.biomass.g.meter.sq..m2..", groupvars = c("Snail.Level", "Nitrogen.level"))
+paged_table(summarySE(valdez_2023, measurevar = "below.biomass.g.meter.sq..m2..", groupvars = c("Snail.Level", "Nitrogen.level")))
 ```
 
 Note the *uncaged* treatment only has *without* for the nitrogen impact.
 It was a control! While we often need these in experiments, they can
 create analysis problems. This is because we can't consider how nutrient
-level depends on snail treatment for the control level! You could note
-we have the same issue for our initial bird analysis:
+level depends on snail treatment for the control level! In other words,
+interactions can not be calculated for some levels.
+
+This is also why we saw the NA and warnings in our model summary
+
+```{r}
+summary(bgb_model)
+```
+
+You could note we have the same issue for our initial bird analysis:
 
 ```{r,error=T}
 two_way_anova_example_int <- lm(Color_index ~ Feather_type * Bird, data=feather)
@@ -476,14 +483,7 @@ On a positive note, this means R will typically not consider
 interactions when it shouldn't, but you need to know why in order to fix
 it.
 
-The NAs in the model summary
-
-```{r}
-summary(bgb_model)
-```
-
-Occur for the same reason. Interactions can not be calculated for some
-levels.
+### Dealing  with controls and missing interactions
 
 To fix this (and deal with controls), we need to consider the data.
 @valdez2023 used t-tests (why?) to consider differences between cage and
@@ -500,6 +500,13 @@ quotations for operators!)
 ```{r}
 t.test(below.biomass.g.meter.sq..m2..~Snail.Level, valdez_2023[valdez_2023$Snail.Level %in% c("uncaged","control snails") & valdez_2023$Nitrogen.level == "without",])
 ```
+
+If interactions are missing for other reasons (e.g., a set of units
+failed/died/data was lost), we can either ignore interactions or combine
+factor levels into a single new treatment variable and analyze using
+one-way ANOVAs.
+
+### Considering interactions
 
 To consider interactions, we can remove the controls
 
@@ -527,32 +534,33 @@ Anova(bgb_model_cont_removed, type="III")
 
 If interactions are not significant, they can be handled in 2 ways.
 
-1.  We can remove the interaction from the model, re-run it, and
-    interpret main effect
+1.  We can leave the interaction in the model and interpret main effects
+    immediately
+
+2.  We can remove the interaction from the model, re-run it, and
+    interpret main effects of the factors.
 
     ```{r}
     bgb_model_cont_removed_int_removed <- update(bgb_model_cont_removed, .~.-Snail.Level:Nitrogen.level)
+    plot(bgb_model_cont_removed_int_removed)
     Anova(bgb_model_cont_removed_int_removed, type="III")
     ```
 
-2.  We can leave the interaction in the model and interpret main effects
-    immediately
-
-The benefit of approach 1 is we "increase" the degrees of freedom
-associated with the residuals, which ends up reducing the the MST. This
-is because in 2-way ANOVA's we allocate degrees of freedom to
-calculating main effects and interactions. This approach was likely used
-in the original manuscript.
-
-The second approach is to simply use the provided output and not perform
-another series of tests, which may increase chances for a Type 1 error.
-We will return to this discussion when we get to model selection.
-
 Regardless, we can interpret main effects (though with possibly
-different outcomes). Using the approach were we drop insignificant
-interactions, we see both nitrogen and grazing levels impact below
-ground biomass. Since there are 3 levels of grazing and no interactions,
-we can consider the general impact of grazing levels:
+different outcomes). The benefit of approach 2 is we "increase" the
+degrees of freedom associated with the residuals, which ends up reducing
+the the MST. This is because in 2-way ANOVAs we allocate degrees of
+freedom to calculating main effects and interactions. This approach was
+likely used in the original manuscript.
+
+Simply using the the provided output (approach 1) and not perform
+another series of tests, however, reduces the chances for a Type 1
+error. We will return to this discussion when we get to model selection.
+
+If we see significant effects of a factor that has more than 2 levels
+(like we do when using the approach that drops insignificant
+interactions), we can consider the general impact of grazing levels
+using post-hoc tests:
 
 ```{r}
 summary(glht(bgb_model_cont_removed_int_removed, linfct = mcp(Snail.Level = "Tukey")))
@@ -564,8 +572,7 @@ summary(glht(bgb_model_cont_removed_int_removed, linfct = mcp(Snail.Level = "Tuk
 If the interaction term is significant, it means the main effects can
 not be interpreted. This is because the impact of a given variable
 depends on the level of another. When this happens, the data is
-typically divided into subset and analyzed using one-way ANOVAs. Another
-less-used approach is to interpret interaction terms.
+typically divided into subset and analyzed using one-way ANOVAs.
 
 For example, when @valdez2023 analyzed standing dead mass, they found a
 significant interaction term:
@@ -577,7 +584,8 @@ Anova(sdm_model, type="III")
 ```
 
 Following this, you could investigate impacts in plots with nitrogen,
-where you find snail manipulation had a significant impact,
+where you find snail manipulation had a significant impact (and
+considered post-hoc which ones!)
 
 ```{r}
 sdm_model_fertilized <-lm(Standing.Dead..dry..m2.~Snail.Level, valdez_2023[valdez_2023$Snail.Level != "uncaged" & valdez_2023$Nitrogen.level == "Fertilized",])
@@ -595,15 +603,37 @@ Anova(sdm_model_not_fertilized, type= "III")
 
 ```
 
-Since interactions were significant, we could also choose to compare all
-groups. the **emmeans** package offers this approach (and was likely
-used in the Valdez et al. 2023 paper).
+Other approaches for dealing with significant interactions include
+directly interpreting interaction terms (which we can do given our
+understanding of linear model coefficients), but this is rarely used.
+They are somewhat messy
+
+```{r}
+coef(sdm_model)
+```
+
+Another approach when interactions are significant is to compare all
+group means (somewhat like a Tukey design for combined treatment
+levels). The **emmeans** package offers this approach.
 
 ```{r}
 library(emmeans)
 emmeans(sdm_model, pairwise ~ Snail.Level*Nitrogen.level)
 
 ```
+
+This was likely the approach used in the Valdez et al. 2023 paper.
+
+```{r}
+paged_table(data.frame(emmeans(sdm_model, pairwise ~ Snail.Level*Nitrogen.level)$contrasts))
+paged_table(data.frame(emmeans(sdm_model, pairwise ~ Snail.Level)$contrasts))
+paged_table(data.frame(emmeans(sdm_model, pairwise ~ Nitrogen.level)$contrasts))
+
+```
+
+Note the warning; if interactions are significant comparing main effects
+may be inappropriate (which is why other approaches include subsetting
+the data).
 
 ## Other options
 
