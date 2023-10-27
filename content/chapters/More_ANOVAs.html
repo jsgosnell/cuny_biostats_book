@@ -345,6 +345,9 @@ div.csl-indent {
   </ul></li>
   <li><a href="#other-ways-to-be-in-multiple-groups" id="toc-other-ways-to-be-in-multiple-groups" class="nav-link" data-scroll-target="#other-ways-to-be-in-multiple-groups">Other ways to be in multiple groups</a>
   <ul class="collapse">
+  <li><a href="#example-impacts-of-grazing-and-fertilization" id="toc-example-impacts-of-grazing-and-fertilization" class="nav-link" data-scroll-target="#example-impacts-of-grazing-and-fertilization">Example: Impacts of grazing and fertilization</a></li>
+  <li><a href="#dealing-with-controls-and-missing-interactions" id="toc-dealing-with-controls-and-missing-interactions" class="nav-link" data-scroll-target="#dealing-with-controls-and-missing-interactions">Dealing with controls and missing interactions</a></li>
+  <li><a href="#considering-interactions" id="toc-considering-interactions" class="nav-link" data-scroll-target="#considering-interactions">Considering interactions</a></li>
   <li><a href="#intepreting-interactions" id="toc-intepreting-interactions" class="nav-link" data-scroll-target="#intepreting-interactions">Intepreting interactions</a></li>
   </ul></li>
   <li><a href="#other-options" id="toc-other-options" class="nav-link" data-scroll-target="#other-options">Other options</a></li>
@@ -496,11 +499,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>When this is true, we need to consider these connections.</p>
+<p>This may also occur if we measure outcomes with-in a single unit (e.g., a study of fertilizer impacts using multiple fields) or over time (e.g., before/after studies). Regardless of the reason, when our experimental design has led to measurements being connected/not independent, we need to consider these connections in order to properly note (and sometimes even observe) impacts of focal variables.</p>
 </section>
 <section id="blocking-two-way-anovasand-paired-t-tests" class="level2">
 <h2 class="anchored" data-anchor-id="blocking-two-way-anovasand-paired-t-tests">Blocking, two-way ANOVAs,and paired t-tests</h2>
-<p>In this case the connections may be considered artifacts of the data. We didn’t assign birds. We also made a choice to compare odd and typical feathers from the same bird - why? In general, accounting for extra variation in the data will give you a better answer about how a given variable influences outcomes. This may be called <em>blocking</em>. Although the motivation might therefore be to get a “better” p value, it should be driven by experimental design (and thus we started with an example where we didn’t “need” to account for it to achieve significance).</p>
+<p>In this case, the connections may be considered artifacts of the data. We didn’t assign birds. We also made a choice to compare odd and typical feathers from the same bird - why? In general, accounting for extra variation in the data will give you a better answer about how a given variable influences outcomes. This may be called <em>blocking</em>. Although the motivation might therefore be to get a “better” p value, it should be driven by experimental design (and thus we started with an example where we didn’t “need” to account for it to achieve significance).</p>
 <p>In order to consider how color differs by bird <em>and</em> feather type, we need to add both variables to our model. This is possible because, as we noted earlier, we can subdivide variance among multiple levels. For each variable we add, we also add a null (and corresponding alternative) hypothesis. So we retain our focus on feather type:</p>
 <p><span class="math display">\[
 \begin{split}
@@ -750,8 +753,67 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 </section>
 <section id="other-ways-to-be-in-multiple-groups" class="level2">
 <h2 class="anchored" data-anchor-id="other-ways-to-be-in-multiple-groups">Other ways to be in multiple groups</h2>
-<p>In the bird example, one of our categories (bird) was un-intential. We chose to measure odd and typical feathers, and accounting for variation among birds was an appropriate step given lack of independece in measurements. However, we can also assign units to multiple groups. Doing so can let us consider the <strong>main effects</strong> of multiple variables and potential <strong>interactions</strong> among them in what is often called a <strong>factorial ANOVA</strong>.</p>
-<p>For example, <span class="citation" data-cites="valdez2023">Valdez et al. (<a href="#ref-valdez2023" role="doc-biblioref">2023</a>)</span> wanted to consider the impact of top-down (snail grazing) and bottom- up (nutrient availability) on marsh plant (<em>Spartina alterniflora</em>) growth. To do this, they assigned plots to one of 3 grazer treatments and one of 2 nitrogen treatments.</p>
+<p>In the bird example, one of our categories (bird) was un-intential. We chose to measure odd and typical feathers, and accounting for variation among birds was an appropriate step given lack of independence in measurements. However, we can also assign units to multiple groups (instead of making multiple measurements within one unit).</p>
+<p>Consider if we ran an experiment focused on the impact of factors A and B on some trait. We can fully cross the factors in an experiment. Doing so can let us consider the <strong>main effects</strong> of multiple variables and potential <strong>interactions</strong> among them in what is often called a <strong>factorial ANOVA.</strong> For starters, let each factor have only 2 levels, and let the levels be the absence or presence of the factor.</p>
+<table class="table">
+<tbody>
+<tr class="odd">
+<td></td>
+<td><strong>Factor A</strong></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Factor B</strong></td>
+<td><em>Absent</em></td>
+<td><em>Present</em></td>
+</tr>
+<tr class="odd">
+<td><em>Absent</em></td>
+<td>Control</td>
+<td>Impact of A only</td>
+</tr>
+<tr class="even">
+<td><em>Present</em></td>
+<td>Impact of B only</td>
+<td>Combined impact of A+B</td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary>
+Experimental design notes
+</summary>
+<p>For a factorial ANOVA, we need to assign each unit randomly to a level of factor A. Then each level of factor B is randomly assigned to subjects at each level of factor A. This is different than randomly assigning treatments of A and B, as that could lead to outcomes where some level of factor B is not represented in some level of factor A.</p>
+<p>We also need multiple units (3+) assigned to each combination.</p>
+</details>
+<p>When both are absent we have a classic control outcome. When one is present and the other absent we see <strong>main effects</strong> impacts of only one factor. Note we previously analyzed experiments that considered <em>only</em> one factor using ANOVAs or t-tests (linear models), but now we have multiple factors. <strong>We should not analyze the main effects of each using 2 one-way ANOVAs</strong>. Doing so cuts our data in half, meaning our estimates of variances are less precise and we increase our chance of making a type 1 error. More importantly, we wouldn’t be able to properly consider the combined impacts of A + B. What could these be?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>example_interaction <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Treatment =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"Control"</span>,<span class="dv">5</span>),</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>                                                <span class="fu">rep</span>(<span class="st">"Impact of A only"</span>,<span class="dv">5</span>),</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                                                <span class="fu">rep</span>(<span class="st">"Impact of B only"</span>,<span class="dv">5</span>),</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                                                <span class="fu">rep</span>(<span class="st">"A+B Additive"</span>,<span class="dv">5</span>), </span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                                                <span class="fu">rep</span>(<span class="st">"A+B Synergistic"</span>, <span class="dv">5</span>),</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>                                                <span class="fu">rep</span>(<span class="st">"A+B Antagonistic"</span>, <span class="dv">5</span>)), </span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Cause=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Control"</span>,<span class="st">"Factor A"</span>,<span class="st">"Factor B"</span>, <span class="st">"Synergistic"</span>, <span class="st">"Antagonistic"</span>), <span class="dv">6</span>),</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Impact =</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>                                             <span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>                                             <span class="dv">5</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">0</span>,<span class="dv">0</span>,</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>                                             <span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">0</span>,<span class="dv">0</span>,</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>                                             <span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">20</span>,<span class="dv">0</span>,</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>                                             <span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">6</span>))</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>example_interaction<span class="sc">$</span>Treatment <span class="ot">&lt;-</span> <span class="fu">factor</span>(example_interaction<span class="sc">$</span>Treatment, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"Control"</span>,<span class="st">"Impact of A only"</span>,<span class="st">"Impact of B only"</span>, <span class="st">"A+B Additive"</span>, <span class="st">"A+B Synergistic"</span>, <span class="st">"A+B Antagonistic"</span>))</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>example_interaction<span class="sc">$</span>Cause <span class="ot">&lt;-</span> <span class="fu">factor</span>(example_interaction<span class="sc">$</span>Cause, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"Control"</span>,<span class="st">"Factor A"</span>,<span class="st">"Factor B"</span>, <span class="st">"Synergistic"</span>, <span class="st">"Antagonistic"</span>))</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(example_interaction, <span class="fu">aes</span>(<span class="at">x=</span>Treatment, <span class="at">y=</span> Impact, <span class="at">fill=</span> Cause))<span class="sc">+</span></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_stack</span>(<span class="at">reverse =</span> <span class="cn">TRUE</span>))<span class="sc">+</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="sc">-</span><span class="dv">45</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>As shown in the graph (Inspired by <span class="citation" data-cites="fong2017">(<a href="#ref-fong2017" role="doc-biblioref">Fong, Bittick, and Fong 2017</a>)</span>), A and B could have additive effects (where they simply stack), synergistic effects (the combined impact is more than the sum of the two), or antagonistic effects (the combined impacts is less than the sum of the two). Synergistic and antagonistic impacts are both examples of <strong>interactions</strong>. Interactions occur when the impact of one variable depends on the level of another.</p>
+<section id="example-impacts-of-grazing-and-fertilization" class="level3">
+<h3 class="anchored" data-anchor-id="example-impacts-of-grazing-and-fertilization">Example: Impacts of grazing and fertilization</h3>
+<p>We can extend this example to consider more than 2 levels for one or more factors. For example, <span class="citation" data-cites="valdez2023">Valdez et al. (<a href="#ref-valdez2023" role="doc-biblioref">2023</a>)</span> wanted to consider the impact of top-down (snail grazing) and bottom- up (nutrient availability) on marsh plant (<em>Spartina alterniflora</em>) growth. To do this, they assigned plots to one of 3 grazer treatments and one of 2 nitrogen treatments.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0286327"><img src="../..\images/journal.pone.0286327.g001.PNG" class="img-fluid figure-img" alt="Map of study site on Hog Island, Virginia, USA and conceptual illustration of experimental design with the following treatments: 1) Nitrogen addition with ambient snails, 2) nitrogen addition with three times ambient snails, 3) nitrogen addition without snails, 4) ambient nitrogen with ambient snails, 5) ambient nitrogen with three times ambient snails, and 6) ambient nitrogen without snails. The figure also depicts cage controls and uncaged plots used to assess caging effects on marsh plants. The map in the figure was created in R using ggmap [33] from ©OpenStreetMap under a ODb license, with permission from OpenStreetMapFoundation, original copyright 2018. https://www.openstreetmap.org/copyright."></a></p>
@@ -768,13 +830,13 @@ H_O: \textrm{impact of snail grazing does not depend on nitrogen level}\\
 \]</span></p>
 <p>Fortunately, these are easy to consider in our linear model framework. We simply add the interaction between two variables using the “:” notation. We’ll focus on below-ground biomass (standardized to m<sup>2</sup>) for this example (the paper measured 9 response variables!)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>valdez_2023 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Spartina_alterniflora_traits.csv"</span>, <span class="at">stringsAsFactors =</span> T)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>bgb_model <span class="ot">&lt;-</span><span class="fu">lm</span>(below.biomass.g.meter.sq..m2..<span class="sc">~</span>Snail.Level <span class="sc">+</span> Nitrogen.level <span class="sc">+</span> Snail.Level<span class="sc">:</span>Nitrogen.level, valdez_2023)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>valdez_2023 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Spartina_alterniflora_traits.csv"</span>, <span class="at">stringsAsFactors =</span> T)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>bgb_model <span class="ot">&lt;-</span><span class="fu">lm</span>(below.biomass.g.meter.sq..m2..<span class="sc">~</span>Snail.Level <span class="sc">+</span> Nitrogen.level <span class="sc">+</span> Snail.Level<span class="sc">:</span>Nitrogen.level, valdez_2023)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>For shorthand, note that if we put <em>main effect * main effect</em> in a model, it automatically adds the interaction term.</p>
+<p>For shorthand, note that if we put <em>main effect * main effect</em> in a model, it automatically adds the interaction term. You can see the model summary is the same.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>bgb_model_shorthand <span class="ot">&lt;-</span><span class="fu">lm</span>(below.biomass.g.meter.sq..m2..<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bgb_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>bgb_model_shorthand <span class="ot">&lt;-</span><span class="fu">lm</span>(below.biomass.g.meter.sq..m2..<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bgb_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -811,7 +873,7 @@ Residual standard error: 70.53 on 14 degrees of freedom
 Multiple R-squared:  0.498, Adjusted R-squared:  0.2829 
 F-statistic: 2.315 on 6 and 14 DF,  p-value: 0.09183</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bgb_model_shorthand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bgb_model_shorthand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -849,69 +911,32 @@ Multiple R-squared:  0.498, Adjusted R-squared:  0.2829
 F-statistic: 2.315 on 6 and 14 DF,  p-value: 0.09183</code></pre>
 </div>
 </div>
-<p>You may note a weird NA here (we’ll come back to it) but we should really check model assumptions before looking at output.</p>
+<p>You may note a weird NA here (we’ll come back to it), but remember we should really check model assumptions before looking at output.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bgb_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bgb_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-20-3.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-21-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-20-4.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-21-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-21-4.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>These look ok. There may be a slight increase in variance with fitted values, but we can work with this. Let’s return to our summary and build an ANOVA table.</p>
+<p>These look ok. There may be a slight increase in variance with fitted values, but we can work with this. Let’s build an ANOVA table.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bgb_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = below.biomass.g.meter.sq..m2.. ~ Snail.Level + Nitrogen.level + 
-    Snail.Level:Nitrogen.level, data = valdez_2023)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--103.003  -50.933    1.507   28.297  153.937 
-
-Coefficients: (1 not defined because of singularities)
-                                                Estimate Std. Error t value
-(Intercept)                                       542.16      40.72  13.315
-Snail.Levelremoval                                 33.58      57.58   0.583
-Snail.Levelsnail addition                         -88.85      57.58  -1.543
-Snail.Leveluncaged                                 45.09      57.58   0.783
-Nitrogen.levelwithout                            -111.87      57.58  -1.943
-Snail.Levelremoval:Nitrogen.levelwithout           43.39      81.44   0.533
-Snail.Levelsnail addition:Nitrogen.levelwithout    60.18      81.44   0.739
-Snail.Leveluncaged:Nitrogen.levelwithout              NA         NA      NA
-                                                Pr(&gt;|t|)    
-(Intercept)                                     2.44e-09 ***
-Snail.Levelremoval                                0.5691    
-Snail.Levelsnail addition                         0.1451    
-Snail.Leveluncaged                                0.4467    
-Nitrogen.levelwithout                             0.0724 .  
-Snail.Levelremoval:Nitrogen.levelwithout          0.6025    
-Snail.Levelsnail addition:Nitrogen.levelwithout   0.4721    
-Snail.Leveluncaged:Nitrogen.levelwithout              NA    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 70.53 on 14 degrees of freedom
-Multiple R-squared:  0.498, Adjusted R-squared:  0.2829 
-F-statistic: 2.315 on 6 and 14 DF,  p-value: 0.09183</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(bgb_model, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(bgb_model, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in Anova.III.lm(mod, error, singular.ok = singular.ok, ...): there are aliased coefficients in the model</code></pre>
 </div>
 </div>
 <p>But we got an error! What happened? Let’s look at the data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(valdez_2023)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(valdez_2023)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -923,42 +948,24 @@ F-statistic: 2.315 on 6 and 14 DF,  p-value: 0.09183</code></pre>
 </div>
 <p>A summary may help more. Note we can summarize across multiple factors.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: plyr</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarySE</span>(valdez_2023, <span class="at">measurevar =</span> <span class="st">"below.biomass.g.meter.sq..m2.."</span>, <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"Snail.Level"</span>, <span class="st">"Nitrogen.level"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     Snail.Level Nitrogen.level N below.biomass.g.meter.sq..m2..        sd
-1 control snails     Fertilized 3                       542.1633 135.83149
-2 control snails        without 3                       430.2967  63.43541
-3        removal     Fertilized 3                       575.7433  15.33561
-4        removal        without 3                       507.2633  58.85590
-5 snail addition     Fertilized 3                       453.3100  60.54124
-6 snail addition        without 3                       401.6267  11.88948
-7        uncaged        without 3                       475.3833  69.54555
-         se        ci
-1 78.422349 337.42413
-2 36.624450 157.58229
-3  8.854019  38.09577
-4 33.980472 146.20617
-5 34.953501 150.39278
-6  6.864392  29.53510
-7 40.152141 172.76072</code></pre>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(<span class="fu">summarySE</span>(valdez_2023, <span class="at">measurevar =</span> <span class="st">"below.biomass.g.meter.sq..m2.."</span>, <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"Snail.Level"</span>, <span class="st">"Nitrogen.level"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Snail.Level"],"name":[1],"type":["fct"],"align":["left"]},{"label":["Nitrogen.level"],"name":[2],"type":["fct"],"align":["left"]},{"label":["N"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["below.biomass.g.meter.sq..m2.."],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["se"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["ci"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"control snails","2":"Fertilized","3":"3","4":"542.1633","5":"135.83149","6":"78.422349","7":"337.42413"},{"1":"control snails","2":"without","3":"3","4":"430.2967","5":"63.43541","6":"36.624450","7":"157.58229"},{"1":"removal","2":"Fertilized","3":"3","4":"575.7433","5":"15.33561","6":"8.854019","7":"38.09577"},{"1":"removal","2":"without","3":"3","4":"507.2633","5":"58.85590","6":"33.980472","7":"146.20617"},{"1":"snail addition","2":"Fertilized","3":"3","4":"453.3100","5":"60.54124","6":"34.953501","7":"150.39278"},{"1":"snail addition","2":"without","3":"3","4":"401.6267","5":"11.88948","6":"6.864392","7":"29.53510"},{"1":"uncaged","2":"without","3":"3","4":"475.3833","5":"69.54555","6":"40.152141","7":"172.76072"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
 </div>
-<p>Note the <em>uncaged</em> treatment only has <em>without</em> for the nitrogen impact. It was a control! While we often need these in experiments, they can create analysis problems. This is because we can’t consider how nutrient level depends on snail treatment for the control level! You could note we have the same issue for our initial bird analysis:</p>
+</div>
+<p>Note the <em>uncaged</em> treatment only has <em>without</em> for the nitrogen impact. It was a control! While we often need these in experiments, they can create analysis problems. This is because we can’t consider how nutrient level depends on snail treatment for the control level! In other words, interactions can not be calculated for some levels.</p>
+<p>This is also why we saw the NA and warnings in our model summary</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>two_way_anova_example_int <span class="ot">&lt;-</span> <span class="fu">lm</span>(Color_index <span class="sc">~</span> Feather_type <span class="sc">*</span> Bird, <span class="at">data=</span>feather)</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(two_way_anova_example_int, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in Anova.lm(two_way_anova_example_int, type = "III"): residual df = 0</code></pre>
-</div>
-</div>
-<p>On a positive note, this means R will typically not consider interactions when it shouldn’t, but you need to know why in order to fix it.</p>
-<p>The NAs in the model summary</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bgb_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bgb_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -996,16 +1003,24 @@ Multiple R-squared:  0.498, Adjusted R-squared:  0.2829
 F-statistic: 2.315 on 6 and 14 DF,  p-value: 0.09183</code></pre>
 </div>
 </div>
-<p>Occur for the same reason. Interactions can not be calculated for some levels.</p>
-<p>To fix this (and deal with controls), we need to consider the data. <span class="citation" data-cites="valdez2023">Valdez et al. (<a href="#ref-valdez2023" role="doc-biblioref">2023</a>)</span> used t-tests (why?) to consider differences between cage and cage control plots (note %in% and the fact they did not focus on above-ground biomass (maybe because uncaged plots had little..).</p>
+<p>You could note we have the same issue for our initial bird analysis:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>?<span class="st">'%in%'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>starting httpd help server ... done</code></pre>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>two_way_anova_example_int <span class="ot">&lt;-</span> <span class="fu">lm</span>(Color_index <span class="sc">~</span> Feather_type <span class="sc">*</span> Bird, <span class="at">data=</span>feather)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(two_way_anova_example_int, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in Anova.lm(two_way_anova_example_int, type = "III"): residual df = 0</code></pre>
 </div>
 </div>
+<p>On a positive note, this means R will typically not consider interactions when it shouldn’t, but you need to know why in order to fix it.</p>
+</section>
+<section id="dealing-with-controls-and-missing-interactions" class="level3">
+<h3 class="anchored" data-anchor-id="dealing-with-controls-and-missing-interactions">Dealing with controls and missing interactions</h3>
+<p>To fix this (and deal with controls), we need to consider the data. <span class="citation" data-cites="valdez2023">Valdez et al. (<a href="#ref-valdez2023" role="doc-biblioref">2023</a>)</span> used t-tests (why?) to consider differences between cage and cage control plots (note %in% and the fact they did not focus on above-ground biomass (maybe because uncaged plots had little..). %in% allows you to subset data by matching items to list. Remember you can always get help on functions using something like (we need the quotations for operators!)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(below.biomass.g.meter.sq..m2..<span class="sc">~</span>Snail.Level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"uncaged"</span>,<span class="st">"control snails"</span>) <span class="sc">&amp;</span> valdez_2023<span class="sc">$</span>Nitrogen.level <span class="sc">==</span> <span class="st">"without"</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>?<span class="st">'%in%'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(below.biomass.g.meter.sq..m2..<span class="sc">~</span>Snail.Level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"uncaged"</span>,<span class="st">"control snails"</span>) <span class="sc">&amp;</span> valdez_2023<span class="sc">$</span>Nitrogen.level <span class="sc">==</span> <span class="st">"without"</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
@@ -1020,29 +1035,33 @@ mean in group control snails        mean in group uncaged
                     430.2967                     475.3833 </code></pre>
 </div>
 </div>
+<p>If interactions are missing for other reasons (e.g., a set of units failed/died/data was lost), we can either ignore interactions or combine factor levels into a single new treatment variable and analyze using one-way ANOVAs.</p>
+</section>
+<section id="considering-interactions" class="level3">
+<h3 class="anchored" data-anchor-id="considering-interactions">Considering interactions</h3>
 <p>To consider interactions, we can remove the controls</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>bgb_model_cont_removed <span class="ot">&lt;-</span><span class="fu">lm</span>(below.biomass.g.meter.sq..m2..<span class="sc">~</span>Snail.Level <span class="sc">+</span> Nitrogen.level <span class="sc">+</span> Snail.Level<span class="sc">:</span>Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>bgb_model_cont_removed <span class="ot">&lt;-</span><span class="fu">lm</span>(below.biomass.g.meter.sq..m2..<span class="sc">~</span>Snail.Level <span class="sc">+</span> Nitrogen.level <span class="sc">+</span> Snail.Level<span class="sc">:</span>Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can consider the assumptions</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bgb_model_cont_removed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bgb_model_cont_removed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-29-2.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-30-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-29-3.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-30-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-29-4.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-30-4.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>and now note …</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(bgb_model_cont_removed, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(bgb_model_cont_removed, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -1058,16 +1077,31 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>…that the ANOVA table works.</p>
+</section>
 <section id="intepreting-interactions" class="level3">
 <h3 class="anchored" data-anchor-id="intepreting-interactions">Intepreting interactions</h3>
 <section id="when-not-significant" class="level4">
 <h4 class="anchored" data-anchor-id="when-not-significant">When not significant</h4>
 <p>If interactions are not significant, they can be handled in 2 ways.</p>
 <ol type="1">
-<li><p>We can remove the interaction from the model, re-run it, and interpret main effect</p>
+<li><p>We can leave the interaction in the model and interpret main effects immediately</p></li>
+<li><p>We can remove the interaction from the model, re-run it, and interpret main effects of the factors.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>bgb_model_cont_removed_int_removed <span class="ot">&lt;-</span> <span class="fu">update</span>(bgb_model_cont_removed, .<span class="sc">~</span>.<span class="sc">-</span>Snail.Level<span class="sc">:</span>Nitrogen.level)</span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(bgb_model_cont_removed_int_removed, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>bgb_model_cont_removed_int_removed <span class="ot">&lt;-</span> <span class="fu">update</span>(bgb_model_cont_removed, .<span class="sc">~</span>.<span class="sc">-</span>Snail.Level<span class="sc">:</span>Nitrogen.level)</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bgb_model_cont_removed_int_removed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-32-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-32-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-32-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(bgb_model_cont_removed_int_removed, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -1081,13 +1115,12 @@ Residuals        62853 14
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div></li>
-<li><p>We can leave the interaction in the model and interpret main effects immediately</p></li>
 </ol>
-<p>The benefit of approach 1 is we “increase” the degrees of freedom associated with the residuals, which ends up reducing the the MST. This is because in 2-way ANOVA’s we allocate degrees of freedom to calculating main effects and interactions. This approach was likely used in the original manuscript.</p>
-<p>The second approach is to simply use the provided output and not perform another series of tests, which may increase chances for a Type 1 error. We will return to this discussion when we get to model selection.</p>
-<p>Regardless, we can interpret main effects (though with possibly different outcomes). Using the approach were we drop insignificant interactions, we see both nitrogen and grazing levels impact below ground biomass. Since there are 3 levels of grazing and no interactions, we can consider the general impact of grazing levels:</p>
+<p>Regardless, we can interpret main effects (though with possibly different outcomes). The benefit of approach 2 is we “increase” the degrees of freedom associated with the residuals, which ends up reducing the the MST. This is because in 2-way ANOVAs we allocate degrees of freedom to calculating main effects and interactions. This approach was likely used in the original manuscript.</p>
+<p>Simply using the the provided output (approach 1) and not perform another series of tests, however, reduces the chances for a Type 1 error. We will return to this discussion when we get to model selection.</p>
+<p>If we see significant effects of a factor that has more than 2 levels (like we do when using the approach that drops insignificant interactions), we can consider the general impact of grazing levels using post-hoc tests:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">glht</span>(bgb_model_cont_removed_int_removed, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Snail.Level =</span> <span class="st">"Tukey"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">glht</span>(bgb_model_cont_removed_int_removed, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Snail.Level =</span> <span class="st">"Tukey"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Simultaneous Tests for General Linear Hypotheses
@@ -1101,9 +1134,9 @@ Fit: lm(formula = below.biomass.g.meter.sq..m2.. ~ Snail.Level + Nitrogen.level,
 
 Linear Hypotheses:
                                      Estimate Std. Error t value Pr(&gt;|t|)  
-removal - control snails == 0           55.27      38.68   1.429   0.3536  
+removal - control snails == 0           55.27      38.68   1.429   0.3534  
 snail addition - control snails == 0   -58.76      38.68  -1.519   0.3123  
-snail addition - removal == 0         -114.03      38.68  -2.948   0.0269 *
+snail addition - removal == 0         -114.03      38.68  -2.948   0.0267 *
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)</code></pre>
@@ -1112,24 +1145,24 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 </section>
 <section id="when-significant" class="level4">
 <h4 class="anchored" data-anchor-id="when-significant">When significant</h4>
-<p>If the interaction term is significant, it means the main effects can not be interpreted. This is because the impact of a given variable depends on the level of another. When this happens, the data is typically divided into subset and analyzed using one-way ANOVAs. Another less-used approach is to interpret interaction terms.</p>
+<p>If the interaction term is significant, it means the main effects can not be interpreted. This is because the impact of a given variable depends on the level of another. When this happens, the data is typically divided into subset and analyzed using one-way ANOVAs.</p>
 <p>For example, when <span class="citation" data-cites="valdez2023">Valdez et al. (<a href="#ref-valdez2023" role="doc-biblioref">2023</a>)</span> analyzed standing dead mass, they found a significant interaction term:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>sdm_model <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,])</span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>sdm_model <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,])</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-33-2.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-34-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-33-3.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-34-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-33-4.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-34-4.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -1144,23 +1177,23 @@ Residuals                    38.37 12
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>Following this, you could investigate impacts in plots with nitrogen, where you find snail manipulation had a significant impact,</p>
+<p>Following this, you could investigate impacts in plots with nitrogen, where you find snail manipulation had a significant impact (and considered post-hoc which ones!)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>sdm_model_fertilized <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span> <span class="sc">&amp;</span> valdez_2023<span class="sc">$</span>Nitrogen.level <span class="sc">==</span> <span class="st">"Fertilized"</span>,])</span>
-<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model_fertilized)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>sdm_model_fertilized <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span> <span class="sc">&amp;</span> valdez_2023<span class="sc">$</span>Nitrogen.level <span class="sc">==</span> <span class="st">"Fertilized"</span>,])</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model_fertilized)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-34-2.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-35-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-34-3.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-35-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-34-4.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-35-4.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model_fertilized, <span class="at">type=</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model_fertilized, <span class="at">type=</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -1172,7 +1205,7 @@ Residuals     30.58  6
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">glht</span>(sdm_model_fertilized, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Snail.Level=</span> <span class="st">"Tukey"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">glht</span>(sdm_model_fertilized, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Snail.Level=</span> <span class="st">"Tukey"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Simultaneous Tests for General Linear Hypotheses
@@ -1186,7 +1219,7 @@ Fit: lm(formula = Standing.Dead..dry..m2. ~ Snail.Level, data = valdez_2023[vald
 Linear Hypotheses:
                                      Estimate Std. Error t value Pr(&gt;|t|)    
 removal - control snails == 0         -14.150      1.843  -7.676   &lt;0.001 ***
-snail addition - control snails == 0   -7.567      1.843  -4.105   0.0152 *  
+snail addition - control snails == 0   -7.567      1.843  -4.105   0.0150 *  
 snail addition - removal == 0           6.583      1.843   3.571   0.0272 *  
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -1195,21 +1228,21 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 </div>
 <p>and plots without added nutrients, where you find snail addition did not</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>sdm_model_not_fertilized <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span> <span class="sc">&amp;</span> valdez_2023<span class="sc">$</span>Nitrogen.level <span class="sc">==</span> <span class="st">"without"</span>,])</span>
-<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model_not_fertilized)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>sdm_model_not_fertilized <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span> <span class="sc">&amp;</span> valdez_2023<span class="sc">$</span>Nitrogen.level <span class="sc">==</span> <span class="st">"without"</span>,])</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model_not_fertilized)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-35-2.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-36-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-35-3.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-36-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-35-4.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-36-4.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model_not_fertilized, <span class="at">type=</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model_not_fertilized, <span class="at">type=</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -1222,7 +1255,25 @@ Residuals    7.783  6
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>Since interactions were significant, we could also choose to compare all groups. the <strong>emmeans</strong> package offers this approach (and was likely used in the Valdez et al.&nbsp;2023 paper).</p>
+<p>Other approaches for dealing with significant interactions include directly interpreting interaction terms (which we can do given our understanding of linear model coefficients), but this is rarely used. They are somewhat messy</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(sdm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                    (Intercept) 
+                                      18.710000 
+                             Snail.Levelremoval 
+                                     -14.150000 
+                      Snail.Levelsnail addition 
+                                      -7.566667 
+                          Nitrogen.levelwithout 
+                                     -15.240000 
+       Snail.Levelremoval:Nitrogen.levelwithout 
+                                      16.153333 
+Snail.Levelsnail addition:Nitrogen.levelwithout 
+                                      10.356667 </code></pre>
+</div>
+</div>
+<p>Another approach when interactions are significant is to compare all group means (somewhat like a Tukey design for combined treatment levels). The <strong>emmeans</strong> package offers this approach.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -1278,6 +1329,43 @@ $contrasts
 P value adjustment: tukey method for comparing a family of 6 estimates </code></pre>
 </div>
 </div>
+<p>This was likely the approach used in the Valdez et al.&nbsp;2023 paper.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(<span class="fu">data.frame</span>(<span class="fu">emmeans</span>(sdm_model, pairwise <span class="sc">~</span> Snail.Level<span class="sc">*</span>Nitrogen.level)<span class="sc">$</span>contrasts))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["contrast"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["SE"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t.ratio"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"control snails Fertilized - removal Fertilized","2":"14.1500000","3":"1.459976","4":"12","5":"9.6919408","6":"5.885439e-06","_rn_":"1"},{"1":"control snails Fertilized - snail addition Fertilized","2":"7.5666667","3":"1.459976","4":"12","5":"5.1827340","6":"2.413208e-03","_rn_":"2"},{"1":"control snails Fertilized - control snails without","2":"15.2400000","3":"1.459976","4":"12","5":"10.4385285","6":"2.654537e-06","_rn_":"3"},{"1":"control snails Fertilized - removal without","2":"13.2366667","3":"1.459976","4":"12","5":"9.0663597","6":"1.191073e-05","_rn_":"4"},{"1":"control snails Fertilized - snail addition without","2":"12.4500000","3":"1.459976","4":"12","5":"8.5275380","6":"2.252132e-05","_rn_":"5"},{"1":"removal Fertilized - snail addition Fertilized","2":"-6.5833333","3":"1.459976","4":"12","5":"-4.5092069","6":"7.225609e-03","_rn_":"6"},{"1":"removal Fertilized - control snails without","2":"1.0900000","3":"1.459976","4":"12","5":"0.7465877","6":"9.715711e-01","_rn_":"7"},{"1":"removal Fertilized - removal without","2":"-0.9133333","3":"1.459976","4":"12","5":"-0.6255811","6":"9.867707e-01","_rn_":"8"},{"1":"removal Fertilized - snail addition without","2":"-1.7000000","3":"1.459976","4":"12","5":"-1.1644028","6":"8.450027e-01","_rn_":"9"},{"1":"snail addition Fertilized - control snails without","2":"7.6733333","3":"1.459976","4":"12","5":"5.2557945","6":"2.148524e-03","_rn_":"10"},{"1":"snail addition Fertilized - removal without","2":"5.6700000","3":"1.459976","4":"12","5":"3.8836257","6":"2.063809e-02","_rn_":"11"},{"1":"snail addition Fertilized - snail addition without","2":"4.8833333","3":"1.459976","4":"12","5":"3.3448041","6":"5.119569e-02","_rn_":"12"},{"1":"control snails without - removal without","2":"-2.0033333","3":"1.459976","4":"12","5":"-1.3721688","6":"7.418719e-01","_rn_":"13"},{"1":"control snails without - snail addition without","2":"-2.7900000","3":"1.459976","4":"12","5":"-1.9109904","6":"4.405552e-01","_rn_":"14"},{"1":"removal without - snail addition without","2":"-0.7866667","3":"1.459976","4":"12","5":"-0.5388217","6":"9.932448e-01","_rn_":"15"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(<span class="fu">data.frame</span>(<span class="fu">emmeans</span>(sdm_model, pairwise <span class="sc">~</span> Snail.Level)<span class="sc">$</span>contrasts))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>NOTE: Results may be misleading due to involvement in interactions</code></pre>
+</div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["contrast"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["SE"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t.ratio"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"control snails - removal","2":"6.073333","3":"1.032359","4":"12","5":"5.882967","6":"0.0002034306","_rn_":"1"},{"1":"control snails - snail addition","2":"2.388333","3":"1.032359","4":"12","5":"2.313472","6":"0.0922380717","_rn_":"2"},{"1":"removal - snail addition","2":"-3.685000","3":"1.032359","4":"12","5":"-3.569495","6":"0.0099735021","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(<span class="fu">data.frame</span>(<span class="fu">emmeans</span>(sdm_model, pairwise <span class="sc">~</span> Nitrogen.level)<span class="sc">$</span>contrasts))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>NOTE: Results may be misleading due to involvement in interactions</code></pre>
+</div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["contrast"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["SE"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t.ratio"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"Fertilized - without","2":"6.403333","3":"0.8429175","4":"12","5":"7.596631","6":"6.359733e-06","_rn_":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Note the warning; if interactions are significant comparing main effects may be inappropriate (which is why other approaches include subsetting the data).</p>
 </section>
 </section>
 </section>
@@ -1286,28 +1374,28 @@ P value adjustment: tukey method for comparing a family of 6 estimates </code></
 <p>Bootstrapping and permutation tests options may also be used for two-way ANOVAs when assumptions are not met, though there is implementation is more complicated than single-sample designs due to the need to randomize/permute interaction impacts.</p>
 <p>Another option is to use weighted-least squares regression - this approach specifically helps when residuals are not evenly distributed among groups. For example, we could take the sdm_model (just as an example of use! it’s not needed here!) This approach assume you built the model and then noted an issue with heteroscedasticity. If so, we can calculate a weight for each residual that is based on its variance - below makes a value that increases with low variance.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>wt_sdm <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">lm</span>(<span class="fu">abs</span>(sdm_model<span class="sc">$</span>residuals) <span class="sc">~</span> sdm_model<span class="sc">$</span>fitted.values)<span class="sc">$</span>fitted.values<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>wt_sdm <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">lm</span>(<span class="fu">abs</span>(sdm_model<span class="sc">$</span>residuals) <span class="sc">~</span> sdm_model<span class="sc">$</span>fitted.values)<span class="sc">$</span>fitted.values<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can then add a new argument to the <em>lm</em> function to use these weights.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>sdm_model_wls <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,], <span class="at">weights =</span> wt_sdm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>sdm_model_wls <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,], <span class="at">weights =</span> wt_sdm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can then continue on our normal route:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model_wls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model_wls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-39-2.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-42-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-39-3.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-42-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-39-4.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-42-4.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model_wls, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model_wls, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -1324,7 +1412,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>If you compare the two models you notice slight differences - these are minimal here due to lack of differences in variance.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1358,7 +1446,7 @@ Residual standard error: 1.788 on 12 degrees of freedom
 Multiple R-squared:  0.9284,    Adjusted R-squared:  0.8986 
 F-statistic: 31.14 on 5 and 12 DF,  p-value: 1.792e-06</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model_wls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model_wls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1399,8 +1487,8 @@ F-statistic: 16.75 on 5 and 12 DF,  p-value: 4.789e-05</code></pre>
 <h2 class="anchored" data-anchor-id="plotting-outcomes">Plotting outcomes</h2>
 <p>Results from two-way ANOVAs are often plotted similarly to one-way ANOVAs, but with colors or other aesthetics representing the additional group.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>sdm_summary <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,], <span class="at">measurevar =</span> <span class="st">"Standing.Dead..dry..m2."</span>, <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"Snail.Level"</span>, <span class="st">"Nitrogen.level"</span>))</span>
-<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>sdm_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>sdm_summary <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,], <span class="at">measurevar =</span> <span class="st">"Standing.Dead..dry..m2."</span>, <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"Snail.Level"</span>, <span class="st">"Nitrogen.level"</span>))</span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>sdm_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     Snail.Level Nitrogen.level N Standing.Dead..dry..m2.        sd        se
 1 control snails     Fertilized 3               18.710000 3.6626220 2.1146158
@@ -1419,18 +1507,18 @@ F-statistic: 16.75 on 5 and 12 DF,  p-value: 4.789e-05</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>sdm_summary<span class="sc">$</span>Snail.Level <span class="ot">&lt;-</span> <span class="fu">relevel</span>(sdm_summary<span class="sc">$</span>Snail.Level, <span class="st">"removal"</span>)</span>
-<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sdm_summary, <span class="fu">aes</span>(<span class="at">x=</span>Snail.Level, </span>
-<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">y=</span>Standing.Dead..dry..m2.,</span>
-<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fill=</span>Nitrogen.level)) <span class="sc">+</span></span>
-<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">position=</span><span class="fu">position_dodge</span>()) <span class="sc">+</span></span>
-<span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Standing.Dead..dry..m2., <span class="at">ymax=</span>Standing.Dead..dry..m2.<span class="sc">+</span>ci), <span class="at">position =</span> <span class="fu">position_dodge</span>()) <span class="sc">+</span></span>
-<span id="cb98-8"><a href="#cb98-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Grazing impacts depend on nitrogen levels"</span>,</span>
-<span id="cb98-9"><a href="#cb98-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Grazing level"</span>,</span>
-<span id="cb98-10"><a href="#cb98-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Standing dry mass ("</span> , g<span class="sc">^</span>{<span class="sc">-</span><span class="dv">1</span>}, m<span class="sc">^</span>{<span class="sc">-</span><span class="dv">2</span>}, <span class="st">")"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>sdm_summary<span class="sc">$</span>Snail.Level <span class="ot">&lt;-</span> <span class="fu">relevel</span>(sdm_summary<span class="sc">$</span>Snail.Level, <span class="st">"removal"</span>)</span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sdm_summary, <span class="fu">aes</span>(<span class="at">x=</span>Snail.Level, </span>
+<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">y=</span>Standing.Dead..dry..m2.,</span>
+<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fill=</span>Nitrogen.level)) <span class="sc">+</span></span>
+<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">position=</span><span class="fu">position_dodge</span>()) <span class="sc">+</span></span>
+<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Standing.Dead..dry..m2., <span class="at">ymax=</span>Standing.Dead..dry..m2.<span class="sc">+</span>ci), <span class="at">position =</span> <span class="fu">position_dodge</span>()) <span class="sc">+</span></span>
+<span id="cb103-8"><a href="#cb103-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Grazing impacts depend on nitrogen levels"</span>,</span>
+<span id="cb103-9"><a href="#cb103-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Grazing level"</span>,</span>
+<span id="cb103-10"><a href="#cb103-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Standing dry mass ("</span> , g<span class="sc">^</span>{<span class="sc">-</span><span class="dv">1</span>}, m<span class="sc">^</span>{<span class="sc">-</span><span class="dv">2</span>}, <span class="st">")"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+<p><img src="More_ANOVAs_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -1443,6 +1531,9 @@ F-statistic: 16.75 on 5 and 12 DF,  p-value: 4.789e-05</code></pre>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-fong2017" class="csl-entry" role="listitem">
+Fong, Caitlin, Sarah Bittick, and Peggy Fong. 2017. <span>“Simultaneous Synergist, Antagonistic, and Additive Interactions Between Multiple Local Stressors All Degrade Algal Turf Communities on Coral Reefs.”</span> <em>Journal of Ecology</em> 106 (December). <a href="https://doi.org/10.1111/1365-2745.12914">https://doi.org/10.1111/1365-2745.12914</a>.
+</div>
 <div id="ref-mcdonald2014" class="csl-entry" role="listitem">
 McDonald, J. H. 2014. <em>Handbook of Biological Statistics</em>. 3rd ed. Baltimore, MD: Sparky House Publishing.
 </div>
