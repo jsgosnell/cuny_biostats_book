@@ -1,6 +1,6 @@
 ---
-title: More ANOVAs
-subtitle: Dealing with multiple group membership and interactions
+title: Relationships among numerical variables
+subtitle: When we only have numbers
 bibliography: ../references.bib
 ---
 
@@ -11,13 +11,24 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
-In the last chapter we introduced the idea of comparing means among
-populations (one-way ANOVAs, our first linear models). However, the
-units that we measure may belong to multiple groups. We will extend our
-analysis of variance to consider multiple group membership and
-interactions in this chapter. As a starting point, consider that group
-membership may be an inherent property of the unit we measure or we may
-assign it.
+In the last chapter we extended linear models to consider impacts of
+multiple factors. Continuing that tradition, we will now explore how
+numerical (and specifically continuous) predictor variables can be used
+to explain variation in numerical outcome variables.
+
+## Back to the iris data
+
+We will motivate this with an example from our favorite iris data. So
+far we have considered how species impacts measured outcomes. However,
+we might also want to consider the relationship between traits. For
+example, we might want to know if sepal and petal length are related.
+
+introduced the idea of comparing means among populations (one-way
+ANOVAs, our first linear models). However, the units that we measure may
+belong to multiple groups. We will extend our analysis of variance to
+consider multiple group membership and interactions in this chapter. As
+a starting point, consider that group membership may be an inherent
+property of the unit we measure or we may assign it.
 
 ## Example: Back to the birds
 
@@ -27,7 +38,7 @@ studying feather color in Northern flickers (*Colaptes auratus*),
 feathers. They decided to compare the color of these odd and "typical"
 feathers.
 
-[![Northern Flicker. Mike's Birds, CC BY-SA 2.0
+[![Northern Flicker. Mike\'s Birds, CC BY-SA 2.0
 \<https://creativecommons.org/licenses/by-sa/2.0\>, via Wikimedia
 Commons](/images/Northern_Flicker_(4508135578).jpg)](https://commons.wikimedia.org/wiki/File:Northern_Flicker_(4508135578).jpg)
 
@@ -332,7 +343,9 @@ and let the levels be the absence or presence of the factor.
 | *Absent*     | Control          | Impact of A only       |
 | *Present*    | Impact of B only | Combined impact of A+B |
 
-<details><summary> Experimental design notes</summary>
+<details>
+
+<summary>Experimental design notes</summary>
 
 For a factorial ANOVA, we need to assign each unit randomly to a level
 of factor A. Then each level of factor B is randomly assigned to
@@ -483,7 +496,7 @@ On a positive note, this means R will typically not consider
 interactions when it shouldn't, but you need to know why in order to fix
 it.
 
-### Dealing  with controls and missing interactions
+### Dealing with controls and missing interactions
 
 To fix this (and deal with controls), we need to consider the data.
 @valdez2023 used t-tests (why?) to consider differences between cage and
