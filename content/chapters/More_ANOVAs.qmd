@@ -27,7 +27,7 @@ studying feather color in Northern flickers (*Colaptes auratus*),
 feathers. They decided to compare the color of these odd and "typical"
 feathers.
 
-[![Northern Flicker. Mike's Birds, CC BY-SA 2.0
+[![Northern Flicker. Mike\'s Birds, CC BY-SA 2.0
 \<https://creativecommons.org/licenses/by-sa/2.0\>, via Wikimedia
 Commons](/images/Northern_Flicker_(4508135578).jpg)](https://commons.wikimedia.org/wiki/File:Northern_Flicker_(4508135578).jpg)
 
@@ -171,10 +171,9 @@ be driven by experimental design (and thus we started with an example
 where we didn't "need" to account for it to achieve significance).
 
 In order to consider how color differs by bird *and* feather type, we
-need to add both variables to our model. This is possible because, as we
-noted earlier, we can subdivide variance among multiple levels. For each
-variable we add, we also add a null (and corresponding alternative)
-hypothesis. So we retain our focus on feather type:
+need to add both variables to our linear model. For each variable we
+add, we also add a null (and corresponding alternative) hypothesis. So
+we retain our focus on feather type:
 
 $$
 \begin{split}
@@ -192,14 +191,63 @@ H_A: \mu_{\textrm{color of bird A}} \neq \mu_{\textrm{color of bird B}}....\text
 \end{split}
 $$
 
-We can analyze this using our linear model approach. Since both
-variables are categorical, this is often called a two-way ANOVA. First,
-let's make the object
+We can analyze this using our linear model approach. This is possible
+because, as we noted earlier, we can subdivide variance among multiple
+levels. Under the hood, the linear model approach build a model matrix
+that considers the impact of feather type and bird on outcomes. Since
+both variables are categorical, this is often called a two-way ANOVA.
+First, let's make the object
 
 ```{r}
 two_way_anova_example <- lm(Color_index ~ Feather_type + Bird, data=feather)
 
 ```
+
+<details> <summary>You can see the new model matrix and coefficients if
+you want
+
+</summary>
+
+Note the model matrix now includes columns for feather type and bird
+(lots of dummy variables, and now intercept is Bird A's odd feather!).
+The $\beta$ matrix of coefficients has corresponding estimates.
+
+```{r}
+library(rmarkdown)
+paged_table(data.frame(model.matrix(two_way_anova_example)))
+matrix(as.numeric(two_way_anova_example$coefficients), ncol=1)
+
+```
+
+So for our first observation, which is
+
+```{r}
+feather[1,]
+```
+
+Our estimate is the intercept (since it's bird A) and the typical
+feather:
+
+```{r}
+model.matrix(two_way_anova_example)[1,] %*% matrix(as.numeric(two_way_anova_example$coefficients), ncol=1)
+
+```
+
+and thus our residual is
+
+```{r}
+two_way_anova_example$residuals[1]
+
+```
+
+which is the same as
+
+```{r}
+feather[1,]$Color_index-model.matrix(two_way_anova_example)[1,] %*% matrix(as.numeric(two_way_anova_example$coefficients), ncol=1)
+
+```
+
+</details>
 
 Then check the assumptions
 
@@ -332,7 +380,9 @@ and let the levels be the absence or presence of the factor.
 | *Absent*     | Control          | Impact of A only       |
 | *Present*    | Impact of B only | Combined impact of A+B |
 
-<details><summary> Experimental design notes</summary>
+<details>
+
+<summary>Experimental design notes</summary>
 
 For a factorial ANOVA, we need to assign each unit randomly to a level
 of factor A. Then each level of factor B is randomly assigned to
@@ -414,9 +464,11 @@ H_O: \textrm{impact of snail grazing does not depend on nitrogen level}\\
 $$
 
 Fortunately, these are easy to consider in our linear model framework.
-We simply add the interaction between two variables using the ":"
-notation. We'll focus on below-ground biomass (standardized to m^2^) for
-this example (the paper measured 9 response variables!)
+While not shown here, the model matrix adds columns to note our new
+interaction terms, and the coefficient matrix estimates them. From an R
+standpoint, we can include the interaction between two variables using
+the ":" notation. We'll focus on below-ground biomass (standardized to
+m^2^) for this example (the paper measured 9 response variables!)
 
 ```{r}
 valdez_2023 <- read.csv("data/Spartina_alterniflora_traits.csv", stringsAsFactors = T)
@@ -483,7 +535,7 @@ On a positive note, this means R will typically not consider
 interactions when it shouldn't, but you need to know why in order to fix
 it.
 
-### Dealing  with controls and missing interactions
+### Dealing with controls and missing interactions
 
 To fix this (and deal with controls), we need to consider the data.
 @valdez2023 used t-tests (why?) to consider differences between cage and

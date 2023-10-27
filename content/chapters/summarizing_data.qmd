@@ -6,10 +6,10 @@ bibliography: ../references.bib
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
 
-{r setup, include=FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
-
+```
 
 ![XKCD: Data Trap. It's important to make sure your analysis destroys as
 much information as it
@@ -199,7 +199,7 @@ around 6-7 cm are most common.
 <details>
 
 <summary>Why do these graphs look slightly different? (Click the grey
-triangle to see the answer</summary>
+triangle to see the answer)</summary>
 
 Most programs, including R, have autobreak functions to separate the
 data into bins. Notice ggplot2 uses a different algorithm to bin the
@@ -208,13 +208,13 @@ these, so it's worth noting that differences in bin size can influence
 what distributions look like.
 
 ```{r}
-#| label: fig-impacts_of_breaks 
-#| fig-cap: "How you bin the data will impact the visualization." 
+#| label: fig-charts
+#| fig-cap: "Charts"
 #| fig-subcap: 
-#|   - "Auto breaks with R" 
-#|   - "10 breaks" 
-#|   -"3 breaks" 
-#| layout-nrow: 3 
+#|   - "Auto breaks with R"
+#|   - "10 breaks"
+#|   - "3 breaks"
+#| layout-ncol: 3
 hist(iris[iris$Species == "virginica", "Sepal.Length"],       main = expression(paste("Sepal lengths of ",italic("I. virginica"))),       xlab = "Sepal Length (cm)",       cex.lab=label_size, cex.axis=label_size, cex.main=title_size,       cex.sub=label_size, col = "blue") 
 hist(iris[iris$Species == "virginica", "Sepal.Length"],        breaks=3, main = "Sepal length histogram, 3 breaks", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue")  
 hist(iris[iris$Species == "virginica", "Sepal.Length"],        breaks=10, main = "Sepal length histogram, 10 breaks", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue")
