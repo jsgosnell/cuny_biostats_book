@@ -1,16 +1,6 @@
 
 
 
-#correlation####
-cor.test(~ Sepal.Length + Petal.Length, data = iris)
-#note
-(.871)^2 #is equal to 0.759, multiple r2 from lm output
-
-#spearman rank####
-monkey <- read.csv("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/monkey.csv")
-cor.test(~ eggs_per_gram + Dominance_rank, monkey, method = "spearman")
-cor.test(monkey$eggs_per_gram, monkey$Dominance_rank, method = "spearman")
-
 
 #permutation####
 library(coin)

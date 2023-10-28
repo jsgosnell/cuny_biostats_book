@@ -142,7 +142,10 @@ plot(iris_regression)
 
 ```
 
-and if assumptions are met consider outcomes.
+For numerical relationships we typically see more of a cloud of data,
+but we are still assuming the residuals are normally distributed (with
+the same variance for all fitted values, i.e. identically distributed)
+and indepent. Iassumptions are met consider outcomes.
 
 ```{r}
 library(car)
@@ -216,7 +219,40 @@ association.
 cor.test(~ Sepal.Length + Petal.Length, data = iris)
 ```
 
-Note
+Note that the output also gives us a confidence interval and estimate
+for r in addition to a p-value. If we square the provided *r* value, we
+get the R^2^ output we have previously described in our linear model
+summary.
+
+```{r}
+cor.test(~ Sepal.Length + Petal.Length, data = iris)$estimate^2
+summary(iris_regression)$r.squared
+```
+
+### Other options
+
+If our assumptions are not met, we have a few options. You may have
+noticed the *cor.test* function provided a *Pearson's* product-moment
+correlation. This is one approach that uses the raw data. Another
+approach, the Spearman rank correlation, uses (surprise) ranked data.
+This relaxes the assumption of normality and only assumes monotonic
+relationships (one variable increases or decreases with the other). We
+can use it by updating the arguments in the *cor.test* function.
+
+```{r}
+cor.test(~ Sepal.Length + Petal.Length, data = iris, method="spearman")
+```
+
+Bootstrapping and permutation options also exist. Some of these use the
+same functions we've encountered before. For example, we can do
+permutation tests using the **coin** package
+
+```{r}
+library(coin)
+independence_test(Sepal.Length ~ Petal.Length, iris)
+```
+
+and
 
 ## Plotting outcomes
 
