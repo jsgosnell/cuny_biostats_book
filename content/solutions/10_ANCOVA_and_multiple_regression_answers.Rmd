@@ -301,7 +301,6 @@ pulse_class_copy$Gender <- as.factor(pulse_class_copy$Gender)
 pulse_class_copy$Smokes <- as.factor (pulse_class_copy$Smokes)
 pulse_class_copy$Alcohol <- as.factor(pulse_class_copy$Alcohol)
 
-require(MuMIn)
 pulse_full <- lm(Change ~ ., pulse_class_copy )
 pulse_final <- step(pulse_full)
 #consider assumptions
@@ -314,7 +313,8 @@ summary(pulse_final)
 library(MuMIn)
 options(na.action = "na.fail")
 auto <- dredge(pulse_full)
-write.csv(auto, "dredge_output.csv", row.names = F)
+library(rmarkdown)
+paged_table(auto)
 options(na.action = "na.omit")
 
 ```

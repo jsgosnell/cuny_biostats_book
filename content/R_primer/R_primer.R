@@ -1,9 +1,3 @@
----
-title: Intro to R!
-subtitle: UPDATE
-bibliography: references.bib
----
-
 ##INTRODUCTION TO R####
 ##JSG, 7/2/22
 
@@ -496,3 +490,5 @@ airquality[order(airquality$Temp),]
 #order (used here to order rows) puts the dataframe in ascending order of temps.
 #in general, order returns the index (row number) need to put the dataset in ascending order,
 #while sort returns the value itself
+
+
