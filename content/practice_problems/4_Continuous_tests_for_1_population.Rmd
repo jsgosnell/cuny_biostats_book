@@ -1,24 +1,14 @@
 ---
-title: "4. Continuous tests for 1 population"
-author: "jsg"
-date: "Last compiled on `r format(Sys.time(), '%d %B, %Y %H:%M')`"
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    keep_md: true
-    self_contained: true
-    toc_depth: 5
+title: "Tests for continuous data from one sample"
+bibliography: ../references.bib
 ---
 
-Before doing this, review the **Introduction to normality and one-sample tests for continuous data** lecture set slides from 
-https://sites.google.com/view/biostats/lessons/hypothesis-testing-with-the-binomial-distribution and
-the  **4_normality.R** script in the lecture_files folder of the
-[CUNY-BioStats github repository](https://github.com/jsgosnell/CUNY-BioStats).
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
 
-You’ll also use the qqplot_example.R and
-central_limit_theorem.R script from the 
-[code_examples folder](https://github.com/jsgosnell/CUNY-BioStats/tree/master/code_examples).
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
 
 Remember you should
 
@@ -29,7 +19,12 @@ pressing *Ctrl+Alt+I* to answer the questions!
   * **commit** it via git!
   * **push** updates to github
   
-## Examples
+## Overview
+
+This practice reviews the [Tests for continuous data from one sample
+lecture](../chapters/Tests_for_continuous_data_from_one_sample.qmd).
+  
+### Examples
 
 From lecture! Consider if average height of males training at the Australian 
 Institute of Sport is different than average of human population. 
@@ -118,7 +113,7 @@ boot.ci(results)
 
 #### 1
 
-1. Using the qqplot_example.R code, examine the following distributions and, for 
+Using the qqplot_example.R code, examine the following distributions and, for 
 the continuous distributions (marked with a “*”), observe how a normal probability
 plot (qqplot) can be used to visually test for approximate normality.
 
@@ -136,7 +131,7 @@ When you source a script, it is run in R without showing any console output
 
 #### 2
 
-2. Review the central_limit_theorem.R code (remember
+Review the central_limit_theorem.R code (remember
 
 ```{r}
 library(VGAM)
@@ -153,7 +148,7 @@ You should also feel comfortable graphing the data.
 
 #### 3
 
-3. Seven observers were shown, for a brief period, a grill with 161 flies impaled 
+Seven observers were shown, for a brief period, a grill with 161 flies impaled 
 and were asked to estimate the number. The results are given by Cochran (1954). 
 Based on five estimates, they were 183.2, 149.0, 154.0, 167.2, 187.2, 158.0, and 143.0. Test the null hypothesis that the mean of the estimates is 161 flies.
 
@@ -174,7 +169,7 @@ upload using a read.csv command. We did this in your introduction to R!
 
 #### 4
 
-4. Yields of 10 strawberry plants in a uniformity trial are given by Baker and 
+Yields of 10 strawberry plants in a uniformity trial are given by Baker and 
 Baker (1953) as 239, 176, 235, 217, 234, 216, 318, 190, 181, and 225 g. 
 Test the hypothesis that µ = 205
 * Assuming variance = 1500
@@ -184,7 +179,7 @@ Test the hypothesis that µ = 205
 
 #### 5
 
-5. Evolutionary geneticists predicts the family sex ratio will be 80% female in 
+Evolutionary geneticists predicts the family sex ratio will be 80% female in 
 broods of eagles that successfully fledge >3 young. Nests that fledge 3 or more
 chicks are very rare but a sample of 30 chicks are obtained from such nests and
 they yield 25 females and 5 males. Test the hypotheses that that: 
@@ -193,7 +188,7 @@ they yield 25 females and 5 males. Test the hypotheses that that:
 
 #### 6
 
-6. Studies of flying snakes have led researchers to posit the mean undulation 
+Studies of flying snakes have led researchers to posit the mean undulation 
 rate is 1.4 Hz.  You wish to test this hypothesis using the small sample of 
 undulation rates shown below.  Create a small dataset of the paradise tree snake 
 undulation rates and choose and justify a test you can use to assess the data.
@@ -202,7 +197,7 @@ Undulation rates (in Hz):  0.9, 1.4, 1.2, 1.2, 1.3, 2.0, 1.4, 1.6
 
 #### 7
 
-7.  Using data from Australian athletes (http://www.statsci.org/data/oz/ais.html 
+Using data from Australian athletes (http://www.statsci.org/data/oz/ais.html 
 for details), determine if the average male training at the Australian Institute 
 of Sport differs in weight from the average Australian male (85.9 kg) using
 bootstrapping techniques. Data at 
