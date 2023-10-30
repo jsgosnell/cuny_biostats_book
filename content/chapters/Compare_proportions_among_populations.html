@@ -302,7 +302,7 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
- <span class="menu-text">Appendix</span></a>
+ <span class="menu-text">Solutions</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -310,20 +310,31 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/Intro_to_R.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Getting started with R!</span></a>
+  <a href="../../content/solutions/6_Comparing_means.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compare means among groups - solutions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+ <span class="menu-text">R Primer</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Primer_material/Tools_overiew.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tools overview</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/Intro_to_Rmd.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Getting started with Rmarkdown!</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/Intro_to_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Getting started with ggpplot2!</span></a>
+  <a href="../../content/Primer_material/R_primer.R" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R primer</span></a>
   </div>
 </li>
       </ul>
@@ -521,21 +532,24 @@ H_A: \textrm{Probability of older bird hitting window is dependent of species} \
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>sampling_experiment[i,k] <span class="ot">=</span> <span class="fu">rbinom</span>(<span class="at">n=</span><span class="dv">1</span>, <span class="at">size=</span><span class="fu">as.numeric</span>(sample_size[k]), <span class="at">prob=</span>.<span class="dv">7</span>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>sampling_experiment_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(sampling_experiment, <span class="at">variable.name =</span> <span class="st">"Sample_size"</span>, <span class="at">value.name =</span> <span class="st">"mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'reshape2' was built under R version 4.3.1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sampling_experiment_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(sampling_experiment, <span class="at">variable.name =</span> <span class="st">"Sample_size"</span>, <span class="at">value.name =</span> <span class="st">"mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>No id variables; using all as measure variables</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sampling_experiment_long<span class="sc">$</span>Sample_size <span class="ot">&lt;-</span> <span class="fu">factor</span>(sampling_experiment_long<span class="sc">$</span>Sample_size, <span class="at">levels =</span><span class="fu">c</span>(<span class="st">"1"</span>,<span class="st">"5"</span>,<span class="st">"10"</span>, <span class="st">"20"</span>, <span class="st">"40"</span>, <span class="st">"80"</span>))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(sampling_experiment_long<span class="sc">$</span>Sample_size) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"Sample size of "</span>, <span class="fu">levels</span>(sampling_experiment_long<span class="sc">$</span>Sample_size))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sampling_experiment_long,<span class="fu">aes</span>(<span class="at">x=</span>mean)) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">paste</span>(<span class="st">"Observed number of successes from "</span>, number_of_simulations, <span class="st">" random draws"</span>),</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Binomial distribution, p=.7"</span>,  </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Mean"</span>,</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>Sample_size, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sampling_experiment_long<span class="sc">$</span>Sample_size <span class="ot">&lt;-</span> <span class="fu">factor</span>(sampling_experiment_long<span class="sc">$</span>Sample_size, <span class="at">levels =</span><span class="fu">c</span>(<span class="st">"1"</span>,<span class="st">"5"</span>,<span class="st">"10"</span>, <span class="st">"20"</span>, <span class="st">"40"</span>, <span class="st">"80"</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(sampling_experiment_long<span class="sc">$</span>Sample_size) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"Sample size of "</span>, <span class="fu">levels</span>(sampling_experiment_long<span class="sc">$</span>Sample_size))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sampling_experiment_long,<span class="fu">aes</span>(<span class="at">x=</span>mean)) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">paste</span>(<span class="st">"Observed number of successes from "</span>, number_of_simulations, <span class="st">" random draws"</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Binomial distribution, p=.7"</span>,  </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Mean"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>Sample_size, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -552,20 +566,20 @@ H_A: \textrm{Probability of older bird hitting window is dependent of species} \
 \]</span></p>
 <p>We then draw only 1 draws this distribution. Why only 1? Because we need to keep the sample sizes the same, so the row and column totals are set! Remember this for a moment. After we draw 1 number, we fill in the rest.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>num_of_simulations <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>simulations <span class="ot">&lt;-</span> <span class="fu">r2dtable</span>(num_of_simulations,<span class="fu">c</span>(<span class="dv">13</span>,<span class="dv">16</span>),<span class="fu">c</span>(<span class="dv">18</span>,<span class="dv">11</span>))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>chi_sq_stats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">chisq =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, num_of_simulations))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>num_of_simulations){</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>chi_sq_stats<span class="sc">$</span>chisq[i] <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">unlist</span>(simulations[i]),<span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))<span class="sc">$</span>statistic</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"distribution"</span> <span class="ot">=</span> <span class="st">"green"</span>, <span class="st">"simulated data"</span> <span class="ot">=</span> <span class="st">"orange"</span>)</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chi_sq_stats, <span class="fu">aes</span>(<span class="at">x=</span>chisq)) <span class="sc">+</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..count..<span class="sc">/</span><span class="fu">sum</span>(..count..), <span class="at">color =</span> <span class="st">"simulated data"</span>, <span class="at">fill=</span><span class="st">"simulated data"</span>)) <span class="sc">+</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="fu">paste</span>(<span class="st">"Probability under "</span>, num_of_simulations, <span class="st">" simulations"</span>, </span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="at">sep =</span><span class="st">""</span>), <span class="at">x=</span><span class="fu">expression</span>(chi<span class="sc">^</span><span class="dv">2</span>), <span class="at">color=</span><span class="st">"Source"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">fill=</span>F)<span class="sc">+</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors)<span class="sc">+</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>num_of_simulations <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>simulations <span class="ot">&lt;-</span> <span class="fu">r2dtable</span>(num_of_simulations,<span class="fu">c</span>(<span class="dv">13</span>,<span class="dv">16</span>),<span class="fu">c</span>(<span class="dv">18</span>,<span class="dv">11</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>chi_sq_stats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">chisq =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, num_of_simulations))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>num_of_simulations){</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>chi_sq_stats<span class="sc">$</span>chisq[i] <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">unlist</span>(simulations[i]),<span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))<span class="sc">$</span>statistic</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"distribution"</span> <span class="ot">=</span> <span class="st">"green"</span>, <span class="st">"simulated data"</span> <span class="ot">=</span> <span class="st">"orange"</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chi_sq_stats, <span class="fu">aes</span>(<span class="at">x=</span>chisq)) <span class="sc">+</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..count..<span class="sc">/</span><span class="fu">sum</span>(..count..), <span class="at">color =</span> <span class="st">"simulated data"</span>, <span class="at">fill=</span><span class="st">"simulated data"</span>)) <span class="sc">+</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="fu">paste</span>(<span class="st">"Probability under "</span>, num_of_simulations, <span class="st">" simulations"</span>, </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="at">sep =</span><span class="st">""</span>), <span class="at">x=</span><span class="fu">expression</span>(chi<span class="sc">^</span><span class="dv">2</span>), <span class="at">color=</span><span class="st">"Source"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">fill=</span>F)<span class="sc">+</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors)<span class="sc">+</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -582,13 +596,13 @@ V=\sum_{i=1}^{n}{\frac{{(Observed-Expected)}^2}{Expected}} \textrm{where n is nu
 <h2 class="anchored" data-anchor-id="contingency-analysis-using-the-chi2-test">Contingency analysis using the <span class="math inline">\(\chi^2\)</span> test</h2>
 <p>The resulting test is called a <span class="math inline">\(\chi^2\)</span> test. Note this takes count-based data and uses a continuous distribution to describe it, so it’s an approximate test.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chi_sq_stats, <span class="fu">aes</span>(<span class="at">x=</span>chisq)) <span class="sc">+</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..count..<span class="sc">/</span><span class="fu">sum</span>(..count..), <span class="at">color =</span> <span class="st">"simulated data"</span>, <span class="at">fill=</span><span class="st">"simulated data"</span>)) <span class="sc">+</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dchisq, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df =</span> <span class="dv">1</span>),<span class="fu">aes</span>(<span class="at">color =</span><span class="st">"distribution"</span>)) <span class="sc">+</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="fu">paste</span>(<span class="st">"Probability under "</span>, num_of_simulations, <span class="st">" simulations"</span>, </span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="at">sep =</span><span class="st">""</span>), <span class="at">x=</span><span class="fu">expression</span>(chi<span class="sc">^</span><span class="dv">2</span>), <span class="at">color=</span><span class="st">"Source"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">fill=</span>F)<span class="sc">+</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors)<span class="sc">+</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chi_sq_stats, <span class="fu">aes</span>(<span class="at">x=</span>chisq)) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..count..<span class="sc">/</span><span class="fu">sum</span>(..count..), <span class="at">color =</span> <span class="st">"simulated data"</span>, <span class="at">fill=</span><span class="st">"simulated data"</span>)) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dchisq, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df =</span> <span class="dv">1</span>),<span class="fu">aes</span>(<span class="at">color =</span><span class="st">"distribution"</span>)) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="fu">paste</span>(<span class="st">"Probability under "</span>, num_of_simulations, <span class="st">" simulations"</span>, </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="at">sep =</span><span class="st">""</span>), <span class="at">x=</span><span class="fu">expression</span>(chi<span class="sc">^</span><span class="dv">2</span>), <span class="at">color=</span><span class="st">"Source"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">fill=</span>F)<span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors)<span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -600,7 +614,7 @@ V=\sum_{i=1}^{n}{\frac{{(Observed-Expected)}^2}{Expected}} \textrm{where n is nu
 <p>This function requires a matrix of aggregated values (counts for each cell). Currently we have a data frame (birds). To make this work, we have a few options.</p>
 <p>We can input the data directly as a matrix, specifying the string, the number of rows and columns, and how we entered the data in regards to rows (remember ?chisq.test)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">7</span>), <span class="dv">2</span>, <span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">7</span>), <span class="dv">2</span>, <span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(matrix(c(9, 4, 9, 7), 2, 2, byrow = T)): Chi-squared
 approximation may be incorrect</code></pre>
@@ -615,7 +629,7 @@ X-squared = 0.11002, df = 1, p-value = 0.7401</code></pre>
 </div>
 <p>If the data is in <em>wide</em> data frame (meaning more than one measured outcome per row, so measuring the young and old as columns in the data frame) or we make it look like that, we can use the data directly from the data frame. Consider the difference in format. This is long data (one measure per row):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>birds_original</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>birds_original</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Age Species Number
 1   Old   Junco      4
@@ -626,12 +640,12 @@ X-squared = 0.11002, df = 1, p-value = 0.7401</code></pre>
 </div>
 <p>and this wide</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2) </span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>birds_wide <span class="ot">&lt;-</span> <span class="fu">dcast</span>(birds_original, Age<span class="sc">~</span>Species) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2) </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>birds_wide <span class="ot">&lt;-</span> <span class="fu">dcast</span>(birds_original, Age<span class="sc">~</span>Species) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Using Number as value column: use value.var to override.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>birds_wide</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>birds_wide</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Age Finch Junco
 1   Old     9     4
@@ -640,7 +654,7 @@ X-squared = 0.11002, df = 1, p-value = 0.7401</code></pre>
 </div>
 <p>We can make the matrix with wide data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(birds_wide<span class="sc">$</span>Junco, birds_wide<span class="sc">$</span>Finch), <span class="at">nrow =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(birds_wide<span class="sc">$</span>Junco, birds_wide<span class="sc">$</span>Finch), <span class="at">nrow =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(matrix(c(birds_wide$Junco, birds_wide$Finch), nrow = 2)):
 Chi-squared approximation may be incorrect</code></pre>
@@ -655,7 +669,7 @@ X-squared = 0.11002, df = 1, p-value = 0.7401</code></pre>
 </div>
 <p>For our 2x2 table, notice the order of input does not matter (because it wouldn’t impact the expected values. Consider</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(birds_wide<span class="sc">$</span>Finch, birds_wide<span class="sc">$</span>Junco), <span class="at">nrow =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(birds_wide<span class="sc">$</span>Finch, birds_wide<span class="sc">$</span>Junco), <span class="at">nrow =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(matrix(c(birds_wide$Finch, birds_wide$Junco), nrow = 2)):
 Chi-squared approximation may be incorrect</code></pre>
@@ -670,7 +684,7 @@ X-squared = 0.11002, df = 1, p-value = 0.7401</code></pre>
 </div>
 <p>Using <em>cbind</em> is also an option.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">cbind</span>(birds_wide<span class="sc">$</span>Finch, birds_wide<span class="sc">$</span>Junco))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">cbind</span>(birds_wide<span class="sc">$</span>Finch, birds_wide<span class="sc">$</span>Junco))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(cbind(birds_wide$Finch, birds_wide$Junco)): Chi-squared
 approximation may be incorrect</code></pre>
@@ -687,7 +701,7 @@ X-squared = 0.11002, df = 1, p-value = 0.7401</code></pre>
 <p>Each result also tells you this is an approximation (as we already noted!). Since the test is approximate, by default R applies Yate’s continuity correction to data focused on 2x2 tables. Some argue this correction is too strict, and you can turn it off in R (correct=F argument). You can also choose to simulate the outcome instead (simulate.p.value = T), but note this will still be an approximate answer since we can’t do every single sample.</p>
 <p>The output also indicate the results may be incorrect? Why? In order for our normal approximation to work, we need large samples and a <span class="math inline">\(\hat{p}\)</span> that is not near 0 or 1. Together, these mean our expected values for most cells (actually, &gt;80%) can not be less than 5., and no cell can have an expected value of less than 1. If these assumption are not met(or are close), R will warn us. We can check expected values using</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">7</span>), <span class="dv">2</span>, <span class="dv">2</span>, <span class="at">byrow=</span>T))<span class="sc">$</span>expected</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">7</span>), <span class="dv">2</span>, <span class="dv">2</span>, <span class="at">byrow=</span>T))<span class="sc">$</span>expected</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(matrix(c(9, 4, 9, 7), 2, 2, byrow = T)): Chi-squared
 approximation may be incorrect</code></pre>
@@ -706,7 +720,7 @@ approximation may be incorrect</code></pre>
 <h3 class="anchored" data-anchor-id="fishers-test">Fisher’s test</h3>
 <p>If this is the case for a 2x2 table, we can use a Fisher’s test instead</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">7</span>), <span class="dv">2</span>, <span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">7</span>), <span class="dv">2</span>, <span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Fisher's Exact Test for Count Data
@@ -738,8 +752,11 @@ odds ratio
 <p>For our current contingency analysis, we can develop a model where a <em>species</em> parameter impacts the likelihood and one where it does not (not fully shown here, but shown by <span class="citation" data-cites="patrone2022">Patrone (<a href="#ref-patrone2022" role="doc-biblioref">2022</a>)</span>).</p>
 <p>The <em>GTest</em> function from the <strong>DescTools</strong> package to employ this test.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DescTools)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">GTest</span>(<span class="at">x =</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">4</span>), <span class="dv">2</span>, <span class="dv">2</span>, <span class="at">byrow =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DescTools)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'DescTools' was built under R version 4.3.1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">GTest</span>(<span class="at">x =</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">4</span>), <span class="dv">2</span>, <span class="dv">2</span>, <span class="at">byrow =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Log likelihood ratio (G-test) test of independence without correction
@@ -794,7 +811,7 @@ G = 0.51774, X-squared df = 1, p-value = 0.4718</code></pre>
 </table>
 <p>We can use the same approaches to test this.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(matrix(c(6, 5, 7, 7, 12, 7, 11, 3), nrow = 2, byrow =
 T)): Chi-squared approximation may be incorrect</code></pre>
@@ -809,7 +826,7 @@ X-squared = 3.7909, df = 3, p-value = 0.2849</code></pre>
 </div>
 <p>Note our sample size is still a potential issue, but only 1/8 cells has a predicted value less than 1.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))<span class="sc">$</span>expected</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))<span class="sc">$</span>expected</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(matrix(c(6, 5, 7, 7, 12, 7, 11, 3), nrow = 2, byrow =
 T)): Chi-squared approximation may be incorrect</code></pre>
@@ -822,7 +839,7 @@ T)): Chi-squared approximation may be incorrect</code></pre>
 </div>
 <p>which means the approximation is fine. We could use the other tests if we preferred.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Fisher's Exact Test for Count Data
@@ -831,7 +848,7 @@ data:  matrix(c(6, 5, 7, 7, 12, 7, 11, 3), nrow = 2, byrow = T)
 p-value = 0.2941
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">GTest</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">GTest</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Log likelihood ratio (G-test) test of independence without correction
@@ -889,7 +906,7 @@ H_O: p_{finch} = p_{junco} = p_{cardinal} = p_{robin}
 </table>
 <p>When we run the test (notice I immediately checked expected values, or assumptions, which is a good habit to get into)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">30</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>,<span class="dv">7</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">30</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>,<span class="dv">7</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(matrix(c(6, 5, 7, 7, 30, 12, 7, 11, 3, 7), nrow = 2, :
 Chi-squared approximation may be incorrect</code></pre>
@@ -901,7 +918,7 @@ Chi-squared approximation may be incorrect</code></pre>
 data:  matrix(c(6, 5, 7, 7, 30, 12, 7, 11, 3, 7), nrow = 2, byrow = T)
 X-squared = 17.179, df = 4, p-value = 0.001784</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">30</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>,<span class="dv">7</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))<span class="sc">$</span>expected</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">30</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>,<span class="dv">7</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))<span class="sc">$</span>expected</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(matrix(c(6, 5, 7, 7, 30, 12, 7, 11, 3, 7), nrow = 2, :
 Chi-squared approximation may be incorrect</code></pre>
@@ -949,13 +966,13 @@ p_{catbird} = p_{finch} \\
 <p>To illustrate this, we will first use a very simple method that is no longer recommended but is useful as a starting point. One options is to control the FWER by dividing <span class="math inline">\(\alpha\)</span> by the number of post-hoc tests we intend to run. For the above example, if we do all pairs comparisons we would be running 10 comparison (4+3+2+1…). So instead of using .05 as a cutoff, we would use .005.</p>
 <p>First, it helps to make a table with row and column names (which are slightly different than headers and very different than a column of names in R).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>bird_ratio_table <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">30</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>,<span class="dv">7</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T)</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(bird_ratio_table) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Finch"</span>, <span class="st">"Junco"</span>, <span class="st">"Cardinal"</span>, <span class="st">"Robin"</span>, <span class="st">"Catbird"</span>)</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(bird_ratio_table) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>bird_ratio_table <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">30</span>,<span class="dv">12</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">3</span>,<span class="dv">7</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(bird_ratio_table) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Finch"</span>, <span class="st">"Junco"</span>, <span class="st">"Cardinal"</span>, <span class="st">"Robin"</span>, <span class="st">"Catbird"</span>)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(bird_ratio_table) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then we can run the test with the <em>pairwiseNominalIndependence</em> function from the <strong>rcompanion</strong> package. Note the function needs a table or matrix and to know which method to use to compare rows or columns. Looking at the table</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>bird_ratio_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>bird_ratio_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       Finch Junco Cardinal Robin Catbird
 Male       6     5        7     7      30
@@ -964,11 +981,11 @@ Female    12     7       11     3       7</code></pre>
 </div>
 <p>Let’ s us see we want to compare columns.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'rcompanion' was built under R version 4.2.3</code></pre>
+<pre><code>Warning: package 'rcompanion' was built under R version 4.3.1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>bonf_correct <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(bird_ratio_table, <span class="at">compare=</span><span class="st">"col"</span>, <span class="at">method =</span> <span class="st">"bonf"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>bonf_correct <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(bird_ratio_table, <span class="at">compare=</span><span class="st">"col"</span>, <span class="at">method =</span> <span class="st">"bonf"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</code></pre>
 </div>
@@ -983,7 +1000,7 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
 
 Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>bonf_correct</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>bonf_correct</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           Comparison p.Fisher p.adj.Fisher  p.Gtest p.adj.Gtest p.Chisq
 1       Finch : Junco  0.71200       1.0000 0.643000     1.00000 0.93800
@@ -1012,7 +1029,7 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</c
 <p>The test then shows all-pair comparisons with regular (what we should compare to .005 now, but we don’t usually know that!) and adjusted p-values (which have compensated for multiple tests so we can use our normal .05 cutoff- use this one!) for each test we have covered (you should use a post-hoc that matches what you did for the overall, or <em>omnibus</em>, comparison).</p>
 <p>You can order and display these differently if it helps. For example, if we used the <span class="math inline">\(\chi^2\)</span> test.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>bonf_correct[<span class="fu">order</span>(bonf_correct<span class="sc">$</span>p.adj.Chisq), <span class="fu">c</span>(<span class="st">"Comparison"</span>, <span class="st">"p.adj.Chisq"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>bonf_correct[<span class="fu">order</span>(bonf_correct<span class="sc">$</span>p.adj.Chisq), <span class="fu">c</span>(<span class="st">"Comparison"</span>, <span class="st">"p.adj.Chisq"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           Comparison p.adj.Chisq
 4     Finch : Catbird      0.0141
@@ -1029,7 +1046,7 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</c
 </div>
 <p>We see that catbirds different from finches and cardinals in the proportion of males and females, while all other species do not differ. Note the un-adjusted p-value for this comparison pair is the same we would have found from just comparing the two groups</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">30</span>,<span class="dv">12</span>,<span class="dv">7</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">30</span>,<span class="dv">12</span>,<span class="dv">7</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's Chi-squared test with Yates' continuity correction
@@ -1037,7 +1054,7 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</c
 data:  matrix(c(6, 30, 12, 7), nrow = 2, byrow = T)
 X-squared = 10.189, df = 1, p-value = 0.001413</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>bonf_correct[bonf_correct<span class="sc">$</span>Comparison<span class="sc">==</span><span class="st">"Finch : Catbird"</span>, <span class="st">"p.Chisq"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>bonf_correct[bonf_correct<span class="sc">$</span>Comparison<span class="sc">==</span><span class="st">"Finch : Catbird"</span>, <span class="st">"p.Chisq"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.00141</code></pre>
 </div>
@@ -1046,7 +1063,7 @@ X-squared = 10.189, df = 1, p-value = 0.001413</code></pre>
 <p>The sequential Bonferroni, or Holm’s, method, allocates your <span class="math inline">\(\alpha\)</span> to accept as many tests as signficant as possible while still controlling for the FWER. To do this, it orders the post-hoc tests by p-value, smallest to largest. It then rejects the null hypothesis attached to the smallest p-value and subtracts that p-value from <span class="math inline">\(\alpha\)</span>. It continues to do this until <span class="math inline">\(\alpha\)</span> is too small to reject the next smallest p-value. I think of it as buying p-values with <span class="math inline">\(\alpha\)</span>.</p>
 <p>We can use this approach by simply changing the method. Let’s also order our results again for viewing.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>holm_correct <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(bird_ratio_table, <span class="at">compare=</span><span class="st">"col"</span>, <span class="at">method =</span> <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>holm_correct <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(bird_ratio_table, <span class="at">compare=</span><span class="st">"col"</span>, <span class="at">method =</span> <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
 
@@ -1060,7 +1077,7 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
 
 Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>holm_correct[<span class="fu">order</span>(holm_correct<span class="sc">$</span>p.adj.Chisq), <span class="fu">c</span>(<span class="st">"Comparison"</span>, <span class="st">"p.adj.Chisq"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>holm_correct[<span class="fu">order</span>(holm_correct<span class="sc">$</span>p.adj.Chisq), <span class="fu">c</span>(<span class="st">"Comparison"</span>, <span class="st">"p.adj.Chisq"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           Comparison p.adj.Chisq
 4     Finch : Catbird      0.0141
@@ -1078,7 +1095,7 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</c
 <p>Although we still reject the same null hypotheses, notice the adjusted p-value for the junco:catbird comparison is slightly lower. This is due to the “holm” approach.</p>
 <p>A final approach we will demonstrate is called the False Discovery Rate, or FDR, approach. It’s similar to the Holm’s approach in that it starts by ordering the post-hoc tests by p-value, smallest to largest. However, it then rejects the null hypothesis attached to the largest p-value that is &lt; <span class="math inline">\(\alpha\)</span> and subsequently rejects all null hypotheses attached to smaller p-values. It is thus less conservative but basically attempts to maximize the number of hypotheses you reject given a set <span class="math inline">\(\alpha\)</span>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>fdr_correct <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(bird_ratio_table, <span class="at">compare=</span><span class="st">"col"</span>, <span class="at">method =</span> <span class="st">"fdr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>fdr_correct <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(bird_ratio_table, <span class="at">compare=</span><span class="st">"col"</span>, <span class="at">method =</span> <span class="st">"fdr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
 
@@ -1092,7 +1109,7 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
 
 Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>fdr_correct[<span class="fu">order</span>(fdr_correct<span class="sc">$</span>p.adj.Chisq), <span class="fu">c</span>(<span class="st">"Comparison"</span>, <span class="st">"p.adj.Chisq"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>fdr_correct[<span class="fu">order</span>(fdr_correct<span class="sc">$</span>p.adj.Chisq), <span class="fu">c</span>(<span class="st">"Comparison"</span>, <span class="st">"p.adj.Chisq"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           Comparison p.adj.Chisq
 4     Finch : Catbird      0.0141
@@ -1121,7 +1138,7 @@ H_A: \textrm{data do not come from a particular discrete probability distributio
 \]</span></p>
 <p>For example, we used a binomial test in earlier chapters to see if our observed number of old (9) and young (9) finches matched a probability of .75.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="at">x=</span><span class="dv">9</span>, <span class="at">n=</span><span class="dv">18</span>, <span class="at">p=</span>.<span class="dv">75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="at">x=</span><span class="dv">9</span>, <span class="at">n=</span><span class="dv">18</span>, <span class="at">p=</span>.<span class="dv">75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Exact binomial test
@@ -1138,7 +1155,7 @@ probability of success
 </div>
 <p>Note we instead consider what we observed vs what we expected using a <span class="math inline">\(\chi^2\)</span> test.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">9</span>), <span class="at">p=</span><span class="fu">c</span>(.<span class="dv">75</span>,.<span class="dv">25</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">9</span>), <span class="at">p=</span><span class="fu">c</span>(.<span class="dv">75</span>,.<span class="dv">25</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(c(9, 9), p = c(0.75, 0.25)): Chi-squared approximation
 may be incorrect</code></pre>
