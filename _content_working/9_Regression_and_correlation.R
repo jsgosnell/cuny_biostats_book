@@ -2,10 +2,6 @@
 
 
 
-#permutation####
-library(coin)
-independence_test(Sepal.Length ~ Petal.Length, iris)
-
 #leverage and outliers
 iris_new <- iris
 iris_new$Source <- "original"

@@ -26,7 +26,7 @@ could plot the data:
 
 ```{r}
 library(ggplot2)
-sepal_petal_relationship <- ggplot(iris, aes(x=Petal.Length, y=Sepal.Length)) +
+sepal_petal_relationship <- ggplot(iris, aes(x=Sepal.Length, y=Petal.Length)) +
   geom_point() +
   labs(title="Sepal length increases with petal length",
        x= "Sepal length (cm)",
@@ -59,7 +59,7 @@ information on order and spacing. Compared to un-ordered categorical
 variables (what we've focused on), the numbers mean something! This
 allows us (with caution) to estimate outcomes from un-sampled regions.
 
-Consider: We know the mean petal lengths for three species of irises:
+Consider: We know the mean sepal lengths for three species of irises:
 
 ```{r}
 library(Rmisc)
@@ -114,7 +114,7 @@ Overall, this means we can use a linear model approach to investigate
 relationships among numerical variables. We can build the model
 
 ```{r}
-iris_regression <- lm(Sepal.Length ~ Petal.Length, iris)
+iris_regression <- lm(Petal.Length ~ Sepal.Length, iris)
 ```
 
 and see the impacts on our linear model.
@@ -186,11 +186,11 @@ For example, since we simply observed flower traits, we could easily
 reverse everything above (plot shown here).
 
 ```{r}
-ggplot(iris, aes(y=Petal.Length, x=Sepal.Length)) +
+ggplot(iris, aes(x=Petal.Length, y=Sepal.Length)) +
   geom_point() +
-  labs(title="Petal length increases with sepal length",
-       x= "Sepal length (cm)",
-       y= "Petal Length (cm)")
+  labs(title="Sepal length increases with petal length",
+       y= "Sepal length (cm)",
+       x= "Petal Length (cm)")
 ```
 
 Note that doing so would change the coefficients in our linear model,but
@@ -249,7 +249,7 @@ permutation tests using the **coin** package.
 
 ```{r}
 library(coin)
-independence_test(Sepal.Length ~ Petal.Length, iris)
+independence_test(Petal.Length ~ Sepal.Length, iris)
 ```
 
 Bootstrapping may be done using the **boot** or other packages (not
@@ -261,7 +261,103 @@ bootstrap_iris <- Boot(iris_regression)
 summary(bootstrap_iris)
 ```
 
+## A little more on assumptions
+
+Although our linear models all have the same assumptions, numerical
+predictors add a few new wrinkles. For numerical predictors, outliers
+may be more of an issue. Outliers may be used a general term to focus on
+a data point that is different from the rest of the dataset, but only
+certain types of outliers matter.
+
+For example, let's pretend we realized our *iris* dataset was missing 3
+rows and add them back in.
+
+```{r}
+iris_new <- iris
+iris_new$Source <- "original"
+iris_new$label <- NULL
+#make outlier
+iris_outlier <- data.frame(Petal.Length = c(2.5,12, 12.1),
+                           Sepal.Length = c(5.4,8.9, 3), 
+                           Source = "new",
+                           label = c("A","B", "C"))
+iris_merged <- merge(iris_new, iris_outlier, all = T)
+iris_merged <- iris_merged[order(iris_merged$Source, decreasing = T),]
+rownames(iris_merged) <- 1:nrow(iris_merged) 
+
+iris_merged$row_number <- 1:nrow(iris_merged)
+
+ggplot(iris_merged, aes(y=Petal.Length, x=Sepal.Length, color=Source)) +
+  geom_point() +
+  geom_text(iris_merged[iris_merged$Source != "original",],mapping=aes(label=row_number,y=Sepal.Length+.2), color="black") +
+  labs(title="Iris data including our missing 3 rows!",
+       x= "Sepal length (cm)",
+       y= "Petal Length (cm)")
+```
+
+Our 3 "new" points (rows 151-153) are all unique ins some way. **152**
+is from a relatively unsampled region of the graph that is within the
+range of existing data. **151** and **153** are also from un-sampled
+regions, but these are outside of the original range. More importantly,
+note if we fit the data *without* these points
+
+```{r}
+ggplot(iris_merged, aes(y=Petal.Length, x=Sepal.Length, color=Source)) +
+  geom_point() +
+  geom_text(iris_merged[iris_merged$Source != "original",],mapping=aes(label=row_number,y=Sepal.Length+.2), color="black") +
+  labs(title="Iris data including our missing 3 rows!",
+       subtitle = "Best fit based on original data only!",
+       x= "Sepal length (cm)",
+       y= "Petal Length (cm)") +
+  geom_smooth(data=iris_new[iris_new$Source == "original",], method = "lm", fullrange=T, se=F)
+```
+
+We see that only row **151** appears to be different than what we would
+expect given the rest of the data. Now, note if we fit a model all these
+points and check assumptions
+
+```{r}
+iris_regression_new <- lm(Petal.Length ~ Sepal.Length, iris_merged)
+plot(iris_regression_new)
+```
+
+several plots label row **151**. In general, R provides the row number
+of the most "unusual" rows in each graph. This may mean a fairly normal
+row that just so happens to be the "most" extreme in a dataset is
+labelled. However, here we see row **151** falling outside the dotted
+lines that are labelled *Cook's distance* in the 4th graph. Cook's
+distance is one way of quantifying leverage, or how much a single point
+shifts the best fit line. The measure quantifies change in the
+regression coefficients if each data point is removed individually. Here
+we see row **151** is a high leverage point, while **153** is not even
+though the sepal length itself may be an outlier.
+
+Although row **153** is not identified as a high leverage point, it *is*
+impacting the line (as are all other points). Our best fit line will
+*always* go though the point $(\bar{x}, \bar{y})$, so outliers in the
+"x" variable will impact the line. This also explains why the confidence
+region (which we won't calculate here), gets "smaller" in the middle of
+the data range.
+
+```{r}
+ggplot(iris_merged, aes(y=Petal.Length, x=Sepal.Length)) +
+  geom_point(aes(color=Source)) +
+  geom_text(iris_merged[iris_merged$Source != "original",],mapping=aes(label=row_number,y=Sepal.Length+.2), color="black") +
+  labs(title="Iris data including our missing 3 rows!",
+       subtitle = "Grey area is confidence region, with mean point shown in purple!",
+       x= "Sepal length (cm)",
+       y= "Petal Length (cm)") +
+  geom_smooth( method = "lm", fullrange=T, se=T)+
+  geom_point(aes(x=mean(iris_merged$Sepal.Length), y=mean(iris_merged$Petal.Length)), color="purple")
+```
+This all the further you get from the mean, the wider your confidence interval 
+will be for an estimate. Even more importantly, estimating points outside your 
+data range is likely a bad idea.
+
 ## Plotting outcomes
+
+As shown above, numerical data is often plotted via paired points. You can also
+add regression lines with or without confidence regions.
 
 ## Next steps
 
