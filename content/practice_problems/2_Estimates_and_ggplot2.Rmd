@@ -1,13 +1,14 @@
 ---
-title: Intro to ggplot2!
-subtitle: UPDATE
-bibliography: references.bib
+title: "Estimation and ggplot2"
+bibliography: ../references.bib
 ---
 
-Before doing this, review the **Estimation and Probability** lecture set slides from 
-https://sites.google.com/view/biostats/lessons/estimation-and-probablity and
-the  **2_estimation_lecture.R** script in the lecture_files folder of the
-[CUNY-BioStats github repository](https://github.com/jsgosnell/CUNY-BioStats).
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
 
 
 Remember you should
@@ -20,6 +21,11 @@ pressing *Ctrl+Alt+I* to answer the questions!
   * **push** updates to github
   
 ## Overview
+
+This practice reviews the [Estimation
+lecture](../chapters/Estimation.qmd) and the use of ggplots (lots of ggplot2 
+example code in the [Summarizing data
+lecture](../chapters/Summarizing_data.qmd)
 
 ### ggplot2 basics
 
@@ -92,13 +98,14 @@ ggplot(sleep, aes(x=TotalSleep, y = Dreaming)) +
 
 Now we've added information on primates. Since that require us to get more data 
 from the dataset, we had to add another aes argument.  Note this is different from
-(not evaluated in code, as it causes an error!)
+this (which causes an error1)
 
-```{r, eval=F}
+```{r, error=T}
 ggplot(sleep, aes(x=TotalSleep, y = Dreaming)) +
   geom_point(colour="Primate")
 ```
-or
+
+and this
 
 ```{r}
 ggplot(sleep, aes(x=TotalSleep, y = Dreaming)) +
@@ -483,19 +490,19 @@ those with ggplot2 and do some more.
 
 ### 1
 
-1. First plot how TotalSleep is explained by BrainWt (remember the issues with 
+First plot how TotalSleep is explained by BrainWt (remember the issues with 
 the data).  Use ggplot2 to plot the relationship.
 
 ### 2
 
-2. Next color code each plot point by whether or not its a primate.  In order 
+Next color code each plot point by whether or not its a primate.  In order 
 to do this you can use the Primate column or (following class code) make a new 
 column called Taxa to represent the information (hint:search for “ revalue”). 
 Make sure axes are well-labeled.
 
 ### 3
 
-3. Let’s work with histograms.
+Let’s work with histograms.
 * What type of variation do we see in total time spent sleeping? Create a 
 histogram to explore this issue.
 * Facet the graph you created based on whether or not the animal is a primate 
@@ -504,7 +511,7 @@ histogram to explore this issue.
 
 ### 4
 
-4. Develop a properly-labeled bar graph with error bars to explore how total 
+Develop a properly-labeled bar graph with error bars to explore how total 
 sleep changes with 
 * Primate (relabeled as yes/no as Primate/Non-Primate; note 
 there are multiple ways to do this!) – use a 95% confidence interval for the bar
@@ -514,10 +521,10 @@ there are multiple ways to do this!) – use a 95% confidence interval for the b
 
 ### 5
 
-5. What does a 95% confidence interval mean?
+What does a 95% confidence interval mean?
 
 ### 6
-6. To make sure you understand the ideas of sampling, confidence intervals, and
+To make sure you understand the ideas of sampling, confidence intervals, and
 the central limit theorem, review the visualizations produced by UBC:
 
 * https://www.zoology.ubc.ca/~whitlock/Kingfisher/SamplingNormal.htm
@@ -526,7 +533,7 @@ the central limit theorem, review the visualizations produced by UBC:
 
 ### 7
 
-7. For this question you'll need the 
+For this question you'll need the 
 central_limit_theorem.R script from the 
 [code_examples folder](https://github.com/jsgosnell/CUNY-BioStats/tree/master/code_examples).
 Download it to your computer and open it. Alternatively, go ahead and make a copy 
