@@ -1,22 +1,14 @@
 ---
 title: "3. Introduction to hypothesis testing via binomial tests"
-author: "jsg"
-date: "Last compiled on `r format(Sys.time(), '%d %B, %Y %H:%M')`"
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    keep_md: true
-    self_contained: true
-    toc_depth: 5
-
+bibliography: ../references.bib
 ---
 
-Before doing this, review the **Introduction To Hypothesis Testing Via Binomial Tests** lecture set slides from 
-https://sites.google.com/view/biostats/lessons/hypothesis-testing-with-the-binomial-distribution and
-the  **3_hypothesis_testing_and_binomial.R** script in the lecture_files folder of the
-[CUNY-BioStats github repository](https://github.com/jsgosnell/CUNY-BioStats).  
-**You should also complete the swirl tutorial**!
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
 
 
 Remember you should
@@ -27,6 +19,11 @@ pressing *Ctrl+Alt+I* to answer the questions!
 * save your work often 
   * **commit** it via git!
   * **push** updates to github
+  
+## Overview
+
+This practice reviews the [Hypothesis testing starting with binomial tests
+lecture](../chapters/Binomial.qmd).
 
 ## Hypothesis Testing and the Binomial Distribution
 
@@ -43,7 +40,7 @@ of trials. By default it runs a 2-sided test against a null hypothesis value of
 p = .5. You can see how to update thee options by 
 looking at the help file.
 
-```{r}
+```{r, eval=F}
 ?binom.test
 ```
 
@@ -60,13 +57,13 @@ All of these correct for the fact that most intervals use a normal approximation
 which as you remember from our earlier discussions is not good when sample sizes 
 are small and/or the p parameter is extreme (close to 0 or 1).
 
-### Practice!
+## Practice!
 
 Make sure you are comfortable with null and alternative hypotheses for all examples.
 
-#### 1
+### 1
 
-1. Are people eared (do they prefer one ear or another)?  Of 25 people observed 
+Are people eared (do they prefer one ear or another)?  Of 25 people observed 
 while in conversation in a nightclub, 19 turned their right ear to the speaker 
 and 6 turn their left ear to the speaker.  How strong is the evidence for 
 eared-ness given this data (adapted from Analysis of Biological Data)?
@@ -82,9 +79,9 @@ eared-ness given this data (adapted from Analysis of Biological Data)?
 * Calculate a 95% confidence interval for the proportion of people who are right-eared
 * How do your 95% confidence interval and hypothesis test compare?
 
-#### 2
+### 2
 
-2.  A professor lets his dog take every multiple-choice test to see how it 
+A professor lets his dog take every multiple-choice test to see how it 
 compares to his students (I know someone who did this).  Unfortunately, the
 professor believes undergraduates in the class tricked him by helping the dog 
 do better on a test. It’s a 100 question test, and every questions has 4 answer 
