@@ -1,0 +1,187 @@
+---
+title: "7. More ANOVAs"
+author: "jsg"
+date: "Last compiled on `r format(Sys.time(), '%d %B, %Y %H:%M')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    keep_md: true
+    self_contained: true
+---
+
+Before doing this, review the **7. More ANOVAs** lecture set slides from
+<https://sites.google.com/view/biostats/lessons/more-anovas>. Make sure
+you are comfortable with null and alternative hypotheses and appropriate
+plots for all examples.
+
+Remember you should
+
+-   add code chunks by clicking the *Insert Chunk* button on the toolbar
+    or by pressing *Ctrl+Alt+I* to answer the questions!
+-   **knit** your file to produce a markdown version that you can see!
+-   save your work often
+    -   **commit** it via git!
+    -   **push** updates to github
+
+## Examples
+
+### If interaction is significant
+
+Following the memory example from class, read in and check data
+
+```{r}
+memory <- read.table("http://www.statsci.org/data/general/eysenck.txt", header = T,
+                     stringsAsFactors = T)
+str(memory)
+```
+
+Let's put younger level first
+
+```{r}
+library(plyr)
+memory$Age <- relevel(memory$Age, "Younger")
+```
+
+and graph
+
+```{r}
+library(Rmisc)
+function_output <- summarySE(memory, measurevar="Words", groupvars =
+                               c("Age", "Process"), na.rm = T)
+library(ggplot2)
+ggplot(function_output, aes(x=Age, y=Words,color=Process, 
+                                   shape = Process)) +
+  geom_line(aes(group=Process, linetype = Process), size=2) +
+    geom_point(size = 5) +
+  ylab("Words remembered")+ 
+  xlab("Age") + 
+  ggtitle("Process type interacts with age to impact memory")+
+  theme(axis.title.x = element_text(face="bold", size=28), 
+        axis.title.y = element_text(face="bold", size=28), 
+        axis.text.y  = element_text(size=20),
+        axis.text.x  = element_text(size=20), 
+        legend.text =element_text(size=20),
+        legend.title = element_text(size=20, face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold", size=32))
+```
+
+There appears to be some interactions. Let' build a model
+
+```{r}
+memory_interactions <- lm(Words ~ Age * Process, memory)
+```
+
+and check assumptions.
+
+```{r}
+par(mfrow=c(2,2))
+plot(memory_interactions)
+```
+
+These appear to be met, so look at output
+
+```{r}
+library(car)
+Anova(memory_interactions, type = "III")
+```
+
+Since interaction is significant, analyze subsets. For example,
+
+```{r}
+memory_interactions_young <- lm(Words ~ Process, memory[memory$Age == "Younger",])
+plot(memory_interactions_young)
+Anova(memory_interactions_young, type = "III")
+```
+
+There is a significant difference in words recalled based on process,
+but why? Investigate with post-hoc tests.
+
+```{r}
+library(multcomp)
+comp_young <- glht(memory_interactions_young, linfct = mcp(Process = "Tukey"))
+summary(comp_young)
+```
+
+### Blocking example
+
+Following feather color example from class:
+
+```{r}
+# more than 2? ####
+feather <-  read.csv("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/wiebe_2002_example.csv", stringsAsFactors = T)
+str(feather)
+set.seed(25)
+special <- data.frame(Bird = LETTERS[1:16], Feather = "Special", 
+                      Color_index= feather[feather$Feather == "Typical", "Color_index"] +
+                        .3 +runif(16,1,1)*.01)
+feather <- merge(feather, special, all = T)
+
+
+Anova(lm(Color_index ~ Feather + Bird, data=feather), type= "III")
+
+library(multcomp)
+compare <- glht(lm(Color_index ~ Feather + Bird, data=feather), linfct = mcp("Feather" = "Tukey"))
+summary(compare)
+```
+
+```{r, error=T}
+#note comparison doesn't work
+Anova(lm(Color_index ~ Feather * Bird, data=feather), type= "III")
+```
+
+## Practice
+
+### 1
+
+A survey was conducted to see if athletes and non-athletes deal with
+anger in the same way. Data is \@
+
+angry \<-
+read.csv("<https://docs.google.com/spreadsheets/d/e/2PACX-1vSaawG37o1ZUEs1B4keIJpZAY2c5tuljf29dWnzqQ0tHNCzfbz85AlWobYzBQ3nPPXJBLP-FWe4BNZB/pub?gid=1784556512&single=true&output=csv>",
+stringsAsFactors = T)
+
+and more information is at
+
+<http://onlinestatbook.com/case_studies/angry_moods.html>.
+
+Focus on the following variables:
+
+Sports 1 = athletes, 2 = non-athletes Gender 1 = males, 2 = females
+Expression (AE) index of general anger expression: (Anger-Out) +
+(Anger-In) - (Control-Out) - (Control-In) + 48
+
+Is there any evidence that gender or athlete status impact how anger is
+expressed?
+
+### 2
+
+A professor carried out a long-term study to see how various factors
+impacted pulse rate before and after exercise. Data can be found at
+<http://www.statsci.org/data/oz/ms212.txt> With more info at
+<http://www.statsci.org/data/oz/ms212.html>. Is there evidence that
+frequency of exercise (Exercise column) and gender impact change in
+pulse rate for students who ran (Ran column = 1)?
+
+### 3
+
+Data from Valdez et al 2023 is available \@
+<https://docs.google.com/spreadsheets/d/e/2PACX-1vT2gaLu6pyRMlcbzarn3ej4bFmT_iHvrlNWJYSdrsLdUWIjcJi7rU11-ipvYpGnqD9qLDnbhNd2sDUW/pub?gid=1707080634&single=true&output=csv>.
+
+Import it into to R and
+
+-   determine how the snail grazing and nitrogen levels impact number of
+    flowering shoots
+-   construct a plot to showcase your analysis
+
+### 4
+
+Find an example of a factorial ANOVA from a paper that is related to
+your work. Make sure you understand the connections between the methods,
+results, and graphs. Briefly answer the following questions
+
+-   What was the dependent variable?
+-   What were the independent variables?
+-   Was the interaction significant?
+    -   If so, how did they interpret findings
+    -   If not, were the main effects significant?

@@ -1,0 +1,173 @@
+---
+title: "6. Comparing means"
+author: "jsg"
+date: "Last compiled on `r format(Sys.time(), '%d %B, %Y %H:%M')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    keep_md: true
+    self_contained: true
+    toc_depth: 6
+bibliography: ../references.bib
+---
+
+Before doing this, review the **6. Comparing means** lecture set slides
+from
+<https://sites.google.com/view/biostats/lessons/comparing-means-among-groups>
+and the **7_ANOVAs.R** script in the lecture files folder of the
+[CUNY-BioStats github
+repository](https://github.com/jsgosnell/CUNY-BioStats). Make sure you
+are comfortable with null and alternative hypotheses and approiate plots
+for all examples.
+
+Remember you should
+
+-   add code chunks by clicking the *Insert Chunk* button on the toolbar
+    or by pressing *Ctrl+Alt+I* to answer the questions!
+-   **knit** your file to produce a markdown version that you can see!
+-   save your work often
+    -   **commit** it via git!
+    -   **push** updates to github
+
+## Examples
+
+We will run ANOVA's using the *lm* function to connect them to other
+test. First, build the model
+
+```{r}
+iris_anova <- lm(Sepal.Length~Species, iris)
+```
+
+Then use the object it created to test assumptions
+
+```{r}
+par(mfrow = c(2,2))
+plot(iris_anova)
+```
+
+If assumptions are met, check the p-value using the *summary* or *Anova*
+function.
+
+```{r}
+summary(iris_anova)
+library(car)
+Anova(iris_anova, type = "III")
+```
+
+If the overall test is significant, carry out post hoc tests (Tukey
+shown here for all pairs, as most common)
+
+```{r}
+library(multcomp)
+compare_cont_tukey <- glht(iris_anova, linfct = mcp(Species = "Tukey"))
+summary(compare_cont_tukey)
+```
+
+If assumptions are not met, we can use the Kruskal Wallis non-parametric
+test and associated post hoc tests.
+
+```{r}
+kruskal.test(Sepal.Length ~ Species, data = iris)
+pairwise.wilcox.test(iris$Sepal.Length, 
+                          iris$Species, 
+                          p.adjust.method="holm")
+```
+
+or a bootstrap alternative
+
+```{r}
+library(WRS2)
+t1waybt(Sepal.Length~Species, iris)
+bootstrap_post_hoc <- mcppb20(Sepal.Length~Species, iris)
+p.adjust(as.numeric(bootstrap_post_hoc$comp[,6]), "holm")
+```
+
+## Just for practice
+
+### 1
+
+1.  Use the iris dataset in R to determine if petal length differs among
+    species. *Do this problems using ANOVA, Kruskal-Wallis, and
+    bootstrapping methods. Make sure you can plot the data and carry out
+    multiple comparison methods as needed. Also be sure to understand
+    the use of coefficients and adjusted R^2^ values and where to find
+    them.*
+
+### 2
+
+2.  Data on plant heights (in cm) for plants grown with a new and old
+    formulation of fertilizer can be found at
+
+<https://docs.google.com/spreadsheets/d/e/2PACX-1vSUVowOKlmTic4ekL7LSbwDcqrsDSXv5K_c4Qyfcvz1lLE1_iINmGzy0zMGxY7z5DImlUErK4S2wY7Y/pub?gid=0&single=true&output=csv>.
+
+Analyze this data using the t.test function and the lm function to
+convince yourself that t-tests are special cases of ANOVAs, which are
+special cases of linear models!
+
+## For the following questions, pick the appropriate method for analyzing the question. Use a plot of the data and/or model analysis to justify your decision. Make sure you can carry out multiple comparison methods as needed. Also be sure to understand the use of coefficients and adjusted R^2^ values and where to find them.
+
+### 3
+
+3.  Data on sugar cane yield for multiple fields is available using
+
+read.table("<https://docs.google.com/spreadsheets/d/e/2PACX-1vRjstKreIM6UknyKFQCtw2_Q6itY9iOAVWO1hUNZkBFL8mwVssvTevqgzV22YDKCUeJq0HBDrsBrf5O/pub?gid=971470377&single=true&output=tsv>",
+header = T, stringsAsFactors = T)
+
+More info on the data can be found at
+<http://www.statsci.org/data/oz/cane.html>. Is there evidence that
+location (DistrictPosition column) impacts yield (Tonn.Hect column)? If
+so, which areas are driving this distance?
+
+### 4
+
+4.  Data on FEV (forced expiratory volume), a measure of lung function,
+    can be found at
+
+<http://www.statsci.org/data/general/fev.txt>
+
+More information on the dataset is available at
+
+<http://www.statsci.org/data/general/fev.html>.
+
+Is there evidence that FEV depends on gender? If so, which gender has
+the higher FEV score? How much variance does gender explain?
+
+### 5
+
+5.  The following data are human blood clotting times (in minutes) of
+    individuals given one of two different drugs.
+
+| Drug B | Drug G |
+|:------:|:------:|
+|  8.8   |  9.9   |
+|  8.4   |  9.0   |
+|  7.9   |  11.1  |
+|  8.7   |  9.6   |
+|  9.1   |  8.7   |
+|  9.6   |  10.4  |
+|        |  9.5   |
+
+Test the hypothesis that the mean clotting times are equal for the two
+groups
+
+-   Estimating the variance from the data
+-   Using rank transform analysis
+-   Using a permutation test
+-   Using a bootstrap test
+
+### 6
+
+6.  (Example from Handbook on Biological Statistics) Odd (stunted,
+    short, new) feathers were compared in color to typical feathers in
+    Northern Flickers (*Colaptes auratus*) [@wiebe2002] . Data is at
+
+<https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/wiebe_2002_example.csv>
+
+Test the hypothesis that odd and typical feathers did not differ using
+
+-   a Student's t test and/or lm
+-   a rank test
+-   bootstrapping
+
+Note we will return to this question next week!
