@@ -94,8 +94,10 @@ While we can draw this "line of best fit" by sight, linear models
 actually give us a way to formally define it (analyze our hypothesis).
 The line of best fit minimizes the residuals (which means it also offers
 a prediction any value of sepal length!). This approach, however, also
-means we are considering **linear** relationships between our variables.
-This is one assumption of linear regression! We can consider
+means we are considering **linear** relationships between our predictor
+variables (but note our predictor variables themselves could be a
+transformation of an actual measurement, such as a square root or value
+cubed!). This is one assumption of linear regression. We can consider
 **non-linear** relationships using other techniques (which we will cover
 later).
 
@@ -252,13 +254,15 @@ library(coin)
 independence_test(Petal.Length ~ Sepal.Length, iris)
 ```
 
-Bootstrapping may be done using the **boot** or other packages (not
-developed here).
+Bootstrapping may be done using the **boot** or other packages. For
+example, the *boot* function in the **car** package gives an easy
+wrapper for *boot*.
 
 ```{r}
 library(car)
 bootstrap_iris <- Boot(iris_regression)
 summary(bootstrap_iris)
+Confint(bootstrap_iris)
 ```
 
 ## A little more on assumptions
@@ -350,14 +354,15 @@ ggplot(iris_merged, aes(y=Petal.Length, x=Sepal.Length)) +
   geom_smooth( method = "lm", fullrange=T, se=T)+
   geom_point(aes(x=mean(iris_merged$Sepal.Length), y=mean(iris_merged$Petal.Length)), color="purple")
 ```
-This all the further you get from the mean, the wider your confidence interval 
-will be for an estimate. Even more importantly, estimating points outside your 
-data range is likely a bad idea.
+
+This all the further you get from the mean, the wider your confidence
+interval will be for an estimate. Even more importantly, estimating
+points outside your data range is likely a bad idea.
 
 ## Plotting outcomes
 
-As shown above, numerical data is often plotted via paired points. You can also
-add regression lines with or without confidence regions.
+As shown above, numerical data is often plotted via paired points. You
+can also add regression lines with or without confidence regions.
 
 ## Next steps
 
