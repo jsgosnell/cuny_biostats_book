@@ -277,6 +277,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/1_Getting_used_to_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting used to R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../content/practice_problems/6_Comparing_means.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Compare means among groups</span></a>
   </div>
@@ -292,6 +298,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/solutions/1_Getting_used_to_R_solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting used to R</span></a>
+  </div>
+</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/solutions/6_Comparing_means.html" class="sidebar-item-text sidebar-link">
@@ -640,16 +652,16 @@ alternative hypothesis: two.sided</code></pre>
 <pre><code>
 Number of bootstrap replications R = 999 
              original   bootBias   bootSE bootMed
-(Intercept)   -7.1014 -0.0264300 0.429986 -7.1359
-Sepal.Length   1.8584  0.0043398 0.069475  1.8626</code></pre>
+(Intercept)   -7.1014 -0.0356234 0.448518 -7.1423
+Sepal.Length   1.8584  0.0066721 0.072603  1.8638</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Confint</span>(bootstrap_iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Bootstrap bca confidence intervals
 
               Estimate     2.5 %    97.5 %
-(Intercept)  -7.101443 -7.896543 -6.231454
-Sepal.Length  1.858433  1.715497  1.991582</code></pre>
+(Intercept)  -7.101443 -7.932692 -6.141766
+Sepal.Length  1.858433  1.714112  1.994023</code></pre>
 </div>
 </div>
 </section>
@@ -675,7 +687,7 @@ Sepal.Length  1.858433  1.715497  1.991582</code></pre>
 <span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">y=</span>Petal.Length, <span class="at">x=</span>Sepal.Length, <span class="at">color=</span>Source)) <span class="sc">+</span></span>
 <span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Sepal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Petal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
 <span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Iris data including our missing 3 rows!"</span>,</span>
 <span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -687,7 +699,7 @@ Sepal.Length  1.858433  1.715497  1.991582</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">y=</span>Petal.Length, <span class="at">x=</span>Sepal.Length, <span class="at">color=</span>Source)) <span class="sc">+</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Sepal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Petal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
 <span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Iris data including our missing 3 rows!"</span>,</span>
 <span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Best fit based on original data only!"</span>,</span>
 <span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
@@ -722,7 +734,7 @@ Sepal.Length  1.858433  1.715497  1.991582</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">y=</span>Petal.Length, <span class="at">x=</span>Sepal.Length)) <span class="sc">+</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color=</span>Source)) <span class="sc">+</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Sepal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Petal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
 <span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Iris data including our missing 3 rows!"</span>,</span>
 <span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Grey area is confidence region, with mean point shown in purple!"</span>,</span>
 <span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
