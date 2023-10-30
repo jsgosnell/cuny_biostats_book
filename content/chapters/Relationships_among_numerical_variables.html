@@ -260,7 +260,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/references.bib" class="sidebar-item-text sidebar-link">
+  <a href="../../content/references.bib" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Download a full reference list!</span></a>
   </div>
 </li>
@@ -425,7 +425,7 @@ H_A: \textrm{there is a relationship between sepal and petal length}\\
 <p><img src="Relationships_among_numerical_variables_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>While we can draw this “line of best fit” by sight, linear models actually give us a way to formally define it (analyze our hypothesis). The line of best fit minimizes the residuals (which means it also offers a prediction any value of sepal length!). This approach, however, also means we are considering <strong>linear</strong> relationships between our variables. This is one assumption of linear regression! We can consider <strong>non-linear</strong> relationships using other techniques (which we will cover later).</p>
+<p>While we can draw this “line of best fit” by sight, linear models actually give us a way to formally define it (analyze our hypothesis). The line of best fit minimizes the residuals (which means it also offers a prediction any value of sepal length!). This approach, however, also means we are considering <strong>linear</strong> relationships between our predictor variables (but note our predictor variables themselves could be a transformation of an actual measurement, such as a square root or value cubed!). This is one assumption of linear regression. We can consider <strong>non-linear</strong> relationships using other techniques (which we will cover later).</p>
 <p>If we wanted to carry out a sampling experiment to determine a p-value for our hypotheses, we could sample from a population that represents our sepal lengths and one that represents our petal lengths. If the two populations are not connected, then arbitrary pairs could be made - this would indicate no relationship among the variables. For each dataset, we could note the potential relationship (now occuring by chance!) between our variables, and then compare that null distribution to what we actually observed. To make this approach more generalizable, we could standardize our data points - using these to calculate our error terms for full and reduced models would lead us to F distributions.</p>
 <p>Overall, this means we can use a linear model approach to investigate relationships among numerical variables. We can build the model</p>
 <div class="cell">
@@ -608,7 +608,7 @@ Z = 10.641, p-value &lt; 2.2e-16
 alternative hypothesis: two.sided</code></pre>
 </div>
 </div>
-<p>Bootstrapping may be done using the <strong>boot</strong> or other packages (not developed here).</p>
+<p>Bootstrapping may be done using the <strong>boot</strong> or other packages. For example, the <em>boot</em> function in the <strong>car</strong> package gives an easy wrapper for <em>boot</em>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>bootstrap_iris <span class="ot">&lt;-</span> <span class="fu">Boot</span>(iris_regression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -619,9 +619,17 @@ alternative hypothesis: two.sided</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Number of bootstrap replications R = 999 
-             original   bootBias   bootSE bootMed
-(Intercept)   -7.1014 -0.0181896 0.430265 -7.1185
-Sepal.Length   1.8584  0.0031911 0.070123  1.8607</code></pre>
+             original    bootBias  bootSE bootMed
+(Intercept)   -7.1014 -0.00126225 0.39454 -7.0941
+Sepal.Length   1.8584  0.00040832 0.06414  1.8575</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Confint</span>(bootstrap_iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Bootstrap bca confidence intervals
+
+              Estimate     2.5 %    97.5 %
+(Intercept)  -7.101443 -7.903464 -6.303292
+Sepal.Length  1.858433  1.731321  1.984933</code></pre>
 </div>
 </div>
 </section>
@@ -631,40 +639,40 @@ Sepal.Length   1.8584  0.0031911 0.070123  1.8607</code></pre>
 <p>Although our linear models all have the same assumptions, numerical predictors add a few new wrinkles. For numerical predictors, outliers may be more of an issue. Outliers may be used a general term to focus on a data point that is different from the rest of the dataset, but only certain types of outliers matter.</p>
 <p>For example, let’s pretend we realized our <em>iris</em> dataset was missing 3 rows and add them back in.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>iris_new <span class="ot">&lt;-</span> iris</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>iris_new<span class="sc">$</span>Source <span class="ot">&lt;-</span> <span class="st">"original"</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>iris_new<span class="sc">$</span>label <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#make outlier</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>iris_outlier <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Petal.Length =</span> <span class="fu">c</span>(<span class="fl">2.5</span>,<span class="dv">12</span>, <span class="fl">12.1</span>),</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">Sepal.Length =</span> <span class="fu">c</span>(<span class="fl">5.4</span>,<span class="fl">8.9</span>, <span class="dv">3</span>), </span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">Source =</span> <span class="st">"new"</span>,</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"A"</span>,<span class="st">"B"</span>, <span class="st">"C"</span>))</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>iris_merged <span class="ot">&lt;-</span> <span class="fu">merge</span>(iris_new, iris_outlier, <span class="at">all =</span> T)</span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>iris_merged <span class="ot">&lt;-</span> iris_merged[<span class="fu">order</span>(iris_merged<span class="sc">$</span>Source, <span class="at">decreasing =</span> T),]</span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(iris_merged) <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(iris_merged) </span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>iris_merged<span class="sc">$</span>row_number <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(iris_merged)</span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">y=</span>Petal.Length, <span class="at">x=</span>Sepal.Length, <span class="at">color=</span>Source)) <span class="sc">+</span></span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Sepal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Iris data including our missing 3 rows!"</span>,</span>
-<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
-<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>iris_new <span class="ot">&lt;-</span> iris</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>iris_new<span class="sc">$</span>Source <span class="ot">&lt;-</span> <span class="st">"original"</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>iris_new<span class="sc">$</span>label <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co">#make outlier</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>iris_outlier <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Petal.Length =</span> <span class="fu">c</span>(<span class="fl">2.5</span>,<span class="dv">12</span>, <span class="fl">12.1</span>),</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">Sepal.Length =</span> <span class="fu">c</span>(<span class="fl">5.4</span>,<span class="fl">8.9</span>, <span class="dv">3</span>), </span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">Source =</span> <span class="st">"new"</span>,</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"A"</span>,<span class="st">"B"</span>, <span class="st">"C"</span>))</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>iris_merged <span class="ot">&lt;-</span> <span class="fu">merge</span>(iris_new, iris_outlier, <span class="at">all =</span> T)</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>iris_merged <span class="ot">&lt;-</span> iris_merged[<span class="fu">order</span>(iris_merged<span class="sc">$</span>Source, <span class="at">decreasing =</span> T),]</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(iris_merged) <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(iris_merged) </span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>iris_merged<span class="sc">$</span>row_number <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(iris_merged)</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">y=</span>Petal.Length, <span class="at">x=</span>Sepal.Length, <span class="at">color=</span>Source)) <span class="sc">+</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Sepal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Iris data including our missing 3 rows!"</span>,</span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Relationships_among_numerical_variables_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Our 3 “new” points (rows 151-153) are all unique ins some way. <strong>152</strong> is from a relatively unsampled region of the graph that is within the range of existing data. <strong>151</strong> and <strong>153</strong> are also from un-sampled regions, but these are outside of the original range. More importantly, note if we fit the data <em>without</em> these points</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">y=</span>Petal.Length, <span class="at">x=</span>Sepal.Length, <span class="at">color=</span>Source)) <span class="sc">+</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Sepal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Iris data including our missing 3 rows!"</span>,</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Best fit based on original data only!"</span>,</span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>) <span class="sc">+</span></span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">data=</span>iris_new[iris_new<span class="sc">$</span>Source <span class="sc">==</span> <span class="st">"original"</span>,], <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">fullrange=</span>T, <span class="at">se=</span>F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">y=</span>Petal.Length, <span class="at">x=</span>Sepal.Length, <span class="at">color=</span>Source)) <span class="sc">+</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Sepal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Iris data including our missing 3 rows!"</span>,</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Best fit based on original data only!"</span>,</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>) <span class="sc">+</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">data=</span>iris_new[iris_new<span class="sc">$</span>Source <span class="sc">==</span> <span class="st">"original"</span>,], <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">fullrange=</span>T, <span class="at">se=</span>F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
@@ -674,8 +682,8 @@ Sepal.Length   1.8584  0.0031911 0.070123  1.8607</code></pre>
 </div>
 <p>We see that only row <strong>151</strong> appears to be different than what we would expect given the rest of the data. Now, note if we fit a model all these points and check assumptions</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>iris_regression_new <span class="ot">&lt;-</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Sepal.Length, iris_merged)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris_regression_new)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>iris_regression_new <span class="ot">&lt;-</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Sepal.Length, iris_merged)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris_regression_new)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Relationships_among_numerical_variables_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -692,15 +700,15 @@ Sepal.Length   1.8584  0.0031911 0.070123  1.8607</code></pre>
 <p>several plots label row <strong>151</strong>. In general, R provides the row number of the most “unusual” rows in each graph. This may mean a fairly normal row that just so happens to be the “most” extreme in a dataset is labelled. However, here we see row <strong>151</strong> falling outside the dotted lines that are labelled <em>Cook’s distance</em> in the 4th graph. Cook’s distance is one way of quantifying leverage, or how much a single point shifts the best fit line. The measure quantifies change in the regression coefficients if each data point is removed individually. Here we see row <strong>151</strong> is a high leverage point, while <strong>153</strong> is not even though the sepal length itself may be an outlier.</p>
 <p>Although row <strong>153</strong> is not identified as a high leverage point, it <em>is</em> impacting the line (as are all other points). Our best fit line will <em>always</em> go though the point <span class="math inline">\((\bar{x}, \bar{y})\)</span>, so outliers in the “x” variable will impact the line. This also explains why the confidence region (which we won’t calculate here), gets “smaller” in the middle of the data range.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">y=</span>Petal.Length, <span class="at">x=</span>Sepal.Length)) <span class="sc">+</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color=</span>Source)) <span class="sc">+</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Sepal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Iris data including our missing 3 rows!"</span>,</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Grey area is confidence region, with mean point shown in purple!"</span>,</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>) <span class="sc">+</span></span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>( <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">fullrange=</span>T, <span class="at">se=</span>T)<span class="sc">+</span></span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="fu">mean</span>(iris_merged<span class="sc">$</span>Sepal.Length), <span class="at">y=</span><span class="fu">mean</span>(iris_merged<span class="sc">$</span>Petal.Length)), <span class="at">color=</span><span class="st">"purple"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">y=</span>Petal.Length, <span class="at">x=</span>Sepal.Length)) <span class="sc">+</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color=</span>Source)) <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Sepal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Iris data including our missing 3 rows!"</span>,</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Grey area is confidence region, with mean point shown in purple!"</span>,</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>) <span class="sc">+</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>( <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">fullrange=</span>T, <span class="at">se=</span>T)<span class="sc">+</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="fu">mean</span>(iris_merged<span class="sc">$</span>Sepal.Length), <span class="at">y=</span><span class="fu">mean</span>(iris_merged<span class="sc">$</span>Petal.Length)), <span class="at">color=</span><span class="st">"purple"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Use of `iris_merged$Sepal.Length` is discouraged.
 ℹ Use `Sepal.Length` instead.</code></pre>
