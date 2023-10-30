@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Biostatistics! - Probability</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
+      Biostatistics: Concepts and approaches for collecting good data and  turning it into knowledge!
+      </li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header sidebar-header-stacked">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../images/image-from-rawpixel-id-547642-jpeg.jpg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Biostatistics: Concepts and approaches for collecting good data and turning it into knowledge!</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://www.gosnelllab.com/" rel="" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
+    <a href="https://github.com/jsgosnell" rel="" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+ <span class="menu-text">Getting started</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/getting_started/getting_started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Before the first class</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+ <span class="menu-text">Chapters</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Introduction.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Acquiring_data.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acquiring data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/summarizing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Summarizing data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Estimation.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Estimation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Probability.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Probability</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Binomial.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hypothesis testing starting with binomial tests</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Tests_for_continuous_data_from_one_sample.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tests for continuous data from one sample</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Compare_proportions_among_populations.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compare proportions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Compare_means_among_populations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compare means among groups</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/More_ANOVAs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">More ANOVAs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Relationships_among_numerical_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Relationships among numerical variables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/acknowledgements.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acknowledgements</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/additional_resources.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Additional resources</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/references.bib" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Download a full reference list!</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+ <span class="menu-text">Practice Problems</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/6_Comparing_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compare means among groups</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Intro_to_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting started with R!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Intro_to_Rmd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting started with Rmarkdown!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/Intro_to_ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting started with ggpplot2!</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-is-probability" id="toc-what-is-probability" class="nav-link active" data-scroll-target="#what-is-probability">What is probability?</a>
+  <ul class="collapse">
+  <li><a href="#what-if-more-than-one-thing-is-of-importance" id="toc-what-if-more-than-one-thing-is-of-importance" class="nav-link" data-scroll-target="#what-if-more-than-one-thing-is-of-importance">What if more than one thing is of importance?</a></li>
+  </ul></li>
+  <li><a href="#conditional-probability" id="toc-conditional-probability" class="nav-link" data-scroll-target="#conditional-probability">Conditional Probability</a></li>
+  <li><a href="#related-ideas" id="toc-related-ideas" class="nav-link" data-scroll-target="#related-ideas">Related Ideas</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Probability.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Probability.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Probability</h1>
+<p class="subtitle lead">The backbone of statistics!</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+<p>We’ve already address probability. When we stated the 95% confidence interval means that if we make these intervals from 100 samples that we expect 95 of them to contain the true mean, we are discussing probability. An even easier example is flipping a coin. You probably know there is a 50% chance of a coin landing on heads. That doesn’t mean given flip will be half heads and half tails. Both of these statements refer to likely outcomes if we do something many, many times!</p>
+<section id="what-is-probability" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-probability">What is probability?</h2>
+<p>To put it specifically, the probability of an outcome is its true relative frequency, the proportion of times the event would occur if we repeated the same process over and over again. We can describe the probability if an outcome by considering all the potential outcomes and how likely each is. If we describe all the outcomes, the total probability must be equal to 1 (since frequency is typically measured as a fraction!). Some probability distributions can be described mathematically, others are a list of possible outcomes, and others are almost impossible to solve. The “impossible” ones require simulations, and we will return to this for our introduction to Bayesian analysis.</p>
+<p>The simplest case is when we focus on outcomes for a single trait that falls into specific categories. These outcomes are often <em>mutually exclusive</em>, meaning only one can happen (like our heads and tails example!), and lead to discrete probability distributions (meaning each outcome has to be a specific value). Another example is rolling a 6-sided die. The die can only land on numbers 1 to 6 (so 2.57 is not an option!).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>die_roll <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Number =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">Probability =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>,<span class="dv">6</span>))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>die_roll<span class="sc">$</span>Number <span class="ot">&lt;-</span> <span class="fu">factor</span>(die_roll<span class="sc">$</span>Number)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(die_roll, <span class="fu">aes</span>(<span class="at">x=</span>Number, <span class="at">y=</span> Probability, <span class="at">fill=</span>Number)) <span class="sc">+</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Probability_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>in this example, the probability of rolling a <em>6</em> is .167. You may see this written as</p>
+<p><span class="math display">\[
+P[roll=6]= \frac{1}{6} \sim .167
+\]</span>Obviously when you roll a die you don’t roll .167 of a 6. You roll a 1, 2, 3, 4, 5, or 6. Again, probability refers to the expected outcome over multiple attempts.</p>
+<p>Compare this to a continuous probability distribution, where the outcome can take any value in a given range.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)), <span class="fu">aes</span>(x)) <span class="sc">+</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">n =</span> <span class="dv">101</span>, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>), <span class="at">color =</span> <span class="st">"orange"</span>)<span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Probability"</span>, <span class="at">x=</span><span class="st">"Outcome"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Probability_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Here’s an odd outcome: Since the outcome can take on any value in a given range, the chance of it being a <em>specific</em> value is 0. Think about it this way - for any value you mention, I can zoom in more. For example, if you ask the probability of <strong>x</strong> in the above graph being equal to 0, we could zoom in to 0.0, or 0.00, or 0.000. At some limit of resolution, the area under the curve (which denotes the probability and would be found using integral calculus, which we won’t do here) would be equal to 0!</p>
+<p>This may seem like an odd aside, but it is actually very important. It explains why when we will discuss probabilities the probability of an outcome being less than, more than, or between two values in upcoming chapters. For example, we can note (again) that for a normal distribution (what we see above and will (still eventually) define more appropriately) that 67% of the data falls within one standard devation for perfectly (very rare!) normally-distributed data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#function from https://dkmathstats.com/plotting-normal-distributions-in-r-using-ggplot2/</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dnorm_one_sd <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  norm_one_sd <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(x)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Have NA values outside interval x in [-1, 1]:</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  norm_one_sd[x <span class="sc">&lt;=</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">|</span> x <span class="sc">&gt;=</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(norm_one_sd)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)), <span class="fu">aes</span>(x)) <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">n =</span> <span class="dv">101</span>, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>), <span class="at">color =</span> <span class="st">"orange"</span>)<span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Probability"</span>, <span class="at">x=</span><span class="st">"Outcome"</span>) <span class="sc">+</span> </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm_one_sd, <span class="at">geom =</span> <span class="st">"area"</span>, <span class="at">fill =</span> <span class="st">"purple"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Probability_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="what-if-more-than-one-thing-is-of-importance" class="level3">
+<h3 class="anchored" data-anchor-id="what-if-more-than-one-thing-is-of-importance">What if more than one thing is of importance?</h3>
+<p>Sometimes we focus on the probability of more than one outcome for a given event. This requires adding or combining probabilities. The first step in doing this is deciding if the outcomes are <em>mutually exclusive</em>. This means they can not occur in the same unit of focus. For example, we could ask the probability of rolling a 1 or a 6, or of being &gt;2 and &lt;-2. In both cases, a single outcome can’t be both of these things, so the outcomes are mutually exclusive. When this is the case, we simply add the probabilities. This is sometimes called the <em>union</em> of two outcomes.</p>
+<p>Contrast this with when we want to know the probability of two things occurring that may occur in the same unit. For example, assume our die not only had dots on it, but these dots were a different color. For example, odd numbers were blue and even numbers were red.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"red"</span> <span class="ot">=</span> <span class="st">"red"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>die_roll<span class="sc">$</span>Color <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>die_roll[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(die_roll<span class="sc">$</span>Number)) <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">0</span>, <span class="st">"Color"</span>] <span class="ot">&lt;-</span> <span class="st">"blue"</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>die_roll[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(die_roll<span class="sc">$</span>Number)) <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">!=</span> <span class="dv">0</span>, <span class="st">"Color"</span>] <span class="ot">&lt;-</span> <span class="st">"red"</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(die_roll, <span class="fu">aes</span>(<span class="at">x=</span>Number, <span class="at">y=</span> Probability, <span class="at">fill=</span>Color)) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Probability_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Now, the probability of rolling any given group of numbers can be found by adding probabilities since the outcomes are mutually exclusive. Same for die color. However, what about the probability of rolling a blue (even) outcome or a 6? Note we can’t simply add these. Why not?</p>
+<p>Because a single roll can result in a 6 and blue dots! So adding the probability of getting blue dots (.5) and of getting a 6 (.167) will double-count the 6. In other words, there is an an intersection of the possible outcomes. So, the probability of rolling a 6 or blue is equal to</p>
+<p><span class="math display">\[
+P[roll=blue] + P[roll=6] - P[roll=6 \ and \ blue]= \frac{1}{2} + \frac{1}{6} -\frac{1}{6}
+\]</span></p>
+<p>This is sometimes called the <em>general addition principle</em>.</p>
+<p>If we are measuring multiple outcomes (note this slightly different than the probability of two or more outcomes for a specific event), we need to consider if the events are <em>independent</em>. This means the outcome of one does not influence the outcome of the other. If this is true, the probability of both events occurring can be found by simply multiplying the probability of each (the <em>multiplication rule</em>). For example, consider the probability of flipping a coin twice and seeing a heads followed by a tails. We can write out all the options (T, HH, TH, TT); assuming independence, the probability for each is <span class="math inline">\(\frac{1}{4}\)</span>. We can also say the probability of heads on the first flip is <span class="math inline">\(\frac{1}{2}\)</span> and the probability of tails on the second flip is <span class="math inline">\(\frac{1}{2}\)</span>; multiplying these yields <span class="math inline">\(\frac{1}{2}\)</span>.</p>
+<p>Consider instead that we roll 2 dice and measure the sum of the rolls. Since one roll does not influence the other, these are independent events. As noted above, we can work out the probability distribution by writing out all possible outcomes:</p>
+<table class="table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 4%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><ul>
+<li><br>
+*Fi</li>
+</ul>
+<p>rst</p>
+<p>Dic</p>
+<p>e<br>
+**</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td><ul>
+<li>* Sec</li>
+</ul>
+<p>ond</p>
+<p>Dic</p>
+<p>e<br>
+**</p></td>
+<td>1</td>
+<td>( 1 ,1)</td>
+<td>( 1 ,2)</td>
+<td>( 1 ,3)</td>
+<td><ul>
+<li><p><br>
+*(1</p>
+<p>,</p>
+<p>4</p></li>
+</ul>
+<p>)<br>
+**</p></td>
+<td>( 1 ,5)</td>
+<td>( 1 ,6)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>2</td>
+<td>( 2 ,1)</td>
+<td>( 2 ,2)</td>
+<td><ul>
+<li><p><br>
+*(2</p>
+<p>,</p>
+<p>3</p></li>
+</ul>
+<p>)<br>
+**</p></td>
+<td>( 2 ,4)</td>
+<td>( 2 ,5)</td>
+<td>( 2 ,6)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>3</td>
+<td>( 3 ,1)</td>
+<td><ul>
+<li><p><br>
+*(3</p>
+<p>,</p>
+<p>2</p></li>
+</ul>
+<p>)<br>
+**</p></td>
+<td>( 3 ,3)</td>
+<td>( 3 ,4)</td>
+<td>( 3 ,5)</td>
+<td>( 3 ,6)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>4</td>
+<td><ul>
+<li><p><br>
+*(4</p>
+<p>,</p>
+<p>1</p></li>
+</ul>
+<p>)<br>
+**</p></td>
+<td>( 4 ,2)</td>
+<td>( 4 ,3)</td>
+<td>( 4 ,4)</td>
+<td>( 4 ,5)</td>
+<td>( 4 ,6)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>5</td>
+<td>( 5 ,1)</td>
+<td>( 5 ,2)</td>
+<td>( 5 ,3)</td>
+<td>( 5 ,4)</td>
+<td>( 5 ,5)</td>
+<td>( 5 ,6)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>6</td>
+<td>( 6 ,1)</td>
+<td>( 6 ,2)</td>
+<td>( 6 ,3)</td>
+<td>( 6 ,4)</td>
+<td>( 6 ,5)</td>
+<td>( 6 ,6)</td>
+</tr>
+</tbody>
+</table>
+<p>Now assume we want to know the probability of the sum of the dice being equal to 5. If we assume independence, the the probability of rolling a sum of 5 (highlighted cells above) is <span class="math inline">\(\frac{4}{36}\)</span>.</p>
+<p>We could also simulate the outcome</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>number_of_rolls <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>sum_of_rolls <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">index =</span> <span class="dv">1</span><span class="sc">:</span>number_of_rolls, <span class="at">Sum =</span> <span class="cn">NA</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>number_of_rolls){</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  dice_roll_trial <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  sum_of_rolls<span class="sc">$</span>Sum[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(dice_roll_trial)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>sum_of_rolls_df <span class="ot">&lt;-</span> <span class="fu">dcast</span>(sum_of_rolls, Sum <span class="sc">~</span> <span class="st">"Probability"</span>, length )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using Sum as value column: use value.var to override.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sum_of_rolls_df<span class="sc">$</span>Probability <span class="ot">&lt;-</span> sum_of_rolls_df<span class="sc">$</span>Probability<span class="sc">/</span>number_of_rolls</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sum_of_rolls_df, <span class="fu">aes</span>(<span class="at">x=</span>Sum, <span class="at">y=</span>Probability)) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill=</span><span class="st">"orange"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Probability"</span>)<span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Probability_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Notice here we find the probability of rolling a sum of 5 is 0.11093 which is very close to <span class="math inline">\(\frac{4}{36}\)</span>.</p>
+<p>To find the probability using math, we have to note that the dice rolls are independent. For example, even though we only want a <strong>4</strong> on the second dice if we roll a <strong>1</strong> on the first dice, the roll of the first die does not influence the roll of the second. We should also note the desired outcomes are mutually exclusive. So we can find the probability of each happening and then add them. It’s easy to see how probability can get complicated!</p>
+</section>
+</section>
+<section id="conditional-probability" class="level2">
+<h2 class="anchored" data-anchor-id="conditional-probability">Conditional Probability</h2>
+<p>Unlike our coin example, sometimes a first event occurring does influence the probability of a second event.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://imgs.xkcd.com/comics/conditional_risk.png" class="img-fluid figure-img" alt="Two stick figures are walking outside. Lightning strikes. One mentions they should go inside. The other notes only 45 Americans are killed by a lightning strike each year, so the chances of dying are less than one in 7,000,000"></p>
+<figcaption class="figure-caption">XKCD Conditional Risk: The annual death rate among people who know that statistics is one is six.</figcaption>
+</figure>
+</div>
+<p>In a similar vein, although the risk of shark attack is low, it increases dramatically if you swim in the ocean.</p>
+<p>Unlike our previous examples, we now have 2 events (lets call them A and B), and the probability of both occurring is equal to</p>
+<p><span class="math display">\[
+P[A \ and \ B] = P[A] \ P[B|A]
+\]</span></p>
+<p>which can be read as “the probability of A and B occurring is equal to the probability of A multiplied by the probability of B given A occurs”. Note if A and B are independent, this reduces to the multiplication rule.</p>
+<p>We can extend this by noting</p>
+<p><span class="math display">\[
+P[A \ and \ B] = P[A] \ P[B|A] \\
+P[A \ and \ B] = P[B] \ P[A|B] \\
+P[A] \ P[B|A] = P[B] \ P[A|B] \\
+P[A|B] = \frac{P[B|A]*P[A]}{P[B]}
+\]</span></p>
+<p>This rule is known as <em>Bayes’ Theorem</em>. We will return to this when we discuss <em>Bayesian</em> analysis, but we can use it here for demonstration.</p>
+<p>For our lightning example, we could use some (pretend) numbers to understand the risk and Bayes’ Theorem. First, let A be the probability of being outside in a lightning storm. B is then the probability of getting struck by lightning, , and P[B|A] is the probabiity of getting struck by lightning given that you are outside in a lightning storm (hint: it’s much higher than the P[B]).</p>
+<p>Here’s anoher similar (in concept) example. Medical trials are designed to test the effectiveness of drugs or treatments. In these trials, drug efficacy is considered by comparing outcomes in people who receive the drug or treatment compared to those who receive a placebo (such as a sugar pill). Note this only works if participants do not know which group (drug vs placebo) they are in (why?). In a given trial, people who receive the drug recover 60% of the time (or avoid some other adverse outcome). This may seem good, but it’s only relevant when compared to the placebo group. What if people receiving the placebo recovered 80% of the time? Also, if we know the probability of recovering without the drug, we can consider the total probability of recovery. For now, let’s assume that 20% of people who receive the placebo recover.</p>
+<p>We could use a tree diagram to consider possible options:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'DiagrammeR' was built under R version 4.2.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>bayes_probability_tree <span class="ot">&lt;-</span> <span class="cf">function</span>(prior, true_positive, true_negative, <span class="at">label1 =</span> <span class="st">"Prior"</span>, </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">label2 =</span> <span class="st">"Complimentary Prior"</span>, <span class="at">label3 =</span> <span class="st">"True Positive"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">label4 =</span> <span class="st">"False Negative"</span>, <span class="at">label5 =</span> <span class="st">"False Positive"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">label6 =</span> <span class="st">"True Negative"</span>) {</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">all</span>(<span class="fu">c</span>(prior, true_positive, true_negative) <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">&amp;&amp;</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">c</span>(prior, true_positive, true_negative) <span class="sc">&lt;</span> <span class="dv">1</span>)) {</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"probabilities must be greater than 0 and less than 1."</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">call. =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  c_prior <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> prior</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  c_tp <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> true_positive</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  c_tn <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> true_negative</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  round4 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">partial</span>(round, <span class="at">digits =</span> <span class="dv">5</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  b1 <span class="ot">&lt;-</span> <span class="fu">round4</span>(prior <span class="sc">*</span> true_positive)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  b2 <span class="ot">&lt;-</span> <span class="fu">round4</span>(prior <span class="sc">*</span> c_tp)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  b3 <span class="ot">&lt;-</span> <span class="fu">round4</span>(c_prior <span class="sc">*</span> c_tn)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  b4 <span class="ot">&lt;-</span> <span class="fu">round4</span>(c_prior <span class="sc">*</span> true_negative)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  bp <span class="ot">&lt;-</span>  <span class="fu">round4</span>(b1<span class="sc">/</span>(b1 <span class="sc">+</span> b3))</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  labs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"X"</span>, prior, c_prior, true_positive, c_tp, true_negative, c_tn, b1, b2, b4, b3)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  tree <span class="ot">&lt;-</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">create_graph</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_n_nodes</span>(</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">n =</span> <span class="dv">11</span>,</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"path"</span>,</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> labs,</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">node_aes =</span> <span class="fu">node_aes</span>(</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">shape =</span> <span class="st">"circle"</span>,</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">height =</span> <span class="dv">1</span>,</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">width =</span> <span class="dv">1</span>,</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>),</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">1</span>,</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">2</span>,</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label1</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">1</span>, </span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">3</span>,</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label2</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">2</span>,</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">4</span>,</span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label3</span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">2</span>,</span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">5</span>,</span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label4</span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">3</span>,</span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">7</span>,</span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label5</span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">3</span>,</span>
+<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">6</span>,</span>
+<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label6</span>
+<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">4</span>,</span>
+<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">8</span>,</span>
+<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">"="</span></span>
+<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">5</span>,</span>
+<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">9</span>,</span>
+<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">"="</span></span>
+<span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-93"><a href="#cb10-93" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb10-94"><a href="#cb10-94" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">7</span>,</span>
+<span id="cb10-95"><a href="#cb10-95" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">11</span>,</span>
+<span id="cb10-96"><a href="#cb10-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb10-97"><a href="#cb10-97" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">"="</span></span>
+<span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb10-101"><a href="#cb10-101" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">6</span>,</span>
+<span id="cb10-102"><a href="#cb10-102" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">10</span>,</span>
+<span id="cb10-103"><a href="#cb10-103" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb10-104"><a href="#cb10-104" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">"="</span></span>
+<span id="cb10-105"><a href="#cb10-105" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb10-106"><a href="#cb10-106" aria-hidden="true" tabindex="-1"></a>    ) </span>
+<span id="cb10-107"><a href="#cb10-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"The probability of having {label1} after testing {label3} is {bp}"</span>))</span>
+<span id="cb10-108"><a href="#cb10-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">render_graph</span>(tree))</span>
+<span id="cb10-109"><a href="#cb10-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(tree)</span>
+<span id="cb10-110"><a href="#cb10-110" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-111"><a href="#cb10-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-112"><a href="#cb10-112" aria-hidden="true" tabindex="-1"></a><span class="co">#first example</span></span>
+<span id="cb10-113"><a href="#cb10-113" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_probability_tree</span>(<span class="at">prior =</span> <span class="fl">0.5</span>, <span class="at">true_positive =</span> <span class="fl">0.8</span>, <span class="at">true_negative =</span> <span class="fl">0.8</span>, <span class="at">label1 =</span> <span class="st">"medicine"</span>, <span class="at">label2 =</span> <span class="st">"placebo"</span>,</span>
+<span id="cb10-114"><a href="#cb10-114" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label3 =</span> <span class="st">"cured"</span>, <span class="at">label4 =</span> <span class="st">"not cured"</span>,</span>
+<span id="cb10-115"><a href="#cb10-115" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label5 =</span> <span class="st">"cured"</span>, <span class="at">label6 =</span> <span class="st">"not cured"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The probability of having medicine after testing cured is 0.8</code></pre>
+</div>
+</div>
+<p>This tree let’s us consider multiple things. We can see the probability of being cured is .5, but 80% of those come from the group receiving medicine (again, the P[being cured|given medicine]). WE could also derive this using Bayes Theorem.</p>
+<p>$$ P[being &nbsp;cured|medicine] = \ P[being &nbsp;cured|medicine] = \ P[being &nbsp;cured|medicine] = .8</p>
+<p>$$</p>
+<p>One more example. Instead of medical trials, let’s focus on medical screenings. These are used to identify patients who have a condition, but there are no perfect tests. A test may give a <em>false positive</em>, meaning it says a condition exists when it does not. A test can also give a <em>false negative</em>, meaning it finds a condition does not exist when it really does. Both of these present issues for patients and explain why series of tests are often used before more invasive procedures are employed.</p>
+<p>For example, assume a procedure is used to assess skin cancer. This cancer occurs at a frequency of .00021 in the general population. The test is fairly accurate; if a patient has cancer, the screening will correctly identify if 95% of the time. However, the probability of a false positive is .01. Given these numbers, how worried should a person be about a positive test?</p>
+<p>Although the test seems to be good, note the prevalence of a false positive is far higher than the prevalence of cancer! This means most positives will likely be false. To quantify this, let A be the probability of cancer and B be the probability of a positive screening. So,</p>
+<p><span class="math display">\[
+P[A|B] = \frac{.95 \ * .00021}{.95 \ * \ .0021+.01*.9779} \\
+P[A|B] = .169
+\]</span></p>
+<p>In other words, only 17% of people with positive screenings actually have cancer.</p>
+<p>To show this in a probability tree:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_probability_tree</span>(<span class="at">prior =</span> <span class="fl">0.0021</span>, <span class="at">true_positive =</span> <span class="fl">0.95</span>, <span class="at">true_negative =</span> <span class="fl">0.99</span>, <span class="at">label1 =</span> <span class="st">"cancer"</span>, </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label2 =</span> <span class="st">"not cancer"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label3 =</span> <span class="st">"positive"</span>, </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label4 =</span> <span class="st">"negative"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label5 =</span> <span class="st">"positive"</span>, </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label6 =</span> <span class="st">"negative"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The probability of having cancer after testing positive is 0.16625</code></pre>
+</div>
+</div>
+</section>
+<section id="related-ideas" class="level2">
+<h2 class="anchored" data-anchor-id="related-ideas">Related Ideas</h2>
+<p>False results are integral to the ideas of test <em>specificity</em> and <em>sensitivity</em> <span class="citation" data-cites="lalkhen2008">Lalkhen and McCluskey (<a href="#ref-lalkhen2008" role="doc-biblioref">2008</a>)</span>. A specific test will yield few false negatives, while a sensitive test will yield few false positives. Put another way (from Lalken &amp; McCluskey (2008): “A test with 100% sensitivity correctly identifies all patients with the disease”, and ” a test with 100% specificity correctly identifies all patients without the disease”. True and false results also impact predictive values.</p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 46%">
+<col style="width: 27%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td></td>
+<td><strong>Condition</strong></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p><strong><br>
+<br>
+</strong></p>
+<p><strong>Test Outcome</strong></p></td>
+<td>Present</td>
+<td>Absent</td>
+</tr>
+<tr class="odd">
+<td>Positive</td>
+<td>True Positive</td>
+<td>False positive</td>
+</tr>
+<tr class="even">
+<td>Negative</td>
+<td>False negative</td>
+<td>True Negative</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><p>Sensitivity=</p>
+<p>True Positive/ Condition present</p></td>
+<td><p>Specificity =</p>
+<p>True negative/</p>
+<p>Condition negative</p></td>
+</tr>
+</tbody>
+</table>
+<p>These ideas can also be related to power. We will return to this visualization in future chapters.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../..\images/ppv, npv, sensitivity, and specificity.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">A 3D visualisaion of PPV, NPV, Sensitivity and Specificity. Luigi Albert Maria, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons</figcaption>
+</figure>
+</div>
+</section>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
+<p>Now that we’ve discussed probability, we can move into the wild world of p-values and discuss how they relate to estimation!</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-lalkhen2008" class="csl-entry" role="listitem">
+Lalkhen, Abdul Ghaaliq, and Anthony McCluskey. 2008. <span>“Clinical Tests: Sensitivity and Specificity.”</span> <em>Continuing Education in Anaesthesia, Critical Care &amp; Pain</em> 8 (6): 221–23. <a href="https://doi.org/10.1093/bjaceaccp/mkn041">https://doi.org/10.1093/bjaceaccp/mkn041</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© CC BY-NC-SA 4.0</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a>.</div>
+  </div>
+</footer>
+
+
+
+</body></html>
