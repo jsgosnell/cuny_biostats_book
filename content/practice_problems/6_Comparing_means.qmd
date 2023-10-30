@@ -1,26 +1,27 @@
 ---
-title: "6. Comparing means"
-author: "jsg"
+title: "Compare means among groups"
 bibliography: ../references.bib
 ---
 
-Before doing this, review the **6. Comparing means** lecture set slides
-from
-<https://sites.google.com/view/biostats/lessons/comparing-means-among-groups>
-and the **7_ANOVAs.R** script in the lecture files folder of the
-[CUNY-BioStats github
-repository](https://github.com/jsgosnell/CUNY-BioStats). Make sure you
-are comfortable with null and alternative hypotheses and approiate plots
-for all examples.
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
 
 Remember you should
 
--   add code chunks by clicking the *Insert Chunk* button on the toolbar
-    or by pressing *Ctrl+Alt+I* to answer the questions!
--   **knit** your file to produce a markdown version that you can see!
--   save your work often
-    -   **commit** it via git!
-    -   **push** updates to github
+* add code chunks by clicking the *Insert Chunk* button on the toolbar or by
+pressing *Ctrl+Alt+I* to answer the questions!
+* **knit** your file to produce a markdown version that you can see!
+* save your work often 
+  * **commit** it via git!
+  * **push** updates to github
+  
+## Overview
+
+This practice reviews the [Compare means among groups lecture](../chapters/6_Comparing_means.qmd).
 
 ## Examples
 
@@ -75,11 +76,14 @@ bootstrap_post_hoc <- mcppb20(Sepal.Length~Species, iris)
 p.adjust(as.numeric(bootstrap_post_hoc$comp[,6]), "holm")
 ```
 
+For 2 groups, the *boot.t.test* function in the **MKinfer** package is also 
+an option.
+
 ## Just for practice
 
 ### 1
 
-1.  Use the iris dataset in R to determine if petal length differs among
+Use the iris dataset in R to determine if petal length differs among
     species. *Do this problems using ANOVA, Kruskal-Wallis, and
     bootstrapping methods. Make sure you can plot the data and carry out
     multiple comparison methods as needed. Also be sure to understand
@@ -88,7 +92,7 @@ p.adjust(as.numeric(bootstrap_post_hoc$comp[,6]), "holm")
 
 ### 2
 
-2.  Data on plant heights (in cm) for plants grown with a new and old
+Data on plant heights (in cm) for plants grown with a new and old
     formulation of fertilizer can be found at
 
 <https://docs.google.com/spreadsheets/d/e/2PACX-1vSUVowOKlmTic4ekL7LSbwDcqrsDSXv5K_c4Qyfcvz1lLE1_iINmGzy0zMGxY7z5DImlUErK4S2wY7Y/pub?gid=0&single=true&output=csv>.
@@ -101,7 +105,7 @@ special cases of linear models!
 
 ### 3
 
-3.  Data on sugar cane yield for multiple fields is available using
+Data on sugar cane yield for multiple fields is available using
 
 read.table("<https://docs.google.com/spreadsheets/d/e/2PACX-1vRjstKreIM6UknyKFQCtw2_Q6itY9iOAVWO1hUNZkBFL8mwVssvTevqgzV22YDKCUeJq0HBDrsBrf5O/pub?gid=971470377&single=true&output=tsv>",
 header = T, stringsAsFactors = T)
@@ -113,7 +117,7 @@ so, which areas are driving this distance?
 
 ### 4
 
-4.  Data on FEV (forced expiratory volume), a measure of lung function,
+Data on FEV (forced expiratory volume), a measure of lung function,
     can be found at
 
 <http://www.statsci.org/data/general/fev.txt>
@@ -127,7 +131,7 @@ the higher FEV score? How much variance does gender explain?
 
 ### 5
 
-5.  The following data are human blood clotting times (in minutes) of
+The following data are human blood clotting times (in minutes) of
     individuals given one of two different drugs.
 
 | Drug B | Drug G |
@@ -148,9 +152,17 @@ groups
 -   Using a permutation test
 -   Using a bootstrap test
 
+Test the hypothesis that the mean clotting times
+are equal for the two groups
+
+-   Estimating the variance from the data
+-   Using rank transform analysis
+-   Using a permutation test
+-   Using a bootstrap test
+
 ### 6
 
-6.  (Example from Handbook on Biological Statistics) Odd (stunted,
+(Example from Handbook on Biological Statistics) Odd (stunted,
     short, new) feathers were compared in color to typical feathers in
     Northern Flickers (*Colaptes auratus*) [@wiebe2002] . Data is at
 

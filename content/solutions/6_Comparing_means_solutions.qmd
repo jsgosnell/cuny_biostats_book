@@ -1,0 +1,434 @@
+---
+title: "Compare means among groups"
+bibliography: ../references.bib
+---
+
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+Remember you should
+
+* add code chunks by clicking the *Insert Chunk* button on the toolbar or by
+pressing *Ctrl+Alt+I* to answer the questions!
+* **knit** your file to produce a markdown version that you can see!
+* save your work often 
+  * **commit** it via git!
+  * **push** updates to github
+  
+## Overview
+
+This practice reviews the [Compare means among groups lecture](../chapters/6_Comparing_means.qmd).
+
+## Examples
+
+We will run ANOVA's using the *lm* function to connect them to other
+test. First, build the model
+
+```{r}
+iris_anova <- lm(Sepal.Length~Species, iris)
+```
+
+Then use the object it created to test assumptions
+
+```{r}
+par(mfrow = c(2,2))
+plot(iris_anova)
+```
+
+If assumptions are met, check the p-value using the *summary* or *Anova*
+function.
+
+```{r}
+summary(iris_anova)
+library(car)
+Anova(iris_anova, type = "III")
+```
+
+If the overall test is significant, carry out post hoc tests (Tukey
+shown here for all pairs, as most common)
+
+```{r}
+library(multcomp)
+compare_cont_tukey <- glht(iris_anova, linfct = mcp(Species = "Tukey"))
+summary(compare_cont_tukey)
+```
+
+If assumptions are not met, we can use the Kruskal Wallis non-parametric
+test and associated post hoc tests.
+
+```{r}
+kruskal.test(Sepal.Length ~ Species, data = iris)
+pairwise.wilcox.test(iris$Sepal.Length, 
+                          iris$Species, 
+                          p.adjust.method="holm")
+```
+
+or a bootstrap alternative
+
+```{r}
+library(WRS2)
+t1waybt(Sepal.Length~Species, iris)
+bootstrap_post_hoc <- mcppb20(Sepal.Length~Species, iris)
+p.adjust(as.numeric(bootstrap_post_hoc$comp[,6]), "holm")
+```
+
+For 2 groups, the *boot.t.test* function in the **MKinfer** package is also 
+an option.
+
+## Just for practice
+
+### 1
+
+Use the iris dataset in R to determine if petal length differs among
+    species. *Do this problems using ANOVA, Kruskal-Wallis, and
+    bootstrapping methods. Make sure you can plot the data and carry out
+    multiple comparison methods as needed. Also be sure to understand
+    the use of coefficients and adjusted R^2^ values and where to find
+    them.*
+    
+```{r}
+#plot
+library(Rmisc)
+
+function_output <- summarySE(iris, measurevar="Petal.Length", groupvars =
+                               c("Species"))
+library(ggplot2)
+ggplot(function_output, aes(x=Species, y=Petal.Length)) +
+  geom_col(aes(fill=Species), size = 3) +
+  geom_errorbar(aes(ymin=Petal.Length-ci, ymax=Petal.Length+ci), size=1.5) +
+  ylab("Petal Length (cm)")+ggtitle("Petal Length of \n various iris species")+
+  theme(axis.title.x = element_text(face="bold", size=28), 
+        axis.title.y = element_text(face="bold", size=28), 
+        axis.text.y  = element_text(size=20),
+        axis.text.x  = element_text(size=20), 
+        legend.text =element_text(size=20),
+        legend.title = element_text(size=20, face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold", size=32))
+
+petal <- lm(Petal.Length ~ Species, iris)
+plot(petal)
+library(car)
+Anova(petal, type = "III")
+#compare to
+summary(petal)
+library(multcomp)
+comp_cholest <- glht(petal, linfct = mcp(Species = "Tukey"))
+summary(comp_cholest)
+
+#kw approach
+petal <- kruskal.test(Petal.Length ~ Species, iris)
+pairwise.wilcox.test(iris$Sepal.Length, 
+                          iris$Species, 
+                          p.adjust.method="holm")
+
+#bootstrap
+library(WRS2)
+t1waybt(Petal.Length~Species, iris)
+bootstrap_post_hoc <- mcppb20(Petal.Length~Species, iris)
+#use p.adjust to correct for FWER
+p.adjust(as.numeric(bootstrap_post_hoc$comp[,6]), "holm")
+```
+
+*Answer: We used an ANOVA (a special case of linear models) to investigate how a numerical response variable 
+differed among 3 groups.  This was appropriate as evidenced by the residual plots
+(there is no pattern in the residuals and they are normally distributed),
+but other methods are demonstrated as well.
+
+Using an ANOVA, we found F~2,147~= 1180.2, which led to a p-value of <.001.  Given
+this, I reject the null hypothesis there is no difference among mean measurements
+for each species.  
+Post-hoc testing indicated all species significantly differed from all others 
+(all p <.05)
+using a Tukey approach to control for family-wise error rate. Kruskal-Wallis and
+bootstrapping approaches led to similar conclusions.*
+
+
+### 2
+
+Data on plant heights (in cm) for plants grown with a new and old
+    formulation of fertilizer can be found at
+
+<https://docs.google.com/spreadsheets/d/e/2PACX-1vSUVowOKlmTic4ekL7LSbwDcqrsDSXv5K_c4Qyfcvz1lLE1_iINmGzy0zMGxY7z5DImlUErK4S2wY7Y/pub?gid=0&single=true&output=csv>.
+
+Analyze this data using the t.test function and the lm function to
+convince yourself that t-tests are special cases of ANOVAs, which are
+special cases of linear models!
+
+```{r}
+fertilizer <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSUVowOKlmTic4ekL7LSbwDcqrsDSXv5K_c4Qyfcvz1lLE1_iINmGzy0zMGxY7z5DImlUErK4S2wY7Y/pub?gid=0&single=true&output=csv",
+                       stringsAsFactors = T)
+#note use of var.equal!  assumption of ANOVAs
+t.test(height ~ fertilizer, fertilizer, var.equal = T)
+fert_lm <- lm(height ~ fertilizer, fertilizer)
+plot(fert_lm)
+summary(fert_lm)
+require(car)
+Anova(fert_lm, type = "III")
+```
+
+*Answer: t-tests and ANOVA (lm) approaches yield the same results. Note for the 
+tests to match exactly we have to assume equal variances among groups for the 
+t-tests. In both we reject the null hypothesis of no difference among mean height
+of plants based on fertilizer.  Notice the t statistic (2.9884) is the square root
+of the F statistic (8.931).  The t distribution corresponds to the F with only 1
+df in the numerator (so its not listed!).*
+
+## For the following questions, pick the appropriate method for analyzing the question. Use a plot of the data and/or model analysis to justify your decision. Make sure you can carry out multiple comparison methods as needed. Also be sure to understand the use of coefficients and adjusted R^2^ values and where to find them.
+
+### 3
+
+Data on sugar cane yield for multiple fields is available using
+
+read.table("<https://docs.google.com/spreadsheets/d/e/2PACX-1vRjstKreIM6UknyKFQCtw2_Q6itY9iOAVWO1hUNZkBFL8mwVssvTevqgzV22YDKCUeJq0HBDrsBrf5O/pub?gid=971470377&single=true&output=tsv>",
+header = T, stringsAsFactors = T)
+
+More info on the data can be found at
+<http://www.statsci.org/data/oz/cane.html>. Is there evidence that
+location (DistrictPosition column) impacts yield (Tonn.Hect column)? If
+so, which areas are driving this distance?
+
+```{r}
+cane <- read.table("https://docs.google.com/spreadsheets/d/e/2PACX-1vRjstKreIM6UknyKFQCtw2_Q6itY9iOAVWO1hUNZkBFL8mwVssvTevqgzV22YDKCUeJq0HBDrsBrf5O/pub?gid=971470377&single=true&output=tsv", header = T, stringsAsFactors = T)
+summary(cane)
+cane_summary <- summarySE(cane, measurevar="Tonn.Hect", groupvars =
+                               c("DistrictPosition"))
+
+ggplot(cane_summary, aes(x=DistrictPosition, y=Tonn.Hect)) +
+  geom_col(size = 3) +
+  geom_errorbar(aes(ymin=Tonn.Hect-ci, ymax=Tonn.Hect+ci), size=1.5) +
+  ylab("Production (tonnes per hectare)") +
+  xlab("District Position") +
+  ggtitle("Production differs \n among locations") +
+  theme(axis.title.x = element_text(face="bold", size=28), 
+        axis.title.y = element_text(face="bold", size=28), 
+        axis.text.y  = element_text(size=20),
+        axis.text.x  = element_text(size=20), 
+        legend.text =element_text(size=20),
+        legend.title = element_text(size=20, face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold", size=32))
+
+impact_district <- lm(Tonn.Hect ~ DistrictPosition, cane)
+summary(impact_district)
+plot(impact_district)#not really normal...lets bootstrap
+require(WRS2)
+t1waybt(Tonn.Hect ~ DistrictPosition, cane)
+mcppb20(Tonn.Hect ~ DistrictPosition, cane)
+p <- mcppb20(Tonn.Hect ~ DistrictPosition, cane)
+p.adjust(as.numeric(p$comp[,6]), "holm")
+
+
+#compare to lm apporach
+require(car)
+Anova(impact_district, type = "III")
+require(multcomp)
+comp_district <- glht(impact_district, linfct = mcp(DistrictPosition = "Tukey"))
+summary(comp_district)
+
+```
+
+*Answer: For this analysis I used a bootstrap approach as the residual plots
+suggested a non-normal distribution.  Analysis revealed a test statistics of 
+16.52 and p-value of 0, so I reject the null hypothesis of no difference among
+Districts.  since I rejected the null hypothesis, I have to use post-hoc tsts
+to determine which groups are different than the others.  
+Post-hoc tests reveal all district areas differ from each other 
+except for
+south and east, south and central, and east and central (using sequential FDR 
+to control for family-wise error rate.)*
+
+*Note that a linear model does lead to slightly different findings regarding which
+districts differ from which others.*
+
+### 4
+
+Data on FEV (forced expiratory volume), a measure of lung function,
+    can be found at
+
+<http://www.statsci.org/data/general/fev.txt>
+
+More information on the dataset is available at
+
+<http://www.statsci.org/data/general/fev.html>.
+
+Is there evidence that FEV depends on gender? If so, which gender has
+the higher FEV score? How much variance does gender explain?
+
+```{r}
+fev <- read.table("http://www.statsci.org/data/general/fev.txt", header = T,
+                  stringsAsFactors = T)
+fev_summary <- summarySE(fev, measurevar="FEV", groupvars =
+                               c("Sex"))
+
+ggplot(fev_summary, aes(x=Sex, y=FEV)) +
+  geom_col(size = 3) +
+  geom_errorbar(aes(ymin=FEV-ci, ymax=FEV+ci), size=1.5) +
+  ylab("FEV (liters)") +
+  xlab("Sex") +
+  ggtitle("FEV differs \n among males and females") +
+  theme(axis.title.x = element_text(face="bold", size=28), 
+        axis.title.y = element_text(face="bold", size=28), 
+        axis.text.y  = element_text(size=20),
+        axis.text.x  = element_text(size=20), 
+        legend.text =element_text(size=20),
+        legend.title = element_text(size=20, face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold", size=32))
+
+
+fev_gender <- lm(FEV ~ Sex, fev)
+plot(fev_gender) #anova is fine
+Anova(fev_gender, type = "III")
+summary(fev_gender)
+```
+
+*I used an ANOVA (or linear model, or t-test, here, all the same since 2 groups!)
+to consider the impact of sex on FEV.  This was appropriate as evidenced by the
+residual plots
+(there is no pattern in the residuals and they are normally distributed).  Results indicate there is a difference among sexes (F~1,652~ = 29.607, p<.001). There is 
+no need for post-hoc tests here since there are only 2 groups being considered.  
+Coefficients related to the groups (note female is replaced by intercept here, 
+and the SexMale coefficient is relative to that) indicates that males have a 
+higher FEV on average.  Graphs also show this relationship.*
+
+
+### 5
+
+The following data are human blood clotting times (in minutes) of
+    individuals given one of two different drugs.
+
+| Drug B | Drug G |
+|:------:|:------:|
+|  8.8   |  9.9   |
+|  8.4   |  9.0   |
+|  7.9   |  11.1  |
+|  8.7   |  9.6   |
+|  9.1   |  8.7   |
+|  9.6   |  10.4  |
+|        |  9.5   |
+
+Test the hypothesis that the mean clotting times are equal for the two
+groups
+
+*  Estimating the variance from the data 
+```{r}
+drug_b <- c( 8.8, 8.4, 7.9, 8.7, 9.1, 9.6)
+drug_g <- c(9.9, 9.0, 11.1, 9.6, 8.7, 10.4, 9.5)
+t.test(drug_b, drug_g)
+```
+*Using a un-paired t-test, since the experimental units were not matched and I 
+assumed the means of each group would follow a normal distribution of unknown 
+variance,  I found a test statistics of t~10.701~=-2.544.  This corresponds to a 
+p-value of 0.02. This p-value is <.05, so I reject the null hypothesis that 
+the mean clotting times are the same for the two drugs.*
+
+* Using rank transform analysis 
+```{r}
+wilcox.test(drug_b, drug_g)
+```
+ 
+*Using a un-paired rank-based test, which is appropriate when normality assumptions 
+can't be met and I assumed the means of each group would follow a similar distribution, 
+I found a test statistics of W=7.  This corresponds to a 
+p-value of 0.05.  This p-value is >.05, so I fail to reject the null hypothesis that 
+the mean clotting times are the same for the two drugs.*
+
+* Using a permutation test
+
+```{r}
+require(coin) #requires data_frame
+clotting <- data.frame(drug = c(rep("drug_b", length(drug_b)), rep("drug_g", 
+                                                                   length(drug_g))),
+                       clotting = c(drug_b, drug_g))
+clotting$drug <- factor(clotting$drug)
+independence_test(clotting ~ drug, clotting)
+```
+*Using a permutation test, which is not fully appropriate here due to small sample 
+sizes (and that also assumes similar distributions for each group), 
+I found a test statistics of Z=-2.0726..  This corresponds to a 
+p-value of 0.038.  This p-value is >.05, so I fail to reject the null hypothesis that 
+the mean clotting times are the same for the two drugs.*
+
+* Using a bootstrap test 
+
+```{r}
+boot.t.test(drug_b, drug_g)
+```
+*Using a bootstrap test with 10000 samples, which is not fully appropriate here 
+due to small sample sizes, 
+I found a p value of 0.0047.  This p-value is <.05, so I reject the null 
+hypothesis that 
+the mean clotting times are the same for the two drugs.*
+
+### 6
+
+(Example from Handbook on Biological Statistics) Odd (stunted,
+    short, new) feathers were compared in color to typical feathers in
+    Northern Flickers (*Colaptes auratus*) [@wiebe2002] . Data is at
+
+<https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/wiebe_2002_example.csv>
+
+Test the hypothesis that odd and typical feathers did not differ using
+
+-   a Student's t test and/or lm
+-   a rank test
+-   bootstrapping
+
+Note we will return to this question next week!
+
+
+*  a Student's t test
+```{r}
+feather <-  read.csv("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/wiebe_2002_example.csv
+", stringsAsFactors = T)
+t.test(Color_index ~ Feather, data=feather, paired=TRUE)
+```
+*I used a paired t-test because feathers were measured on the same bird.  
+I also assumed the difference in means was normally
+distributed given the trait and sample size.  The test resulted in a statistic of
+t~15~ = -4.06. This corresponds to a p-value of .001.  Since the p-value is <.05,
+I reject the null hypothesis that feather color is the same between odd and 
+typical feathers. Note this equivalent too:
+
+```{r}
+library(car)
+Anova(lm(Color_index ~ Feather+Bird, data=feather))
+```
+
+
+* a rank test
+```{r}
+wilcox.test(Color_index ~ Feather, data=feather, paired=TRUE)
+```
+*I used a paired rank-based test because feathers were measured on the same bird.
+I did not assume the difference in means was normally
+distributed but did assume it followed a symmetric distribution.  The test resulted in a statistic of
+V = 10.   This corresponds to a p-value of .001.  Since the p-value is <.05,
+I reject the null hypothesis that feather color is the same between odd and 
+typical feathers.*
+
+* a binary test
+```{r}
+library(BSDA)
+SIGN.test(feather[feather$Feather == "Odd", "Color_index"], 
+          feather[feather$Feather == "Typical", "Color_index"])
+```
+
+*I used a sign test (always paired!) because feathers were measured on the same bird.
+I did not assume the difference in means was normally
+distributed or that the differences followed a symmetric distribution.  The test resulted in a statistic of
+s = 3.   This corresponds to a p-value of .02.  Since the p-value is <.05,
+I reject the null hypothesis that feather color is the same between odd and 
+typical feathers.*
+
+* bootstrapping
+```{r}
+boot.t.test(Color_index ~ Feather, data=feather, paired=TRUE)
+```
+*Since feathers were measured on the same bird.
+I used a bootstrap (10,000 samples) focused on the difference in color.  This 
+resulted in a p-value of <.001. Since the p-value is <.05,
+I reject the null hypothesis that feather color is the same between odd and 
+typical feathers.*

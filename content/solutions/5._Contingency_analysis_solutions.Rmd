@@ -1,20 +1,14 @@
 ---
-title: "5. Contingency Analysis:  Extending the binomial to more categories"
-author: "jsg answers"
-date: "Last compiled on `r format(Sys.time(), '%d %B, %Y %H:%M')`"
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    keep_md: true
-    self_contained: true
-    toc_depth: 5
+title: "Compare proportions among groups"
+bibliography: ../references.bib
 ---
 
-Before doing this, review the **Contingency Analysis** lecture set slides from 
-https://sites.google.com/view/biostats/lessons/contingency-analysis and
-the  **5_beyond_binomial.R** script in the lecture_files folder of the
-[CUNY-BioStats github repository](https://github.com/jsgosnell/CUNY-BioStats).
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
 
 Remember you should
 
@@ -25,6 +19,9 @@ pressing *Ctrl+Alt+I* to answer the questions!
   * **commit** it via git!
   * **push** updates to github
   
+## Overview
+
+This practice reviews the [Compare proportions among groups lecture](../chapters/Compare_proportions_among_populations.qmd).
 ## Examples
 
 Issue is we often get data in spreadsheet format (expanded/long or wide/summarized,
@@ -176,7 +173,7 @@ everest_table
 
 #### 1
 
-1. Let’s look at some heart attack data.  Read in the data using
+Let’s look at some heart attack data.  Read in the data using
 ```{r}
 heart_attacks <- read.table("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/heartatk4R.txt",header=T, stringsAsFactors = T)
 ```
@@ -211,7 +208,7 @@ binom.test(7779, 7779+5065, .508)
 
 #### 2
 
-2. Still using the heart attack data, is survival independent of gender?
+Still using the heart attack data, is survival independent of gender?
 ```{r}
 #note what this does
 table(heart_attacks$SEX, heart_attacks$DIED)
@@ -228,7 +225,7 @@ hypothesis.*
 
 #### 3
 
-3. For people that have a heart attack before they turn 30, is survival independent of gender?
+For people that have a heart attack before they turn 30, is survival independent of gender?
 
 ```{r}
 chisq.test(table(heart_attacks[heart_attacks$AGE < 30, "SEX"], 
@@ -254,7 +251,7 @@ I found a p-value of 1, thus I fail to reject the null hypothesis.*
 #### 4
 
 
-4. Data on dolphin behavior was collected off the coast of Iceland. Data is @
+Data on dolphin behavior was collected off the coast of Iceland. Data is @
 
 http://www.statsci.org/data/general/dolpacti.txt
 
@@ -303,7 +300,7 @@ pairwiseNominalIndependence(travel_table, compare = "row", method = "holm")
 
 #### 5
 
-5. Use data on smoking and exercise from
+Use data on smoking and exercise from
 
 http://www.r-tutor.com/elementary-statistics/goodness-fit/chi-squared-test-independence
 

@@ -279,15 +279,10 @@ sport <- read.table("http://www.statsci.org/data/oz/ais.txt", header = T,
                     stringsAsFactors = T)
 ```
 
-You can source the bootstrapjsg function using
 
 ```{r}
-source("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/bootstrapjsg.R")
-```
-
-
-```{r}
-bootstrapjsg(data1=sport[sport$Sex == "male", "Wt"], null= 85.9)
+library(MKinfer)
+boot.t.test(sport[sport$Sex == "male", "Wt"], mu= 85.9)
 ```
 
 *Using a bootstrap test wtih 10,000 samples, we found a p-value of .007; we thus 
