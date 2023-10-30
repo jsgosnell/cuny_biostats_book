@@ -245,14 +245,21 @@ cor.test(~ Sepal.Length + Petal.Length, data = iris, method="spearman")
 
 Bootstrapping and permutation options also exist. Some of these use the
 same functions we've encountered before. For example, we can do
-permutation tests using the **coin** package
+permutation tests using the **coin** package.
 
 ```{r}
 library(coin)
 independence_test(Sepal.Length ~ Petal.Length, iris)
 ```
 
-and
+Bootstrapping may be done using the **boot** or other packages (not
+developed here).
+
+```{r}
+library(car)
+bootstrap_iris <- Boot(iris_regression)
+summary(bootstrap_iris)
+```
 
 ## Plotting outcomes
 

@@ -1,8 +1,15 @@
 ---
 title: One sample tests for continuous data
 subtitle: The one where we fully introduce normality
-bibliography: references.bib
+bibliography: ../references.bib
 ---
+
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
 
 In this chapter will build on our introduction to significance testing
 by considering tests for continuous data collected on one trait from a
@@ -766,7 +773,7 @@ to actually appropriately sample from (and that we have the means to do
 it!). This approach was developed in the 1990s given the increase in
 computing power and availability.
 
-We can demonstate this with an imaginary population (and also
+We can demonstrate this with an imaginary population (and also
 demonstrate the central limit theorem). Let's make a population whose
 trait value of focus falls between 60 and 80 in a uniform manner.
 
@@ -862,7 +869,7 @@ We can also carry this out using the *boot* function (in the **boot**
 package), though the functions may look a little odd.
 
 ```{r}
-library(boot)
+library(car)
 results <- boot(data=bootstrap_data, statistic = function(x, inds) mean(x[inds]),
    R=number_of_simulations)
 ggplot(data.frame(results$t), aes(x=results.t)) +
