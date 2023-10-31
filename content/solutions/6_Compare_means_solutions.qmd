@@ -21,7 +21,7 @@ pressing *Ctrl+Alt+I* to answer the questions!
   
 ## Overview
 
-This practice reviews the [Compare means among groups lecture](../chapters/6_Comparing_means.qmd).
+This practice reviews the [Compare means among groups lecture](../chapters/6_Compare_means_among_populations.qmd).
 
 ## Examples
 
@@ -354,6 +354,7 @@ the mean clotting times are the same for the two drugs.*
 * Using a bootstrap test 
 
 ```{r}
+library(MKinfer)
 boot.t.test(drug_b, drug_g)
 ```
 *Using a bootstrap test with 10000 samples, which is not fully appropriate here 
@@ -381,8 +382,7 @@ Note we will return to this question next week!
 
 *  a Student's t test
 ```{r}
-feather <-  read.csv("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/wiebe_2002_example.csv
-", stringsAsFactors = T)
+feather <-  read.csv("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/wiebe_2002_example.csv", stringsAsFactors = T)
 t.test(Color_index ~ Feather, data=feather, paired=TRUE)
 ```
 *I used a paired t-test because feathers were measured on the same bird.  
@@ -425,6 +425,7 @@ typical feathers.*
 
 * bootstrapping
 ```{r}
+library(Mkinfer)
 boot.t.test(Color_index ~ Feather, data=feather, paired=TRUE)
 ```
 *Since feathers were measured on the same bird.
