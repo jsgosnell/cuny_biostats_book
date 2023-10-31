@@ -1,23 +1,14 @@
 ---
-title: "9. Regression and correlation"
-author: "jsg answers"
-date: "Last compiled on `r format(Sys.time(), '%d %B, %Y %H:%M')`"
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    keep_md: true
-    self_contained: true
+title: "Relationships among numerical variables"
+bibliography: ../references.bib
 ---
 
-Before doing this, review the **9. Linear Regression and Correlation** lecture set slides from 
-https://sites.google.com/view/biostats/lessons/linear-regression-and-correlation and
-the  **9_Regression_and_correlation.R** script in the lecture files folder of the
-[CUNY-BioStats github repository](https://github.com/jsgosnell/CUNY-BioStats). 
-Make sure you are comfortable with null and alternative hypotheses and appropriate plots
-for all examples. Also make sure you understand the difference between
-correlation and regression.
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
 
 Remember you should
 
@@ -28,6 +19,9 @@ pressing *Ctrl+Alt+I* to answer the questions!
   * **commit** it via git!
   * **push** updates to github
   
+## Overview
+
+This practice reviews the [Relationships among numerical variabless lecuture](../chapters/Relationships_among_numerical_variables.qmd).
   
 ## Example
 
@@ -69,7 +63,6 @@ cor.test(~ Sepal.Length + Petal.Length, data = iris,
 
 ### 1
   
-  
 
 1.  A professor carried out a long-term study to see how various factors impacted
 pulse rate before and after exercise.  Data can be found at 
@@ -81,7 +74,6 @@ With more info at
 http://www.statsci.org/data/oz/ms212.html.
 
 Is there evidence that age, height, or weight impact change in pulse rate for students who ran (Ran column = 1)?  For each of these, how much variation in pulse rate do they explain?
-
 
 ```{r}
 pulse <- read.table("http://www.statsci.org/data/oz/ms212.txt", header = T, stringsAsFactors = T)
@@ -140,6 +132,7 @@ hypothesis that there is no relationship between height and change in pulse rate
 also note that age only explains 2.5% of the variation in change in pulse rate 
 (likely due to chance!).*   
 
+
 ### 2 
 
 2. (from OZDASL repository, http://www.statsci.org/data/general/stature.html; reference for more information)
@@ -176,7 +169,6 @@ indicate that stature increases with increasing metacarpal length.*
 
 ### 3
 
-
 3. Data on medals won by various countries in the 1992 and 1994 Olympics is
 available in a tab-delimited file at 
 
@@ -208,12 +200,10 @@ medal count that explains ~15% of the variation in the response variable.  Rank-
 correlation analysis also indicated this relationship exists.*
 
 ### 4
-
-
+ 
 4. Continuing with the Olympic data, is there a relationship between the
 latitude of a country and the number of medals won in summer or winter
 Olympics?
-
 ```{r}
 #still using medals
 summer_medals <- lm(Summer ~ Latitude, medals)
@@ -235,7 +225,6 @@ related to latitude, with latitude explaining ~17% of the variation in winter me
 count and ~8% of the data in summer medal count.*
 
 ### 5
-
 
 5. Data on FEV (forced expiratory volume), a measure of lung function, can
 be found at 
@@ -271,11 +260,10 @@ summary(fev_age)
 Model assumptions appear to be met. Age appears to have a positive relationship
 with FEV (F~1,652~ = 872.2, p<.001). 
 
+
 ### 6 
 
-
-6. Continuing with the FEV data, produce plots that illustrate how height, age, 
-and gender each impact FEV.  
+6. Continuing with the FEV data, produce plots that illustrate how height, age, and gender each impact FEV.  
 
 ```{r}
 library(ggplot2)

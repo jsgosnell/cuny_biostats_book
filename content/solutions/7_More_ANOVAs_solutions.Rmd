@@ -291,10 +291,51 @@ Data from Valdez et al 2023 is available \@
 Import it into to R and
 
 -   determine how the snail grazing and nitrogen levels impact number of
-    flowering shoots
+    flowering shoots(Shoot.density..m2)
 -   construct a plot to showcase your analysis
 
 
+```{r}
+valdez_2023 <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vT2gaLu6pyRMlcbzarn3ej4bFmT_iHvrlNWJYSdrsLdUWIjcJi7rU11-ipvYpGnqD9qLDnbhNd2sDUW/pub?gid=1707080634&single=true&output=csv", stringsAsFactors = T)
+shoot_model <-lm( Shoot.density..m2~Snail.Level + Nitrogen.level + Snail.Level:Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",])
+plot(shoot_model)
+```
+
+```{r}
+Anova(shoot_model, type="III")
+```
+
+No interaction, so I can remove or not.
+
+```{r}
+shoot_model_reduced <- update(shoot_model, .~.- Snail.Level:Nitrogen.level)
+Anova(shoot_model_reduced)
+```
+Both have impacts.
+
+```{r}
+snail_post_hoc <- glht(shoot_model_reduced, linfct = mcp(Snail.Level = "Tukey"))
+summary(snail_post_hoc)
+```
+
+significant difference among all snails.
+
+```{r}
+shoot_summary <- summarySE(valdez_2023[valdez_2023$Snail.Level != "uncaged",], measurevar = "Shoot.density..m2", groupvars = c("Snail.Level", "Nitrogen.level"))
+shoot_summary
+shoot_summary$Snail.Level <- relevel(shoot_summary$Snail.Level, "removal")
+shoot_summary$Snail.Level <- relevel(shoot_summary$Snail.Level, "uncaged")
+
+
+ggplot(shoot_summary, aes(x=Snail.Level, 
+                           y=Shoot.density..m2,
+                           fill=Nitrogen.level)) +
+  geom_col(color="black", position=position_dodge()) +
+  geom_errorbar(aes(ymin=Shoot.density..m2, ymax=Shoot.density..m2+ci), position = position_dodge()) +
+  labs(title="Grazing impacts depend on nitrogen levels",
+       x= "Grazing level",
+       y= expression(paste("# of shoots/" ,m^{-2})))
+```
 
 ### 4
 
