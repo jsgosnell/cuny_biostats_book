@@ -603,9 +603,9 @@ Fit: lm(formula = Sepal.Length ~ Species, data = iris)
 
 Linear Hypotheses:
                             Estimate Std. Error t value Pr(&gt;|t|)    
-versicolor - setosa == 0       0.930      0.103   9.033   &lt;1e-08 ***
-virginica - setosa == 0        1.582      0.103  15.366   &lt;1e-08 ***
-virginica - versicolor == 0    0.652      0.103   6.333   &lt;1e-08 ***
+versicolor - setosa == 0       0.930      0.103   9.033   &lt;1e-07 ***
+virginica - setosa == 0        1.582      0.103  15.366   &lt;1e-07 ***
+virginica - versicolor == 0    0.652      0.103   6.333   &lt;1e-07 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)</code></pre>
@@ -1034,23 +1034,23 @@ Effect size: 0.178 </code></pre>
 <pre><code>Call:
 mcppb20(formula = Tonn.Hect ~ DistrictPosition, data = cane)
 
-           psihat  ci.lower  ci.upper p-value
-S vs. N -56.10126 -92.71142 -15.70265 0.00000
-S vs. E -12.51609 -52.67011  28.13042 0.35392
-S vs. W  39.25821   7.84816  72.02204 0.00000
-S vs. C  -0.97532 -29.62201  30.51805 0.91152
-N vs. E  43.58517   4.11342  78.71249 0.00334
-N vs. W  95.35948  63.82666 129.36979 0.00000
-N vs. C  55.12595  20.93370  89.08046 0.00000
-E vs. W  51.77430  22.63849  85.90707 0.00000
-E vs. C  11.54077 -18.02016  42.70245 0.26377
-W vs. C -40.23353 -65.35160 -17.01493 0.00000</code></pre>
+           psihat   ci.lower  ci.upper p-value
+S vs. N -56.10126 -102.00344 -10.38567 0.00000
+S vs. E -12.51609  -51.24222  32.72077 0.36060
+S vs. W  39.25821    6.46855  74.17452 0.00000
+S vs. C  -0.97532  -30.33659  34.48281 0.96828
+N vs. E  43.58517    4.57955  84.03343 0.00334
+N vs. W  95.35948   60.52660 129.87267 0.00000
+N vs. C  55.12595   21.06824  87.47756 0.00000
+E vs. W  51.77430   16.53961  83.70044 0.00000
+E vs. C  11.54077  -19.24467  44.75768 0.27713
+W vs. C -40.23353  -60.35409 -16.74095 0.00000</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">mcppb20</span>(Tonn.Hect <span class="sc">~</span> DistrictPosition, cane)</span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(<span class="fu">as.numeric</span>(p<span class="sc">$</span>comp[,<span class="dv">6</span>]), <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.0000000 0.7913189 0.0000000 0.9415693 0.0000000 0.0000000 0.0000000
- [8] 0.0000000 0.7913189 0.0000000</code></pre>
+<pre><code> [1] 0.00000000 0.86143573 0.01669449 0.94156928 0.01669449 0.00000000
+ [7] 0.00000000 0.00000000 0.86143573 0.00000000</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co">#compare to lm apporach</span></span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(car)</span>
@@ -1080,16 +1080,16 @@ Fit: lm(formula = Tonn.Hect ~ DistrictPosition, data = cane)
 
 Linear Hypotheses:
            Estimate Std. Error t value Pr(&gt;|t|)    
-E - C == 0   39.360     14.249   2.762  0.04413 *  
+E - C == 0   39.360     14.249   2.762  0.04399 *  
 N - C == 0   20.252     14.487   1.398  0.62080    
-S - C == 0  -42.955     13.777  -3.118  0.01516 *  
+S - C == 0  -42.955     13.777  -3.118  0.01510 *  
 W - C == 0   -7.317     11.298  -0.648  0.96582    
-N - E == 0  -19.108     14.601  -1.309  0.67819    
+N - E == 0  -19.108     14.601  -1.309  0.67820    
 S - E == 0  -82.315     13.896  -5.924  &lt; 0.001 ***
 W - E == 0  -46.677     11.444  -4.079  &lt; 0.001 ***
 S - N == 0  -63.207     14.141  -4.470  &lt; 0.001 ***
-W - N == 0  -27.569     11.739  -2.348  0.12605    
-W - S == 0   35.638     10.850   3.285  0.00878 ** 
+W - N == 0  -27.569     11.739  -2.348  0.12590    
+W - S == 0   35.638     10.850   3.285  0.00884 ** 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)</code></pre>
@@ -1299,10 +1299,10 @@ alternative hypothesis: two.sided</code></pre>
     Bootstrap Welch Two Sample t-test
 
 data:  drug_b and drug_g
-bootstrap p-value = 0.0266 
-bootstrap difference of means (SE) = -0.9904919 (0.3539376) 
+bootstrap p-value = 0.0192 
+bootstrap difference of means (SE) = -0.9920218 (0.3538016) 
 95 percent bootstrap percentile confidence interval:
- -1.726190 -0.299881
+ -1.6977381 -0.3094048
 
 Results without bootstrap:
 t = -2.5454, df = 10.701, p-value = 0.02774
@@ -1433,10 +1433,10 @@ Upper Achieved CI     0.9787 -0.2410 -0.0140</code></pre>
     Bootstrap Paired t-test
 
 data:  Color_index by Feather
-bootstrap p-value = 0.0008001 
-bootstrap mean of the differences (SE) = -0.1373961 (0.03232381) 
+bootstrap p-value = 2e-04 
+bootstrap mean of the differences (SE) = -0.1371744 (0.03229001) 
 95 percent bootstrap percentile confidence interval:
- -0.2036281 -0.0738750
+ -0.2011281 -0.0756250
 
 Results without bootstrap:
 t = -4.0647, df = 15, p-value = 0.001017
