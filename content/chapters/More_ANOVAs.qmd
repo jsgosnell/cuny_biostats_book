@@ -746,6 +746,9 @@ sdm_summary
 ```{r}
 sdm_summary$Snail.Level <- relevel(sdm_summary$Snail.Level, "removal")
 
+sdm_summary$Nitrogen.level <- revalue(sdm_summary$Nitrogen.level, c("Fertilized" = "Yes",
+                                                                    "without"= "No"))
+
 ggplot(sdm_summary, aes(x=Snail.Level, 
                            y=Standing.Dead..dry..m2.,
                            fill=Nitrogen.level)) +
@@ -754,7 +757,7 @@ ggplot(sdm_summary, aes(x=Snail.Level,
   labs(title="Grazing impacts depend on nitrogen levels",
        x= "Grazing level",
        y= expression(paste("Standing dry mass (" , g^{-1}, m^{-2}, ")")),
-       fill = "Nitrogen level")
+       fill = "Fertilized?")
 ```
 
 ## Next steps
