@@ -63,7 +63,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../content/swirl_lessons.html" rel="next">
+<link href="../../content/chapters/Combining_numerical_and_categorical_predictors.html" rel="next">
 <link href="../../content/chapters/More_ANOVAs.html" rel="prev">
 <link href="../../images/favicon.ico" rel="icon">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
@@ -244,6 +244,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/Relationships_among_numerical_variables.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Relationships among numerical variables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Combining_numerical_and_categorical_predictors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Combining numerical and categorical predictors</span></a>
   </div>
 </li>
       </ul>
@@ -487,11 +493,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We will motivate this with an example from our favorite iris data. So far we have considered how species impacts measured outcomes. However, we might also want to consider the relationship between traits. For example, we might want to know if sepal and petal length are related. We could plot the data:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>sepal_petal_relationship <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length, <span class="at">y=</span>Petal.Length)) <span class="sc">+</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>sepal_petal_relationship <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>Petal.Length)) <span class="sc">+</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Sepal length increases with petal length"</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Petal Length (cm)"</span>)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sepal_petal_relationship</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Relationships_among_numerical_variables_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
@@ -552,7 +558,7 @@ H_A: \textrm{there is a relationship between sepal and petal length}\\
 <p>If we wanted to carry out a sampling experiment to determine a p-value for our hypotheses, we could sample from a population that represents our sepal lengths and one that represents our petal lengths. If the two populations are not connected, then arbitrary pairs could be made - this would indicate no relationship among the variables. For each dataset, we could note the potential relationship (now occuring by chance!) between our variables, and then compare that null distribution to what we actually observed. To make this approach more generalizable, we could standardize our data points - using these to calculate our error terms for full and reduced models would lead us to F distributions.</p>
 <p>Overall, this means we can use a linear model approach to investigate relationships among numerical variables. We can build the model</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>iris_regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Sepal.Length, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>iris_regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Petal.Length, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>and see the impacts on our linear model.</p>
 <p>The relationship between our two variables is noted in the model matrix, which now includes our actual values,</p>
@@ -563,7 +569,7 @@ H_A: \textrm{there is a relationship between sepal and petal length}\\
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["X.Intercept."],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Sepal.Length"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"5.1","_rn_":"1"},{"1":"1","2":"4.9","_rn_":"2"},{"1":"1","2":"4.7","_rn_":"3"},{"1":"1","2":"4.6","_rn_":"4"},{"1":"1","2":"5.0","_rn_":"5"},{"1":"1","2":"5.4","_rn_":"6"},{"1":"1","2":"4.6","_rn_":"7"},{"1":"1","2":"5.0","_rn_":"8"},{"1":"1","2":"4.4","_rn_":"9"},{"1":"1","2":"4.9","_rn_":"10"},{"1":"1","2":"5.4","_rn_":"11"},{"1":"1","2":"4.8","_rn_":"12"},{"1":"1","2":"4.8","_rn_":"13"},{"1":"1","2":"4.3","_rn_":"14"},{"1":"1","2":"5.8","_rn_":"15"},{"1":"1","2":"5.7","_rn_":"16"},{"1":"1","2":"5.4","_rn_":"17"},{"1":"1","2":"5.1","_rn_":"18"},{"1":"1","2":"5.7","_rn_":"19"},{"1":"1","2":"5.1","_rn_":"20"},{"1":"1","2":"5.4","_rn_":"21"},{"1":"1","2":"5.1","_rn_":"22"},{"1":"1","2":"4.6","_rn_":"23"},{"1":"1","2":"5.1","_rn_":"24"},{"1":"1","2":"4.8","_rn_":"25"},{"1":"1","2":"5.0","_rn_":"26"},{"1":"1","2":"5.0","_rn_":"27"},{"1":"1","2":"5.2","_rn_":"28"},{"1":"1","2":"5.2","_rn_":"29"},{"1":"1","2":"4.7","_rn_":"30"},{"1":"1","2":"4.8","_rn_":"31"},{"1":"1","2":"5.4","_rn_":"32"},{"1":"1","2":"5.2","_rn_":"33"},{"1":"1","2":"5.5","_rn_":"34"},{"1":"1","2":"4.9","_rn_":"35"},{"1":"1","2":"5.0","_rn_":"36"},{"1":"1","2":"5.5","_rn_":"37"},{"1":"1","2":"4.9","_rn_":"38"},{"1":"1","2":"4.4","_rn_":"39"},{"1":"1","2":"5.1","_rn_":"40"},{"1":"1","2":"5.0","_rn_":"41"},{"1":"1","2":"4.5","_rn_":"42"},{"1":"1","2":"4.4","_rn_":"43"},{"1":"1","2":"5.0","_rn_":"44"},{"1":"1","2":"5.1","_rn_":"45"},{"1":"1","2":"4.8","_rn_":"46"},{"1":"1","2":"5.1","_rn_":"47"},{"1":"1","2":"4.6","_rn_":"48"},{"1":"1","2":"5.3","_rn_":"49"},{"1":"1","2":"5.0","_rn_":"50"},{"1":"1","2":"7.0","_rn_":"51"},{"1":"1","2":"6.4","_rn_":"52"},{"1":"1","2":"6.9","_rn_":"53"},{"1":"1","2":"5.5","_rn_":"54"},{"1":"1","2":"6.5","_rn_":"55"},{"1":"1","2":"5.7","_rn_":"56"},{"1":"1","2":"6.3","_rn_":"57"},{"1":"1","2":"4.9","_rn_":"58"},{"1":"1","2":"6.6","_rn_":"59"},{"1":"1","2":"5.2","_rn_":"60"},{"1":"1","2":"5.0","_rn_":"61"},{"1":"1","2":"5.9","_rn_":"62"},{"1":"1","2":"6.0","_rn_":"63"},{"1":"1","2":"6.1","_rn_":"64"},{"1":"1","2":"5.6","_rn_":"65"},{"1":"1","2":"6.7","_rn_":"66"},{"1":"1","2":"5.6","_rn_":"67"},{"1":"1","2":"5.8","_rn_":"68"},{"1":"1","2":"6.2","_rn_":"69"},{"1":"1","2":"5.6","_rn_":"70"},{"1":"1","2":"5.9","_rn_":"71"},{"1":"1","2":"6.1","_rn_":"72"},{"1":"1","2":"6.3","_rn_":"73"},{"1":"1","2":"6.1","_rn_":"74"},{"1":"1","2":"6.4","_rn_":"75"},{"1":"1","2":"6.6","_rn_":"76"},{"1":"1","2":"6.8","_rn_":"77"},{"1":"1","2":"6.7","_rn_":"78"},{"1":"1","2":"6.0","_rn_":"79"},{"1":"1","2":"5.7","_rn_":"80"},{"1":"1","2":"5.5","_rn_":"81"},{"1":"1","2":"5.5","_rn_":"82"},{"1":"1","2":"5.8","_rn_":"83"},{"1":"1","2":"6.0","_rn_":"84"},{"1":"1","2":"5.4","_rn_":"85"},{"1":"1","2":"6.0","_rn_":"86"},{"1":"1","2":"6.7","_rn_":"87"},{"1":"1","2":"6.3","_rn_":"88"},{"1":"1","2":"5.6","_rn_":"89"},{"1":"1","2":"5.5","_rn_":"90"},{"1":"1","2":"5.5","_rn_":"91"},{"1":"1","2":"6.1","_rn_":"92"},{"1":"1","2":"5.8","_rn_":"93"},{"1":"1","2":"5.0","_rn_":"94"},{"1":"1","2":"5.6","_rn_":"95"},{"1":"1","2":"5.7","_rn_":"96"},{"1":"1","2":"5.7","_rn_":"97"},{"1":"1","2":"6.2","_rn_":"98"},{"1":"1","2":"5.1","_rn_":"99"},{"1":"1","2":"5.7","_rn_":"100"},{"1":"1","2":"6.3","_rn_":"101"},{"1":"1","2":"5.8","_rn_":"102"},{"1":"1","2":"7.1","_rn_":"103"},{"1":"1","2":"6.3","_rn_":"104"},{"1":"1","2":"6.5","_rn_":"105"},{"1":"1","2":"7.6","_rn_":"106"},{"1":"1","2":"4.9","_rn_":"107"},{"1":"1","2":"7.3","_rn_":"108"},{"1":"1","2":"6.7","_rn_":"109"},{"1":"1","2":"7.2","_rn_":"110"},{"1":"1","2":"6.5","_rn_":"111"},{"1":"1","2":"6.4","_rn_":"112"},{"1":"1","2":"6.8","_rn_":"113"},{"1":"1","2":"5.7","_rn_":"114"},{"1":"1","2":"5.8","_rn_":"115"},{"1":"1","2":"6.4","_rn_":"116"},{"1":"1","2":"6.5","_rn_":"117"},{"1":"1","2":"7.7","_rn_":"118"},{"1":"1","2":"7.7","_rn_":"119"},{"1":"1","2":"6.0","_rn_":"120"},{"1":"1","2":"6.9","_rn_":"121"},{"1":"1","2":"5.6","_rn_":"122"},{"1":"1","2":"7.7","_rn_":"123"},{"1":"1","2":"6.3","_rn_":"124"},{"1":"1","2":"6.7","_rn_":"125"},{"1":"1","2":"7.2","_rn_":"126"},{"1":"1","2":"6.2","_rn_":"127"},{"1":"1","2":"6.1","_rn_":"128"},{"1":"1","2":"6.4","_rn_":"129"},{"1":"1","2":"7.2","_rn_":"130"},{"1":"1","2":"7.4","_rn_":"131"},{"1":"1","2":"7.9","_rn_":"132"},{"1":"1","2":"6.4","_rn_":"133"},{"1":"1","2":"6.3","_rn_":"134"},{"1":"1","2":"6.1","_rn_":"135"},{"1":"1","2":"7.7","_rn_":"136"},{"1":"1","2":"6.3","_rn_":"137"},{"1":"1","2":"6.4","_rn_":"138"},{"1":"1","2":"6.0","_rn_":"139"},{"1":"1","2":"6.9","_rn_":"140"},{"1":"1","2":"6.7","_rn_":"141"},{"1":"1","2":"6.9","_rn_":"142"},{"1":"1","2":"5.8","_rn_":"143"},{"1":"1","2":"6.8","_rn_":"144"},{"1":"1","2":"6.7","_rn_":"145"},{"1":"1","2":"6.7","_rn_":"146"},{"1":"1","2":"6.3","_rn_":"147"},{"1":"1","2":"6.5","_rn_":"148"},{"1":"1","2":"6.2","_rn_":"149"},{"1":"1","2":"5.9","_rn_":"150"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["X.Intercept."],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Petal.Length"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"1.4","_rn_":"1"},{"1":"1","2":"1.4","_rn_":"2"},{"1":"1","2":"1.3","_rn_":"3"},{"1":"1","2":"1.5","_rn_":"4"},{"1":"1","2":"1.4","_rn_":"5"},{"1":"1","2":"1.7","_rn_":"6"},{"1":"1","2":"1.4","_rn_":"7"},{"1":"1","2":"1.5","_rn_":"8"},{"1":"1","2":"1.4","_rn_":"9"},{"1":"1","2":"1.5","_rn_":"10"},{"1":"1","2":"1.5","_rn_":"11"},{"1":"1","2":"1.6","_rn_":"12"},{"1":"1","2":"1.4","_rn_":"13"},{"1":"1","2":"1.1","_rn_":"14"},{"1":"1","2":"1.2","_rn_":"15"},{"1":"1","2":"1.5","_rn_":"16"},{"1":"1","2":"1.3","_rn_":"17"},{"1":"1","2":"1.4","_rn_":"18"},{"1":"1","2":"1.7","_rn_":"19"},{"1":"1","2":"1.5","_rn_":"20"},{"1":"1","2":"1.7","_rn_":"21"},{"1":"1","2":"1.5","_rn_":"22"},{"1":"1","2":"1.0","_rn_":"23"},{"1":"1","2":"1.7","_rn_":"24"},{"1":"1","2":"1.9","_rn_":"25"},{"1":"1","2":"1.6","_rn_":"26"},{"1":"1","2":"1.6","_rn_":"27"},{"1":"1","2":"1.5","_rn_":"28"},{"1":"1","2":"1.4","_rn_":"29"},{"1":"1","2":"1.6","_rn_":"30"},{"1":"1","2":"1.6","_rn_":"31"},{"1":"1","2":"1.5","_rn_":"32"},{"1":"1","2":"1.5","_rn_":"33"},{"1":"1","2":"1.4","_rn_":"34"},{"1":"1","2":"1.5","_rn_":"35"},{"1":"1","2":"1.2","_rn_":"36"},{"1":"1","2":"1.3","_rn_":"37"},{"1":"1","2":"1.4","_rn_":"38"},{"1":"1","2":"1.3","_rn_":"39"},{"1":"1","2":"1.5","_rn_":"40"},{"1":"1","2":"1.3","_rn_":"41"},{"1":"1","2":"1.3","_rn_":"42"},{"1":"1","2":"1.3","_rn_":"43"},{"1":"1","2":"1.6","_rn_":"44"},{"1":"1","2":"1.9","_rn_":"45"},{"1":"1","2":"1.4","_rn_":"46"},{"1":"1","2":"1.6","_rn_":"47"},{"1":"1","2":"1.4","_rn_":"48"},{"1":"1","2":"1.5","_rn_":"49"},{"1":"1","2":"1.4","_rn_":"50"},{"1":"1","2":"4.7","_rn_":"51"},{"1":"1","2":"4.5","_rn_":"52"},{"1":"1","2":"4.9","_rn_":"53"},{"1":"1","2":"4.0","_rn_":"54"},{"1":"1","2":"4.6","_rn_":"55"},{"1":"1","2":"4.5","_rn_":"56"},{"1":"1","2":"4.7","_rn_":"57"},{"1":"1","2":"3.3","_rn_":"58"},{"1":"1","2":"4.6","_rn_":"59"},{"1":"1","2":"3.9","_rn_":"60"},{"1":"1","2":"3.5","_rn_":"61"},{"1":"1","2":"4.2","_rn_":"62"},{"1":"1","2":"4.0","_rn_":"63"},{"1":"1","2":"4.7","_rn_":"64"},{"1":"1","2":"3.6","_rn_":"65"},{"1":"1","2":"4.4","_rn_":"66"},{"1":"1","2":"4.5","_rn_":"67"},{"1":"1","2":"4.1","_rn_":"68"},{"1":"1","2":"4.5","_rn_":"69"},{"1":"1","2":"3.9","_rn_":"70"},{"1":"1","2":"4.8","_rn_":"71"},{"1":"1","2":"4.0","_rn_":"72"},{"1":"1","2":"4.9","_rn_":"73"},{"1":"1","2":"4.7","_rn_":"74"},{"1":"1","2":"4.3","_rn_":"75"},{"1":"1","2":"4.4","_rn_":"76"},{"1":"1","2":"4.8","_rn_":"77"},{"1":"1","2":"5.0","_rn_":"78"},{"1":"1","2":"4.5","_rn_":"79"},{"1":"1","2":"3.5","_rn_":"80"},{"1":"1","2":"3.8","_rn_":"81"},{"1":"1","2":"3.7","_rn_":"82"},{"1":"1","2":"3.9","_rn_":"83"},{"1":"1","2":"5.1","_rn_":"84"},{"1":"1","2":"4.5","_rn_":"85"},{"1":"1","2":"4.5","_rn_":"86"},{"1":"1","2":"4.7","_rn_":"87"},{"1":"1","2":"4.4","_rn_":"88"},{"1":"1","2":"4.1","_rn_":"89"},{"1":"1","2":"4.0","_rn_":"90"},{"1":"1","2":"4.4","_rn_":"91"},{"1":"1","2":"4.6","_rn_":"92"},{"1":"1","2":"4.0","_rn_":"93"},{"1":"1","2":"3.3","_rn_":"94"},{"1":"1","2":"4.2","_rn_":"95"},{"1":"1","2":"4.2","_rn_":"96"},{"1":"1","2":"4.2","_rn_":"97"},{"1":"1","2":"4.3","_rn_":"98"},{"1":"1","2":"3.0","_rn_":"99"},{"1":"1","2":"4.1","_rn_":"100"},{"1":"1","2":"6.0","_rn_":"101"},{"1":"1","2":"5.1","_rn_":"102"},{"1":"1","2":"5.9","_rn_":"103"},{"1":"1","2":"5.6","_rn_":"104"},{"1":"1","2":"5.8","_rn_":"105"},{"1":"1","2":"6.6","_rn_":"106"},{"1":"1","2":"4.5","_rn_":"107"},{"1":"1","2":"6.3","_rn_":"108"},{"1":"1","2":"5.8","_rn_":"109"},{"1":"1","2":"6.1","_rn_":"110"},{"1":"1","2":"5.1","_rn_":"111"},{"1":"1","2":"5.3","_rn_":"112"},{"1":"1","2":"5.5","_rn_":"113"},{"1":"1","2":"5.0","_rn_":"114"},{"1":"1","2":"5.1","_rn_":"115"},{"1":"1","2":"5.3","_rn_":"116"},{"1":"1","2":"5.5","_rn_":"117"},{"1":"1","2":"6.7","_rn_":"118"},{"1":"1","2":"6.9","_rn_":"119"},{"1":"1","2":"5.0","_rn_":"120"},{"1":"1","2":"5.7","_rn_":"121"},{"1":"1","2":"4.9","_rn_":"122"},{"1":"1","2":"6.7","_rn_":"123"},{"1":"1","2":"4.9","_rn_":"124"},{"1":"1","2":"5.7","_rn_":"125"},{"1":"1","2":"6.0","_rn_":"126"},{"1":"1","2":"4.8","_rn_":"127"},{"1":"1","2":"4.9","_rn_":"128"},{"1":"1","2":"5.6","_rn_":"129"},{"1":"1","2":"5.8","_rn_":"130"},{"1":"1","2":"6.1","_rn_":"131"},{"1":"1","2":"6.4","_rn_":"132"},{"1":"1","2":"5.6","_rn_":"133"},{"1":"1","2":"5.1","_rn_":"134"},{"1":"1","2":"5.6","_rn_":"135"},{"1":"1","2":"6.1","_rn_":"136"},{"1":"1","2":"5.6","_rn_":"137"},{"1":"1","2":"5.5","_rn_":"138"},{"1":"1","2":"4.8","_rn_":"139"},{"1":"1","2":"5.4","_rn_":"140"},{"1":"1","2":"5.6","_rn_":"141"},{"1":"1","2":"5.1","_rn_":"142"},{"1":"1","2":"5.1","_rn_":"143"},{"1":"1","2":"5.9","_rn_":"144"},{"1":"1","2":"5.7","_rn_":"145"},{"1":"1","2":"5.2","_rn_":"146"},{"1":"1","2":"5.0","_rn_":"147"},{"1":"1","2":"5.2","_rn_":"148"},{"1":"1","2":"5.4","_rn_":"149"},{"1":"1","2":"5.1","_rn_":"150"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -573,8 +579,8 @@ H_A: \textrm{there is a relationship between sepal and petal length}\\
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="fu">as.numeric</span>(iris_regression<span class="sc">$</span>coefficients), <span class="at">ncol=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          [,1]
-[1,] -7.101443
-[2,]  1.858433</code></pre>
+[1,] 4.3066034
+[2,] 0.4089223</code></pre>
 </div>
 </div>
 <p>Once the model is made, we can plot it to check assumptions</p>
@@ -603,11 +609,11 @@ H_A: \textrm{there is a relationship between sepal and petal length}\\
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
-Response: Petal.Length
+Response: Sepal.Length
              Sum Sq  Df F value    Pr(&gt;F)    
-(Intercept)  147.95   1  196.45 &lt; 2.2e-16 ***
-Sepal.Length 352.87   1  468.55 &lt; 2.2e-16 ***
-Residuals    111.46 148                      
+(Intercept)  500.16   1 3018.28 &lt; 2.2e-16 ***
+Petal.Length  77.64   1  468.55 &lt; 2.2e-16 ***
+Residuals     24.53 148                      
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -615,20 +621,20 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-lm(formula = Petal.Length ~ Sepal.Length, data = iris)
+lm(formula = Sepal.Length ~ Petal.Length, data = iris)
 
 Residuals:
      Min       1Q   Median       3Q      Max 
--2.47747 -0.59072 -0.00668  0.60484  2.49512 
+-1.24675 -0.29657 -0.01515  0.27676  1.00269 
 
 Coefficients:
              Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  -7.10144    0.50666  -14.02   &lt;2e-16 ***
-Sepal.Length  1.85843    0.08586   21.65   &lt;2e-16 ***
+(Intercept)   4.30660    0.07839   54.94   &lt;2e-16 ***
+Petal.Length  0.40892    0.01889   21.65   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 0.8678 on 148 degrees of freedom
+Residual standard error: 0.4071 on 148 degrees of freedom
 Multiple R-squared:   0.76, Adjusted R-squared:  0.7583 
 F-statistic: 468.6 on 1 and 148 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
@@ -641,8 +647,8 @@ F-statistic: 468.6 on 1 and 148 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>This approach, with small changes in theory, can be used for two scenarios. We typically consider (but actually rarely use) linear regression. Linear regression technically assumes that an approach was used to determine how one variable impacts another (so we chose which one to vary and how). For this scenario, our sampling experiment technically uses the set values of the predictor variable,and our hypotheses focus on the coefficient value</p>
 <p><span class="math display">\[
 \begin{split}
-H_O: \beta_\textrm{relationship between sepal and petal length} = 0\\
-H_A: \beta_\textrm{relationship between sepal and petal length} \neq 0\\
+H_O: \beta_\textrm{(coefficient between sepal and petal length)} = 0\\
+H_A: \beta_\textrm{(coefficient between sepal and petal length)} \neq 0\\
 \end{split}
 \]</span></p>
 <p>Note our coefficient will also change based on measurement units, but this should not impact the resulting p-value.</p>
@@ -650,9 +656,9 @@ H_A: \beta_\textrm{relationship between sepal and petal length} \neq 0\\
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x=</span>Petal.Length, <span class="at">y=</span>Sepal.Length)) <span class="sc">+</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Sepal length increases with petal length"</span>,</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Petal Length (cm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Petal length increases with sepal length"</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Relationships_among_numerical_variables_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -660,8 +666,8 @@ H_A: \beta_\textrm{relationship between sepal and petal length} \neq 0\\
 <p>Note that doing so would change the coefficients in our linear model,but not the direction of the relationship. For this reason, correlation often focuses on a unitless correlation parameter, <em>r</em>, instead of a coefficient from our <span class="math inline">\(\beta\)</span> matrix.</p>
 <p><span class="math display">\[
 \begin{split}
-H_O: r_\textrm{relationship between sepal and petal length} = 0\\
-H_A: r_\textrm{relationship between sepal and petal length} \neq 0\\
+H_O: r_\textrm{(association between sepal and petal length)} = 0\\
+H_A: r_\textrm{(association between sepal and petal length)} \neq 0\\
 \end{split}
 \]</span></p>
 <p><em>r</em> can vary from -1 (values are perfectly negatively related) to 1 (values are perfectly positively related), where 0 indicates no associatoin. This should sound familiar (hold this thought). For a related sampling experiment, populations for both traits are simulated and then paired (what we described above!).</p>
@@ -721,12 +727,12 @@ sample estimates:
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: survival</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">independence_test</span>(Petal.Length <span class="sc">~</span> Sepal.Length, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">independence_test</span>(Sepal.Length <span class="sc">~</span> Petal.Length, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Asymptotic General Independence Test
 
-data:  Petal.Length by Sepal.Length
+data:  Sepal.Length by Petal.Length
 Z = 10.641, p-value &lt; 2.2e-16
 alternative hypothesis: two.sided</code></pre>
 </div>
@@ -742,17 +748,17 @@ alternative hypothesis: two.sided</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Number of bootstrap replications R = 999 
-             original   bootBias   bootSE bootMed
-(Intercept)   -7.1014 -0.0102657 0.414615 -7.1211
-Sepal.Length   1.8584  0.0020759 0.066772  1.8605</code></pre>
+             original    bootBias   bootSE bootMed
+(Intercept)   4.30660  0.00037673 0.072798 4.30650
+Petal.Length  0.40892 -0.00048213 0.018131 0.40892</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Confint</span>(bootstrap_iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Bootstrap bca confidence intervals
 
               Estimate     2.5 %    97.5 %
-(Intercept)  -7.101443 -7.841520 -6.204427
-Sepal.Length  1.858433  1.716078  1.978459</code></pre>
+(Intercept)  4.3066034 4.1645351 4.4534592
+Petal.Length 0.4089223 0.3742956 0.4436595</code></pre>
 </div>
 </div>
 </section>
@@ -776,25 +782,25 @@ Sepal.Length  1.858433  1.716078  1.978459</code></pre>
 <span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>iris_merged<span class="sc">$</span>row_number <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(iris_merged)</span>
 <span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">y=</span>Petal.Length, <span class="at">x=</span>Sepal.Length, <span class="at">color=</span>Source)) <span class="sc">+</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">x=</span>Petal.Length, <span class="at">y=</span>Sepal.Length, <span class="at">color=</span>Source)) <span class="sc">+</span></span>
 <span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Petal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Sepal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
 <span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Iris data including our missing 3 rows!"</span>,</span>
-<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
-<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Petal Length (cm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Relationships_among_numerical_variables_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Our 3 “new” points (rows 151-153) are all unique ins some way. <strong>152</strong> is from a relatively unsampled region of the graph that is within the range of existing data. <strong>151</strong> and <strong>153</strong> are also from un-sampled regions, but these are outside of the original range. More importantly, note if we fit the data <em>without</em> these points</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">y=</span>Petal.Length, <span class="at">x=</span>Sepal.Length, <span class="at">color=</span>Source)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>Petal.Length, <span class="at">color=</span>Source)) <span class="sc">+</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Petal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Sepal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
 <span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Iris data including our missing 3 rows!"</span>,</span>
 <span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Best fit based on original data only!"</span>,</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>) <span class="sc">+</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Petal Length (cm)"</span>) <span class="sc">+</span></span>
 <span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">data=</span>iris_new[iris_new<span class="sc">$</span>Source <span class="sc">==</span> <span class="st">"original"</span>,], <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">fullrange=</span>T, <span class="at">se=</span>F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
@@ -805,7 +811,7 @@ Sepal.Length  1.858433  1.716078  1.978459</code></pre>
 </div>
 <p>We see that only row <strong>151</strong> appears to be different than what we would expect given the rest of the data. Now, note if we fit a model all these points and check assumptions</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>iris_regression_new <span class="ot">&lt;-</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Sepal.Length, iris_merged)</span>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>iris_regression_new <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Petal.Length, iris_merged)</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris_regression_new)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Relationships_among_numerical_variables_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
@@ -823,9 +829,9 @@ Sepal.Length  1.858433  1.716078  1.978459</code></pre>
 <p>several plots label row <strong>151</strong>. In general, R provides the row number of the most “unusual” rows in each graph. This may mean a fairly normal row that just so happens to be the “most” extreme in a dataset is labelled. However, here we see row <strong>151</strong> falling outside the dotted lines that are labelled <em>Cook’s distance</em> in the 4th graph. Cook’s distance is one way of quantifying leverage, or how much a single point shifts the best fit line. The measure quantifies change in the regression coefficients if each data point is removed individually. Here we see row <strong>151</strong> is a high leverage point, while <strong>153</strong> is not even though the sepal length itself may be an outlier.</p>
 <p>Although row <strong>153</strong> is not identified as a high leverage point, it <em>is</em> impacting the line (as are all other points). Our best fit line will <em>always</em> go though the point <span class="math inline">\((\bar{x}, \bar{y})\)</span>, so outliers in the “x” variable will impact the line. This also explains why the confidence region (which we won’t calculate here), gets “smaller” in the middle of the data range.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">y=</span>Petal.Length, <span class="at">x=</span>Sepal.Length)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_merged, <span class="fu">aes</span>(<span class="at">x=</span>Petal.Length, <span class="at">y=</span>Sepal.Length)) <span class="sc">+</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color=</span>Source)) <span class="sc">+</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Petal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(iris_merged[iris_merged<span class="sc">$</span>Source <span class="sc">!=</span> <span class="st">"original"</span>,],<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">label=</span>row_number,<span class="at">y=</span>Sepal.Length<span class="fl">+.2</span>), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
 <span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Iris data including our missing 3 rows!"</span>,</span>
 <span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Grey area is confidence region, with mean point shown in purple!"</span>,</span>
 <span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
@@ -1216,8 +1222,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/swirl_lessons.html" class="pagination-link">
-        <span class="nav-page-text">swirl lessons</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../content/chapters/Combining_numerical_and_categorical_predictors.html" class="pagination-link">
+        <span class="nav-page-text">Combining numerical and categorical predictors</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
