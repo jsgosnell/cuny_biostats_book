@@ -1,0 +1,926 @@
+---
+title: Combining (lots of) numerical and categorical predictors
+subtitle: ANCOVAs and beyond
+bibliography: ../references.bib
+---
+
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+So far we've used linear models to consider how categorical predictors
+and continuous numerical predictors can predict continuous outcomes.
+We've already considered having multiple categorical predictors
+(remember factorial ANOVAs). Now we'll extend those ideas to models
+where we have numerous categorical and/or continuous numerical
+predictors in the same model. In doing so we'll introduce (and connect)
+ANCOVAs, multiple regression, and model selection.
+
+## Back to the iris data
+
+We will motivate this (again!) with an example from our favorite iris
+data. So far we have considered how species impacts sepal lengths
+(abbreviated analysis:
+
+```{r}
+library(Rmisc)
+function_output <- summarySE(iris, measurevar="Sepal.Length", groupvars =
+                               c("Species"))
+
+library(ggplot2)
+ggplot(function_output, aes(y=Sepal.Length, x=Species, fill=Species)) +
+  geom_col(aes(fill=Species)) +
+    geom_errorbar(aes(ymin=Sepal.Length-ci, ymax=Sepal.Length+ci)) +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species")
+```
+
+```{r}
+iris_anova <- lm(Sepal.Length~Species, iris)
+plot(iris_anova)
+library(car)
+Anova(iris_anova, type="III")
+library(multcomp)
+compare_cont_tukey <- glht(iris_anova, linfct = mcp(Species = "Tukey"))
+summary(compare_cont_tukey)
+```
+
+We've also considered how petal length influences sepal length
+(abbreviated analysis:
+
+```{r}
+ggplot(iris, aes(y=Sepal.Length, x=Petal.Length)) +
+  geom_point() +
+  labs(title="Sepal length increases with petal length",
+       y= "Sepal length (cm)",
+       x= "Petal Length (cm)") +
+  geom_smooth(method = "lm",se = F)
+
+```
+
+```{r}
+iris_regression <- lm(Sepal.Length ~ Petal.Length, iris)
+plot(iris_regression)
+Anova(iris_regression, type = "III")
+summary(iris_regression)
+```
+
+However, what if we wanted to consider the combined (and potentially
+interacting) effects of petal length and species on sepal length? This
+is like our 2-way ANOVA but with one predictor being continuous. This is
+often called an ANCOVA, but it's just another linear model! Overall, we
+are decomposing the variance of each data point among various factors.
+Our use of type III residuals let's us ask how much any given factor
+explains *given* that other factors are in the model (we'll explore this
+more below). Put another way, we might want to know if a factor adds
+explanatory power to the model (and is not redundant or subsumed by
+another factor).
+
+Continuing to use focal iris dataset, we can use the same format we used
+for factorial or 2-way ANOVAs to add the factors.
+
+```{r}
+iris_ancova <- lm(Sepal.Length~Species*Petal.Length, iris)
+```
+
+This model includes an interaction and matche the following null
+hypotheses (note 2 are copied from previous sections!):
+
+$$
+\begin{split}
+H_O: \mu_{sepal \ length, \ setosa} = \mu_{sepal \ length, \ virginica} = \mu_{sepal \ length, \ versicolor}\\ 
+H_O: \beta_\textrm{(coefficient between sepal and petal length)} = 0\\\\
+H_O: \textrm{relationship between petal length and sepal length does not differ
+among species}\\
+\end{split}
+$$ Once we develop the model, we can visually check the assumptions,
+which remain
+
+$$
+\epsilon \approx i.i.d.\ N(\mu,\sigma)
+$$
+
+```{r}
+plot(iris_ancova)
+```
+
+If assumptions appear to be met (as they do here), we can consider
+impacts of factors. Given the presence of categorical predictors, an
+Anova table may be informative
+
+```{r}
+Anova(iris_ancova, type="III")
+```
+
+Once here we again have the same 2 options we noted in factorial ANOVAs.
+
+1.  We can read results from the full model. These show no interaction
+    between species and petal length (F~2,144~ = 1.68, p = 0.1895) and
+    no impact of petal length (F~1,144~=3.83, p = 0.052) but a
+    significant impact of species (F~2,144~ = 12.81, p \< 0.01). We can
+    follow this up with a post-hoc test
+
+    ```{r}
+    compare_ancova_tukey <- glht(iris_ancova, linfct = mcp(Species = "Tukey"))
+    summary(compare_ancova_tukey)
+    ```
+
+which suggests *I. versicolor* and *I. virginica* are similar to each
+other but different from other species.
+
+However, note the *glht* output notes interactions are still present in
+model, so this approach may be inappropriate. For ANOVA's we noted could
+instead compare means for each combination.
+
+```{r}
+library(emmeans)
+emmeans(iris_ancova, pairwise ~ Species*Petal.Length)
+```
+
+This approach, however, is less useful for numerical predictors. By
+default the **emmeans** package uses the average for the covariate
+(note,
+
+```{r}
+mean(iris$Petal.Length)
+```
+
+is why we see *3.578* spread throughout the output). While
+
+To illustrate how this works, let's pretend we visit another valley and
+sample 3 new iris species (*I. baruch*, *I. hunter*, and *I. york)*. We
+might want to see
+
+```{r}
+set.seed(19)
+iris_example_species <-data.frame(
+  Species = c(rep("baruch",25), rep("hunter", 25), rep("york", 25)),
+  Sepal_Length = runif(75,2,4 ),
+  #no difference based on species or sepal length
+  Petal_no_impacts = runif (75, 4, 6))
+#no difference based on species
+iris_example_species$Petal_no_impact_species <- 
+  iris_example_species$Sepal_Length * 2 + rnorm(75)
+#no impact of petal length
+iris_example_species$Petal_no_relationship <-rnorm(75) +
+  c(rep(2,25), rep(3,25), rep(4,25))
+#impact of species and petal length but no interaction
+iris_example_species$Petal_no_interaction <- 
+  iris_example_species$Sepal_Length * 2 + rnorm(75) +
+  c(rep(2,25), rep(3,25), rep(4,25))
+#impact of species and petal length with interaction
+iris_example_species$Petal_interaction <- 
+  iris_example_species$Sepal_Length * c(rep(-2, 25),rep(2,25), rep(5,25)) + 
+  c(rep(2,25), rep(3,25), rep(4,25)) + rnorm(75)
+```
+
+## Example: Back to the birds
+
+One of the last chapters practice problems focused bird feathers. While
+studying feather color in Northern flickers (*Colaptes auratus*),
+@wiebe2002 noted that \~25% of birds had one or more "odd" tail
+feathers. They decided to compare the color of these odd and "typical"
+feathers.
+
+[![Northern Flicker. Mike's Birds, CC BY-SA 2.0
+\<https://creativecommons.org/licenses/by-sa/2.0\>, via Wikimedia
+Commons](/images/Northern_Flicker_(4508135578).jpg)](https://commons.wikimedia.org/wiki/File:Northern_Flicker_(4508135578).jpg)
+
+Example and data provided by @mcdonald2014.
+
+```{r, echo=FALSE}
+Input = ("
+ Bird    Feather_type   Color_index
+ A       Typical   -0.255
+ B       Typical   -0.213
+ C       Typical   -0.19
+ D       Typical   -0.185
+ E       Typical   -0.045
+ F       Typical   -0.025
+ G       Typical   -0.015
+ H       Typical    0.003
+ I       Typical    0.015
+ J       Typical    0.02
+ K       Typical    0.023
+ L       Typical    0.04
+ M       Typical    0.04
+ N       Typical    0.05
+ O       Typical    0.055
+ P       Typical    0.058
+ A       Odd       -0.324
+ B       Odd       -0.185
+ C       Odd       -0.299
+ D       Odd       -0.144
+ E       Odd       -0.027
+ F       Odd       -0.039
+ G       Odd       -0.264
+ H       Odd       -0.077
+ I       Odd       -0.017
+ J       Odd       -0.169
+ K       Odd       -0.096
+ L       Odd       -0.33
+ M       Odd       -0.346
+ N       Odd       -0.191
+ O       Odd       -0.128
+ P       Odd       -0.182
+")
+
+feather <-  read.table(textConnection(Input),header=TRUE)
+```
+
+```{r}
+library(rmarkdown)
+paged_table(feather)
+```
+
+## How do we analyze this data?
+
+We may first note that we have a continuous measurement (feather color,
+measured using color hues from a digital camera and another statistical
+technique that we will not go into here) and a categorical variable
+(feather type, with levels "typical" and "odd"). This hopefully reminds
+you of an ANOVA/t-test!
+
+We could plot the data
+
+```{r}
+library(ggplot2)
+ggplot(feather, aes(x=Feather_type, y= Color_index, color=Feather_type))+
+  geom_jitter()+
+  labs(y= "Color index",
+       x= "Feather type",
+       title="Comparing odd and typical feathers in Northern flickers")+
+  guides(color=F)
+```
+
+Develop a set of hypotheses:
+
+$$
+\begin{split}
+H_O: \mu_{\textrm{odd feather color}} = \mu_{\textrm{typical feather color}}\\
+H_A: \mu_{\textrm{odd feather color}} \neq \mu_{\textrm{typical feather color}}\\
+\end{split}
+$$
+
+and test them using a t-test:
+
+```{r}
+t.test(Color_index ~ Feather_type, data=feather)
+```
+
+or, using more generalizable functions, a linear model:
+
+```{r}
+library(car)
+Anova(lm(Color_index ~ Feather_type, data=feather), type = "III")
+```
+
+We find a significant p value, **but we did not check assumptions**. For
+linear models (remember, \$\epsilon \approx i.i.d. N(\mu,\sigma)\$, we
+could use our visual checks
+
+```{r}
+plot(lm(Color_index ~ Feather_type, data=feather))
+```
+
+Which appears ok, but there is a problem.
+
+Our data are not independent!
+
+## Lack of Independence
+
+Odd and typical feathers were measured on a single bird (note the *Bird*
+column) in the dataset. We might assume feathers on a given bird are
+more closely related in color than feathers on different birds. This
+could be due to diet or other factors making all feathers on a given
+bird brighter or darker than those on another. Regardless of reason (and
+"good" p value), we know the measurements are linked in some way. Note
+we could "connect" individual observations.
+
+```{r}
+ggplot(feather, aes(x=Feather_type, y= Color_index, color=Feather_type, group=Bird))+
+  geom_line(position = position_dodge(0.4), color="black") +
+  geom_point(position = position_dodge(0.4)) +  
+  labs(y= "Color index",
+       x= "Feather type",
+       title="Comparing odd and typical feathers in Northern flickers")+
+  guides(color=F)
+```
+
+This may also occur if we measure outcomes with-in a single unit (e.g.,
+a study of fertilizer impacts using multiple fields) or over time (e.g.,
+before/after studies). Regardless of the reason, when our experimental
+design has led to measurements being connected/not independent, we need
+to consider these connections in order to properly note (and sometimes
+even observe) impacts of focal variables.
+
+## Blocking, two-way ANOVAs,and paired t-tests
+
+In this case, the connections may be considered artifacts of the data.
+We didn't assign birds. We also made a choice to compare odd and typical
+feathers from the same bird - why? In general, accounting for extra
+variation in the data will give you a better answer about how a given
+variable influences outcomes. This may be called *blocking*. Although
+the motivation might therefore be to get a "better" p value, it should
+be driven by experimental design (and thus we started with an example
+where we didn't "need" to account for it to achieve significance).
+
+In order to consider how color differs by bird *and* feather type, we
+need to add both variables to our linear model. For each variable we
+add, we also add a null (and corresponding alternative) hypothesis. So
+we retain our focus on feather type:
+
+$$
+\begin{split}
+H_O: \mu_{\textrm{odd feather color}} = \mu_{\textrm{typical feather color}}\\
+H_A: \mu_{\textrm{odd feather color}} \neq \mu_{\textrm{typical feather color}}\\
+\end{split}
+$$
+
+but also add a set of hypotheses focused on birds:
+
+$$
+\begin{split}
+H_O: \mu_{\textrm{color of bird A}} = \mu_{\textrm{color of bird B}}....\textrm{for all birds}\\
+H_A: \mu_{\textrm{color of bird A}} \neq \mu_{\textrm{color of bird B}}....\textrm{for all birds}\\
+\end{split}
+$$
+
+We can analyze this using our linear model approach. This is possible
+because, as we noted earlier, we can subdivide variance among multiple
+levels. Under the hood, the linear model approach build a model matrix
+that considers the impact of feather type and bird on outcomes. Since
+both variables are categorical, this is often called a two-way ANOVA.
+First, let's make the object
+
+```{r}
+two_way_anova_example <- lm(Color_index ~ Feather_type + Bird, data=feather)
+
+```
+
+<details>
+
+<summary>You can see the new model matrix and coefficients if you
+want</summary>
+
+Note the model matrix now includes columns for feather type and bird
+(lots of dummy variables, and now intercept is Bird A's odd feather!).
+The $\beta$ matrix of coefficients has corresponding estimates.
+
+```{r}
+library(rmarkdown)
+paged_table(data.frame(model.matrix(two_way_anova_example)))
+matrix(as.numeric(two_way_anova_example$coefficients), ncol=1)
+
+```
+
+So for our first observation, which is
+
+```{r}
+feather[1,]
+```
+
+Our estimate is the intercept (since it's bird A) and the typical
+feather:
+
+```{r}
+model.matrix(two_way_anova_example)[1,] %*% matrix(as.numeric(two_way_anova_example$coefficients), ncol=1)
+
+```
+
+and thus our residual is
+
+```{r}
+two_way_anova_example$residuals[1]
+
+```
+
+which is the same as
+
+```{r}
+feather[1,]$Color_index-model.matrix(two_way_anova_example)[1,] %*% matrix(as.numeric(two_way_anova_example$coefficients), ncol=1)
+
+```
+
+</details>
+
+Then check the assumptions
+
+```{r}
+plot(two_way_anova_example)
+```
+
+Note, visually speaking, the residuals do appear to be closer to normal
+now. Since assumptions look ok, we can analyze the outcome
+
+```{r}
+summary(two_way_anova_example)
+Anova(two_way_anova_example, type= "III")
+```
+
+Note we see a significant difference in color among birds and feather
+type. Although we may be tempted to (and could) use post-hoc tests to
+consider which birds are different than which others, this is typically
+not done for blocked variables. We did not assign these pairings and it
+is not the focus of our efforts.
+
+Since we only had 2 types of feathers, we also don't need post-hoc
+tests. A significant p value means they differ from each other, and the
+estimates provided by the *summary* command indicate the typical
+feathers have a higher color index.
+
+### t-test connections
+
+When we have only two measurements per group (e.g., odd and typical
+feathers from each bird), we can use a t-test approach to achieve
+similar goals. This approach is known as a paired t-test. Instead of
+focusing on the difference in means (like a 2-sample t-test), the test
+focuses on the mean difference between paired measurements (which would
+be 0 under the null hypothesis!). In this way, it is effectively a
+one-sample test that is pairing the data to reduce variation (blocking).
+We can do carry out the test:
+
+```{r}
+t.test(Color_index ~ Feather_type, data=feather, paired=TRUE)
+```
+
+and get the same results as above (note we don't even have to consider
+corrections like the Welch approach since this a one-sample test).
+Common examples of paired t-tests include before-after and twin studies.
+
+In an earlier chapters we considered options for one- and two-sample
+tests when t-tests assumptions were not met. For two-sample tests, one
+of these approaches, the sign or binary test, is only valid for paired
+data. The differences in paired observations are compared to a set value
+(typically 0). Under the null hypothesis, half should be below the
+proposed median and half should be above. Differences matching the
+proposed value are ignored, thus reducing the sample size and making it
+harder to reject the null hypothesis; this is actually an odd way of
+accounting for them. The proportion of values below the proposed median
+is then evaluated using a binomial test. For two sample, the *SIGN.test*
+function in the **BSDA** package requires 2 columns of data and assumes
+the order of the column represents paired data.
+
+```{r}
+library(BSDA)
+SIGN.test(feather[feather$Feather_type == "Odd", "Color_index"], 
+          feather[feather$Feather_type == "Typical", "Color_index"],
+          md = 0)
+
+```
+
+### More than 2 measurements? Back to the linear model
+
+We can also block for variation when we take more than 2 measurements
+per unit. For example, imagine if these birds also had a special, long
+tail feather.
+
+```{r}
+set.seed(25)
+special <- data.frame(Bird = LETTERS[1:16], Feather_type = "Special", 
+                      Color_index= feather[feather$Feather_type == "Typical", "Color_index"] +
+                        .3 +runif(16,1,1)*.01)
+feather_extra <- merge(feather, special, all = T)
+feather_extra$Feather_type <- factor(feather_extra$Feather_type)
+```
+
+We could still block for variation using the linear model/ANOVA, but not
+the t-test, approach. As another review, we create the model
+
+```{r}
+more_blocks <-lm(Color_index ~ Feather_type + Bird, data=feather_extra)
+```
+
+Check assumptions
+
+```{r}
+plot(more_blocks)
+```
+
+Check outcome (this time focusing on *Anova* output)
+
+```{r}
+Anova(more_blocks, type="III")
+```
+
+We still see feather type has a significant impact on color, but since
+we have more than 2 groups we need to follow up this finding with a
+post-hoc test.
+
+```{r}
+library(multcomp)
+compare <- glht(more_blocks, linfct = mcp(Feather_type = "Tukey"))
+summary(compare)
+```
+
+## Other ways to be in multiple groups
+
+In the bird example, one of our categories (bird) was un-intential. We
+chose to measure odd and typical feathers, and accounting for variation
+among birds was an appropriate step given lack of independence in
+measurements. However, we can also assign units to multiple groups
+(instead of making multiple measurements within one unit).
+
+Consider if we ran an experiment focused on the impact of factors A and
+B on some trait. We can fully cross the factors in an experiment. Doing
+so can let us consider the **main effects** of multiple variables and
+potential **interactions** among them in what is often called a
+**factorial ANOVA.** For starters, let each factor have only 2 levels,
+and let the levels be the absence or presence of the factor.
+
+|              |                  |                        |
+|--------------|------------------|------------------------|
+|              | **Factor A**     |                        |
+| **Factor B** | *Absent*         | *Present*              |
+| *Absent*     | Control          | Impact of A only       |
+| *Present*    | Impact of B only | Combined impact of A+B |
+
+<details>
+
+<summary>Experimental design notes</summary>
+
+For a factorial ANOVA, we need to assign each unit randomly to a level
+of factor A. Then each level of factor B is randomly assigned to
+subjects at each level of factor A. This is different than randomly
+assigning treatments of A and B, as that could lead to outcomes where
+some level of factor B is not represented in some level of factor A.
+
+We also need multiple units (3+) assigned to each combination.
+
+</details>
+
+When both are absent we have a classic control outcome. When one is
+present and the other absent we see **main effects** impacts of only one
+factor. Note we previously analyzed experiments that considered *only*
+one factor using ANOVAs or t-tests (linear models), but now we have
+multiple factors. **We should not analyze the main effects of each using
+2 one-way ANOVAs**. Doing so cuts our data in half, meaning our
+estimates of variances are less precise and we increase our chance of
+making a type 1 error. More importantly, we wouldn't be able to properly
+consider the combined impacts of A + B. What could these be?
+
+```{r}
+example_interaction <- data.frame(Treatment = c(rep("Control",5),
+                                                rep("Impact of A only",5),
+                                                rep("Impact of B only",5),
+                                                rep("A+B Additive",5), 
+                                                rep("A+B Synergistic", 5),
+                                                rep("A+B Antagonistic", 5)), 
+                                  Cause= rep(c("Control","Factor A","Factor B", "Synergistic", "Antagonistic"), 6),
+                                  Impact = c(5,0,0,0,0,
+                                             5,2,0,0,0,
+                                             5,0,3,0,0,
+                                             5,2,3,0,0,
+                                             0,0,0,20,0,
+                                             0,0,0,0,6))
+example_interaction$Treatment <- factor(example_interaction$Treatment, levels=c("Control","Impact of A only","Impact of B only", "A+B Additive", "A+B Synergistic", "A+B Antagonistic"))
+example_interaction$Cause <- factor(example_interaction$Cause, levels=c("Control","Factor A","Factor B", "Synergistic", "Antagonistic"))
+ggplot(example_interaction, aes(x=Treatment, y= Impact, fill= Cause))+
+  geom_col(position = position_stack(reverse = TRUE))+
+  theme(axis.text.x = element_text(angle = -45))
+  
+```
+
+As shown in the graph (Inspired by [@fong2017]), A and B could have
+additive effects (where they simply stack), synergistic effects (the
+combined impact is more than the sum of the two), or antagonistic
+effects (the combined impacts is less than the sum of the two).
+Synergistic and antagonistic impacts are both examples of
+**interactions**. Interactions occur when the impact of one variable
+depends on the level of another.
+
+### Example: Impacts of grazing and fertilization
+
+We can extend this example to consider more than 2 levels for one or
+more factors. For example, @valdez2023 wanted to consider the impact of
+top-down (snail grazing) and bottom- up (nutrient availability) on marsh
+plant (*Spartina alterniflora*) growth. To do this, they assigned plots
+to one of 3 grazer treatments and one of 2 nitrogen treatments.
+
+[![Fig 1 from Valdez et al. 2003. Map and conceptual illustration of
+experimental
+design.](/images/journal.pone.0286327.g001.PNG){fig-alt="Map of study site on Hog Island, Virginia, USA and conceptual illustration of experimental design with the following treatments: 1) Nitrogen addition with ambient snails, 2) nitrogen addition with three times ambient snails, 3) nitrogen addition without snails, 4) ambient nitrogen with ambient snails, 5) ambient nitrogen with three times ambient snails, and 6) ambient nitrogen without snails. The figure also depicts cage controls and uncaged plots used to assess caging effects on marsh plants. The map in the figure was created in R using ggmap [33] from ©OpenStreetMap under a ODb license, with permission from OpenStreetMapFoundation, original copyright 2018. https://www.openstreetmap.org/copyright."}](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0286327)
+
+This design is different from the bird example. No two measurements for
+a given trait were taken on the same plot. In this case, we likely care
+about the main effects, or impacts, of both variables. However, we may
+also need to consider interactions among the variables. Interactions
+occur when the impact of one variable depends on the level of another.
+For example, snail removal might have major impacts on nitrogen-enriched
+plots while having no impact on ambient plots. Due to this, we now have
+even more hypotheses:
+
+$$
+\begin{split}
+H_O: \mu_\textrm{plant growth, no fertilizer} = \mu_\textrm{plant growth, fertilizer}\\
+H_O: \mu_\textrm{plant growth, snails removed} = \mu_\textrm{plant growth, control snails}= \mu_\textrm{plant growth, snails added}\\
+H_O: \textrm{impact of snail grazing does not depend on nitrogen level}\\
+\end{split}
+$$
+
+Fortunately, these are easy to consider in our linear model framework.
+While not shown here, the model matrix adds columns to note our new
+interaction terms, and the coefficient matrix estimates them. From an R
+standpoint, we can include the interaction between two variables using
+the ":" notation. We'll focus on below-ground biomass (standardized to
+m^2^) for this example (the paper measured 9 response variables!)
+
+```{r}
+valdez_2023 <- read.csv("data/Spartina_alterniflora_traits.csv", stringsAsFactors = T)
+bgb_model <-lm(below.biomass.g.meter.sq..m2..~Snail.Level + Nitrogen.level + Snail.Level:Nitrogen.level, valdez_2023)
+```
+
+For shorthand, note that if we put *main effect \* main effect* in a
+model, it automatically adds the interaction term. You can see the model
+summary is the same.
+
+```{r}
+bgb_model_shorthand <-lm(below.biomass.g.meter.sq..m2..~Snail.Level * Nitrogen.level, valdez_2023)
+summary(bgb_model)
+summary(bgb_model_shorthand)
+```
+
+You may note a weird NA here (we'll come back to it), but remember we
+should really check model assumptions before looking at output.
+
+```{r}
+plot(bgb_model)
+```
+
+These look ok. There may be a slight increase in variance with fitted
+values, but we can work with this. Let's build an ANOVA table.
+
+```{r, error = T}
+Anova(bgb_model, type="III")
+```
+
+But we got an error! What happened? Let's look at the data
+
+```{r}
+paged_table(valdez_2023)
+```
+
+A summary may help more. Note we can summarize across multiple factors.
+
+```{r}
+library(Rmisc)
+paged_table(summarySE(valdez_2023, measurevar = "below.biomass.g.meter.sq..m2..", groupvars = c("Snail.Level", "Nitrogen.level")))
+```
+
+Note the *uncaged* treatment only has *without* for the nitrogen impact.
+It was a control! While we often need these in experiments, they can
+create analysis problems. This is because we can't consider how nutrient
+level depends on snail treatment for the control level! In other words,
+interactions can not be calculated for some levels.
+
+This is also why we saw the NA and warnings in our model summary
+
+```{r}
+summary(bgb_model)
+```
+
+You could note we have the same issue for our initial bird analysis:
+
+```{r,error=T}
+two_way_anova_example_int <- lm(Color_index ~ Feather_type * Bird, data=feather)
+Anova(two_way_anova_example_int, type="III")
+```
+
+On a positive note, this means R will typically not consider
+interactions when it shouldn't, but you need to know why in order to fix
+it.
+
+### Dealing with controls and missing interactions
+
+To fix this (and deal with controls), we need to consider the data.
+@valdez2023 used t-tests (why?) to consider differences between cage and
+cage control plots (note %in% and the fact they did not focus on
+above-ground biomass (maybe because uncaged plots had little..). %in%
+allows you to subset data by matching items to list. Remember you can
+always get help on functions using something like (we need the
+quotations for operators!)
+
+```{r, eval=F}
+?'%in%'
+```
+
+```{r}
+t.test(below.biomass.g.meter.sq..m2..~Snail.Level, valdez_2023[valdez_2023$Snail.Level %in% c("uncaged","control snails") & valdez_2023$Nitrogen.level == "without",])
+```
+
+If interactions are missing for other reasons (e.g., a set of units
+failed/died/data was lost), we can either ignore interactions or combine
+factor levels into a single new treatment variable and analyze using
+one-way ANOVAs.
+
+### Considering interactions
+
+To consider interactions, we can remove the controls
+
+```{r}
+bgb_model_cont_removed <-lm(below.biomass.g.meter.sq..m2..~Snail.Level + Nitrogen.level + Snail.Level:Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",])
+```
+
+We can consider the assumptions
+
+```{r}
+plot(bgb_model_cont_removed)
+```
+
+and now note ...
+
+```{r}
+Anova(bgb_model_cont_removed, type="III")
+```
+
+...that the ANOVA table works.
+
+### Intepreting interactions
+
+#### When not significant
+
+If interactions are not significant, they can be handled in 2 ways.
+
+1.  We can leave the interaction in the model and interpret main effects
+    immediately
+
+2.  We can remove the interaction from the model, re-run it, and
+    interpret main effects of the factors.
+
+    ```{r}
+    bgb_model_cont_removed_int_removed <- update(bgb_model_cont_removed, .~.-Snail.Level:Nitrogen.level)
+    plot(bgb_model_cont_removed_int_removed)
+    Anova(bgb_model_cont_removed_int_removed, type="III")
+    ```
+
+Regardless, we can interpret main effects (though with possibly
+different outcomes). The benefit of approach 2 is we "increase" the
+degrees of freedom associated with the residuals, which ends up reducing
+the the MST. This is because in 2-way ANOVAs we allocate degrees of
+freedom to calculating main effects and interactions. This approach was
+likely used in the original manuscript.
+
+Simply using the the provided output (approach 1) and not perform
+another series of tests, however, reduces the chances for a Type 1
+error. We will return to this discussion when we get to model selection.
+
+If we see significant effects of a factor that has more than 2 levels
+(like we do when using the approach that drops insignificant
+interactions), we can consider the general impact of grazing levels
+using post-hoc tests:
+
+```{r}
+summary(glht(bgb_model_cont_removed_int_removed, linfct = mcp(Snail.Level = "Tukey")))
+
+```
+
+#### When significant
+
+If the interaction term is significant, it means the main effects can
+not be interpreted. This is because the impact of a given variable
+depends on the level of another. When this happens, the data is
+typically divided into subset and analyzed using one-way ANOVAs.
+
+For example, when @valdez2023 analyzed standing dead mass, they found a
+significant interaction term:
+
+```{r}
+sdm_model <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",])
+plot(sdm_model)
+Anova(sdm_model, type="III")
+```
+
+Following this, you could investigate impacts in plots with nitrogen,
+where you find snail manipulation had a significant impact (and
+considered post-hoc which ones!)
+
+```{r}
+sdm_model_fertilized <-lm(Standing.Dead..dry..m2.~Snail.Level, valdez_2023[valdez_2023$Snail.Level != "uncaged" & valdez_2023$Nitrogen.level == "Fertilized",])
+plot(sdm_model_fertilized)
+Anova(sdm_model_fertilized, type= "III")
+summary(glht(sdm_model_fertilized, linfct = mcp(Snail.Level= "Tukey")))
+```
+
+and plots without added nutrients, where you find snail addition did not
+
+```{r}
+sdm_model_not_fertilized <-lm(Standing.Dead..dry..m2.~Snail.Level, valdez_2023[valdez_2023$Snail.Level != "uncaged" & valdez_2023$Nitrogen.level == "without",])
+plot(sdm_model_not_fertilized)
+Anova(sdm_model_not_fertilized, type= "III")
+
+```
+
+Other approaches for dealing with significant interactions include
+directly interpreting interaction terms (which we can do given our
+understanding of linear model coefficients), but this is rarely used.
+They are somewhat messy
+
+```{r}
+coef(sdm_model)
+```
+
+Another approach when interactions are significant is to compare all
+group means (somewhat like a Tukey design for combined treatment
+levels). The **emmeans** package offers this approach.
+
+```{r}
+library(emmeans)
+emmeans(sdm_model, pairwise ~ Snail.Level*Nitrogen.level)
+
+```
+
+This was likely the approach used in the Valdez et al. 2023 paper.
+
+```{r}
+paged_table(data.frame(emmeans(sdm_model, pairwise ~ Snail.Level*Nitrogen.level)$contrasts))
+paged_table(data.frame(emmeans(sdm_model, pairwise ~ Snail.Level)$contrasts))
+paged_table(data.frame(emmeans(sdm_model, pairwise ~ Nitrogen.level)$contrasts))
+
+```
+
+Note the warning; if interactions are significant comparing main effects
+may be inappropriate (which is why other approaches include subsetting
+the data).
+
+## Other options
+
+Bootstrapping and permutation tests options may also be used for two-way
+ANOVAs when assumptions are not met, though there is implementation is
+more complicated than single-sample designs due to the need to
+randomize/permute interaction impacts.
+
+Another option is to use weighted-least squares regression - this
+approach specifically helps when residuals are not evenly distributed
+among groups. For example, we could take the sdm_model (just as an
+example of use! it's not needed here!) This approach assume you built
+the model and then noted an issue with heteroscedasticity. If so, we can
+calculate a weight for each residual that is based on its variance -
+below makes a value that increases with low variance.
+
+```{r}
+wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2
+```
+
+We can then add a new argument to the *lm* function to use these
+weights.
+
+```{r}
+sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)
+```
+
+We can then continue on our normal route:
+
+```{r}
+plot(sdm_model_wls)
+Anova(sdm_model_wls, type="III")
+```
+
+If you compare the two models you notice slight differences - these are
+minimal here due to lack of differences in variance.
+
+```{r}
+summary(sdm_model)
+summary(sdm_model_wls)
+```
+
+Why not just always do this? Because weighted least squares implicitly
+assumes we *know* the weights. We are actually estimating them, so small
+datasets may lead to bad estimates and outcomes.
+
+## Plotting outcomes
+
+Results from two-way ANOVAs are often plotted similarly to one-way
+ANOVAs, but with colors or other aesthetics representing the additional
+group.
+
+```{r}
+sdm_summary <- summarySE(valdez_2023[valdez_2023$Snail.Level != "uncaged",], measurevar = "Standing.Dead..dry..m2.", groupvars = c("Snail.Level", "Nitrogen.level"))
+sdm_summary
+```
+
+```{r}
+sdm_summary$Snail.Level <- relevel(sdm_summary$Snail.Level, "removal")
+
+sdm_summary$Nitrogen.level <- revalue(sdm_summary$Nitrogen.level, c("Fertilized" = "Yes",
+                                                                    "without"= "No"))
+
+ggplot(sdm_summary, aes(x=Snail.Level, 
+                           y=Standing.Dead..dry..m2.,
+                           fill=Nitrogen.level)) +
+  geom_col(color="black", position=position_dodge()) +
+  geom_errorbar(aes(ymin=Standing.Dead..dry..m2., ymax=Standing.Dead..dry..m2.+ci), position = position_dodge()) +
+  labs(title="Grazing impacts depend on nitrogen levels",
+       x= "Grazing level",
+       y= expression(paste("Standing dry mass (" , g^{-1}, m^{-2}, ")")),
+       fill = "Fertilized?")
+```
+
+## Next steps
+
+In the next chapters we will carry our linear model approach to consider
+the relationship between continuous outcomes and continuous predictor
+variables.

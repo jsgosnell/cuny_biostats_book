@@ -15,26 +15,6 @@ head(model.matrix(garlick_lm))
 
 
 
-#ancova with interactions example - simulated ####
-iris_example_species <-data.frame(
-  Species = c(rep("x",25), rep("y", 25), rep("z", 25)),
-  Sepal_Length = runif(75,2,4 ),
-  #no difference based on species or sepal length
-  Petal_no_impacts = runif (75, 4, 6))
-#no difference based on species
-iris_example_species$Petal_no_impact_species <- 
-  iris_example_species$Sepal_Length * 2 + rnorm(75)
-#no impact of petal length
-iris_example_species$Petal_no_relationship <-rnorm(75) +
-  c(rep(2,25), rep(3,25), rep(4,25))
-#impact of species and petal length but no interaction
-iris_example_species$Petal_no_interaction <- 
-  iris_example_species$Sepal_Length * 2 + rnorm(75) +
-  c(rep(2,25), rep(3,25), rep(4,25))
-#impact of species and petal length with interaction
-iris_example_species$Petal_interaction <- 
-  iris_example_species$Sepal_Length * c(rep(-2, 25),rep(2,25), rep(5,25)) + 
-  c(rep(2,25), rep(3,25), rep(4,25)) + rnorm(75)
 
 #no impact species or relationship
 ggplot(iris_example_species, aes(x= Sepal_Length, y = Petal_no_impacts, color = Species)) +
