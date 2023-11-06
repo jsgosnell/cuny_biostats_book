@@ -116,18 +116,21 @@ Anova table may be informative
 Anova(iris_ancova, type="III")
 ```
 
-Once here we again have the same 2 options we noted in factorial ANOVAs.
+Since the interaction is not significant (F~2,144~ = 1.68, p = 0.19), we
+have the same 2 options we noted in factorial ANOVAs.
 
-1.  We can read results from the full model. These show no interaction
-    between species and petal length (F~2,144~ = 1.68, p = 0.1895) and
-    no impact of petal length (F~1,144~=3.83, p = 0.052) but a
-    significant impact of species (F~2,144~ = 12.81, p \< 0.01). We can
-    follow this up with a post-hoc test
+### Interpret results with the interaction
 
-    ```{r}
-    compare_ancova_tukey <- glht(iris_ancova, linfct = mcp(Species = "Tukey"))
-    summary(compare_ancova_tukey)
-    ```
+We can read results from the full model. These show no interaction
+between species and petal length (F~2,144~ = 1.68, p = 0.1895) and no
+impact of petal length (F~1,144~=3.83, p = 0.052) but a significant
+impact of species (F~2,144~ = 12.81, p \< 0.01). We can follow this up
+with a post-hoc test
+
+```{{r}}
+compare_ancova_tukey <- glht(iris_ancova, linfct = mcp(Species = "Tukey"))
+summary(compare_ancova_tukey)
+```
 
 which suggests *I. versicolor* and *I. virginica* are similar to each
 other but different from other species.
@@ -149,33 +152,208 @@ default the **emmeans** package uses the average for the covariate
 mean(iris$Petal.Length)
 ```
 
-is why we see *3.578* spread throughout the output). While
+is why we see *3.578* spread throughout the output). While we can
+specify other breaks, this highlights the difference in combining
+cateorical variable impacts and combining effects of categorical and
+continuous variables.
 
-To illustrate how this works, let's pretend we visit another valley and
-sample 3 new iris species (*I. baruch*, *I. hunter*, and *I. york)*. We
-might want to see
+### Remove the interaction
+
+Since the interaction isn't significant, we can also remove it.
 
 ```{r}
-set.seed(19)
+iris_ancova_updated <- lm(Sepal.Length~Species+Petal.Length, iris)
+plot(iris_ancova_updated)
+Anova(iris_ancova_updated, type="III")
+```
+
+This shows us that both petal length and species impact sepal length.
+
+Why did these factors "suddenly" become significant. The issue lies in
+that they are not fully independent. Note
+
+```{r}
+petal_anova <- lm(Petal.Length ~ Species, iris)
+plot(petal_anova)
+Anova(petal_anova, type ="III")
+summary(petal_anova)
+```
+
+This shows that species explains a lot
+(`r summary(petal_anova)$r.squared` %, in fact) of the variation in
+petal length. Thus interactions among species and petal length are hard
+to define, as each species petal lengths are *mostly* different than the
+others.
+
+This relates to an issue we will soon see. When you consider the impacts
+of multiple factors on a variable, you are assuming they are not
+related. That is rarely true (except for when we set up factorial
+ANOVAs), so we have to decide how related is ok. As factors become more
+related, the linear model approach does not work.On one level, its hard
+to split variance correctly among two similar columns. Mathematically,
+it also makes the design matrix harder to invert.
+
+<details>
+
+<summary>How does this relate to types of residuals?</summary>
+
+This also relates to the "types" of residuals. Type 1 notes the order of
+factors in the model. The function *anova* uses this type. Note the
+values are different (but still significant) depending on the order.
+
+```{r}
+anova(iris_ancova)
+```
+
+and
+
+```{r}
+iris_ancova_reversed <- lm(Sepal.Length~Petal.Length*Species, iris)
+anova(iris_ancova_reversed)
+```
+
+This is because Type 1 residuals remove all the variation that can be
+explained by the first factor (even if it *could* be given to a related
+factor), then do the same for the second and so forth. So related
+factors will have different p-values depending on order (unbalanced
+designs also impact this.)
+
+Type II residuals don't focus on order, but they ignore interactions. In
+doing so they ignore any variation that could be attributed to multiple
+factors.
+
+Type III residuals include interactions, but ask how much a given factor
+contributes to the explanatory power of a model given main effects of
+other factors and interactions, including those with the focal factor,
+are already present. This use of *marginal means* may seem odd (e.g.,
+asking if a factor should be included when you are already including
+interactions with said factor) and also means the sum of squares that we
+get from decomposing the variance adds up to *more* than the total sum
+of squares. However, from a conceptual standpoint they work and are thus
+commonly used.
+
+</details>
+
+### What would interactions look like?
+
+So, what would interactions actually look like, and how would you
+interpret them? To illustrate this, let's pretend we visit another
+valley and sample 3 new iris species (*I. baruch*, *I. hunter*, and *I.
+york)*. We want to see how species and petal length impact sepal length
+in these species. Let's make some data to suggest potential outcomes.
+
+```{r}
+set.seed(3)
 iris_example_species <-data.frame(
   Species = c(rep("baruch",25), rep("hunter", 25), rep("york", 25)),
-  Sepal_Length = runif(75,2,4 ),
+  Petal_Length = runif(75,2,4 ),
   #no difference based on species or sepal length
-  Petal_no_impacts = runif (75, 4, 6))
-#no difference based on species
-iris_example_species$Petal_no_impact_species <- 
-  iris_example_species$Sepal_Length * 2 + rnorm(75)
-#no impact of petal length
-iris_example_species$Petal_no_relationship <-rnorm(75) +
-  c(rep(2,25), rep(3,25), rep(4,25))
-#impact of species and petal length but no interaction
-iris_example_species$Petal_no_interaction <- 
-  iris_example_species$Sepal_Length * 2 + rnorm(75) +
-  c(rep(2,25), rep(3,25), rep(4,25))
-#impact of species and petal length with interaction
-iris_example_species$Petal_interaction <- 
-  iris_example_species$Sepal_Length * c(rep(-2, 25),rep(2,25), rep(5,25)) + 
-  c(rep(2,25), rep(3,25), rep(4,25)) + rnorm(75)
+  Sepal_no_impacts = runif (75, 4, 6))
+iris_example_species$Species <- factor(iris_example_species$Species)
 ```
+
+First, we might find no relationship between the variables.
+
+```{r}
+ggplot(iris_example_species, aes(x= Petal_Length, y = Sepal_no_impacts, color = Species)) +
+  geom_point()+
+  ylab("Sepal Length") +
+  xlab("Petal Length") +
+  ggtitle("Impact of Petal length and species on sepal length") +
+    geom_smooth(method = "lm", se = F)
+
+```
+
+Analysis would indicate (assumption plots not shown here to allow focus
+on interpreting interactions)
+
+```{r}
+Anova(lm( Sepal_no_impacts~ Petal_Length * Species, iris_example_species), 
+      type = "III")
+```
+
+no impact of interaction, so we could drop it
+
+```{r}
+Anova(lm( Sepal_no_impacts~ Petal_Length + Species, iris_example_species), 
+      type = "III")
+```
+
+but we still find no main effects.
+
+Alternatively, we might find a situation like this
+
+```{r}
+set.seed(77)
+iris_example_species$Sepal_no_impact_species <- 
+  iris_example_species$Petal_Length * 2 + rnorm(75)
+
+ggplot(iris_example_species, aes(x= Petal_Length, y = Sepal_no_impact_species, color = Species)) +
+  geom_point()+
+  ylab("Sepal Length") +
+  xlab("Petal Length") +
+  ggtitle("Impact of Petal length and species on sepal length") +
+    geom_smooth(method = "lm", se = F)
+
+```
+
+Analysis would indicate (assumption plots not shown here to allow focus
+on interpreting interactions)
+
+```{r}
+Anova(lm( Sepal_no_impact_species~ Petal_Length * Species, iris_example_species), 
+      type = "III")
+```
+
+no impact of interaction, so we could drop it
+
+```{r}
+Anova(lm( Sepal_no_impact_species~ Petal_Length + Species, iris_example_species), 
+      type = "III")
+```
+
+and note only petal length impacts sepal length.  
+
+We could also ssee a situation like this
+
+```{r}
+set.seed(79)
+iris_example_species$Sepal_no_relationship_petal <-rnorm(75) +
+  c(rep(2,25), rep(4,25), rep(6,25))
+
+ggplot(iris_example_species, aes(x= Petal_Length, y = Sepal_no_relationship_petal, color = Species)) +
+  geom_point()+
+  ylab("Sepal Length") +
+  xlab("Petal Length") +
+  ggtitle("Impact of Petal length and species on sepal length") +
+    geom_smooth(method = "lm", se = F)
+
+```
+
+Analysis would indicate (assumption plots not shown here to allow focus
+on interpreting interactions)
+
+```{r}
+Anova(lm( Sepal_no_relationship_petal~ Petal_Length * Species, iris_example_species), 
+      type = "III")
+```
+
+no impact of interaction, so we could drop it
+
+```{r}
+Anova(lm( Sepal_no_relationship_petal~ Petal_Length + Species, iris_example_species), 
+      type = "III")
+```
+
+and we find only species impacts sepal length. In that case, we need a
+post-hoc follow up.
+
+```{r}
+summary(glht(lm( Sepal_no_relationship_petal~ Petal_Length + Species, iris_example_species), 
+             linfct =mcp(Species = "Tukey")))
+```
+
+
+
 
 ## Next steps
