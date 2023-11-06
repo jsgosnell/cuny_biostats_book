@@ -26,11 +26,11 @@ could plot the data:
 
 ```{r}
 library(ggplot2)
-sepal_petal_relationship <- ggplot(iris, aes(x=Sepal.Length, y=Petal.Length)) +
+sepal_petal_relationship <- ggplot(iris, aes(y=Sepal.Length, x=Petal.Length)) +
   geom_point() +
   labs(title="Sepal length increases with petal length",
-       x= "Sepal length (cm)",
-       y= "Petal Length (cm)")
+       y= "Sepal length (cm)",
+       x= "Petal Length (cm)")
 sepal_petal_relationship
 
 ```
@@ -116,7 +116,7 @@ Overall, this means we can use a linear model approach to investigate
 relationships among numerical variables. We can build the model
 
 ```{r}
-iris_regression <- lm(Petal.Length ~ Sepal.Length, iris)
+iris_regression <- lm(Sepal.Length ~ Petal.Length, iris)
 ```
 
 and see the impacts on our linear model.
@@ -190,9 +190,9 @@ reverse everything above (plot shown here).
 ```{r}
 ggplot(iris, aes(x=Petal.Length, y=Sepal.Length)) +
   geom_point() +
-  labs(title="Sepal length increases with petal length",
-       y= "Sepal length (cm)",
-       x= "Petal Length (cm)")
+  labs(title="Petal length increases with sepal length",
+       x= "Sepal length (cm)",
+       y= "Petal Length (cm)")
 ```
 
 Note that doing so would change the coefficients in our linear model,but
@@ -251,7 +251,7 @@ permutation tests using the **coin** package.
 
 ```{r}
 library(coin)
-independence_test(Petal.Length ~ Sepal.Length, iris)
+independence_test(Sepal.Length ~ Petal.Length, iris)
 ```
 
 Bootstrapping may be done using the **boot** or other packages. For
@@ -291,12 +291,12 @@ rownames(iris_merged) <- 1:nrow(iris_merged)
 
 iris_merged$row_number <- 1:nrow(iris_merged)
 
-ggplot(iris_merged, aes(y=Petal.Length, x=Sepal.Length, color=Source)) +
+ggplot(iris_merged, aes(x=Petal.Length, y=Sepal.Length, color=Source)) +
   geom_point() +
-  geom_text(iris_merged[iris_merged$Source != "original",],mapping=aes(label=row_number,y=Petal.Length+.2), color="black") +
+  geom_text(iris_merged[iris_merged$Source != "original",],mapping=aes(label=row_number,y=Sepal.Length+.2), color="black") +
   labs(title="Iris data including our missing 3 rows!",
-       x= "Sepal length (cm)",
-       y= "Petal Length (cm)")
+       y= "Sepal length (cm)",
+       x= "Petal Length (cm)")
 ```
 
 Our 3 "new" points (rows 151-153) are all unique ins some way. **152**
@@ -306,13 +306,13 @@ regions, but these are outside of the original range. More importantly,
 note if we fit the data *without* these points
 
 ```{r}
-ggplot(iris_merged, aes(y=Petal.Length, x=Sepal.Length, color=Source)) +
+ggplot(iris_merged, aes(y=Sepal.Length, x=Petal.Length, color=Source)) +
   geom_point() +
-  geom_text(iris_merged[iris_merged$Source != "original",],mapping=aes(label=row_number,y=Petal.Length+.2), color="black") +
+  geom_text(iris_merged[iris_merged$Source != "original",],mapping=aes(label=row_number,y=Sepal.Length+.2), color="black") +
   labs(title="Iris data including our missing 3 rows!",
        subtitle = "Best fit based on original data only!",
-       x= "Sepal length (cm)",
-       y= "Petal Length (cm)") +
+       y= "Sepal length (cm)",
+       x= "Petal Length (cm)") +
   geom_smooth(data=iris_new[iris_new$Source == "original",], method = "lm", fullrange=T, se=F)
 ```
 
@@ -321,7 +321,7 @@ expect given the rest of the data. Now, note if we fit a model all these
 points and check assumptions
 
 ```{r}
-iris_regression_new <- lm(Petal.Length ~ Sepal.Length, iris_merged)
+iris_regression_new <- lm(Sepal.Length ~ Petal.Length, iris_merged)
 plot(iris_regression_new)
 ```
 
@@ -344,9 +344,9 @@ region (which we won't calculate here), gets "smaller" in the middle of
 the data range.
 
 ```{r}
-ggplot(iris_merged, aes(y=Petal.Length, x=Sepal.Length)) +
+ggplot(iris_merged, aes(x=Petal.Length, y=Sepal.Length)) +
   geom_point(aes(color=Source)) +
-  geom_text(iris_merged[iris_merged$Source != "original",],mapping=aes(label=row_number,y=Petal.Length+.2), color="black") +
+  geom_text(iris_merged[iris_merged$Source != "original",],mapping=aes(label=row_number,y=Sepal.Length+.2), color="black") +
   labs(title="Iris data including our missing 3 rows!",
        subtitle = "Grey area is confidence region, with mean point shown in purple!",
        x= "Sepal length (cm)",
