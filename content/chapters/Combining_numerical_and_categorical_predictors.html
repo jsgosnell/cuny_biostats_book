@@ -448,7 +448,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#back-to-the-iris-data" id="toc-back-to-the-iris-data" class="nav-link active" data-scroll-target="#back-to-the-iris-data">Back to the iris data</a></li>
+  <li><a href="#back-to-the-iris-data" id="toc-back-to-the-iris-data" class="nav-link active" data-scroll-target="#back-to-the-iris-data">Back to the iris data</a>
+  <ul class="collapse">
+  <li><a href="#interpret-results-with-the-interaction" id="toc-interpret-results-with-the-interaction" class="nav-link" data-scroll-target="#interpret-results-with-the-interaction">Interpret results with the interaction</a></li>
+  <li><a href="#remove-the-interaction" id="toc-remove-the-interaction" class="nav-link" data-scroll-target="#remove-the-interaction">Remove the interaction</a></li>
+  <li><a href="#what-would-interactions-look-like" id="toc-what-would-interactions-look-like" class="nav-link" data-scroll-target="#what-would-interactions-look-like">What would interactions look like?</a></li>
+  </ul></li>
+  <li><a href="#extensions-to-multiple-regression" id="toc-extensions-to-multiple-regression" class="nav-link" data-scroll-target="#extensions-to-multiple-regression">Extensions to multiple regression</a></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Combining_numerical_and_categorical_predictors.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Combining_numerical_and_categorical_predictors.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
@@ -688,44 +694,22 @@ Residuals            16.3007 144
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>Once here we again have the same 2 options we noted in factorial ANOVAs.</p>
-<ol type="1">
-<li><p>We can read results from the full model. These show no interaction between species and petal length (F<sub>2,144</sub> = 1.68, p = 0.1895) and no impact of petal length (F<sub>1,144</sub>=3.83, p = 0.052) but a significant impact of species (F<sub>2,144</sub> = 12.81, p &lt; 0.01). We can follow this up with a post-hoc test</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>compare_ancova_tukey <span class="ot">&lt;-</span> <span class="fu">glht</span>(iris_ancova, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Species =</span> <span class="st">"Tukey"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in mcp2matrix(model, linfct = linfct): covariate interactions found --
-default contrast might be inappropriate</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(compare_ancova_tukey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-     Simultaneous Tests for General Linear Hypotheses
-
-Multiple Comparisons of Means: Tukey Contrasts
-
-
-Fit: lm(formula = Sepal.Length ~ Species * Petal.Length, data = iris)
-
-Linear Hypotheses:
-                            Estimate Std. Error t value Pr(&gt;|t|)    
-versicolor - setosa == 0     -1.8056     0.5984  -3.017  0.00833 ** 
-virginica - setosa == 0      -3.1535     0.6341  -4.973  &lt; 1e-04 ***
-virginica - versicolor == 0  -1.3479     0.6544  -2.060  0.10175    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-(Adjusted p values reported -- single-step method)</code></pre>
-</div>
-</div></li>
-</ol>
+<p>Since the interaction is not significant (F<sub>2,144</sub> = 1.68, p = 0.19), we have the same 2 options we noted in factorial ANOVAs.</p>
+<section id="interpret-results-with-the-interaction" class="level3">
+<h3 class="anchored" data-anchor-id="interpret-results-with-the-interaction">Interpret results with the interaction</h3>
+<p>We can read results from the full model. These show no interaction between species and petal length (F<sub>2,144</sub> = 1.68, p = 0.1895) and no impact of petal length (F<sub>1,144</sub>=3.83, p = 0.052) but a significant impact of species (F<sub>2,144</sub> = 12.81, p &lt; 0.01). We can follow this up with a post-hoc test</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>compare_ancova_tukey <span class="ot">&lt;-</span> <span class="fu">glht</span>(iris_ancova, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Species =</span> <span class="st">"Tukey"</span>))</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(compare_ancova_tukey)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>which suggests <em>I. versicolor</em> and <em>I. virginica</em> are similar to each other but different from other species.</p>
 <p>However, note the <em>glht</em> output notes interactions are still present in model, so this approach may be inappropriate. For ANOVA’s we noted could instead compare means for each combination.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'emmeans' was built under R version 4.2.3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(iris_ancova, pairwise <span class="sc">~</span> Species<span class="sc">*</span>Petal.Length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(iris_ancova, pairwise <span class="sc">~</span> Species<span class="sc">*</span>Petal.Length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$emmeans
  Species    Petal.Length emmean    SE  df lower.CL upper.CL
@@ -750,35 +734,559 @@ P value adjustment: tukey method for comparing a family of 3 estimates </code></
 </div>
 <p>This approach, however, is less useful for numerical predictors. By default the <strong>emmeans</strong> package uses the average for the covariate (note,</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(iris<span class="sc">$</span>Petal.Length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(iris<span class="sc">$</span>Petal.Length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3.758</code></pre>
 </div>
 </div>
-<p>is why we see <em>3.578</em> spread throughout the output). While</p>
-<p>To illustrate how this works, let’s pretend we visit another valley and sample 3 new iris species (<em>I. baruch</em>, <em>I. hunter</em>, and <em>I. york)</em>. We might want to see</p>
+<p>is why we see <em>3.578</em> spread throughout the output). While we can specify other breaks, this highlights the difference in combining cateorical variable impacts and combining effects of categorical and continuous variables.</p>
+</section>
+<section id="remove-the-interaction" class="level3">
+<h3 class="anchored" data-anchor-id="remove-the-interaction">Remove the interaction</h3>
+<p>Since the interaction isn’t significant, we can also remove it.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>iris_example_species <span class="ot">&lt;-</span><span class="fu">data.frame</span>(</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Species =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"baruch"</span>,<span class="dv">25</span>), <span class="fu">rep</span>(<span class="st">"hunter"</span>, <span class="dv">25</span>), <span class="fu">rep</span>(<span class="st">"york"</span>, <span class="dv">25</span>)),</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sepal_Length =</span> <span class="fu">runif</span>(<span class="dv">75</span>,<span class="dv">2</span>,<span class="dv">4</span> ),</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#no difference based on species or sepal length</span></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Petal_no_impacts =</span> <span class="fu">runif</span> (<span class="dv">75</span>, <span class="dv">4</span>, <span class="dv">6</span>))</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="co">#no difference based on species</span></span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>iris_example_species<span class="sc">$</span>Petal_no_impact_species <span class="ot">&lt;-</span> </span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  iris_example_species<span class="sc">$</span>Sepal_Length <span class="sc">*</span> <span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">75</span>)</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="co">#no impact of petal length</span></span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>iris_example_species<span class="sc">$</span>Petal_no_relationship <span class="ot">&lt;-</span><span class="fu">rnorm</span>(<span class="dv">75</span>) <span class="sc">+</span></span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">25</span>), <span class="fu">rep</span>(<span class="dv">3</span>,<span class="dv">25</span>), <span class="fu">rep</span>(<span class="dv">4</span>,<span class="dv">25</span>))</span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a><span class="co">#impact of species and petal length but no interaction</span></span>
-<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>iris_example_species<span class="sc">$</span>Petal_no_interaction <span class="ot">&lt;-</span> </span>
-<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>  iris_example_species<span class="sc">$</span>Sepal_Length <span class="sc">*</span> <span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">75</span>) <span class="sc">+</span></span>
-<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">25</span>), <span class="fu">rep</span>(<span class="dv">3</span>,<span class="dv">25</span>), <span class="fu">rep</span>(<span class="dv">4</span>,<span class="dv">25</span>))</span>
-<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a><span class="co">#impact of species and petal length with interaction</span></span>
-<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>iris_example_species<span class="sc">$</span>Petal_interaction <span class="ot">&lt;-</span> </span>
-<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>  iris_example_species<span class="sc">$</span>Sepal_Length <span class="sc">*</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">25</span>),<span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">25</span>), <span class="fu">rep</span>(<span class="dv">5</span>,<span class="dv">25</span>)) <span class="sc">+</span> </span>
-<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">25</span>), <span class="fu">rep</span>(<span class="dv">3</span>,<span class="dv">25</span>), <span class="fu">rep</span>(<span class="dv">4</span>,<span class="dv">25</span>)) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>iris_ancova_updated <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length<span class="sc">~</span>Species<span class="sc">+</span>Petal.Length, iris)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris_ancova_updated)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
+<div class="cell-output-display">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-10-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-10-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(iris_ancova_updated, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal.Length
+              Sum Sq  Df  F value    Pr(&gt;F)    
+(Intercept)  137.726   1 1205.394 &lt; 2.2e-16 ***
+Species        7.843   2   34.323 6.053e-13 ***
+Petal.Length  22.275   1  194.950 &lt; 2.2e-16 ***
+Residuals     16.682 146                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>This shows us that both petal length and species impact sepal length.</p>
+<p>Why did these factors “suddenly” become significant. The issue lies in that they are not fully independent. Note</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>petal_anova <span class="ot">&lt;-</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(petal_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(petal_anova, <span class="at">type =</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Petal.Length
+            Sum Sq  Df F value    Pr(&gt;F)    
+(Intercept) 106.87   1   577.1 &lt; 2.2e-16 ***
+Species     437.10   2  1180.2 &lt; 2.2e-16 ***
+Residuals    27.22 147                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(petal_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Petal.Length ~ Species, data = iris)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-1.260 -0.258  0.038  0.240  1.348 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)        1.46200    0.06086   24.02   &lt;2e-16 ***
+Speciesversicolor  2.79800    0.08607   32.51   &lt;2e-16 ***
+Speciesvirginica   4.09000    0.08607   47.52   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.4303 on 147 degrees of freedom
+Multiple R-squared:  0.9414,    Adjusted R-squared:  0.9406 
+F-statistic:  1180 on 2 and 147 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>This shows that species explains a lot (0.9413717 %, in fact) of the variation in petal length. Thus interactions among species and petal length are hard to define, as each species petal lengths are <em>mostly</em> different than the others.</p>
+<p>This relates to an issue we will soon see. When you consider the impacts of multiple factors on a variable, you are assuming they are not related. That is rarely true (except for when we set up factorial ANOVAs), so we have to decide how related is ok. As factors become more related, the linear model approach does not work.On one level, its hard to split variance correctly among two similar columns. Mathematically, it also makes the design matrix harder to invert.</p>
+<details>
+<summary>
+How does this relate to types of residuals?
+</summary>
+<p>This also relates to the “types” of residuals. Type 1 notes the order of factors in the model. The function <em>anova</em> uses this type. Note the values are different (but still significant) depending on the order.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(iris_ancova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: Sepal.Length
+                      Df Sum Sq Mean Sq  F value Pr(&gt;F)    
+Species                2 63.212 31.6061 279.2076 &lt;2e-16 ***
+Petal.Length           1 22.275 22.2745 196.7730 &lt;2e-16 ***
+Species:Petal.Length   2  0.381  0.1905   1.6828 0.1895    
+Residuals            144 16.301  0.1132                    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>and</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>iris_ancova_reversed <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length<span class="sc">~</span>Petal.Length<span class="sc">*</span>Species, iris)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(iris_ancova_reversed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: Sepal.Length
+                      Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
+Petal.Length           1 77.643  77.643 685.8998 &lt; 2.2e-16 ***
+Species                2  7.843   3.922  34.6441 5.206e-13 ***
+Petal.Length:Species   2  0.381   0.190   1.6828    0.1895    
+Residuals            144 16.301   0.113                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>This is because Type 1 residuals remove all the variation that can be explained by the first factor (even if it <em>could</em> be given to a related factor), then do the same for the second and so forth. So related factors will have different p-values depending on order (unbalanced designs also impact this.)</p>
+<p>Type II residuals don’t focus on order, but they ignore interactions. In doing so they ignore any variation that could be attributed to multiple factors.</p>
+<p>Type III residuals include interactions, but ask how much a given factor contributes to the explanatory power of a model given main effects of other factors and interactions, including those with the focal factor, are already present. This use of <em>marginal means</em> may seem odd (e.g., asking if a factor should be included when you are already including interactions with said factor) and also means the sum of squares that we get from decomposing the variance adds up to <em>more</em> than the total sum of squares. However, from a conceptual standpoint they work and are thus commonly used.</p>
+</details>
+</section>
+<section id="what-would-interactions-look-like" class="level3">
+<h3 class="anchored" data-anchor-id="what-would-interactions-look-like">What would interactions look like?</h3>
+<p>So, what would interactions actually look like, and how would you interpret them? To illustrate this, let’s pretend we visit another valley and sample 3 new iris species (<em>I. baruch</em>, <em>I. hunter</em>, and <em>I. york)</em>. We want to see how species and petal length impact sepal length in these species. Let’s make some data to suggest potential outcomes.</p>
+<section id="no-impact-of-petal-length-or-species" class="level4">
+<h4 class="anchored" data-anchor-id="no-impact-of-petal-length-or-species">No impact of petal length or species</h4>
+<p>First, we might find no relationship between the variables. That might looi something like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_example_species, <span class="fu">aes</span>(<span class="at">x=</span> Petal_Length, <span class="at">y =</span> Sepal_no_impacts, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Sepal Length"</span>) <span class="sc">+</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Petal Length"</span>) <span class="sc">+</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Impact of petal length and species on sepal length"</span>) <span class="sc">+</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Analysis would indicate (assumption plots not shown here to allow focus on interpreting interactions)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>( Sepal_no_impacts<span class="sc">~</span> Petal_Length <span class="sc">*</span> Species, iris_example_species), </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal_no_impacts
+                      Sum Sq Df F value    Pr(&gt;F)    
+(Intercept)          15.5910  1 50.7890 7.838e-10 ***
+Petal_Length          0.2812  1  0.9162    0.3418    
+Species               0.4198  2  0.6838    0.5081    
+Petal_Length:Species  0.4781  2  0.7788    0.4630    
+Residuals            21.1813 69                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>no impact of interaction, so we could drop it</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>( Sepal_no_impacts<span class="sc">~</span> Petal_Length <span class="sc">+</span> Species, iris_example_species), </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal_no_impacts
+             Sum Sq Df  F value Pr(&gt;F)    
+(Intercept)  61.439  1 201.3986 &lt;2e-16 ***
+Petal_Length  0.007  1   0.0229 0.8801    
+Species       0.043  2   0.0700 0.9325    
+Residuals    21.659 71                    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>but we still find no main effects.</p>
+</section>
+<section id="impact-of-petal-length-but-not-species" class="level4">
+<h4 class="anchored" data-anchor-id="impact-of-petal-length-but-not-species">Impact of petal length but not species</h4>
+<p>Alternatively, we might find a situation where there is a relationship between petal length and sepal length, but no impact of species</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_example_species, <span class="fu">aes</span>(<span class="at">x=</span> Petal_Length, <span class="at">y =</span> Sepal_no_impact_species, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Sepal Length"</span>) <span class="sc">+</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Petal Length"</span>) <span class="sc">+</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Impact of petal length and species on sepal length"</span>) <span class="sc">+</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Analysis would indicate (assumption plots not shown here to allow focus on interpreting interactions)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>( Sepal_no_impact_species<span class="sc">~</span> Petal_Length <span class="sc">*</span> Species, iris_example_species), </span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal_no_impact_species
+                     Sum Sq Df F value    Pr(&gt;F)    
+(Intercept)           0.233  1  0.2086    0.6493    
+Petal_Length         35.555  1 31.8760 3.375e-07 ***
+Species               1.233  2  0.5528    0.5778    
+Petal_Length:Species  1.769  2  0.7931    0.4565    
+Residuals            76.964 69                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>no impact of interaction, so we could drop it</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>( Sepal_no_impact_species<span class="sc">~</span> Petal_Length <span class="sc">+</span> Species, iris_example_species), </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal_no_impact_species
+             Sum Sq Df F value    Pr(&gt;F)    
+(Intercept)   0.311  1  0.2803    0.5981    
+Petal_Length 89.619  1 80.8172 2.451e-13 ***
+Species       2.196  2  0.9901    0.3766    
+Residuals    78.733 71                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>and note only petal length impacts sepal length.</p>
+</section>
+<section id="impact-of-species-but-not-petal-length" class="level4">
+<h4 class="anchored" data-anchor-id="impact-of-species-but-not-petal-length">Impact of species but not petal length</h4>
+<p>We could also see an impact of species on sepal length, but no relationship between petal length and sepal length.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_example_species, <span class="fu">aes</span>(<span class="at">x=</span> Petal_Length, <span class="at">y =</span> Sepal_no_relationship_petal, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Sepal Length"</span>) <span class="sc">+</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Petal Length"</span>) <span class="sc">+</span></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Impact of petal length and species on sepal length"</span>) <span class="sc">+</span></span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Analysis would indicate (assumption plots not shown here to allow focus on interpreting interactions)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>( Sepal_no_relationship_petal<span class="sc">~</span> Petal_Length <span class="sc">*</span> Species, iris_example_species), </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal_no_relationship_petal
+                     Sum Sq Df F value   Pr(&gt;F)   
+(Intercept)           0.928  1  0.7644 0.384996   
+Petal_Length          0.373  1  0.3070 0.581305   
+Species              12.282  2  5.0583 0.008914 **
+Petal_Length:Species  4.690  2  1.9314 0.152699   
+Residuals            83.771 69                    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>no impact of interaction, so we could drop it</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>( Sepal_no_relationship_petal<span class="sc">~</span> Petal_Length <span class="sc">+</span> Species, iris_example_species), </span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal_no_relationship_petal
+              Sum Sq Df F value    Pr(&gt;F)    
+(Intercept)    8.924  1  7.1629  0.009236 ** 
+Petal_Length   0.052  1  0.0421  0.837988    
+Species      230.679  2 92.5730 &lt; 2.2e-16 ***
+Residuals     88.461 71                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>and we find only species impacts sepal length. In that case, we need a post-hoc follow up.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">glht</span>(<span class="fu">lm</span>( Sepal_no_relationship_petal<span class="sc">~</span> Petal_Length <span class="sc">+</span> Species, iris_example_species), </span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">linfct =</span><span class="fu">mcp</span>(<span class="at">Species =</span> <span class="st">"Tukey"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lm(formula = Sepal_no_relationship_petal ~ Petal_Length + Species, 
+    data = iris_example_species)
+
+Linear Hypotheses:
+                     Estimate Std. Error t value Pr(&gt;|t|)    
+hunter - baruch == 0   2.2703     0.3157   7.190  &lt; 1e-08 ***
+york - baruch == 0     4.3452     0.3196  13.597  &lt; 1e-08 ***
+york - hunter == 0     2.0750     0.3190   6.505 1.77e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+(Adjusted p values reported -- single-step method)</code></pre>
+</div>
+</div>
+</section>
+<section id="impact-of-species-and-petal-length-but-no-interaction" class="level4">
+<h4 class="anchored" data-anchor-id="impact-of-species-and-petal-length-but-no-interaction">Impact of species and petal length, but no interaction</h4>
+<p>We also might see a difference among the species on sepal length <em>and</em> a relationship between petal length and sepal length, but find the relationship is the same for all species</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_example_species, <span class="fu">aes</span>(<span class="at">x=</span> Petal_Length, <span class="at">y =</span> Sepal_no_interaction, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Sepal Length"</span>) <span class="sc">+</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Petal Length"</span>) <span class="sc">+</span></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Impact of petal length and species on sepal length"</span>) <span class="sc">+</span></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Analysis would indicate (assumption plots not shown here to allow focus on interpreting interactions)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>( Sepal_no_interaction<span class="sc">~</span> Petal_Length <span class="sc">*</span> Species, iris_example_species), </span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal_no_interaction
+                     Sum Sq Df F value    Pr(&gt;F)    
+(Intercept)           2.019  1  2.0815 0.1536187    
+Petal_Length         33.579  1 34.6162 1.305e-07 ***
+Species              17.167  2  8.8488 0.0003794 ***
+Petal_Length:Species  1.916  2  0.9876 0.3776779    
+Residuals            66.933 69                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>no impact of interaction, so we could drop it</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>( Sepal_no_interaction<span class="sc">~</span> Petal_Length <span class="sc">+</span> Species, iris_example_species), </span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal_no_interaction
+              Sum Sq Df  F value Pr(&gt;F)    
+(Intercept)    6.700  1   6.9096 0.0105 *  
+Petal_Length 111.746  1 115.2368 &lt;2e-16 ***
+Species      225.299  2 116.1681 &lt;2e-16 ***
+Residuals     68.849 71                    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Given this, we could focus post-hoc tests on which species are different than which others (since the relationship between sepal and petal length is the same)</p>
+<p>and we find only species impacts sepal length. In that case, we need a post-hoc follow up.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">glht</span>(<span class="fu">lm</span>( Sepal_no_interaction<span class="sc">~</span> Petal_Length <span class="sc">+</span> Species, iris_example_species), </span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">linfct =</span><span class="fu">mcp</span>(<span class="at">Species =</span> <span class="st">"Tukey"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lm(formula = Sepal_no_interaction ~ Petal_Length + Species, data = iris_example_species)
+
+Linear Hypotheses:
+                     Estimate Std. Error t value Pr(&gt;|t|)    
+hunter - baruch == 0  -0.3612     0.2785  -1.297    0.402    
+york - baruch == 0     3.5372     0.2819  12.546   &lt;1e-04 ***
+york - hunter == 0     3.8983     0.2814  13.852   &lt;1e-04 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+(Adjusted p values reported -- single-step method)</code></pre>
+</div>
+</div>
+<p>Here we would note that only <em>I. york</em> is different than the other species.</p>
+</section>
+<section id="impact-of-species-and-petal-length-that-differs-among-species" class="level4">
+<h4 class="anchored" data-anchor-id="impact-of-species-and-petal-length-that-differs-among-species">Impact of species and petal length that differs among species</h4>
+<p>Finally, we could not there is an relationship between petal and sepal length that differs among the species.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris_example_species, <span class="fu">aes</span>(<span class="at">x=</span> Petal_Length, <span class="at">y =</span> Sepal_interaction, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Sepal Length"</span>) <span class="sc">+</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Petal Length"</span>) <span class="sc">+</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Impact of petal length and species on sepal length"</span>) <span class="sc">+</span></span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Analysis would indicate (assumption plots not shown here to allow focus on interpreting interactions)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>( Sepal_interaction<span class="sc">~</span> Petal_Length <span class="sc">*</span> Species, iris_example_species), </span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal_interaction
+                      Sum Sq Df  F value    Pr(&gt;F)    
+(Intercept)            7.076  1   8.0267  0.006038 ** 
+Petal_Length          38.452  1  43.6177  6.88e-09 ***
+Species                3.353  2   1.9015  0.157092    
+Petal_Length:Species 227.334  2 128.9368 &lt; 2.2e-16 ***
+Residuals             60.828 69                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>interactions do exist. This means we can’t interpret the “general” relationship, so we need to look for each species using regression.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>         iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"baruch"</span>,]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Sepal_interaction ~ Petal_Length, data = iris_example_species[iris_example_species$Species == 
+    "baruch", ])
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.7194 -0.5504 -0.1860  0.4736  1.7067 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    2.9734     0.9767   3.044  0.00576 ** 
+Petal_Length  -2.3663     0.3335  -7.097 3.14e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.8738 on 23 degrees of freedom
+Multiple R-squared:  0.6865,    Adjusted R-squared:  0.6728 
+F-statistic: 50.36 on 1 and 23 DF,  p-value: 3.144e-07</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>         iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"baruch"</span>,]), </span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal_interaction
+             Sum Sq Df F value    Pr(&gt;F)    
+(Intercept)   7.076  1  9.2676  0.005758 ** 
+Petal_Length 38.452  1 50.3604 3.144e-07 ***
+Residuals    17.561 23                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>           iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"hunter"</span>,]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Sepal_interaction ~ Petal_Length, data = iris_example_species[iris_example_species$Species == 
+    "hunter", ])
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.89221 -0.58055  0.00876  0.47006  2.49756 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)    1.2564     1.1463   1.096    0.284
+Petal_Length   0.4962     0.3895   1.274    0.215
+
+Residual standard error: 0.9902 on 23 degrees of freedom
+Multiple R-squared:  0.06589,   Adjusted R-squared:  0.02528 
+F-statistic: 1.622 on 1 and 23 DF,  p-value: 0.2155</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>         iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"hunter"</span>,]), </span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal_interaction
+              Sum Sq Df F value Pr(&gt;F)
+(Intercept)   1.1779  1  1.2014 0.2844
+Petal_Length  1.5907  1  1.6224 0.2155
+Residuals    22.5503 23               </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>           iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"york"</span>,]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Sepal_interaction ~ Petal_Length, data = iris_example_species[iris_example_species$Species == 
+    "york", ])
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.45150 -0.69660  0.02717  0.83006  1.64698 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    4.0617     0.9550   4.253    3e-04 ***
+Petal_Length   4.9642     0.3024  16.417  3.4e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.9491 on 23 degrees of freedom
+Multiple R-squared:  0.9214,    Adjusted R-squared:  0.918 
+F-statistic: 269.5 on 1 and 23 DF,  p-value: 3.401e-14</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>         iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"york"</span>,]), </span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Sepal_interaction
+              Sum Sq Df F value    Pr(&gt;F)    
+(Intercept)   16.292  1  18.087 0.0002998 ***
+Petal_Length 242.770  1 269.527 3.401e-14 ***
+Residuals     20.717 23                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Here we see that there is a significant negative relationship (F~1,23 = 50.36, p&lt;0.001) between sepal and petal length for <em>I. baruch</em>, a significant positive relationship (F~1,23 = 269.53, p&lt;0.001) between sepal and petal length for <em>I. york</em>,and no relationship (F~1,23 = 1.63, p&lt;-0.21) between sepal and petal length for <em>I. hunter</em>.</p>
+</section>
+</section>
+</section>
+<section id="extensions-to-multiple-regression" class="level2">
+<h2 class="anchored" data-anchor-id="extensions-to-multiple-regression">Extensions to multiple regression</h2>
+<p>Just as we can extend the 2-way ANOVA ideas to ANCOVA, it turns out we can extend these ideas further to include even more variables (and their interactions, if we want) using our linear model framework. At each stage we are continuing to partition variance among factors and ask (using our type III residuals) how “much” better a given factor makes a model.</p>
 </section>
 <section id="next-steps" class="level2">
 <h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
