@@ -129,7 +129,7 @@ impact of petal length (F~1,144~=3.83, p = 0.052) but a significant
 impact of species (F~2,144~ = 12.81, p \< 0.01). We can follow this up
 with a post-hoc test
 
-```{{r}}
+```{r}
 compare_ancova_tukey <- glht(iris_ancova, linfct = mcp(Species = "Tukey"))
 summary(compare_ancova_tukey)
 ```
@@ -223,6 +223,10 @@ designs also impact this.)
 Type II residuals don't focus on order, but they ignore interactions. In
 doing so they ignore any variation that could be attributed to multiple
 factors.
+
+```{r}
+Anova(iris_ancova, type="II")
+```
 
 Type III residuals include interactions, but ask how much a given factor
 contributes to the explanatory power of a model given main effects of
@@ -322,7 +326,12 @@ Anova(lm( Sepal_no_impact_species~ Petal_Length + Species, iris_example_species)
       type = "III")
 ```
 
-and note only petal length impacts sepal length.
+and note only petal length impacts sepal length. We could use *summary*
+to see the impact
+
+```{r}
+summary(lm( Sepal_no_impact_species~ Petal_Length + Species, iris_example_species))
+```
 
 #### Impact of species but not petal length
 
@@ -504,7 +513,9 @@ summary(fev_age)
 ggplot(fev, aes(x=Age, y=FEV)) +
   geom_point(size = 3) +
   geom_smooth(method = "lm") +
-  ylab("FEV")+ggtitle("FEV increases with age")
+  labs(y="FEV (liters)",
+       x= "Age (years)",
+       title ="FEV increases with age")
 ```
 
 height,
@@ -519,7 +530,9 @@ summary(fev_height)
 ggplot(fev, aes(x=Height, y=FEV)) +
   geom_point() +
   geom_smooth(method = "lm") +
-  ylab("FEV")+ggtitle("FEV increases with height")
+    labs(y="FEV (liters)",
+       x= "Height (inches)",
+       title ="FEV increases with height")
 ```
 
 and gender
@@ -572,7 +585,10 @@ moving from hypothesis-based analysis to a decision to find the "best"
 model. However, we are still trying to use a linear model framework, so
 our predictor variables need to be independent (or at least somewhat
 independent). We can consider this by noting the relationship among all
-predictor variables. The **pairs** function is one way to do this:
+predictor variables. The *pairs* function is one way to do this; the
+added portion below shows *r* values (correlations) among variables and
+marks significant relationships using asterisks (any asterisk indicates
+a p value of \< .05):
 
 ```{r}
 panel.cor <- function(x, y, digits=2, prefix="", cex.cor) 
@@ -617,7 +633,7 @@ model selection.
 One option is to construct a large model,
 
 ```{r}
-fev_full <- lm(FEV ~ Age * Height * Sex, fev)
+fev_full <- lm(FEV ~ Age * Height * Sex * Smoker, fev)
 ```
 
 check it,
@@ -639,16 +655,39 @@ impact).
 ### Option 2: Remove or add variables using p-values
 
 Another option is to start with the full model and remove factors (or
-their interactions) until all are "significant". You can do this
-manually or using automated approaches like the *drop1* function.
+their interactions) until all are "significant". You can do this by
+building models manually or using automated approaches like the *drop1*
+function.
 
 ```{r}
 drop1(fev_full, test="F")
 ```
 
-(which happens immediately here). This approach requires nested models
-(you compare a model without a given factor to one that has it - type
-III residuals!).
+Notice it considers highest order interactions first. This indicates we
+should drop the 4-way interaction term, so we do that and continue
+
+```{r}
+fev_full_working <- update(fev_full, .~.- Age:Height:Sex:Smoker)
+drop1(fev_full_working, test = "F")
+```
+
+Now we can drop another interaction term
+
+```{r}
+fev_full_working <- update(fev_full_working, .~.- Age:Sex:Smoker)
+drop1(fev_full_working, test = "F")
+```
+
+and another
+
+```{r}
+fev_full_working <- update(fev_full_working, .~.- Age:Height:Smoker)
+drop1(fev_full_working, test = "F")
+```
+
+and so on until all interactions or main effects are significant (like
+we see now). This approach requires nested models (you compare a model
+without a given factor to one that has it - type III residuals!).
 
 Alternatively, you can build a simple model
 
@@ -656,7 +695,7 @@ Alternatively, you can build a simple model
 fev_under <- lm(FEV ~ 1, fev)
 ```
 
-and add factors to it until none are significant
+and add factors to it until none are significant (not fully shown here).
 
 ```{r}
 add1(fev_under, ~ Age + Height + Sex, test = "F")
@@ -732,7 +771,6 @@ parameter multiplied by the number of parameters in the model. Why?
 Because the algorithms used mean an extra parameter will always make a
 model better (or at least no worse).
 
-\
 The true *AIC* process uses a penalty parameter of 2; other approaches
 vary this. The Bayesian information criterion (BIC), for example, uses a
 penalty parameter of of log(n), where n is the number of observations.
@@ -740,11 +778,21 @@ Given this formula, the "best" model has the **lowest** AIC value.
 
 AIC and other information criteria can be used to compare nested models
 (the value of adding or removing a single variable). This can be done in
-a few ways
+a few ways. The default for *drop1* focuses on AIC
 
 ```{r}
-drop1(fev_full, test="Chisq")
+drop1(fev_full)
+```
+
+but we can also automate this process using the *stepAIC* function
+
+```{r}
 stepAIC(fev_full)
+```
+
+```{r, echo=F, eval=FALSE}
+#needs to be added
+stepAIC(fev_under,fev_full, direction ="forward")
 ```
 
 AIC and IC can also be used to compare non-nested models. For example,
@@ -784,7 +832,11 @@ should be made.
     -   So there is no "good" AIC value
 
 -   AIC outcomes actually correspond to using an $\alpha$ level of .15
-    [@steyerberg2000]
+    [@steyerberg2000], so AIC approaches typically favor larger models
+
+-   AIC relies on large-sample approximations
+
+    -   AICc corrects for small samples and can always be used.
 
 ### Option 4: Compare r^2^ (or adjusted r^2^) values
 
