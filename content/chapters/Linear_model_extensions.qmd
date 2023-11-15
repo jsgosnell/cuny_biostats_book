@@ -1,0 +1,163 @@
+---
+title: Linear model extensions
+subtitle: How to fix it when it's broken
+bibliography: ../references.bib
+---
+
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+The past several chapters/lessons have focused on linear models. That's
+because they are a great way to unify most/many tests from classical
+statistics. In fact, most of the ranked tests we've developed can
+actually be run as linear models when n \>15. For example, we can go
+back to our Wilcox-Mann Whitney U tests (for 2 populations) and
+Kruskal-Wallis (for 3+) from the [comparing means among groups
+chapter](Compare_means_among_populations.qmd){target="_blank"} and note
+the outcome from a *wilcox.test*
+
+```{r}
+two_species_subset <- iris[iris$Species!="setosa",]
+wilcox.test(Sepal.Length ~ Species, two_species_subset)
+```
+
+is very close to a linear model predicting the signed rank of the data
+
+```{r}
+library(car)
+signed_rank = function(x) sign(x) * rank(abs(x))
+Anova(lm(signed_rank(Sepal.Length) ~ Species, two_species_subset), type="III")
+```
+
+In fact, we could run simulations and show that p values from these 2
+approaches are highly correlated (now you know what that means) with a
+$\beta$ of almost 1 (from @lindelov).
+
+```{r, echo=F}
+library(tidyverse)
+set.seed(21)
+weird_data <- c(rnorm(10000), exp(rnorm(10000)), runif(10000, min=-3, max=-2))
+
+
+# Parameters
+Ns = c(seq(from=6, to=20, by=2), 30, 50, 80)
+mus = c(0, 0.5, 1)  # Means
+PERMUTATIONS = 1:200
+
+# Run it
+D = expand.grid(set=PERMUTATIONS, mu=mus, N=Ns) %>%
+  mutate(
+    # Generate data. One normal and one weird
+    data = map2(N, mu, ~cbind(sample(weird_data, .x), .y + rnorm(.x))),
+    
+    # Built-in
+    mann_raw = map(data, ~ wilcox.test(.x[,1], .x[,2])),
+    
+    # Ttest
+    ranked_value = map(data, ~ rank(c(.x))),  # As 1D ranked vector for t.test
+    ttest_raw = map2(ranked_value, N, ~t.test(.x[1:.y], .x[-(1:.y)], var.equal=TRUE)),
+    
+    # Tidy it up
+    mann = map(mann_raw, broom::tidy),
+    ttest = map(ttest_raw, broom::tidy)
+  ) %>%
+  
+  # Get as columns instead of lists; then remove "old" columns
+  unnest(mann, ttest, .sep='_') %>%
+  select(-data, -mann_raw, -ranked_value, -ttest_raw)
+D$N = factor(D$N)  # Make N a factor for prettier plotting
+
+library(ggplot2)
+library(patchwork)
+
+# A straight-up comparison of the p-values
+library(ggpubr)
+
+p_relative = ggplot(D, aes(x=mann_p.value, y=ttest_p.value, color=N)) + 
+  geom_line() + 
+  geom_vline(xintercept=0.05, lty=2) +
+  geom_hline(yintercept=0.05, lty=2) +
+  
+  labs(title='Absolute relation', x = 'Mann-Whitney p-value', y = 'T-test p-value') + 
+  #coord_cartesian(xlim=c(0, 0.10), ylim=c(0, 0.11)) + 
+  theme_gray(13) + 
+  guides(color=FALSE)+
+    stat_cor(p.accuracy = 0.001, r.accuracy = 0.01)
+
+# Looking at the difference (error) between p-values
+p_error_all = ggplot(D, aes(x=mann_p.value, y=ttest_p.value-mann_p.value, color=N)) + 
+  geom_line() + 
+  geom_vline(xintercept=0.05, lty=2) +
+  labs(title='Error', x = 'Mann-Whitney p-value', y = 'T-test p-value deviation') + 
+  theme_gray(13) + 
+  guides(color=FALSE)
+# Same, but zoomed in around p=0.05
+p_error_zoom = ggplot(D, aes(x=mann_p.value, y=ttest_p.value-mann_p.value, color=N)) + 
+  geom_line() + 
+  geom_vline(xintercept=0.05, lty=2) +
+  
+  labs(title='Zoomed error', x = 'Mann-Whitney p-value', y = 'T-test p-value deviation') + 
+  coord_cartesian(xlim=c(0, 0.10), ylim=c(-0.020, 0.000)) + 
+  theme_gray(13)
+
+# Show it. Patchwork is your friend!
+p_relative + p_error_all + p_error_zoom
+```
+
+Linear models are also extremely robust. Consider the basic assumptions
+of a linear model
+
+$$
+\epsilon \approx i.i.d.\ N(\mu,\sigma)
+$$
+
+Although the residuals are meant to be homoscedastic (equal or constant
+across all groups) , it turns out the model is robust of when the
+largest group variance is 4-10x larger than the smallest group variance
+and sample sizes are approximately equal [@blanca2018; @fox2015;
+@zuur2010], though highly uneven group sizes begin to cause issues
+[@blanca2018].
+
+Similarly, non-normal data is not an issue. This is partially because
+the assumptions are focused on residuals, but also because the procedure
+is highly robust\[ [@blanca2017]. This finding further supports the
+graphical consideration of assumptions, especially since many tests for
+normality are conservative (samples are almost never *perfectly* normal,
+and slight deviations are easier to pick up with larger sample sizes
+despite the fact the central limit theorem suggests this is when the
+issue is least important @zuur2010).
+
+These issues have led some authors to argue violations of the linear
+model assumptions are less dangerous than trying new, and often
+less-tested, techniques [@knief2021]. Alternatively, new techniques (or
+sometimes old techniques that are new to a given field) may be more
+appropriate when assumptions are clearly broken [@warton2010;
+@reitan2016; @geissinger2022]. In this section we explore common-ish
+approaches for analyzing data when the assumptions of a linear model are
+broken. Fortunately most can be viewed as extensions to our existing
+knowledge.
+
+## Residuals are not appropriately distributed (heteroscedastic or not normal)
+
+Although this may be viewed as 2 separate violations, many datasets will
+violate both simultaneously. Addressing this issue is often best
+resolved by understanding *why* this is happening.
+
+## Data are not independent
+
+### In respect to predictors
+
+### In respect to measured outcomes
+
+some issues to cover(again)
+
+Dealing with broken assumptions
+
+## Next steps
+
+These methods can be extended to other models that are used when linear
+model assumptions are not met, which is the focus of the next chapter.
