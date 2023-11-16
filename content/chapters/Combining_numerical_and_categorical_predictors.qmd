@@ -845,6 +845,24 @@ should not be used. If it is used, however, one should compare adjusted
 r^2^ values since the r^2^ values my be connected to larger but less
 useful models.
 
+## Final model checks
+
+Regardless of the the method that is used, the linear models still need to meet
+basic assumptions.  For this reason, the final model (and probably all those
+developed in route to getting there, though this rarely happens) should be 
+assessed for assumptions. 
+
+A new approach we have not used previously focuses on variance inflation factors
+(vif) to ensure collinearity (more on this in next section) isn't an issue.  In general
+you want these values to be less than 5.  When working with normal linear models,
+especially those have factors that have more than 2 levels, focusing on the 
+generalized form of the vif for predictors is appropriate.  
+
+```{r}
+vif(fev_full_working, type="predictor")
+```
+
+
 ## Important differences
 
 One major difference between ANCOVA/ANOVA and multiple regression is

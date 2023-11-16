@@ -124,7 +124,7 @@ and sample sizes are approximately equal [@blanca2018; @fox2015;
 
 Similarly, non-normal data is not an issue. This is partially because
 the assumptions are focused on residuals, but also because the procedure
-is highly robust\[ [@blanca2017]. This finding further supports the
+is highly robust [@blanca2017]. This finding further supports the
 graphical consideration of assumptions, especially since many tests for
 normality are conservative (samples are almost never *perfectly* normal,
 and slight deviations are easier to pick up with larger sample sizes
@@ -147,15 +147,156 @@ Although this may be viewed as 2 separate violations, many datasets will
 violate both simultaneously. Addressing this issue is often best
 resolved by understanding *why* this is happening.
 
-## Data are not independent
+### Linear relationship is inappropriate
 
-### In respect to predictors
+### Data are not independent
 
-### In respect to measured outcomes
+#### In respect to predictors
 
-some issues to cover(again)
+A major issue for linear models is when predictors are co-linear.
+Mathematically speaking, perfect collinearity occurs when any column of
+the design (*X*) matrix can be derived by combining other columns.
+Perfect collinearity will lead to a message noting singularity issues,
+which is R's way of telling you the matrix isn't invertible (which it
+has to be to solve the equation).
 
-Dealing with broken assumptions
+Even partial collinearity will lead to an increase in Type II errors
+[@zuur2010]. To put it simply, partitioning variance among related
+predictors is hard. For this reason, a few approaches may be used.
+
+##### Check for issues
+
+The first step is identifying issues. From the outset, relationships
+among predictor variables can be assessed using the *pairs* function in
+R. If two variables are highly correlated (r^2^ \> .8 is a general
+limit), only one should be included in the model. Similarly, variance
+inflation factors (vif) can be assessed for the final and other models
+to consider this issues (all this is covered in the [previous chapter
+that introduces multiple
+regression](Combining_numerical_and_categorical_predictors.qmd){target="_blank"}.
+
+#### In respect to measured outcomes
+
+When outcome variables are linked together, a few options exist. Note
+this issue may be obvious from checks of assumptions, but it also may be
+due to experimental design.
+
+Consider this example. In order to investigate impacts of climate stress
+on oysters, specimens are placed in individual tanks and held at normal
+summer (calculated using recent data) temperature or at temperatures
+predicted under 2 IPCC --- Intergovernmental Panel on Climate Change-
+scenarios. Oysters were also exposed to predator cues by dropping in
+water from tanks with 0, low (.25/m2), or high (2/m2) predators. After
+two months changes in oyster shell length (growth) was measured.
+Twenty-five oysters were measured for each treatment combination.
+
+You hopefully recognize this as a factorial ANOVA experiment that you
+know how to analyze (see the [chapter on ANOVA
+extensions](%22More_ANOVAs.qmd%22){target="_blank"}). Experiments like
+this are odd, however, given the space they require. It is far more
+common to put lots of organisms in a single container given space and
+costs. However, this means our measurements are connected (remember
+[blocking and paired tests](%22More_ANOVAs.qmd%22){target="_blank"})?
+
+There are several ways to deal with this. Here we explore each for our
+oyster example.
+
+```{r, echo=F}
+set.seed(19)
+experiment <- data.frame(temperature = factor(c(rep("ambient",75), rep("elevated_scenario1", 75), rep("elevated_scenario2", 75))),
+                         predator_cue = factor(c(rep(c(rep("none",25),
+                                               rep("normal",25),
+                                               rep("high",25)),3))),
+                         growth = c(rnorm(25,2),
+                                    rnorm(25, 1.5),
+                                    rnorm(25, .7),
+                                    rnorm(25,2.7),
+                                    rnorm(25,1.0),
+                                    rnorm(25, .4),
+                                    rnorm(25, 3.1),
+                                    rnorm(25, 3.1),
+                                    rnorm(25, 3.1)),
+                         container = c(rep(letters[1:9],each=25)))
+experiment[experiment$growth<0, "growth"] <- 0
+```
+
+##### Ignore it (don't do this!)
+
+First, let's ignore the lack of independence. This is *not* an option,
+but it let's you see the impact.
+
+```{r}
+growth_lm <- lm(growth~predator_cue*temperature, experiment)
+plot(growth_lm)
+library(car)
+Anova(growth_lm, type="III")
+```
+
+We find significant main effects and interactions using this *wrong*
+approach.
+
+##### Find average for each unit
+
+One way of doing this focuses on the average for each unit
+
+```{r}
+library(Rmisc)
+averaged_experiment <- summarySE(experiment, measurevar = "growth",
+                             groupvars = c("predator_cue", "temperature", "container"))
+library(rmarkdown)
+paged_table(averaged_oyster)
+```
+
+and use that for your analysis.
+
+```{r, error=T}
+average_analysis <- lm(growth~predator_cue*temperature, averaged_experiment)
+Anova(average_analysis, type = "III")
+```
+
+but that leads to an issue! Since we only get 9 average outcomes and our
+model requires 10 degrees of freedom (consider why), we are left with no
+"noise" to make the denominator for our F ratio! Even when this doesn't
+happen, you have reduced your data to a much smaller number of points
+and are not getting credit for all your work! This is a good example of
+why you should analyze simulated data before you run an experiment, but
+there are other options.
+
+#####Blocking
+
+The blocking approach we've already covered works might seem appropriate
+here.
+
+```{r, error=T}
+blocking_analysis <- lm(growth~predator_cue*temperature+container, experiment)
+Anova(blocking_analysis, type = "III")
+```
+
+but its not? Why? This error means now our model matrix has collinearity
+issues. WE can actually see where
+
+```{r}
+alias(blocking_analysis)
+```
+
+though the output is confusing. In general, the issue here is each unit
+only contributes to one level of other traits..so if we know the average
+impact of ambient temperatures, for example, and the impacts in two of
+the treatments that were held at that temperature, we can predict the
+other. If instead each unit contributed to multiple levels ([think back
+to our feather experiment](%22More_ANOVAs.qmd%22){target="blank"}) this
+isn't an issue.
+
+##### Random effects
+
+Our final option takes a new approach. It considers the units we
+measured as simply a sample from a larger population. Using that
+background, we use the information from the units to consider the
+distribution of sample effects we might see. The impact of unit is then
+considered a random-effect. For this to work, you probably want 5+
+levels of the unit variable. This is because we are using the means to
+estimate variance (confusing?). For factors with \<5 levels, random
+effects likely offer no benefit [@gomes2022]
 
 ## Next steps
 
