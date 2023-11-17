@@ -11,12 +11,17 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
-The past several chapters/lessons have focused on linear models. That's
-because they are a great way to unify most/many tests from classical
-statistics. In fact, most of the ranked tests we've developed can
-actually be run as linear models when n \>15. For example, we can go
-back to our Wilcox-Mann Whitney U tests (for 2 populations) and
-Kruskal-Wallis (for 3+) from the [comparing means among groups
+The past several chapters/lessons have focused on linear models. Here we
+explore options for analysis when linear model assumptions are not met.
+
+## Sticking with the linear model
+
+Linear models are useful for a number of reasons. They are a great way
+to unify most/many tests from classical statistics. In fact, most of the
+ranked tests we've developed can actually be run as linear models when n
+\>15. For example, we can go back to our Wilcox-Mann Whitney U tests
+(for 2 populations) and Kruskal-Wallis (for 3+) from the [comparing
+means among groups
 chapter](Compare_means_among_populations.qmd){target="_blank"} and note
 the outcome from a *wilcox.test*
 
@@ -139,7 +144,10 @@ appropriate when assumptions are clearly broken [@warton2010;
 @reitan2016; @geissinger2022]. In this section we explore common-ish
 approaches for analyzing data when the assumptions of a linear model are
 broken. Fortunately most can be viewed as extensions to our existing
-knowledge.
+knowledge. The order of broken assumptions here reflects that found in
+@gelman2006. Ignored here is their first main point - the model must be
+valid! As noted in the multiple regression chapter, we only should
+investigate relationships we have a mechanism to explain.
 
 ## Residuals are not appropriately distributed (heteroscedastic or not normal)
 
@@ -148,6 +156,66 @@ violate both simultaneously. Addressing this issue is often best
 resolved by understanding *why* this is happening.
 
 ### Linear relationship is inappropriate
+
+A key (and often overlooked assumption) of linear models is that the
+relationship between the predictors and the outcome variable is linear.
+This may not occur for a number of reasons (each having its own
+response). When this occurs the resulting residuals are often not
+normally distributed as well.
+
+#### Transform the data (least advisable, sometimes)
+
+One option is to transform the data (typically focusing on the dependent
+variable) so that the resulting variable meets the linear model
+assumptions. This approach was often used in the past. For example,
+Box-Cox transformation helped researchers find the best way to transform
+data to reduce issues with the distribution of residuals; this method
+also tended to impact linearity and differences in variances.
+
+Two things should be noted regarding this approach and transformations
+in general:
+
+-   The Box-Cox approach requires a model - it still focused on
+    transforming data so that *residuals* met assumptions. Data should
+    not be transformed before model assumptions are analyzed to ensure
+    it is necessary. For example, highly skewed data may arise due to
+    unequal sample sizes (which may pose their own problems, but not
+    outright).
+
+```{r}
+set.seed(8)
+example_skewed <- data.frame(Population= c(rep("a",40),
+                                           rep("b", 30),
+                                           rep(letters[3:4], each=15)), 
+                             Growth = c(rnorm(40,1),
+                                    rnorm(30, 4),
+                                    rnorm(15, 7),
+                                    rnorm(15,10)))
+library(ggplot2)
+ggplot(example_skewed,aes(x=Growth))+
+  geom_histogram()+
+  labs(y="Some value",
+       title="Example of skewed data appearing due to unequal sample size")
+plot(lm(Growth~Population, example_skewed))
+Anova(lm(Growth~Population, example_skewed), type="III")
+                             
+```
+
+-   The resulting variable is *now* linear in respect to the predictors.
+    This highlights the actual assumption of the model. Similarly,
+    higher-terms (squares, cubes, etc) may be added to a linear model.
+    The model does not care what the data represent - it only focuses on
+    if linear relationships exist among them.
+
+-   Conversely, transformations can make model interpretation and
+    prediction difficult.
+
+If the decision is made to transform the data, several approaches exist.
+Some are driven by the distribution of the data, and all depend on it.
+For example, log and related root transformations are useful for
+right-skewed data, but some can only be carried out for non-negative
+(e.g., square) or strictly positive (e..g., log) values. To address this
+for log transformations, a small value is often added to 0 measurements.
 
 ### Data are not independent
 
@@ -191,12 +259,13 @@ two months changes in oyster shell length (growth) was measured.
 Twenty-five oysters were measured for each treatment combination.
 
 You hopefully recognize this as a factorial ANOVA experiment that you
-know how to analyze (see the [chapter on ANOVA
-extensions](%22More_ANOVAs.qmd%22){target="_blank"}). Experiments like
-this are odd, however, given the space they require. It is far more
+know how to analyze. If you need a reminder, see the [chapter on ANOVA
+extensions](../chapters/More_ANOVAs.qmd){target="_blank"}. Experiments
+like this are odd, however, given the space they require. It is far more
 common to put lots of organisms in a single container given space and
-costs. However, this means our measurements are connected (remember
-[blocking and paired tests](%22More_ANOVAs.qmd%22){target="_blank"})?
+costs. However, this means our measurements are connected; remember
+[blocking and paired
+tests](../chapters/More_ANOVAs.qmd){target="_blank"})?
 
 There are several ways to deal with this. Here we explore each for our
 oyster example.
@@ -244,7 +313,7 @@ library(Rmisc)
 averaged_experiment <- summarySE(experiment, measurevar = "growth",
                              groupvars = c("predator_cue", "temperature", "container"))
 library(rmarkdown)
-paged_table(averaged_oyster)
+paged_table(averaged_experiment)
 ```
 
 and use that for your analysis.
@@ -283,8 +352,8 @@ though the output is confusing. In general, the issue here is each unit
 only contributes to one level of other traits..so if we know the average
 impact of ambient temperatures, for example, and the impacts in two of
 the treatments that were held at that temperature, we can predict the
-other. If instead each unit contributed to multiple levels ([think back
-to our feather experiment](%22More_ANOVAs.qmd%22){target="blank"}) this
+other. If instead each unit contributed to multiple levels, like in
+[feather experiment](../chapters/More_ANOVAs.qmd){target="blank"}) this
 isn't an issue.
 
 ##### Random effects
@@ -296,7 +365,84 @@ distribution of sample effects we might see. The impact of unit is then
 considered a random-effect. For this to work, you probably want 5+
 levels of the unit variable. This is because we are using the means to
 estimate variance (confusing?). For factors with \<5 levels, random
-effects likely offer no benefit [@gomes2022]
+effects likely offer no benefit [@gomes2022].
+
+When models contain fixed (what we've done before) and random effects,
+we call them mixed-effects models. Two common packages for carrying out
+this analysis in R are the **nlme** and **lme4** packages. We will focus
+on the lme4 package here. Random effects can be entered in the *lmer*
+(linear mixed-effects regression) function and specified as (1\|Grouping
+Unit). One nice thing about **lme4** is it will handle crossed and
+random effects on it's own **as long as you don't repeat unit names**.
+For example, we could note
+
+```{r}
+library(lme4)
+mixed_analysis <- lmer(growth~predator_cue*temperature+(1|container), experiment)
+```
+
+Once built, we need to consider assumptions. The main assumption we add
+here is that the random effects are normally distributed. This should be
+checked at each level of grouping. The *check_mixed_model* function
+(provided below) offers an automated approach for one level (also known
+as one-way random effects).
+
+```{r}
+check_mixed_model <- function (model, model_name = NULL) {
+  #collection of things you might check for mixed model
+  par(mfrow = c(2,3))
+  if(length(names(ranef(model))<2)){
+    qqnorm(ranef(model, drop = T)[[1]], pch = 19, las = 1, cex = 1.4, main= paste(model_name, 
+                                                                                  "\n Random effects Q-Q plot"))
+    qqline(ranef(model, drop = T)[[1]])
+  }
+  plot(fitted(model),residuals(model), main = paste(model_name, 
+                                                    "\n residuals vs fitted"))
+  qqnorm(residuals(model), main =paste(model_name, 
+                                       "\nresiduals q-q plot"))
+  qqline(residuals(model))
+  hist(residuals(model), main = paste(model_name, 
+                                      "\nresidual histogram"))
+}
+```
+
+```{r}
+check_mixed_model(mixed_analysis)
+```
+
+Here we have only 9 levels of units, so the spread is not perfect.
+However, we also know each of these is itself an average,and averages
+should be normally-distributed under the central limith theorem, so we
+can plow ahead.
+
+We can consider the outcome using our *summary* command - note the
+output denotes we have 225 observations and 9 grouping levels.
+
+```{r}
+summary(mixed_analysis)
+```
+
+We can also still use *Anova* to get p-values. However, these are now
+calculated by default using likelihood-associated $\chi^2$ tests.
+
+```{r}
+Anova(mixed_analysis, type = "III")
+```
+
+You can also ask for F tests, but note the degrees of freedom associated
+with these tests is not clear. It's somewhere between the "average" and
+"ignore" approach used above.
+
+```{r}
+Anova(mixed_analysis, type = "III", test="F")
+```
+
+Note this approach suggests we do not have enough data to reject the
+null hypothesis. Ignoring the linkages among data led to *very*
+different results. This issue (pseudopreplication) has been noted in
+ecology and other fields [@hurlbert1984; @heffner1996; @lazic2010].
+
+## Combinining these
 
 ## Next steps
 
