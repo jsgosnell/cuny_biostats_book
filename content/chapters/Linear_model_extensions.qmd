@@ -145,15 +145,20 @@ appropriate when assumptions are clearly broken [@warton2010;
 approaches for analyzing data when the assumptions of a linear model are
 broken. Fortunately most can be viewed as extensions to our existing
 knowledge. The order of broken assumptions here reflects that found in
-@gelman2006. Ignored here is their first main point - the model must be
-valid! As noted in the multiple regression chapter, we only should
-investigate relationships we have a mechanism to explain.
+@gelman2006 but also common practice. Ignored here is their first main
+point - the model must be valid! As noted in the multiple regression
+chapter, we only should investigate relationships we have a mechanism to
+explain. We will return to this point multiple times
 
 ## Residuals are not appropriately distributed (heteroscedastic or not normal)
 
-Although this may be viewed as 2 separate violations, many datasets will
-violate both simultaneously. Addressing this issue is often best
-resolved by understanding *why* this is happening.
+A very common concern regarding linear models is normality. I list it
+first here due to how often I see it noted, but in fact this assumption
+is one of the least important (and the assumption is based on residuals,
+not data!). However, non-normal residuals are often (not always)
+connected to other issues, namely linearity. Many datasets will violate
+both simultaneously, so addressing this issue is often best resolved by
+understanding *why* this is happening.
 
 ### Linear relationship is inappropriate
 
@@ -214,8 +219,136 @@ If the decision is made to transform the data, several approaches exist.
 Some are driven by the distribution of the data, and all depend on it.
 For example, log and related root transformations are useful for
 right-skewed data, but some can only be carried out for non-negative
-(e.g., square) or strictly positive (e..g., log) values. To address this
-for log transformations, a small value is often added to 0 measurements.
+(e.g., square root) or strictly positive (e..g., log) values. To address
+this for log transformations, a small value is often added to 0
+measurements.
+
+Let's data (not residuals) to show what different types of data look
+like and consider possible fixes (always fit a model first for real
+analysis!). For example, we can return to our right-skewed blue jay data
+[from the summarizing data
+chapter](summarizing_data.qmd)(target="\_blank)(idea from [@hunt]) .
+
+```{r}
+set.seed(19)
+blue_jays <- round(rbeta(10000,2,8)*100+runif(10000,60,80),3)
+ggplot(data.frame(blue_jays), 
+       aes(x=blue_jays)) +
+  geom_histogram( fill="blue", color="black") +
+  labs(title="Weight of Westchester blue jays",
+       x= "Weight (g)",
+       y= "Frequency")
+```
+
+Note the right-skewed data shows a convex curve on the Q-Q plot.
+
+```{r}
+qqnorm(blue_jays)
+qqline(blue_jays)
+
+```
+
+To help you understand Q-Q plots, remember they are comparing the
+relative spread of data (quantiles) from a target and theoretical
+distribution. For right-skewed data, points are shifted right (both
+smallest and largest observations are larger than you would expect from
+a normal distribution).
+
+Conversely, we could also return to our left-skewed cardinal data
+
+```{r}
+set.seed(19)
+cardinals <- round(rbeta(10000,10,2)*50+runif(10000,5,10),3)
+ggplot(data.frame(cardinals), 
+       aes(x=cardinals)) +
+  geom_histogram( fill="red", color="black") +
+  labs(title="Weight of Westchester cardinals",
+       x= "Weight (g)",
+       y= "Frequency")
+```
+
+and note a concave shape is seen in the Q-Q plot,as all points are
+shifted left.
+
+```{r}
+qqnorm(cardinals)
+qqline(cardinals)
+
+```
+
+For this type of data, power transformations (raising the variable to
+the 2, 3, or higher power) may be useful.
+
+Meanwhile, our uniformly-distributed distributed robin data
+
+```{r}
+set.seed(19)
+rochester <- round(c(runif(1000,75,85)),3)
+ggplot(data.frame(rochester), 
+       aes(x=rochester)) +
+  geom_histogram( fill="pink", color="black") +
+  labs(title="Weight of Rochester robins",
+       x= "Weight (g)",
+       y= "Frequency")
+```
+
+shows as a s-shape on the Q-Q plot
+
+```{r}
+qqnorm(rochester)
+qqline(rochester)
+```
+
+because it is *under-dispersed* (has no tails). Alternatively, data may
+be *over-dispersed*, like this (fake) finch data.
+
+```{r}
+set.seed(19)
+library(VGAM)
+finch <- rlaplace(1000,location=50, scale=4)
+ggplot(data.frame(finch), 
+       aes(x=finch)) +
+  geom_histogram( fill="cyan", color="black") +
+  labs(title="Weight of finches",
+       x= "Weight (g)",
+       y= "Frequency")
+```
+
+```{r}
+qqnorm(finch)
+qqline(finch)
+```
+
+Over- and under-dispersed data may mean there's a missing factor in your
+analysis. For example, our bi-modal woodpecker data
+
+```{r}
+set.seed(19)
+woodpeckers <- round(c(rnorm(100,60,4),rnorm(100,80,4)),3)
+ggplot(data.frame(woodpeckers), 
+       aes(x=woodpeckers)) +
+  geom_histogram( fill="orange", color="black") +
+  labs(title="Weight of  Westchester woodpeckers",
+       x= "Weight (g)",
+       y= "Frequency")
+```
+
+is under-dispersed due the shape of the distribution.
+
+```{r}
+qqnorm(woodpeckers)
+qqline(woodpeckers)
+```
+
+Under-dispersion could also happen if data are bounded (e.g., by
+practicality or due to a measurement issue). Over-dispersion can
+similarly occur if the model does not account for variability (e.g.,
+missing factors, non-linear relationship) and/or outliers, which might
+be related to the underlying form of the data [@payne2017] (more to come
+on this). In this way, over- and under-dispersion relate to both the
+linear relationship.
+
+#### Use a better model
 
 ### Data are not independent
 
