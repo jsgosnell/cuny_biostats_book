@@ -694,44 +694,6 @@ ANOVAs when assumptions are not met, though there is implementation is
 more complicated than single-sample designs due to the need to
 randomize/permute interaction impacts.
 
-Another option is to use weighted-least squares regression - this
-approach specifically helps when residuals are not evenly distributed
-among groups. For example, we could take the sdm_model (just as an
-example of use! it's not needed here!) This approach assume you built
-the model and then noted an issue with heteroscedasticity. If so, we can
-calculate a weight for each residual that is based on its variance -
-below makes a value that increases with low variance.
-
-```{r}
-wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2
-```
-
-We can then add a new argument to the *lm* function to use these
-weights.
-
-```{r}
-sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)
-```
-
-We can then continue on our normal route:
-
-```{r}
-plot(sdm_model_wls)
-Anova(sdm_model_wls, type="III")
-```
-
-If you compare the two models you notice slight differences - these are
-minimal here due to lack of differences in variance.
-
-```{r}
-summary(sdm_model)
-summary(sdm_model_wls)
-```
-
-Why not just always do this? Because weighted least squares implicitly
-assumes we *know* the weights. We are actually estimating them, so small
-datasets may lead to bad estimates and outcomes.
-
 ## Plotting outcomes
 
 Results from two-way ANOVAs are often plotted similarly to one-way

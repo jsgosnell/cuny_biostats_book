@@ -138,17 +138,38 @@ issue is least important @zuur2010).
 
 These issues have led some authors to argue violations of the linear
 model assumptions are less dangerous than trying new, and often
-less-tested, techniques [@knief2021]. Alternatively, new techniques (or
-sometimes old techniques that are new to a given field) may be more
-appropriate when assumptions are clearly broken [@warton2010;
-@reitan2016; @geissinger2022]. In this section we explore common-ish
-approaches for analyzing data when the assumptions of a linear model are
-broken. Fortunately most can be viewed as extensions to our existing
-knowledge. The order of broken assumptions here reflects that found in
-@gelman2006 but also common practice. Ignored here is their first main
-point - the model must be valid! As noted in the multiple regression
-chapter, we only should investigate relationships we have a mechanism to
-explain. We will return to this point multiple times
+less-tested, techniques that may inflate type I error rates [@knief2021;
+@warton2016]. However, new techniques (or sometimes old techniques that
+are new to a given field) may be more appropriate when assumptions are
+clearly broken [@warton2010; @reitan2016; @geissinger2022]. In this
+section we explore common-ish approaches for analyzing data when the
+assumptions of a linear model are broken. Our goal here is to introduce
+these methods. Each could be the focus of their own class, book, or much
+larger study. Fortunately most can be viewed as extensions to our
+existing knowledge.
+
+The various assumptions related to linear models may be prioritized on
+their relative importance. One such order is [@gelman2006]
+
+-   Model validity
+
+    -    As noted in the multiple regression chapter, we only should
+        investigate relationships we have a mechanism to explain
+
+-   linear relationship
+
+-   errors are 
+
+    -   independently distributed 
+
+    -   identical (homoscedastic)
+
+    -   follow a normal distribution
+
+but also common practice. Ignored here is their first main point - the
+model must be valid! As noted in the multiple regression chapter, we
+only should investigate relationships we have a mechanism to explain. We
+will return to this point multiple times
 
 ## Residuals are not appropriately distributed (heteroscedastic or not normal)
 
@@ -390,6 +411,46 @@ Beta regression focuses on true porpiton data.
 Poisson regression focuses on count-based data.
 
 ##### 
+
+### Errors are not equal among groups
+
+Another option is to use weighted-least squares regression - this
+approach specifically helps when residuals are not evenly distributed
+among groups. For example, we could take the sdm_model (just as an
+example of use! it's not needed here!) This approach assume you built
+the model and then noted an issue with heteroscedasticity. If so, we can
+calculate a weight for each residual that is based on its variance -
+below makes a value that increases with low variance.
+
+```{r}
+wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2
+```
+
+We can then add a new argument to the *lm* function to use these
+weights.
+
+```{r}
+sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)
+```
+
+We can then continue on our normal route:
+
+```{r}
+plot(sdm_model_wls)
+Anova(sdm_model_wls, type="III")
+```
+
+If you compare the two models you notice slight differences - these are
+minimal here due to lack of differences in variance.
+
+```{r}
+summary(sdm_model)
+summary(sdm_model_wls)
+```
+
+Why not just always do this? Because weighted least squares implicitly
+assumes we *know* the weights. We are actually estimating them, so small
+datasets may lead to bad estimates and outcomes.
 
 ### Data are not independent
 
