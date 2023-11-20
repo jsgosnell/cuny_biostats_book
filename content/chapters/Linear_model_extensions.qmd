@@ -166,22 +166,11 @@ their relative importance. One such order is [@gelman2006]
 
     -   follow a normal distribution
 
-but also common practice. Ignored here is their first main point - the
-model must be valid! As noted in the multiple regression chapter, we
-only should investigate relationships we have a mechanism to explain. We
-will return to this point multiple times
+Many datasets will violate multiple of these assumptions simultaneously,
+so addressing issues is often best resolved by understanding *why* this
+is happening.
 
-## Residuals are not appropriately distributed (heteroscedastic or not normal)
-
-A very common concern regarding linear models is normality. I list it
-first here due to how often I see it noted, but in fact this assumption
-is one of the least important (and the assumption is based on residuals,
-not data!). However, non-normal residuals are often (not always)
-connected to other issues, namely linearity. Many datasets will violate
-both simultaneously, so addressing this issue is often best resolved by
-understanding *why* this is happening.
-
-### Linear relationship is inappropriate
+## Linear relationship is inappropriate
 
 A key (and often overlooked assumption) of linear models is that the
 relationship between the predictors and the outcome variable is linear.
@@ -189,14 +178,16 @@ This may not occur for a number of reasons (each having its own
 response). When this occurs the resulting residuals are often not
 normally distributed as well.
 
-#### Transform the data (least advisable, sometimes)
+### Transform the data (least advisable, sometimes)
 
 One option is to transform the data (typically focusing on the dependent
 variable) so that the resulting variable meets the linear model
-assumptions. This approach was often used in the past. For example,
-Box-Cox transformation helped researchers find the best way to transform
-data to reduce issues with the distribution of residuals; this method
-also tended to impact linearity and differences in variances.
+assumptions. As noted above, our rank-based approaches are using a
+similar method (not technically the same, but it works for larger sample
+sizes). This approach was often used in the past. For example, Box-Cox
+transformation helped researchers find the best way to transform data to
+reduce issues with the distribution of residuals; this method also
+tended to impact linearity and differences in variances.
 
 Two things should be noted regarding this approach and transformations
 in general:
@@ -397,64 +388,24 @@ glm's (not to be confused with the general linear model, which is just
 another name sometimes used for the "normal" linear model). Here we
 outline some of the more common ones.
 
-##### Logistic regression
+#### Logistic regression
 
 Logistic regression focused on yes/no outcomes; data can be a single
 answer (Bernoulli) or a collection (binomial).
 
-##### Beta regression
+#### Beta regression
 
 Beta regression focuses on true porpiton data.
 
-##### Poisson regression
+#### Poisson regression
 
 Poisson regression focuses on count-based data.
 
 ##### 
 
-### Errors are not equal among groups
+## Data are not independent
 
-Another option is to use weighted-least squares regression - this
-approach specifically helps when residuals are not evenly distributed
-among groups. For example, we could take the sdm_model (just as an
-example of use! it's not needed here!) This approach assume you built
-the model and then noted an issue with heteroscedasticity. If so, we can
-calculate a weight for each residual that is based on its variance -
-below makes a value that increases with low variance.
-
-```{r}
-wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2
-```
-
-We can then add a new argument to the *lm* function to use these
-weights.
-
-```{r}
-sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)
-```
-
-We can then continue on our normal route:
-
-```{r}
-plot(sdm_model_wls)
-Anova(sdm_model_wls, type="III")
-```
-
-If you compare the two models you notice slight differences - these are
-minimal here due to lack of differences in variance.
-
-```{r}
-summary(sdm_model)
-summary(sdm_model_wls)
-```
-
-Why not just always do this? Because weighted least squares implicitly
-assumes we *know* the weights. We are actually estimating them, so small
-datasets may lead to bad estimates and outcomes.
-
-### Data are not independent
-
-#### In respect to predictors
+### In respect to predictors
 
 A major issue for linear models is when predictors are co-linear.
 Mathematically speaking, perfect collinearity occurs when any column of
@@ -467,7 +418,7 @@ Even partial collinearity will lead to an increase in Type II errors
 [@zuur2010]. To put it simply, partitioning variance among related
 predictors is hard. For this reason, a few approaches may be used.
 
-##### Check for issues
+#### Check for issues
 
 The first step is identifying issues. From the outset, relationships
 among predictor variables can be assessed using the *pairs* function in
@@ -478,7 +429,7 @@ to consider this issues (all this is covered in the [previous chapter
 that introduces multiple
 regression](Combining_numerical_and_categorical_predictors.qmd){target="_blank"}.
 
-#### In respect to measured outcomes
+### In respect to measured outcomes
 
 When outcome variables are linked together, a few options exist. Note
 this issue may be obvious from checks of assumptions, but it also may be
@@ -524,7 +475,7 @@ experiment <- data.frame(temperature = factor(c(rep("ambient",75), rep("elevated
 experiment[experiment$growth<0, "growth"] <- 0
 ```
 
-##### Ignore it (don't do this!)
+#### Ignore it (don't do this!)
 
 First, let's ignore the lack of independence. This is *not* an option,
 but it let's you see the impact.
@@ -539,7 +490,7 @@ Anova(growth_lm, type="III")
 We find significant main effects and interactions using this *wrong*
 approach.
 
-##### Find average for each unit
+#### Find average for each unit
 
 One way of doing this focuses on the average for each unit
 
@@ -591,7 +542,7 @@ other. If instead each unit contributed to multiple levels, like in
 [feather experiment](../chapters/More_ANOVAs.qmd){target="blank"}) this
 isn't an issue.
 
-##### Random effects
+#### Random effects
 
 Our final option takes a new approach. It considers the units we
 measured as simply a sample from a larger population. Using that
@@ -676,6 +627,48 @@ Note this approach suggests we do not have enough data to reject the
 null hypothesis. Ignoring the linkages among data led to *very*
 different results. This issue (pseudopreplication) has been noted in
 ecology and other fields [@hurlbert1984; @heffner1996; @lazic2010].
+
+## Errors are not equal among groups
+
+Another option is to use weighted-least squares regression - this
+approach specifically helps when residuals are not evenly distributed
+among groups. For example, we could take the sdm_model (just as an
+example of use! it's not needed here!) This approach assume you built
+the model and then noted an issue with heteroscedasticity. If so, we can
+calculate a weight for each residual that is based on its variance -
+below makes a value that increases with low variance.
+
+```{r} wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2}
+```
+
+We can then add a new argument to the *lm* function to use these
+weights.
+
+```{r} sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)}
+```
+
+We can then continue on our normal route:
+
+```{r} plot(sdm_model_wls) Anova(sdm_model_wls, type="III")}
+```
+
+If you compare the two models you notice slight differences - these are
+minimal here due to lack of differences in variance.
+
+```{r} summary(sdm_model) summary(sdm_model_wls)}
+```
+
+Why not just always do this? Because weighted least squares implicitly
+assumes we *know* the weights. We are actually estimating them, so small
+datasets may lead to bad estimates and outcomes.
+
+## Residuals are not normally distributed 
+
+A very common concern regarding linear models is normality. I list it
+first here due to how often I see it noted, but in fact this assumption
+is one of the least important (and the assumption is based on residuals,
+not data!). However, non-normal residuals are often (not always)
+connected to other issues, namely linearity, as noted above.
 
 ## Combinining these
 
