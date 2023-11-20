@@ -11,6 +11,10 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
+```{r}
+knitr::knit_exit()
+```
+
 The past several chapters/lessons have focused on linear models. Here we
 explore options for analysis when linear model assumptions are not met.
 
@@ -562,7 +566,7 @@ Unit). One nice thing about **lme4** is it will handle crossed and
 random effects on it's own **as long as you don't repeat unit names**.
 For example, we could note
 
-```{r}
+```{r, eval=FALSE}
 library(lme4)
 mixed_analysis <- lmer(growth~predator_cue*temperature+(1|container), experiment)
 ```
