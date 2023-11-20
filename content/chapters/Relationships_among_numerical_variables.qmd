@@ -40,8 +40,8 @@ sepal_petal_relationship
 ```
 
 Our related hypothesis might be a relationship exists among the
-variables; alternatively, one does not. To put this our null hypothesis
-framework, we might write:
+(continuous) variables; alternatively, one does not. To put this our
+null hypothesis framework, we might write:
 
 $$
 \begin{split}
@@ -57,11 +57,12 @@ more in a moment, but how do we test them?
 ### Working with continuous predictors
 
 For some background, consider differences between continuous and
-categorical predictor variables. Unlike examples of when we transformed
-continuous outcomes into binomial data, continuous predictors offers
-information on order and spacing. Compared to un-ordered categorical
-variables (what we've focused on), the numbers mean something! This
-allows us (with caution) to estimate outcomes from un-sampled regions.
+categorical predictor (independent) variables. Unlike examples where we
+transformed continuous outcomes (dependent variables) into binomial
+data, continuous predictors offers information on order and spacing.
+Compared to un-ordered categorical variables (what we've focused on),
+the numbers mean something! This allows us (with caution) to estimate
+outcomes from un-sampled regions.
 
 Consider: We know the mean sepal lengths for three species of irises:
 
@@ -97,20 +98,20 @@ sepal_petal_relationship+geom_smooth(method = "lm",se = F)
 While we can draw this "line of best fit" by sight, linear models
 actually give us a way to formally define it (analyze our hypothesis).
 The line of best fit minimizes the residuals (which means it also offers
-a prediction any value of sepal length!). This approach, however, also
-means we are considering **linear** relationships between our predictor
-variables (but note our predictor variables themselves could be a
-transformation of an actual measurement, such as a square root or value
-cubed!). This is one assumption of linear regression. We can consider
-**non-linear** relationships using other techniques (which we will cover
-later).
+a **prediction** for any value of sepal length!). This approach,
+however, also means we are considering **linear** relationships between
+our predictor variables (but note our predictor variables themselves
+could be a transformation of an actual measurement, such as a square
+root or value cubed!). This is one assumption of linear regression. We
+can consider **non-linear** relationships using other techniques (which
+we will cover later).
 
 If we wanted to carry out a sampling experiment to determine a p-value
 for our hypotheses, we could sample from a population that represents
 our sepal lengths and one that represents our petal lengths. If the two
 populations are not connected, then arbitrary pairs could be made - this
 would indicate no relationship among the variables. For each dataset, we
-could note the potential relationship (now occuring by chance!) between
+could note the potential relationship (now occurring by chance!) between
 our variables, and then compare that null distribution to what we
 actually observed. To make this approach more generalizable, we could
 standardize our data points - using these to calculate our error terms
@@ -151,7 +152,7 @@ plot(iris_regression)
 For numerical relationships we typically see more of a cloud of data,
 but we are still assuming the residuals are normally distributed (with
 the same variance for all fitted values, i.e. identically distributed)
-and indepent. Iassumptions are met consider outcomes.
+and independent. If assumptions are met consider outcomes.
 
 ```{r}
 library(car)
@@ -162,7 +163,7 @@ summary(iris_regression)
 
 Here the ANOVA table tells us there is a significant impact of sepal
 length on petal length, and the summary (and graph) demonstrate that
-relationship is positive. Note we do not need any post-hoc analysis (why
+relationship is positive. Note we do not need any post-hoc analyses (why
 not?).
 
 ## Regression or correlation
@@ -172,7 +173,7 @@ scenarios. We typically consider (but actually rarely use) linear
 regression. Linear regression technically assumes that an approach was
 used to determine how one variable impacts another (so we chose which
 one to vary and how). For this scenario, our sampling experiment
-technically uses the set values of the predictor variable,and our
+technically uses the set values of the predictor variable, and our
 hypotheses focus on the coefficient value
 
 $$
@@ -188,8 +189,18 @@ this should not impact the resulting p-value.
 The other approach, correlation, is more simply measuring association
 between the variables. It's not specifying which, if either, is the
 driver - both variables could be responding to an un-measured variable.
+You may have heard the phrase "correlation does not equal causation"
+before, which refers to this "driver-less" model. One famous example of
+correlation is that the murder rate tends to rise as ice cream
+consumption rates rise. Because we have no reason to believe that an
+increase in murder rate would *cause* people to eat more ice cream, nor
+do we have a reason to believe that ice cream consumption would cause
+people to commit murder, all we really want to look at is the
+association between the two. This is important to consider before
+running your analysis *and* when interpreting outcomes.
+
 For example, since we simply observed flower traits, we could easily
-reverse everything above (plot shown here).
+reverse our previous code (plot shown here).
 
 ```{r}
 ggplot(iris, aes(x=Petal.Length, y=Sepal.Length)) +
@@ -199,8 +210,8 @@ ggplot(iris, aes(x=Petal.Length, y=Sepal.Length)) +
        y= "Petal Length (cm)")
 ```
 
-Note that doing so would change the coefficients in our linear model,but
-not the direction of the relationship. For this reason, correlation
+Note that doing so would change the coefficients in our linear model,
+but not the direction of the relationship. For this reason, correlation
 often focuses on a unitless correlation parameter, *r*, instead of a
 coefficient from our $\beta$ matrix.
 
@@ -213,7 +224,7 @@ $$
 
 *r* can vary from -1 (values are perfectly negatively related) to 1
 (values are perfectly positively related), where 0 indicates no
-associatoin. This should sound familiar (hold this thought). For a
+association. This should sound familiar (hold this thought). For a
 related sampling experiment, populations for both traits are simulated
 and then paired (what we described above!).
 
@@ -234,6 +245,34 @@ summary.
 cor.test(~ Sepal.Length + Petal.Length, data = iris)$estimate^2
 summary(iris_regression)$r.squared
 ```
+
+Let's consider another dataset that comes pre-installed with R: mtcars.
+More information on the data can be found
+[here](https://www.rdocumentation.org/packages/datasets/versions/3.6.2/topics/mtcars).
+
+```{r}
+head(mtcars, 6)
+```
+
+Let's consider two continuous variables: miles per gallon (mpg) and car
+weight (wt). Because we can make a reasonable hypothesis that car weight
+would be a *driver* for miles per gallon, then we should run a
+**regression** in order to see if, indeed, weight can predict the
+variance in miles per gallon and, if so, how much of the variance
+(R^2^).
+
+```{r}
+cars_regression <- lm(mpg ~ wt, mtcars)
+plot(iris_regression)
+Anova(cars_regression, Type = "III")
+summary()
+
+```
+
+However, if we were to look at miles per gallon and 1/4 mile time
+(qsec), it's less clear which variable might be "driving" the other, so
+we should run a **correlation** to look for an association between the
+two.
 
 ### Other options
 
