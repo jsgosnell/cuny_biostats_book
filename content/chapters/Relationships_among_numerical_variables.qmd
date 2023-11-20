@@ -269,10 +269,22 @@ summary(cars_regression)
 
 ```
 
+Based on our regression, we see that car weight *does* explain
+approximately 75% of the variation in miles per gallon (F~1,\ 30~ =
+91.375, p \< 0.001).
+
 However, if we were to look at miles per gallon and 1/4 mile time
 (qsec), it's less clear which variable might be "driving" the other, so
 we should run a **correlation** to look for an association between the
 two.
+
+```{r}
+cor.test(~ qsec + mpg, data = mtcars)
+```
+
+We can see that there *is* a significant, positive association between
+1/4 mile time and miles per gallon (t = 2.5252, p = 0.01708), but we
+cannot use either variable to explain the variation in the other.
 
 ### Other options
 
