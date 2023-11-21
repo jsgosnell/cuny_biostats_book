@@ -1,6 +1,6 @@
 checkPackage <- function(x){
   y <- deparse(substitute(x))
-  if (y %in% row.names(installed.packages()) == F)install.packages(y)
+  if (y %in% row.names(installed.packages()) == F)install.packages(y, repos = "http://cran.us.r-project.org")
   library(y, character.only = T)
 }
 
@@ -26,7 +26,6 @@ checkPackage(Rmisc)
 checkPackage(MuMIn)
 checkPackage(MASS)
 checkPackage(emmeans)
-checkPackage(ggstatplot)
 checkPackage(coin)
 checkPackage(reshape2)
 checkPackage(viridis)

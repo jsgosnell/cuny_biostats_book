@@ -73,8 +73,7 @@ D = expand.grid(set=PERMUTATIONS, mu=mus, N=Ns) %>%
   ) %>%
   
   # Get as columns instead of lists; then remove "old" columns
-  unnest(mann, ttest, .sep='_') %>%
-  select(-data, -mann_raw, -ranked_value, -ttest_raw)
+  unnest(c(mann, ttest), names_sep='_')
 D$N = factor(D$N)  # Make N a factor for prettier plotting
 
 library(ggplot2)
