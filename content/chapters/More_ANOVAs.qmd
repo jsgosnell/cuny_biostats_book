@@ -21,7 +21,7 @@ assign it.
 
 ## Example: Back to the birds
 
-One of the last chapters practice problems focused bird feathers. While
+One of the last chapters practice problems focused on bird feathers. While
 studying feather color in Northern flickers (*Colaptes auratus*),
 @wiebe2002 noted that \~25% of birds had one or more "odd" tail
 feathers. They decided to compare the color of these odd and "typical"
@@ -152,12 +152,12 @@ ggplot(feather, aes(x=Feather_type, y= Color_index, color=Feather_type, group=Bi
   guides(color=F)
 ```
 
-This may also occur if we measure outcomes with-in a single unit (e.g.,
+This may also occur if we measure outcomes within a single unit (e.g.,
 a study of fertilizer impacts using multiple fields) or over time (e.g.,
 before/after studies). Regardless of the reason, when our experimental
 design has led to measurements being connected/not independent, we need
 to consider these connections in order to properly note (and sometimes
-even observe) impacts of focal variables.
+even observe) impacts of focal variables, or main effects.
 
 ## Blocking, two-way ANOVAs,and paired t-tests
 
@@ -193,7 +193,7 @@ $$
 
 We can analyze this using our linear model approach. This is possible
 because, as we noted earlier, we can subdivide variance among multiple
-levels. Under the hood, the linear model approach build a model matrix
+levels. Under the hood, the linear model approach builds a model matrix
 that considers the impact of feather type and bird on outcomes. Since
 both variables are categorical, this is often called a two-way ANOVA.
 First, let's make the object
@@ -293,7 +293,25 @@ and get the same results as above (note we don't even have to consider
 corrections like the Welch approach since this a one-sample test).
 Common examples of paired t-tests include before-after and twin studies.
 
-In an earlier chapters we considered options for one- and two-sample
+Another example we can look at of a paired t test is National No Smoking day, observed in the UK (Waters et al, 1998). There is a possible increase in injuries and workplace accidents on National No Smoking Day due to withdrawal effects people may face by not smoking. Data was collected every year on number of injuries before and on National No Smoking Day for 9 years. We would like to compare the number of injuries before and on No Smoking Day
+
+```{r}
+smoking_data <- matrix(c(1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 516, 610, 581, 586, 554, 632, 479, 583, 445, 532, 540, 620, 599, 639, 607, 603, 519, 560, 515, 556),10, 3, byrow=F)
+colnames(smoking_data) <- c("Year", "Injuries before No Smoking Day", "Injuries on No Smoking Day")
+```
+
+There is variation from year to year. We could standardize, but there are other factors to consider why the variation may occur, such as changes in size of workforce. To account for this variation, we can block the data by year.
+
+For a paired t test, our null hypothesis would be that work related injuries do not change during No Smoking Days (d=0), while our alternative hypothesis would be that there is a change in work related injuries during No Smoking Days (d≠0).
+
+We can calculate the difference (d)
+
+```{r}
+smoking_data$difference = smoking_data$InjuriesonNoSmokingDay - smoking_data$InjuriesbeforeNoSmokingDay
+```
+
+
+In earlier chapters we considered options for one- and two-sample
 tests when t-tests assumptions were not met. For two-sample tests, one
 of these approaches, the sign or binary test, is only valid for paired
 data. The differences in paired observations are compared to a set value
@@ -314,6 +332,9 @@ SIGN.test(feather[feather$Feather_type == "Odd", "Color_index"],
 
 ```
 
+
+
+
 ### More than 2 measurements? Back to the linear model
 
 We can also block for variation when we take more than 2 measurements
@@ -330,7 +351,7 @@ feather_extra$Feather_type <- factor(feather_extra$Feather_type)
 ```
 
 We could still block for variation using the linear model/ANOVA, but not
-the t-test, approach. As another review, we create the model
+the t-test approach. As another review, we create the model
 
 ```{r}
 more_blocks <-lm(Color_index ~ Feather_type + Bird, data=feather_extra)
@@ -358,9 +379,11 @@ compare <- glht(more_blocks, linfct = mcp(Feather_type = "Tukey"))
 summary(compare)
 ```
 
+The post hoc test results showed  that all groups show a difference. A positive estimated value means that the first listed group has a greater color index than the second group (and vise versa). This is an example of one way to deal with non-independent data.
+
 ## Other ways to be in multiple groups
 
-In the bird example, one of our categories (bird) was un-intential. We
+In the bird example, one of our categories (bird) was unintentional. We
 chose to measure odd and typical feathers, and accounting for variation
 among birds was an appropriate step given lack of independence in
 measurements. However, we can also assign units to multiple groups
@@ -605,7 +628,7 @@ the the MST. This is because in 2-way ANOVAs we allocate degrees of
 freedom to calculating main effects and interactions. This approach was
 likely used in the original manuscript.
 
-Simply using the the provided output (approach 1) and not perform
+Simply using the provided output (approach 1) and not perform
 another series of tests, however, reduces the chances for a Type 1
 error. We will return to this discussion when we get to model selection.
 
@@ -690,7 +713,7 @@ the data).
 ## Other options
 
 Bootstrapping and permutation tests options may also be used for two-way
-ANOVAs when assumptions are not met, though there is implementation is
+ANOVAs when assumptions are not met, though implementation is
 more complicated than single-sample designs due to the need to
 randomize/permute interaction impacts.
 
