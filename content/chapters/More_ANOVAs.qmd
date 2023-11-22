@@ -297,7 +297,7 @@ Another example we can look at of a paired t test is National No Smoking day, ob
 
 ```{r}
 smoking_data <- matrix(c(1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 516, 610, 581, 586, 554, 632, 479, 583, 445, 532, 540, 620, 599, 639, 607, 603, 519, 560, 515, 556),10, 3, byrow=F)
-colnames(smoking_data) <- c("Year", "Injuries before No Smoking Day", "Injuries on No Smoking Day")
+colnames(smoking_data) <- c("Year", "Injuries_before_No_Smoking_Day", "Injuries_on_No_Smoking_Day")
 ```
 
 There is variation from year to year. We could standardize, but there are other factors to consider why the variation may occur, such as changes in size of workforce. To account for this variation, we can block the data by year.
@@ -307,9 +307,16 @@ For a paired t test, our null hypothesis would be that work related injuries do 
 We can calculate the difference (d)
 
 ```{r}
-smoking_data$difference = smoking_data$InjuriesonNoSmokingDay - smoking_data$InjuriesbeforeNoSmokingDay
+smoking_data_x <- data.frame(smoking_data)
+smoking_data_x$difference<- smoking_data_x$Injuries_on_No_Smoking_Day - smoking_data_x$Injuries_before_No_Smoking_Day
 ```
 
+We can use the difference column to run a one sample t test. But here, let's run a paired t test between the before and on No Smoking Day injuries:
+
+```{r}
+t.test(smoking_data_x$Injuries_before_No_Smoking_Day, smoking_data_x$Injuries_on_No_Smoking_Day, paired=T)
+```
+Report t=-2.3605, df=9, p= 0.04257. Reject null hypothesis
 
 In earlier chapters we considered options for one- and two-sample
 tests when t-tests assumptions were not met. For two-sample tests, one
