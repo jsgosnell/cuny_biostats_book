@@ -270,7 +270,7 @@ summary(cars_regression)
 ```
 
 Based on our regression, we see that car weight *does* explain
-approximately 75% of the variation in miles per gallon (F~1,\ 30~ =
+approximately 75% of the variation in miles per gallon (F~1, 30~ =
 91.375, p \< 0.001).
 
 However, if we were to look at miles per gallon and 1/4 mile time
@@ -418,6 +418,74 @@ points outside your data range is likely a bad idea.
 
 As shown above, numerical data is often plotted via paired points. You
 can also add regression lines with or without confidence regions.
+
+## Linear Regression - Special Case
+
+It's possible to have a case where the R2 value is near to 1 (i.e R2 \~
+0.9) in a linear regression, but the fit is not homoscedastic (i.e., the
+variance of the residuals is not constant across the range of predictor
+values). This can happen in very specific and contrived scenarios where
+the variance of the error terms changes systematically with the
+independent variable, yet the predicted values still exactly match the
+actual values.
+
+Here's an this example:
+
+```{r}
+# Load necessary library
+library(ggplot2)
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Generate perfectly fitting data
+x <- seq(0, 10, length.out = 100)
+y <- 2 * x  # Perfect linear relationship
+
+# Adding heteroscedastic noise
+error_variance <- x^1.5 * 0.15
+error <- rnorm(100, mean = 0, sd = error_variance)  # Error term
+y_observed <- y + error  # Observed y values
+
+# Fit linear model
+model <- lm(y_observed ~ x)
+
+# Create a dataframe for plotting
+data <- data.frame(x = x, y = y, y_observed = y_observed)
+
+# Plot the data with the fitted line from the model and the actual line
+ggplot(data, aes(x = x, y = y_observed)) +
+  geom_point(color = "blue", alpha = 0.7) +
+  geom_smooth(method = "lm", color = "red") +
+  labs(title = "Comparison of Fitted Model and Actual Data", 
+       x = "X", 
+       y = "Y") +
+  theme_minimal() 
+#+
+ # scale_color_manual("", 
+  #                   values = c("Observed Data" = "blue", 
+   #                             "Fitted Line" = "red"))
+
+```
+
+Let's now check the assumptions by plotting "model"
+
+```{r}
+plot(model)
+```
+
+there's a potential "funneling" observed in the residuals vs fitted
+plot. You might want to consider another fitting model. However, for
+this example, let's proceed to compute R2.
+
+```{r}
+summary(model)
+```
+
+As you can see, R2 value is near 0.9. However, we might not want to use
+this linear model to fit this data due to potential Heteroscedasticity.
+Don't only rely on a good R2 value to validate the use of a linear
+regression to your data. Always check your assumptions!
 
 ## Next steps
 
