@@ -9,6 +9,7 @@ bibliography: ../references.bib
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+source("../globals.R")
 ```
 
 The past several chapters/lessons have focused on linear models. Here we
@@ -76,8 +77,7 @@ D = expand.grid(set=PERMUTATIONS, mu=mus, N=Ns) %>%
   ) %>%
   
   # Get as columns instead of lists; then remove "old" columns
-  unnest(mann, ttest, .sep='_') %>%
-  select(-data, -mann_raw, -ranked_value, -ttest_raw)
+  unnest(c(mann, ttest), names_sep='_')
 D$N = factor(D$N)  # Make N a factor for prettier plotting
 
 library(ggplot2)
@@ -125,20 +125,19 @@ $$
 $$
 
 Although the residuals are meant to be homoscedastic (equal or constant
-across all groups) , it turns out the model is robust of when the
-largest group variance is 4-10x larger than the smallest group variance
-and sample sizes are approximately equal [@blanca2018; @fox2015;
-@zuur2010], though highly uneven group sizes begin to cause issues
-[@blanca2018].
+across all groups), it turns out the model is robust of when the largest
+group variance is 4-10x larger than the smallest group variance and
+sample sizes are approximately equal [@blanca2018; @fox2015; @zuur2010],
+though highly uneven group sizes begin to cause issues [@blanca2018].
 
 Similarly, non-normal data is not an issue. This is partially because
 the assumptions are focused on residuals, but also because the procedure
 is highly robust [@blanca2017]. This finding further supports the
-graphical consideration of assumptions, especially since many tests for
+graphical consideration of assumptions , especially since many tests for
 normality are conservative (samples are almost never *perfectly* normal,
 and slight deviations are easier to pick up with larger sample sizes
 despite the fact the central limit theorem suggests this is when the
-issue is least important @zuur2010).
+issue is least important) [@zuur2010; @shatz2023].
 
 These issues have led some authors to argue violations of the linear
 model assumptions are less dangerous than trying new, and often
@@ -150,21 +149,23 @@ section we explore common-ish approaches for analyzing data when the
 assumptions of a linear model are broken. Our goal here is to introduce
 these methods. Each could be the focus of their own class, book, or much
 larger study. Fortunately most can be viewed as extensions to our
-existing knowledge.
+existing knowledge, although many of the assumptions and techniques for
+them are less developed/still being argued about.
 
 The various assumptions related to linear models may be prioritized on
-their relative importance. One such order is [@gelman2006]
+their relative importance. One such order is provided (roughly) by
+@gelman2006.
 
 -   Model validity
 
-    -    As noted in the multiple regression chapter, we only should
+    -   As noted in the multiple regression chapter, we only should
         investigate relationships we have a mechanism to explain
 
--   linear relationship
+-   Linear relationship and additive effects of predictor variables
 
--   errors are 
+-   Errors are
 
-    -   independently distributed 
+    -   independently distributed
 
     -   identical (homoscedastic)
 
@@ -176,22 +177,41 @@ is happening.
 
 ## Linear relationship is inappropriate
 
-A key (and often overlooked assumption) of linear models is that the
-relationship between the predictors and the outcome variable is linear.
-This may not occur for a number of reasons (each having its own
-response). When this occurs the resulting residuals are often not
-normally distributed as well.
+A central (and often overlooked assumption) of linear models is that the
+relationship between the predictors and the outcome variable is linear
+and addtive. When the relationship is not linear, the resulting
+residuals are often not appropriately distributed as well.This may occur
+for a number of reasons. The outcome may not actually be continuous
+(e.g. counts. proportions) or may be related to the predictors in
+different ways (e.g., logarithmic). When this occurs, several options
+exist.
+
+<details>
+
+<summary>What's linear anyway?</summary>
+
+To be clear, the linear model only focuses on the linear and additive
+relationship between the predictors and the outcome variable (this will
+become more important/obvious later in this section!). The model doesn't
+*know* what the variables are. For that reason, we can add predictor
+variables to a model that are squares or cubes of predictors, or we can
+transform the outcome variable. We just the $Y = X\beta$ relationship to
+be additive and linear.
+
+</details>
 
 ### Transform the data (least advisable, sometimes)
 
 One option is to transform the data (typically focusing on the dependent
 variable) so that the resulting variable meets the linear model
-assumptions. As noted above, our rank-based approaches are using a
-similar method (not technically the same, but it works for larger sample
-sizes). This approach was often used in the past. For example, Box-Cox
-transformation helped researchers find the best way to transform data to
-reduce issues with the distribution of residuals; this method also
-tended to impact linearity and differences in variances.
+assumptions (and thus uses the strengths of linear models that we noted
+above). As shown above, our rank-based approaches are using a similar
+method (not technically the same, but it works for larger sample sizes).
+This approach was often used in the past(e.g., arc-sin transforms of
+proportion data @warton2010) and supported by various approacheac. For
+example, Box-Cox transformation helped researchers find the best way to
+transform data to reduce issues with the distribution of residuals; this
+method also tended to impact linearity and differences in variances.
 
 Two things should be noted regarding this approach and transformations
 in general:
@@ -201,7 +221,10 @@ in general:
     not be transformed before model assumptions are analyzed to ensure
     it is necessary. For example, highly skewed data may arise due to
     unequal sample sizes (which may pose their own problems, but not
-    outright).
+    outright). Non-normal data, however, may have normalized residuals.
+    However, normal data (or transformed data) does typically lead to
+    normal residuals, so if residuals are not normal transformations may
+    help.
 
 ```{r}
 set.seed(8)
@@ -222,20 +245,20 @@ Anova(lm(Growth~Population, example_skewed), type="III")
                              
 ```
 
--   The resulting variable is *now* linear in respect to the predictors.
-    This highlights the actual assumption of the model. Similarly,
-    higher-terms (squares, cubes, etc) may be added to a linear model.
-    The model does not care what the data represent - it only focuses on
-    if linear relationships exist among them.
+-   The transformed variable is *now* linear in respect to the
+    predictors. This highlights the actual assumption of the model.
+    Similarly, higher-terms (squares, cubes, etc) may be added to a
+    linear model. The model does not care what the data represent - it
+    only focuses on if linear relationships exist among them.
 
--   Conversely, transformations can make model interpretation and
-    prediction difficult.
+-   Transformations can make model interpretation and prediction
+    difficult.
 
 If the decision is made to transform the data, several approaches exist.
 Some are driven by the distribution of the data, and all depend on it.
 For example, log and related root transformations are useful for
 right-skewed data, but some can only be carried out for non-negative
-(e.g., square root) or strictly positive (e..g., log) values. To address
+(e.g., square root) or strictly positive (e.g., log) values. To address
 this for log transformations, a small value is often added to 0
 measurements.
 
@@ -364,48 +387,116 @@ be related to the underlying form of the data [@payne2017] (more to come
 on this). In this way, over- and under-dispersion relate to both the
 linear relationship.
 
-#### Use a better model
+#### Generalized linear model approach: Different data, different approach
 
 The linear relationship may be inappropriate because our data doesn't
 fit it! For example, if we are modeling proportions, estimates less than
 0 or below 1 do not make sense, but a linear model doesn't account for
 that. The same issues arise for proportions and binary outcomes. While
 we may be able to transform the response variable to make it linear,
-another options is to translate the *link* function.
+another option is to translate the *link* function.
 
-Although we haven't fully explored it yet, a linear model contains three
-components. There is always a random component that focuses on the
+Although we haven't fully explained it yet, a linear model contains
+three components. There is always a random component that focuses on the
 distribution of the data. There is also a systematic component, where a
 number of covariates and data points produce an estimate. Finally, there
 is the link function, which connects that estimate to the data
-distribution.
+distribution (this maintains the linearity of the model).
 
 Notice this means the link connects to the distribution of the data, not
 the data itself. So far we have focused on the *mean* of the data, and
 the estimate is the mean, so the link has been implied. We can
-*generalize* this setup, however, using *generalized linear models*.
-These models make different assumptions, which can include removing the
-need for homoscedasticity or normality of residuals.
+*generalize* this setup to include other distributions in the
+exponential family (and now others [@applied2022, ch. 15]).
 
-There are numerous types of generalized linear models, commonly known as
-glm's (not to be confused with the general linear model, which is just
-another name sometimes used for the "normal" linear model). Here we
-outline some of the more common ones.
+While we won't develop all the math, exponential family distributions
+all have a canonical parameter (the mean for Gaussian, or normal, data)
+and a dispersion parameter (the variance for normal data). Different
+distributions have different relationships between these two parameters.
+For normal data, there is *no* relationship, so the variance is
+constant. This is not true for other families.
 
-#### Logistic regression
+We can specify other families using *generalized linear models*(which
+are different than general linear models, which is another term used to
+describe our "regular" linear models). These models are also known as
+glm or glim (we'll use the glm jargon here). GLM make different
+assumptions (though everyone does not agree on what they are!). While we
+still need independence of the residuals (or some extension, see below),
+they no longer need to be normally distributed [@zuur2007, p. 86-87;
+@zuur2009, section 9.8.3] (though normality may hold at large sample
+sizes for Pearson [@agresti2007, p. 87] or deviance [@montgomery2012,
+section 13.4.4]
+<!-- https://stats.stackexchange.com/questions/92394/checking-residuals-for-normality-in-generalised-linear-models; https://online.stat.psu.edu/stat504/lesson/6/6.1 -->
+residuals, and some authors argue normality is required for testing
+[@feng2020] ) or constant (homogeneity). As noted above, non-Gaussian
+families don't assume a constant variance, so homogeneity assumptions
+would not be appropriate. However, we need to ensure the correct family
+(and thus mean-variance link) is chosen. In general, plotting the
+residuals against
+
+-   the predicted values
+
+-   each explanatory variable in model
+
+```{=html}
+<!-- -->
+```
+-   each explanatory not retained/used in model
+
+-   against time and space
+
+will be useful. Any patterns may suggest missing predictors or lack of
+independence/correlation among measurements. Patterns in the residuals
+may also indicate the incorrect family has been chosen [@zuur2009,
+section 9.8.4]
+
+<details><summary>What are residuals for a GLM?</summary>
+
+Residuals for a Gaussian/normal glm (what we've been doing) are easy to
+calculate. We simply subtract the estimate for each data point (which is
+the average for similar observations!) from the observed. However,
+though these raw or response residuals exist for GLM, they rarely make
+sense. Variance may increase with mean for some distributions, for
+example, or outcomes may be binary.
+
+To account for this, we could divide the residuals by the square root of
+the variance. This normalizes the residuals and leads to *Pearson
+residuals*. Another option is based on something called deviance.
+Deviance is similar to sums of squares but based on likelihood (which we
+shortly see is what we use to test for significance in GLM); it can also
+be considered the generalized form of variance or residuals sums of
+squares. It is calculated as the difference of log-likelihods between
+the focal model and the saturated model. Deviance residuals consider how
+important each point is to the overall deviance. You can also compare
+the deviance of a model to a perfect fit (no deviance/saturated) model
+and an intercept-only model (worst fit, D~O~) and generate a pseudo-R^2^
+measure using the formula
+
+$$
+1-\frac{D}{D_O}
+$$
+
+</details>
+
+There are numerous types of GLMs. Here we outline some of the more
+common ones. Regardless of which ones you use, moving beyond the normal
+distribution means the residuals do not need to be normally or
+identically distributed
+
+##### Logistic regression
 
 Logistic regression focused on yes/no outcomes; data can be a single
 answer (Bernoulli) or a collection (binomial).
 
-#### Beta regression
+##### Beta regression
 
 Beta regression focuses on true porpiton data.
 
-#### Poisson regression
+##### Poisson regression
 
 Poisson regression focuses on count-based data.
 
-##### 
+##### Non-linear options
 
 ## Data are not independent
 
@@ -642,31 +733,27 @@ the model and then noted an issue with heteroscedasticity. If so, we can
 calculate a weight for each residual that is based on its variance -
 below makes a value that increases with low variance.
 
-```{r} wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2}
-```
+`{r} wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2}`
 
 We can then add a new argument to the *lm* function to use these
 weights.
 
-```{r} sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)}
-```
+`{r} sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)}`
 
 We can then continue on our normal route:
 
-```{r} plot(sdm_model_wls) Anova(sdm_model_wls, type="III")}
-```
+`{r} plot(sdm_model_wls) Anova(sdm_model_wls, type="III")}`
 
 If you compare the two models you notice slight differences - these are
 minimal here due to lack of differences in variance.
 
-```{r} summary(sdm_model) summary(sdm_model_wls)}
-```
+`{r} summary(sdm_model) summary(sdm_model_wls)}`
 
 Why not just always do this? Because weighted least squares implicitly
 assumes we *know* the weights. We are actually estimating them, so small
 datasets may lead to bad estimates and outcomes.
 
-## Residuals are not normally distributed 
+## Residuals are not normally distributed
 
 A very common concern regarding linear models is normality. I list it
 first here due to how often I see it noted, but in fact this assumption
