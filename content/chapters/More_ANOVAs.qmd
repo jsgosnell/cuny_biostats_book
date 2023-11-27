@@ -746,13 +746,13 @@ ggplot(function_output, aes(x=Age, y=Words,color=Process,
   ylab("Words remembered")+ 
   xlab("Age") + 
   ggtitle("Process type interacts with age to impact memory")+
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
+  theme(axis.title.x = element_text(face="bold", size=20), 
+        axis.title.y = element_text(face="bold", size=20), 
         axis.text.y  = element_text(size=20),
         axis.text.x  = element_text(size=20), 
         legend.text =element_text(size=20),
         legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32))
+        plot.title = element_text(hjust = 0.5, face="bold", size=18))
 ```
 
 On the plot we see that all lines are not parallel which indicates that there may be some interactions between factors. Also, some of the processes are more affected by age (adjective, imagery, and intentional), while others are not (counting and rhyming).
@@ -794,12 +794,26 @@ memory_interactions_young <- lm(Words ~ Process, memory[memory$Age == "Younger",
 plot(memory_interactions_young)
 Anova(memory_interactions_young, type = "III")
 ```
+We have a significant impact of processing approach on memory for the younger group. To see which approaches have a significant difference, we can run a post-hoc test:
+
 ```{r}
 library(multcomp)
 comp_young <- glht(memory_interactions_young, linfct = mcp(Process = "Tukey"))
 summary(comp_young)
 ```
+ANOVA for the older group:
 
+```{r}
+memory_interactions_old <- lm(Words ~ Process, memory[memory$Age == "Older",])
+plot(memory_interactions_old)
+Anova(memory_interactions_old, type = "III")
+```
+There is also a significant impact of processing approach on memory for the older group, so we need a post-hoc test again:
+
+```{r}
+comp_old <- glht(memory_interactions_old, linfct = mcp(Process = "Tukey"))
+summary(comp_old)
+```
 
 ## Other options
 
