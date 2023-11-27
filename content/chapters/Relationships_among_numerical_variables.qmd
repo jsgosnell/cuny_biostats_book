@@ -196,11 +196,14 @@ consumption rates rise. Because we have no reason to believe that an
 increase in murder rate would *cause* people to eat more ice cream, nor
 do we have a reason to believe that ice cream consumption would cause
 people to commit murder, all we really want to look at is the
-association between the two. This is important to consider before
-running your analysis *and* when interpreting outcomes.
+association between the two. In other words, there is another driver (in
+this case, time spent outside in the summer) that can help explain both
+factors as opposed to one explaining the other. This is important to
+consider before running your analysis *and* when interpreting outcomes.
 
-For example, since we simply observed flower traits, we could easily
-reverse our previous code (plot shown here).
+For an example of an association between variables, since we simply
+observed flower traits, we could easily reverse our previous code (plot
+shown here).
 
 ```{r}
 ggplot(iris, aes(x=Petal.Length, y=Sepal.Length)) +
@@ -246,7 +249,8 @@ cor.test(~ Sepal.Length + Petal.Length, data = iris)$estimate^2
 summary(iris_regression)$r.squared
 ```
 
-Let's consider another dataset that comes pre-installed with R: mtcars.
+To further explore the difference between regression and correlation,
+let's consider another dataset that comes pre-installed with R: mtcars.
 More information on the data can be found
 [here](https://www.rdocumentation.org/packages/datasets/versions/3.6.2/topics/mtcars).
 
@@ -257,9 +261,12 @@ head(mtcars, 6)
 Let's consider two continuous variables: miles per gallon (mpg) and car
 weight (wt). Because we can make a reasonable hypothesis that car weight
 would be a *driver* for miles per gallon, then we should run a
-**regression** in order to see if, indeed, weight can predict the
-variance in miles per gallon and, if so, how much of the variance
-(R^2^).
+**regression** in order to see if weight has an impact on the variance
+in miles per gallon and, if so, how much of the variance (R^2^).
+
+\*Note: For regression, it is important that your driver or independent
+variable is always on the x-axis and your outcome variable or dependent
+variable is always on the y-axis.
 
 ```{r}
 cars_regression <- lm(mpg ~ wt, mtcars)
@@ -271,7 +278,21 @@ summary(cars_regression)
 
 Based on our regression, we see that car weight *does* explain
 approximately 75% of the variation in miles per gallon (F~1, 30~ =
-91.375, p \< 0.001).
+91.375, p \< 0.001). Further, the relationship between the two is
+negative (as car weight increases, mpg decreases).
+
+```{r}
+library(ggplot2)
+car_wt_mpg <- ggplot(mtcars, aes(x=wt, y=mpg)) +
+  geom_point() +
+  labs(title="MPG decreases with car weight",
+       x= "Car weight",
+       y= "MPG")
+car_wt_mpg +                                      
+  stat_smooth(method = "lm", 
+              formula = y ~ x, 
+              geom = "smooth") 
+```
 
 However, if we were to look at miles per gallon and 1/4 mile time
 (qsec), it's less clear which variable might be "driving" the other, so
@@ -282,9 +303,42 @@ two.
 cor.test(~ qsec + mpg, data = mtcars)
 ```
 
+```{r}
+library(ggplot2)
+car_qsec_mpg <- ggplot(mtcars, aes(x=qsec, y=mpg)) +
+  geom_point() +
+  labs(title="Positive association between 1/4 mile time and MPG",
+       x= "1/4 mile time",
+       y= "MPG")
+car_qsec_mpg + stat_smooth(method = "lm", 
+              formula = y ~ x, 
+              geom = "smooth")
+
+```
+
 We can see that there *is* a significant, positive association between
 1/4 mile time and miles per gallon (t = 2.5252, p = 0.01708), but we
 cannot use either variable to explain the variation in the other.
+
+\*Note: For correlation, which variable is on which axis is not
+important for determining an association. The below code is as correct
+as the code above.
+
+```{r}
+cor.test(~ mpg + qsec, data = mtcars)
+```
+
+```{r}
+library(ggplot2)
+car_mpg_qsec <- ggplot(mtcars, aes(x=mpg, y=qsec)) +
+  geom_point() +
+  labs(title="Positive association between 1/4 mile time and MPG",
+       x= "MPG",
+       y= "1/4 mile time")
+car_mpg_qsec + stat_smooth(method = "lm", 
+              formula = y ~ x, 
+              geom = "smooth")
+```
 
 ### Other options
 
