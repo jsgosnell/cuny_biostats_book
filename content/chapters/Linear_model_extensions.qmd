@@ -153,7 +153,7 @@ their relative importance. One such order is [@gelman2006]
 
 -   Model validity
 
-    -    As noted in the multiple regression chapter, we only should
+    -   As noted in the multiple regression chapter, we only should
         investigate relationships we have a mechanism to explain
 
 -   linear relationship
@@ -638,31 +638,27 @@ the model and then noted an issue with heteroscedasticity. If so, we can
 calculate a weight for each residual that is based on its variance -
 below makes a value that increases with low variance.
 
-```{r} wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2}
-```
+`{r} wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2}`
 
 We can then add a new argument to the *lm* function to use these
 weights.
 
-```{r} sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)}
-```
+`{r} sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)}`
 
 We can then continue on our normal route:
 
-```{r} plot(sdm_model_wls) Anova(sdm_model_wls, type="III")}
-```
+`{r} plot(sdm_model_wls) Anova(sdm_model_wls, type="III")}`
 
 If you compare the two models you notice slight differences - these are
 minimal here due to lack of differences in variance.
 
-```{r} summary(sdm_model) summary(sdm_model_wls)}
-```
+`{r} summary(sdm_model) summary(sdm_model_wls)}`
 
 Why not just always do this? Because weighted least squares implicitly
 assumes we *know* the weights. We are actually estimating them, so small
 datasets may lead to bad estimates and outcomes.
 
-## Residuals are not normally distributed 
+## Residuals are not normally distributed
 
 A very common concern regarding linear models is normality. I list it
 first here due to how often I see it noted, but in fact this assumption
