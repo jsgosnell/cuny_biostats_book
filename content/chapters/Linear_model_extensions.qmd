@@ -14,6 +14,16 @@ source("../globals.R")
 
 The past several chapters/lessons have focused on linear models. Here we
 explore options for analysis when linear model assumptions are not met.
+In doing so, we review several different approaches, many of which could
+be (and are) the focal topic of courses and books. The goal here is to
+
+-   help you figure out when you may need to employ these methods by
+    having you understand what they do/fix
+
+-   give you a start on doing these analyses in R
+
+citations to relevant articles papers and books are noted throughout for
+further exploration.
 
 ## Sticking with the linear model
 
@@ -191,8 +201,8 @@ relationship between the predictors and the outcome variable (this will
 become more important/obvious later in this section!). The model doesn't
 *know* what the variables are. For that reason, we can add predictor
 variables to a model that are squares or cubes of predictors, or we can
-transform the outcome variable. We just the $Y = X\beta$ relationship to
-be additive and linear.
+transform the outcome variable. We just need the $Y = X\beta$
+relationship to be additive and linear.
 
 </details>
 
@@ -258,7 +268,7 @@ right-skewed data, but some can only be carried out for non-negative
 this for log transformations, a small value is often added to 0
 measurements.
 
-Let's data (not residuals) to show what different types of data look
+Let's use data (not residuals) to show what different types of data look
 like and consider possible fixes (always fit a model first for real
 analysis!). For example, we can return to our right-skewed blue jay data
 [from the summarizing data
@@ -474,18 +484,31 @@ $$
 
 </details>
 
+Once developed, GLMs can use most of the tools we developed for basic
+linear models. However, a few key differences exist. Most tests of
+factors focus on $\chi^2$ tests, not F tests, given the reliance on
+likelihood methods (remember, the ratio of likelihood values follow a
+$\chi^2$ distribution and can thus provide a p-value to compare possible
+models as noted in introducing G tests in
+(content/Compare_proportions_among_populations.qmd).
+
 There are numerous types of GLMs. Here we outline some of the more
-common ones.
+common ones. Each of these deserves a much fuller treatment - remember,
+the intent here is to get you to a place to where you can begin working
+with them. @harrison2018 provides an excellent review of these models,
+and fuller treatments are provided by @zuur2009 (chapters 8-11) and
+@fox2016 (chapters 14 - 15).
 
-##### Logistic regression
+##### Logistic regression: Bernoulli and binomial outcomes
 
-Logistic regression focused on yes/no or success/failure outcomes; data
-can be a single answer (Bernoulli) or a collection (binomial).
+Logistic regression focuses on yes/no or success/failure outcomes; data
+can be a single answer (Bernoulli) or a collection (binomial). For
+example,
 
 ##### Beta regression
 
-Beta regression focuses on true proportion data where the outcome is between 
-0 and 1.
+Beta regression focuses on true proportion data where the outcome is
+between 0 and 1.
 
 ##### Poisson regression
 
