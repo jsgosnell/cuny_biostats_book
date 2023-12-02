@@ -32,6 +32,7 @@ checkPackage(viridis)
 checkPackage(boot)
 checkPackage(grid)
 checkPackage(DiagrammeR)
+checkPackage(simpleboot)
 
 
 
