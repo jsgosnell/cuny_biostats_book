@@ -1,18 +1,24 @@
 ---
-title: "13. Multivariate methods answers"
-author: "jsg"
-date: "Last compiled on `r format(Sys.time(), '%d %B, %Y %H:%M')`"
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    keep_md: true
-    self_contained: true
+title: "Multivariate methods"
+bibliography: ../references.bib
 ---
 
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.align="center")
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+source("../globals.R")
 ```
+
+Remember you should
+
+* add code chunks by clicking the *Insert Chunk* button on the toolbar or by
+pressing *Ctrl+Alt+I* to answer the questions!
+* **knit** your file to produce a markdown version that you can see!
+* save your work often 
+  * **commit** it via git!
+  * **push** updates to github
 
 
 1. A pharmaceutical company has a drug that may help an illness that causes 
@@ -26,23 +32,6 @@ against the grouping variable treatment.
 illness <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRlcjpU0XHfXF1WId1C5ZYX0YdY53KI9Nv91_tNCMj4z4iTjr-XMW1L_Ln8j3ahk5GUPZy4kGzSlA96/pub?gid=1322236994&single=true&output=csv",
                     stringsAsFactors = T)
 ```
-
-We will test the multiple outcomes using a MANOVA. This tests the null hypothesis
-that there is no difference in the vector of mean parameters for the groups. 
-
-```{r}
-m <- manova(cbind(fever,pressure,aches)~treatment, illness)
-summary(m)
-```
-The MANOVA shows a significant difference (Pillai's trace = .55466, p <.001), so
-we reject the  null hypothesis.  To follow this up we consider ANOVAs for each 
-trait to determine which ones differ among groups
-
-```{r}
-summary.aov(m)
-```
-
-These indicate that only fever differs among groups.
 
 2. Darlingtonia californica is a partly carnivorous pitcher plant that grows in 
 fens and along seeps and
@@ -89,14 +78,6 @@ side of the mouth](https://bsapubs.onlinelibrary.wiley.com/cms/asset/1258a675-69
 
 * Use a MANOVA to consider differences in plant traits (do not follow-up with 
 almost 20 ANOVA's! Just consider why PCA might be useful with large datasets!
-
-```{r}
-pitcher_outcomes <- pitcher[,2:13]
-pitcher_manova <- manova(as.matrix(pitcher_outcomes)~site, pitcher)
-summary(pitcher_manova)
-summary.aov(pitcher_manova)
-```
-
 * Use principal component analysis to investigate variation among
 individual plants in their dimensions. Along the way, make sure you
   * construct screeplots
@@ -104,101 +85,11 @@ individual plants in their dimensions. Along the way, make sure you
   * Use biplots and/or loadings to see if you can understand/interpret the 
   first few principal components
   
-Noticed I scaled the data here since some groups have more/less variation and 
-are measured in different units.
-
-```{r}
-summary(pitcher_outcomes)
-```
-
-  
-```{r}
-library(vegan)
-pitcher_pca <- rda(pitcher_outcomes, scale=T)
-summary(pitcher_pca)
-```
-
-```{r}
-screeplot(pitcher_pca)
-
-pca_data <- as.data.frame(t(as.data.frame(summary(pitcher_pca)$cont)))
-pca_data$PC <- 1: nrow(pca_data)
-pca_data$Proportion_Explained <-pca_data$"Proportion Explained"
-pca_data$Cumulative <-pca_data$"Cumulative Proportion"
-library(ggplot2)
-ggplot(pca_data, aes(x=PC,y=Proportion_Explained, group=1))+
-  geom_point(size=4)+
-  geom_line()+
-  labs(title="Scree plot: PCA on scaled data") +
-  geom_vline(xintercept = which(pca_data$Cumulative > .80)[1]) +
-  geom_text(aes(which(Cumulative > .80)[1],.3,
-            label = paste(Cumulative[which(Cumulative > .80)[1]]*100, 
-                          "% \n of variation explained"))) +
-  geom_hline(yintercept = 1/nrow(pca_data), linetype="dotted")+
-  geom_text(aes(y= 1/nrow(pca_data), x=2, label = "broken stick \n line"))
-
-```
-
-Multiple methods suggest we should retain first 3 PC (they explain >80% of variance, 
-form elbow in scree plot, and would be selected using broken stick approach).
-
-```{r}
- summary(pitcher_pca)$species
-```
-
-Wing (wingarea, wing1_length, wing2_length) and hoodarea appear to be driving PC1.
-PC is focus on tube  measurements.
-
-```{r}
-biplot(pitcher_pca, choices = c(1,2), type = c("text", "points"), xlim = c(-5,10), scale=0,
-       main= "Correlation biplot (scale = 0)") # biplot of axis 1 vs 2
-```
-
-
 3. Using the same plant dataset, use linear discriminant analysis to classify the 
-various sites
-
-```{r}
-library(MASS)
-pitcher_lda <-pitcher[,1:13]
-da_ca <- lda(site ~ ., pitcher_lda)
-summary(da_ca)
-Predictions <- predict(da_ca,pitcher_lda)
-table(Predictions$class, pitcher_lda$site)
-ldahist(data = Predictions$x[,1], g=pitcher_lda$site)
-ldahist(data = Predictions$x[,2], g=pitcher_lda$site)
-```
-
+various sites.
 
 4.  Using the same plant dataset, use cluster analysis to determine how many 
 clusters are supported by the data.
-
-```{r}
-library(cluster)    # clustering algorithms
-library(factoextra)
-fviz_nbclust(pitcher_outcomes, kmeans, method = "silhouette")
-```
-  
-Data only support 2 clusters (but we had 4 sites!). Note we don't see clear
-break among sites in graph either.
-
-```{r}
-final <- kmeans(pitcher_outcomes, 2, nstart = 25)
-print(final)
-fviz_cluster(final, data = pitcher_outcomes)
-
-#compare to other information
-
-library(ggforce)
-library(concaveman)
-pitcher$cluster <- factor(final$cluster)
-pitcher$PC1 <- as.data.frame(summary(pitcher_pca)$site)$PC1
-pitcher$PC2 <- as.data.frame(summary(pitcher_pca)$site)$PC2
-ggplot(pitcher, aes(x=PC1, y=PC2, shape=site, color=cluster, group=cluster)) +
-  geom_point() +
-  geom_mark_hull(aes(fill=cluster))
-
-```
   
 5. The data for this exercise are rodent species abundance from 28 sites
 in California (Bolger et al. 1997, Response of rodents to habitat fragmentation 
@@ -220,23 +111,7 @@ The 9 species are indicated by variable (column) names. Genus abbreviations are:
 Rattus and Mus are invasive species, whereas the others are native.
 
 * Analyze the dat using correspondence analysis
-  * interpret any results (loadings!)
-  
-```{r}
-rodents_cca <- cca(rodents[,-1])
-summary(rodents_cca)
-plot(rodents_cca)
-```
-
-It appears that invasive species (*Rattus rattus* and *Muscus musculus*) are driving
-the loadings.
-
-```{r}
-summary(rodents_cca)$species
-summary(rodents_cca)$sites
-```
-
-
+  * interprent any results (loadings!)
 
 
 
