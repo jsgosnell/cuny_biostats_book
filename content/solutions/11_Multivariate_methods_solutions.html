@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Biostatistics! - Multivariate methods</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
+      Biostatistics: Concepts and approaches for collecting good data and  turning it into knowledge!
+      </li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header sidebar-header-stacked">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../images/image-from-rawpixel-id-547642-jpeg.jpg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Biostatistics: Concepts and approaches for collecting good data and turning it into knowledge!</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://www.gosnelllab.com/" rel="" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
+    <a href="https://github.com/jsgosnell" rel="" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+ <span class="menu-text">Getting started</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/getting_started/getting_started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Before the first class</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+ <span class="menu-text">Chapters</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Acquiring_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acquiring data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/summarizing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Summarizing data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Estimation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Probability</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Binomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hypothesis testing starting with binomial tests</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Tests_for_continuous_data_from_one_sample.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tests for continuous data from one sample</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Compare_proportions_among_populations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compare proportions among groups</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Compare_means_among_populations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compare means among groups</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/More_ANOVAs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">More ANOVAs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Relationships_among_numerical_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Relationships among numerical variables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Combining_numerical_and_categorical_predictors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Combining numerical and categorical predictors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/Linear_model_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Linear model extensions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+ <span class="menu-text">swirl lessons</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/swirl_lessons.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">swirl lessons</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+ <span class="menu-text">Practice problems</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/1_Getting_used_to_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting used to R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/2_Estimates_and_ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Estimates and ggplot2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/3_Introduction_to_hypothesis_testing_via_binomial_test.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hypothesis testing starting with binomial tests</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/4_Continuous_tests_for_1_population.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tests for continuous data from one sample</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/5_Contingency_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compare proportions among groups</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/6_Compare_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compare means among groups</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/7_More_ANOVAs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">More ANOVAs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/8_Relationships_among_numerical_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Relationships among numerical variables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/9_Combining_numerical_and_categorical_predictors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Combining numerical and categorical predictors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/10_Linear_model_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Linear model extensions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/11_Multivariate_methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multivariate methods</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+ <span class="menu-text">Solutions</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/solutions/1_Getting_used_to_R_solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting used to R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/solutions/2_Estimates_and_ggplot2_solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Estimates and ggplot2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/solutions/3_Introduction_to_hypothesis_testing_via_binomial_test_solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hypothesis testing starting with binomial tests</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/solutions/4_Continuous_tests_for_1_population_solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tests for continuous data from one sample</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/solutions/5_Contingency_analysis_solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compare proportions among groups</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/solutions/6_Compare_means_solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compare means among groups</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/solutions/7_More_ANOVAs_solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">More ANOVAs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/solutions/8_Relationships_among_numerical_variables_solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Relationships among numerical variables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/9_Combining_numerical_and_categorical_predictors_solutions.Rmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Combining numerical and categorical predictors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/10_Linear_model_extensions_solutions.Rmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Linear model extensions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/11_Multivariate_methods_solutions.Rmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multivariate methods</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+ <span class="menu-text">Software primer</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/primer_material/tools_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tools overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/primer_material/R_primer.R" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Download an R primer file!</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+ <span class="menu-text">End matter</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/end_matter/acknowledgements.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acknowledgements</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/end_matter/additional_resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Additional resources</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/references.bib" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Download a full reference list!</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Multivariate methods</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+<p>Remember you should</p>
+<ul>
+<li>add code chunks by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Ctrl+Alt+I</em> to answer the questions!</li>
+<li><strong>knit</strong> your file to produce a markdown version that you can see!</li>
+<li>save your work often
+<ul>
+<li><strong>commit</strong> it via git!</li>
+<li><strong>push</strong> updates to github</li>
+</ul></li>
+</ul>
+<ol type="1">
+<li>A pharmaceutical company has a drug that may help an illness that causes fever (temperature in degrees Celsius), blood pressures, and “aches” (scored on an index). Data is collected for several patients. To determine if the drug actually helps, test for differences in multivariate means for the fever, pressure and aches column, against the grouping variable treatment.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>illness <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://docs.google.com/spreadsheets/d/e/2PACX-1vRlcjpU0XHfXF1WId1C5ZYX0YdY53KI9Nv91_tNCMj4z4iTjr-XMW1L_Ln8j3ahk5GUPZy4kGzSlA96/pub?gid=1322236994&amp;single=true&amp;output=csv"</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We will test the multiple outcomes using a MANOVA. This tests the null hypothesis that there is no difference in the vector of mean parameters for the groups.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">manova</span>(<span class="fu">cbind</span>(fever,pressure,aches)<span class="sc">~</span>treatment, illness)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Df  Pillai approx F num Df den Df    Pr(&gt;F)    
+treatment  1 0.55466   14.115      3     34 3.857e-06 ***
+Residuals 36                                             
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>The MANOVA shows a significant difference (Pillai’s trace = .55466, p &lt;.001), so we reject the null hypothesis. To follow this up we consider ANOVAs for each trait to determine which ones differ among groups</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary.aov</span>(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Response fever :
+            Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+treatment    1 43.973  43.973   34.99 9.02e-07 ***
+Residuals   36 45.242   1.257                     
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ Response pressure :
+            Df Sum Sq Mean Sq F value Pr(&gt;F)
+treatment    1  440.9  440.93  2.6871 0.1099
+Residuals   36 5907.4  164.09               
+
+ Response aches :
+            Df  Sum Sq Mean Sq F value Pr(&gt;F)
+treatment    1   59.74  59.738  1.6285 0.2101
+Residuals   36 1320.58  36.683               </code></pre>
+</div>
+</div>
+<p>These indicate that only fever differs among groups.</p>
+<ol start="2" type="1">
+<li>Darlingtonia californica is a partly carnivorous pitcher plant that grows in fens and along seeps and streams in the mountains of Oregon and California. Its pitchers are tubular l eaves with a round hood and a mouth at the base of the hood (see figure below). A “fishtail” appendage hangs from the mouth. Wasps and other prey are attracted to nectar secreted by extrafloral nectaries along the hood, mouth, and fishtail. Plants absorb nutrients excreted by a food web of bacteria, protozoa, mites, and fly larvae that break down the prey.</li>
+</ol>
+<p>Measurements of 87 plants from four sites were made by Ellison and Farnsworth (2005, The cost of carnivory for Darlingtonia californica (Sarraceniaceae): evidence from relationships among leaf traits. Am. J. Botany 92: 1085-1093). Their measurements are available using</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pitcher <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://docs.google.com/spreadsheets/d/e/2PACX-1vQZf2mS4NmfBUUsn7lY2RTpuVjuWvRYN4MdLNt2XdS4WepolrxvWCKBI5diKBMWPLhdbEGwP-hfWOnz/pub?gid=1427497144&amp;single=true&amp;output=csv"</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I obtained them from the web page (http://harvardforest.fas.harvard.edu/personnel/web/aellison/publications/primer/primer.html) of A. M. Ellison for the book by Gotelli and Ellison (2004, A primer of ecological statistics. Sinauer, Sunderland, Mass.). To simplify, outliers have been removed. Most plant traits in the file are illustrated in the image below, and trait labels are fairly self-explanatory. Keel width measures the span of the pitcher tube. “Wing” traits refer to the lengths of the fishtail appendage.</p>
+<center>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://bsapubs.onlinelibrary.wiley.com/cms/asset/1258a675-69f2-4bca-80de-d76ed9c43c47/ajb21085-fig-0001-m.jpg" class="img-fluid figure-img" style="width:30.0%"></p>
+<figcaption class="figure-caption">Photograph of a <em>Darlingtonia californica</em> pitcher with morphological measurements indicated (lower diameter at ground level not shown). Note the translucent hood and the pronounced fishtail appendage attached to the proximal side of the mouth</figcaption>
+</figure>
+</div>
+</center>
+<ul>
+<li>Use a MANOVA to consider differences in plant traits (do not follow-up with almost 20 ANOVA’s! Just consider why PCA might be useful with large datasets!</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pitcher_outcomes <span class="ot">&lt;-</span> pitcher[,<span class="dv">2</span><span class="sc">:</span><span class="dv">13</span>]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pitcher_manova <span class="ot">&lt;-</span> <span class="fu">manova</span>(<span class="fu">as.matrix</span>(pitcher_outcomes)<span class="sc">~</span>site, pitcher)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pitcher_manova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Df Pillai approx F num Df den Df    Pr(&gt;F)    
+site       3 1.6951   8.0108     36    222 &lt; 2.2e-16 ***
+Residuals 83                                            
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary.aov</span>(pitcher_manova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Response height :
+            Df Sum Sq Mean Sq F value Pr(&gt;F)
+site         3  35080   11693  1.1618 0.3293
+Residuals   83 835341   10064               
+
+ Response mouth_diam :
+            Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+site         3 1069.1  356.38  12.902 5.353e-07 ***
+Residuals   83 2292.7   27.62                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ Response tube_diam :
+            Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+site         3 234.95  78.317  9.6701 1.526e-05 ***
+Residuals   83 672.21   8.099                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ Response keel_diam :
+            Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+site         3 141.99  47.329  14.653 9.638e-08 ***
+Residuals   83 268.08   3.230                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ Response wing1_length :
+            Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+site         3  12897  4298.9  11.289 2.76e-06 ***
+Residuals   83  31606   380.8                     
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ Response wing2_length :
+            Df Sum Sq Mean Sq F value   Pr(&gt;F)   
+site         3   7784 2594.56     5.5 0.001702 **
+Residuals   83  39154  471.74                    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ Response wingsprea :
+            Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+site         3  21676  7225.3  6.9585 0.0003108 ***
+Residuals   83  86182  1038.3                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ Response hoodarea :
+            Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+site         3  4015.2 1338.41  6.3842 0.0006031 ***
+Residuals   83 17400.4  209.64                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ Response wingarea :
+            Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+site         3  3115.8 1038.60  7.1171 0.0002592 ***
+Residuals   83 12112.2  145.93                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ Response tubearea :
+            Df Sum Sq Mean Sq F value  Pr(&gt;F)  
+site         3   5507 1835.78  2.9363 0.03805 *
+Residuals   83  51892  625.21                  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ Response hoodmass_g :
+            Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+site         3 3.1075 1.03585  10.439 6.721e-06 ***
+Residuals   83 8.2362 0.09923                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ Response tubemass_g :
+            Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+site         3 19.305  6.4349    6.39 0.0005991 ***
+Residuals   83 83.583  1.0070                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<ul>
+<li>Use principal component analysis to investigate variation among individual plants in their dimensions. Along the way, make sure you
+<ul>
+<li>construct screeplots</li>
+<li>determine how many principal components to retain (and why)</li>
+<li>Use biplots and/or loadings to see if you can understand/interpret the first few principal components</li>
+</ul></li>
+</ul>
+<p>Noticed I scaled the data here since some groups have more/less variation and are measured in different units.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pitcher_outcomes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     height        mouth_diam      tube_diam       keel_diam     
+ Min.   :322.0   Min.   :13.60   Min.   :14.30   Min.   : 1.600  
+ 1st Qu.:545.5   1st Qu.:27.30   1st Qu.:17.70   1st Qu.: 5.000  
+ Median :625.0   Median :31.50   Median :19.80   Median : 6.100  
+ Mean   :615.6   Mean   :30.88   Mean   :20.05   Mean   : 6.399  
+ 3rd Qu.:671.0   3rd Qu.:34.50   3rd Qu.:21.00   3rd Qu.: 7.200  
+ Max.   :845.0   Max.   :49.30   Max.   :30.00   Max.   :14.800  
+  wing1_length     wing2_length      wingsprea         hoodarea     
+ Min.   : 10.00   Min.   : 16.00   Min.   : 22.00   Min.   : 13.81  
+ 1st Qu.: 58.00   1st Qu.: 56.50   1st Qu.: 70.00   1st Qu.: 35.31  
+ Median : 70.00   Median : 70.00   Median : 86.00   Median : 46.18  
+ Mean   : 73.26   Mean   : 72.36   Mean   : 91.66   Mean   : 47.56  
+ 3rd Qu.: 85.00   3rd Qu.: 83.50   3rd Qu.:112.50   3rd Qu.: 56.30  
+ Max.   :148.00   Max.   :152.00   Max.   :199.00   Max.   :104.04  
+    wingarea        tubearea        hoodmass_g       tubemass_g   
+ Min.   : 2.03   Min.   : 29.57   Min.   :0.2200   Min.   :0.680  
+ 1st Qu.:14.36   1st Qu.: 69.40   1st Qu.:0.5600   1st Qu.:1.995  
+ Median :19.89   Median : 89.15   Median :0.7600   Median :2.920  
+ Mean   :23.21   Mean   : 87.43   Mean   :0.8101   Mean   :2.882  
+ 3rd Qu.:27.59   3rd Qu.:103.00   3rd Qu.:1.0250   3rd Qu.:3.505  
+ Max.   :77.09   Max.   :187.27   Max.   :1.9300   Max.   :5.890  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vegan)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>pitcher_pca <span class="ot">&lt;-</span> <span class="fu">rda</span>(pitcher_outcomes, <span class="at">scale=</span>T)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pitcher_pca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+rda(X = pitcher_outcomes, scale = T) 
+
+Partitioning of correlations:
+              Inertia Proportion
+Total              12          1
+Unconstrained      12          1
+
+Eigenvalues, and their contribution to the correlations 
+
+Importance of components:
+                         PC1    PC2    PC3     PC4     PC5     PC6     PC7
+Eigenvalue            6.0387 2.2926 1.5593 0.63927 0.44024 0.27999 0.25489
+Proportion Explained  0.5032 0.1910 0.1299 0.05327 0.03669 0.02333 0.02124
+Cumulative Proportion 0.5032 0.6943 0.8242 0.87748 0.91417 0.93750 0.95874
+                          PC8     PC9     PC10     PC11     PC12
+Eigenvalue            0.17288 0.14335 0.092922 0.057404 0.028523
+Proportion Explained  0.01441 0.01195 0.007744 0.004784 0.002377
+Cumulative Proportion 0.97315 0.98510 0.992839 0.997623 1.000000
+
+Scaling 2 for species and site scores
+* Species are scaled proportional to eigenvalues
+* Sites are unscaled: weighted dispersion equal on all dimensions
+* General scaling constant of scores:  5.667871 
+
+
+Species scores
+
+                 PC1      PC2      PC3      PC4      PC5      PC6
+height       -1.1643 -0.95368  0.23353 -0.28433  0.40067 -0.15695
+mouth_diam   -1.3498 -0.10307  0.53362  0.29479 -0.35038 -0.30827
+tube_diam    -0.1513 -1.02639 -1.06379  0.09076 -0.48719  0.43845
+keel_diam     0.5582 -0.85222 -0.86751  0.77983  0.39166 -0.33991
+wing1_length -1.3002  0.72306 -0.29384  0.23501  0.18980  0.09135
+wing2_length -1.2168  0.68270 -0.57917  0.02279  0.35568  0.17562
+wingsprea    -0.9352  0.67747 -0.88936 -0.41005 -0.11292 -0.30465
+hoodarea     -1.4402 -0.30399 -0.01017  0.07542 -0.49798 -0.26424
+wingarea     -1.3941  0.58219 -0.41932  0.00920  0.02980  0.05794
+tubearea     -1.0507 -1.09046 -0.15821 -0.51083  0.12765 -0.03247
+hoodmass_g   -1.3095  0.07561  0.51625  0.65995 -0.04898  0.20154
+tubemass_g   -1.3311 -0.60281  0.52025 -0.03302  0.24827  0.27434
+
+
+Site scores (weighted sums of species scores)
+
+             PC1      PC2      PC3       PC4        PC5       PC6
+sit1  -0.4463924  0.04766  0.79651  1.054843  0.0870049 -0.335005
+sit2   1.0632800  0.47916  0.42089  0.119629 -0.3613301  0.247938
+sit3   0.4386730  0.10924  0.13222  0.184173  0.0890179 -0.075499
+sit4  -0.1661331  0.29206 -0.03427  0.712293 -0.4491643  0.439535
+sit5   0.3304689 -0.63223  0.59247 -0.079716  0.5914151  0.735484
+sit6  -0.3799725 -0.28525  0.39815  0.429037  0.2000534  0.225961
+sit7  -0.3916880 -0.57755  0.31489  1.060107 -0.6798062  0.519512
+sit8  -0.0872208  0.11243 -0.13918 -0.472610  0.3446415  0.130392
+sit9   0.6816717 -0.06759 -0.17840  0.236907  0.0438359  0.171646
+sit10 -0.3255634 -0.69190  1.06871  0.482034 -0.4828406 -0.184721
+sit11  0.8034244  0.01429  0.35956  0.876686 -0.9733306 -0.320842
+sit12 -0.7595912  0.43638 -0.10189  0.912732 -0.9836053 -0.143740
+sit13 -1.0031435 -0.13357 -0.03894  0.391550  0.2840587 -0.273339
+sit14 -0.2806476 -0.38673  0.74999  1.082411 -0.1679918 -0.241718
+sit15  0.1381739 -0.39591  0.58624  0.030995 -1.1319188 -0.778462
+sit16  0.6670847  0.22010  0.73802 -0.082469 -0.6924330 -0.453134
+sit17 -0.2175254 -0.28696  0.55793 -0.214797  0.3622401 -0.778094
+sit18  0.2111235  0.38335 -0.30553 -0.212128 -0.7100999 -0.380937
+sit19  0.5075660 -0.17979 -0.05746 -0.511997  0.5220202  0.850809
+sit20  0.0617287 -0.31374  0.23245 -0.449793  0.0306993  0.077435
+sit21 -0.1762105 -0.17153  0.20731 -0.236427  0.2415121 -0.636271
+sit22  0.3895824 -0.68817 -0.21368  0.670757  0.0133626  0.448295
+sit23  0.7597897 -1.47935  0.32618 -0.466748 -1.2094533  1.493809
+sit24  0.5820916  0.25051 -0.18916  0.420591  0.5091079 -0.715202
+sit25  0.4175885 -0.89406  0.51579 -0.604205  0.4564758 -0.259361
+sit26 -0.5162329 -0.03560  0.21041 -0.758770  0.9719342  0.078193
+sit27 -0.6874618  0.16528 -0.23048  0.145259  0.6574611  0.540882
+sit28  0.0844907 -0.83030  0.84730 -0.025341  0.7203106  0.905834
+sit29 -0.3639010  0.08398  0.40438  0.114736  0.2829802  1.022799
+sit30  0.2092140  0.33223  0.33383  0.281520  0.5847517  0.287617
+sit31 -0.7094872 -0.33309 -0.17645 -0.038312  1.2697983  0.555526
+sit32 -0.3247773  0.08040  0.31726  0.452421  0.3123298  0.184047
+sit33  0.3397863  0.98893 -0.17209  0.320579 -0.5824703  0.006482
+sit34 -0.5845362 -0.27480  0.66265  0.362946 -0.0002129  0.376642
+sit35 -0.3572606  1.04672  0.05764  0.298637  0.6573240  0.203199
+sit36 -0.2667667  0.50878  0.06541  0.452741  0.3111447  0.686467
+sit37 -0.5677158  0.27752  0.06170  0.728231  0.4752313  0.829873
+sit38  0.5229252  0.54024 -0.17909  0.065267  0.1945776 -0.189681
+sit39 -0.0013364  0.80816 -0.13455  0.018343  0.0410862 -0.391301
+sit40 -0.5388902 -1.13087  1.26171  0.047454  1.0441887  0.668788
+sit41 -0.2467531  1.14060  0.66910  0.573901 -0.0146463 -0.332846
+sit42  0.4549990  0.42063 -0.10218  0.856017 -0.6250215  0.270708
+sit43 -0.1239053  0.40831  0.29145  0.371215  0.3167318 -0.356128
+sit44 -0.1669593  0.75504  0.93458 -0.624792 -0.4268282 -0.101325
+sit45  0.4288170 -0.27499 -0.17573  2.222507  1.7711028 -2.378105
+sit46  0.3411268  0.32102  0.69979  0.390182 -0.1043059  0.594431
+sit47  0.6208401  0.62623  1.25634 -0.137758 -0.4047325  0.285599
+sit48  0.1931513  0.44505  0.64189  0.001985  0.3186258  0.602631
+sit49 -0.1224239  0.25412  0.94560 -0.191226 -0.1844349 -0.531529
+sit50 -0.2202620  0.19981  0.53275 -0.010767  0.3077867  0.109635
+sit51  0.8917147  0.02203  0.06410  0.439493 -0.5206997  0.369146
+sit52 -0.0500368 -0.35043  0.24503 -0.062231 -0.4307627 -0.651150
+sit53 -0.1877315 -0.58397  0.59962 -0.501188 -0.5327591 -1.182568
+sit54 -0.6434479  0.93835 -0.12122 -0.419734  0.7328652 -0.051323
+sit55 -0.9655902  0.76333 -0.63653 -1.590712  0.2336204 -0.966367
+sit56 -0.6095791 -0.19369  0.35361 -0.609574 -0.0675414  0.955165
+sit57 -0.1637258 -0.54635  0.70509 -1.868968 -0.0093444 -0.293474
+sit58  0.0811023  0.11102  0.27559 -0.731463 -0.6025209 -1.179412
+sit59 -0.2263622 -0.29279 -1.06919 -0.452795 -1.7155293  0.943129
+sit60 -0.3437170 -0.05901 -0.15968 -0.355757 -0.0777497  0.696393
+sit61 -0.1269513  0.25833 -0.29434 -0.768799 -0.2236760 -0.109182
+sit62 -0.1611561 -0.78416 -0.31557  0.400971 -0.6635208 -0.607628
+sit63  1.1077018  1.12820  0.12538 -0.199203 -0.7324537 -0.040404
+sit64 -0.0706639 -0.31781 -0.28904 -0.864513  0.6646166 -0.272227
+sit65  0.1664669  0.26363 -0.70956 -0.813948  0.2342168 -0.627288
+sit66  0.5394657  1.08518  0.32806 -1.362784  0.0030909 -0.112026
+sit67 -0.3158841 -0.69456 -0.89648 -0.118303 -0.1763827  0.045813
+sit68  0.7171084  0.46154 -0.54202 -0.181813 -0.1222254  0.471115
+sit69  0.0004532  0.49471 -0.46819 -0.323250 -0.5553126 -0.509247
+sit70 -0.2681351  0.44464 -0.47120 -0.182249  0.4531224  0.044631
+sit71 -0.0843833  0.14298 -0.53371 -0.135497 -0.6208439 -1.058486
+sit72 -1.1261616  0.32014  0.29980 -0.657098  0.0572245 -0.325422
+sit73 -1.6046603  1.17904 -1.27249  0.552834 -0.3197890  0.419779
+sit74 -2.0139236  0.23599 -0.89121  0.173690 -0.1562039  0.675486
+sit75 -1.7543157 -1.48957 -0.72403 -0.142786 -1.5671974 -0.413141
+sit76  0.6965810 -0.44968 -0.89687 -0.225599  0.7381074  0.324791
+sit77  0.6040848 -0.75733 -1.01652 -0.372706  1.2037617  0.408366
+sit78  0.9358270  0.29392 -0.43741 -0.230137  0.4547464  0.598805
+sit79 -0.0025734 -2.03491 -0.65786  0.113113  0.3848851 -1.109784
+sit80  0.2355288 -0.05073 -1.32836  0.062861  0.3406334 -0.278353
+sit81  0.8757834 -0.18870 -1.63886  0.442544  0.1753669  0.402537
+sit82  0.4224307  0.43504 -1.16942  0.626329  0.2335106  0.121773
+sit83  0.6657932 -0.51662 -0.89376  0.649431 -0.7968785  0.678728
+sit84  0.8054656 -0.22045 -0.88613 -0.148910  0.2246859 -0.056510
+sit85  0.8557207 -0.89255 -0.13112 -0.682129  0.3729357 -0.461634
+sit86  0.3009114 -0.31308 -0.38347 -0.015390 -0.5723651 -0.609030
+sit87  0.6020202  0.47404  0.07596 -0.694564  0.1281819  0.066068</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">screeplot</span>(pitcher_pca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11_Multivariate_methods_solutions_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pca_data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(<span class="fu">as.data.frame</span>(<span class="fu">summary</span>(pitcher_pca)<span class="sc">$</span>cont)))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>pca_data<span class="sc">$</span>PC <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span> <span class="fu">nrow</span>(pca_data)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>pca_data<span class="sc">$</span>Proportion_Explained <span class="ot">&lt;-</span>pca_data<span class="sc">$</span><span class="st">"Proportion Explained"</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>pca_data<span class="sc">$</span>Cumulative <span class="ot">&lt;-</span>pca_data<span class="sc">$</span><span class="st">"Cumulative Proportion"</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pca_data, <span class="fu">aes</span>(<span class="at">x=</span>PC,<span class="at">y=</span>Proportion_Explained, <span class="at">group=</span><span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">4</span>)<span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Scree plot: PCA on scaled data"</span>) <span class="sc">+</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">which</span>(pca_data<span class="sc">$</span>Cumulative <span class="sc">&gt;</span> .<span class="dv">80</span>)[<span class="dv">1</span>]) <span class="sc">+</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="fu">which</span>(Cumulative <span class="sc">&gt;</span> .<span class="dv">80</span>)[<span class="dv">1</span>],.<span class="dv">3</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">label =</span> <span class="fu">paste</span>(Cumulative[<span class="fu">which</span>(Cumulative <span class="sc">&gt;</span> .<span class="dv">80</span>)[<span class="dv">1</span>]]<span class="sc">*</span><span class="dv">100</span>, </span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"% </span><span class="sc">\n</span><span class="st"> of variation explained"</span>))) <span class="sc">+</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">nrow</span>(pca_data), <span class="at">linetype=</span><span class="st">"dotted"</span>)<span class="sc">+</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">y=</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">nrow</span>(pca_data), <span class="at">x=</span><span class="dv">2</span>, <span class="at">label =</span> <span class="st">"broken stick </span><span class="sc">\n</span><span class="st"> line"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11_Multivariate_methods_solutions_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Multiple methods suggest we should retain first 3 PC (they explain &gt;80% of variance, form elbow in scree plot, and would be selected using broken stick approach).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">summary</span>(pitcher_pca)<span class="sc">$</span>species</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                    PC1         PC2         PC3          PC4         PC5
+height       -1.1643428 -0.95367637  0.23352889 -0.284330991  0.40067325
+mouth_diam   -1.3497724 -0.10307217  0.53362181  0.294794469 -0.35038393
+tube_diam    -0.1513386 -1.02639333 -1.06379060  0.090757278 -0.48718590
+keel_diam     0.5582436 -0.85222211 -0.86751464  0.779825245  0.39165963
+wing1_length -1.3001889  0.72306489 -0.29383753  0.235012920  0.18979581
+wing2_length -1.2168443  0.68270351 -0.57917053  0.022790217  0.35568359
+wingsprea    -0.9352076  0.67746718 -0.88936229 -0.410054974 -0.11292338
+hoodarea     -1.4401785 -0.30398796 -0.01016784  0.075423616 -0.49797720
+wingarea     -1.3940507  0.58219309 -0.41931938  0.009200049  0.02980016
+tubearea     -1.0507264 -1.09045742 -0.15821104 -0.510832669  0.12764686
+hoodmass_g   -1.3094841  0.07560727  0.51625102  0.659950440 -0.04897506
+tubemass_g   -1.3310526 -0.60280534  0.52025395 -0.033022124  0.24826759
+                     PC6
+height       -0.15695312
+mouth_diam   -0.30826618
+tube_diam     0.43844844
+keel_diam    -0.33991294
+wing1_length  0.09135393
+wing2_length  0.17561592
+wingsprea    -0.30465108
+hoodarea     -0.26424106
+wingarea      0.05793657
+tubearea     -0.03246665
+hoodmass_g    0.20153729
+tubemass_g    0.27433695</code></pre>
+</div>
+</div>
+<p>Wing (wingarea, wing1_length, wing2_length) and hoodarea appear to be driving PC1. PC is focus on tube measurements.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">biplot</span>(pitcher_pca, <span class="at">choices =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">type =</span> <span class="fu">c</span>(<span class="st">"text"</span>, <span class="st">"points"</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">10</span>), <span class="at">scale=</span><span class="dv">0</span>,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">main=</span> <span class="st">"Correlation biplot (scale = 0)"</span>) <span class="co"># biplot of axis 1 vs 2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in plot.window(...): "scale" is not a graphical parameter</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in plot.xy(xy, type, ...): "scale" is not a graphical parameter</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in axis(side = side, at = at, labels = labels, ...): "scale" is not a
+graphical parameter
+
+Warning in axis(side = side, at = at, labels = labels, ...): "scale" is not a
+graphical parameter</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in box(...): "scale" is not a graphical parameter</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in title(...): "scale" is not a graphical parameter</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="11_Multivariate_methods_solutions_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Using the same plant dataset, use linear discriminant analysis to classify the various sites</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>pitcher_lda <span class="ot">&lt;-</span>pitcher[,<span class="dv">1</span><span class="sc">:</span><span class="dv">13</span>]</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>da_ca <span class="ot">&lt;-</span> <span class="fu">lda</span>(site <span class="sc">~</span> ., pitcher_lda)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(da_ca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Length Class  Mode     
+prior    4     -none- numeric  
+counts   4     -none- numeric  
+means   48     -none- numeric  
+scaling 36     -none- numeric  
+lev      4     -none- character
+svd      3     -none- numeric  
+N        1     -none- numeric  
+call     3     -none- call     
+terms    3     terms  call     
+xlevels  0     -none- list     </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(da_ca,pitcher_lda)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(Predictions<span class="sc">$</span>class, pitcher_lda<span class="sc">$</span>site)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     
+      DG HD LEH TJH
+  DG  23  0   0   2
+  HD   0 11   0   0
+  LEH  0  1  24   0
+  TJH  2  0   1  23</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ldahist</span>(<span class="at">data =</span> Predictions<span class="sc">$</span>x[,<span class="dv">1</span>], <span class="at">g=</span>pitcher_lda<span class="sc">$</span>site)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11_Multivariate_methods_solutions_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ldahist</span>(<span class="at">data =</span> Predictions<span class="sc">$</span>x[,<span class="dv">2</span>], <span class="at">g=</span>pitcher_lda<span class="sc">$</span>site)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11_Multivariate_methods_solutions_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="4" type="1">
+<li>Using the same plant dataset, use cluster analysis to determine how many clusters are supported by the data.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cluster)    <span class="co"># clustering algorithms</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_nbclust</span>(pitcher_outcomes, kmeans, <span class="at">method =</span> <span class="st">"silhouette"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11_Multivariate_methods_solutions_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Data only support 2 clusters (but we had 4 sites!). Note we don’t see clear break among sites in graph either.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>final <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(pitcher_outcomes, <span class="dv">2</span>, <span class="at">nstart =</span> <span class="dv">25</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(final)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>K-means clustering with 2 clusters of sizes 53, 34
+
+Cluster means:
+    height mouth_diam tube_diam keel_diam wing1_length wing2_length wingsprea
+1 679.6226   33.65094  20.40755  6.207547     77.37736     76.37736  95.67925
+2 515.8824   26.55588  19.49412  6.697059     66.85294     66.08824  85.38235
+  hoodarea wingarea  tubearea hoodmass_g tubemass_g
+1 54.68491 26.71642 101.05679  0.9333962   3.464906
+2 36.46529 17.75353  66.17559  0.6179412   1.972647
+
+Clustering vector:
+ [1] 1 2 1 2 1 1 1 1 2 1 2 1 1 1 1 2 1 2 2 1 1 2 1 2 1 1 1 1 1 2 1 1 2 1 2 2 1 2
+[39] 2 1 2 2 1 1 1 2 2 2 1 1 2 1 1 1 1 1 1 1 1 1 1 1 2 1 1 2 1 2 2 1 1 1 1 1 1 2
+[77] 1 2 1 2 2 2 2 2 1 2 2
+
+Within cluster sum of squares by cluster:
+[1] 395968.5 175725.5
+ (between_SS / total_SS =  51.1 %)
+
+Available components:
+
+[1] "cluster"      "centers"      "totss"        "withinss"     "tot.withinss"
+[6] "betweenss"    "size"         "iter"         "ifault"      </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_cluster</span>(final, <span class="at">data =</span> pitcher_outcomes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11_Multivariate_methods_solutions_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#compare to other information</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggforce)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(concaveman)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>pitcher<span class="sc">$</span>cluster <span class="ot">&lt;-</span> <span class="fu">factor</span>(final<span class="sc">$</span>cluster)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>pitcher<span class="sc">$</span>PC1 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">summary</span>(pitcher_pca)<span class="sc">$</span>site)<span class="sc">$</span>PC1</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>pitcher<span class="sc">$</span>PC2 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">summary</span>(pitcher_pca)<span class="sc">$</span>site)<span class="sc">$</span>PC2</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pitcher, <span class="fu">aes</span>(<span class="at">x=</span>PC1, <span class="at">y=</span>PC2, <span class="at">shape=</span>site, <span class="at">color=</span>cluster, <span class="at">group=</span>cluster)) <span class="sc">+</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_mark_hull</span>(<span class="fu">aes</span>(<span class="at">fill=</span>cluster))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11_Multivariate_methods_solutions_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="5" type="1">
+<li>The data for this exercise are rodent species abundance from 28 sites in California (Bolger et al.&nbsp;1997, Response of rodents to habitat fragmentation in coastal Southern California, Ecological Applications 7: 552–563).</li>
+</ol>
+<p>This data comes from the (website)[http://www.zoology.unimelb.edu.au/qkstats/data.htm) of Quinn and Keough (2002, Experimental Design and Data Analysis for Biologists, Cambridge Univ. Press, Cambridge, UK). Data is available via</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>rodents <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://docs.google.com/spreadsheets/d/e/2PACX-1vTLRwuI1cQ61RZOVJFwi0jhO85fonqR7oZHzy_9A5fVwxuZQ2A6iBnlLG2Z-33rwNnycqNUUh1_XuMU/pub?gid=1403553505&amp;single=true&amp;output=csv"</span>, </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The 9 species are indicated by variable (column) names. Genus abbreviations are: Rt (Rattus), Rs (Reithrodontomys), Mus (Mus), Pm (Peromyscus), Pg (Perognathus), N (Neotoma) and M (Microtus). Rattus and Mus are invasive species, whereas the others are native.</p>
+<ul>
+<li>Analyze the dat using correspondence analysis
+<ul>
+<li>interpret any results (loadings!)</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>rodents_cca <span class="ot">&lt;-</span> <span class="fu">cca</span>(rodents[,<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rodents_cca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+cca(X = rodents[, -1]) 
+
+Partitioning of scaled Chi-square:
+              Inertia Proportion
+Total           1.719          1
+Unconstrained   1.719          1
+
+Eigenvalues, and their contribution to the scaled Chi-square 
+
+Importance of components:
+                         CA1    CA2    CA3     CA4     CA5     CA6      CA7
+Eigenvalue            0.7463 0.4591 0.2876 0.15278 0.03567 0.02458 0.011345
+Proportion Explained  0.4341 0.2670 0.1673 0.08886 0.02074 0.01430 0.006599
+Cumulative Proportion 0.4341 0.7011 0.8684 0.95721 0.97795 0.99225 0.998847
+                           CA8
+Eigenvalue            0.001982
+Proportion Explained  0.001153
+Cumulative Proportion 1.000000
+
+Scaling 2 for species and site scores
+* Species are scaled proportional to eigenvalues
+* Sites are unscaled: weighted dispersion equal on all dimensions
+
+
+Species scores
+
+                    CA1      CA2      CA3      CA4       CA5       CA6
+Rt.rattus        2.6062  5.29874 -0.04857 -0.20529  0.030064 -0.003758
+Mus.musculus     2.2895 -0.77463  0.09027  0.02397 -0.006747  0.002850
+Pm.californicus -0.3071  0.05080 -0.13409  0.35500 -0.063215  0.011530
+Pm.eremicus     -0.4133  0.02486  1.14724 -0.27566 -0.023139 -0.177492
+Rs.megalotis    -0.3156 -0.04209 -0.06907 -0.13316  0.532798  0.211411
+N.fuscipes      -0.2733 -0.07662 -0.52447 -0.42972  0.118793 -0.153441
+N.lepida        -0.4467  0.02780  1.35632 -0.41923 -0.044516  0.771731
+Pg.fallax       -0.2746 -0.10305 -0.94290 -1.12163 -0.429545  0.193050
+M.californicus  -0.3839 -0.01687  0.44567 -0.65496 -0.744677  0.261514
+
+
+Site scores (weighted averages of species scores)
+
+           CA1       CA2      CA3      CA4      CA5      CA6
+sit1   1.84681 -1.098735  0.13919  0.03544  0.65872 -0.40955
+sit2  -0.45410  0.028388  1.47538 -0.54050 -0.32520 -1.03226
+sit3  -0.13106 -0.087277 -0.63582  1.12198 -0.09235 -0.42415
+sit4  -0.27507 -0.091636 -1.13823 -0.98046 -1.75568  0.41337
+sit5  -0.37103  0.009339  0.20537  0.47983  0.81371 -1.12508
+sit6  -0.44178  0.027407  1.27694 -0.33839  0.14261  1.97439
+sit7   3.06766 -1.687336  0.31393  0.15686 -0.18917  0.11596
+sit8   3.06766 -1.687336  0.31393  0.15686 -0.18917  0.11596
+sit9   3.18338  1.920675  0.18225 -0.25239  0.09231  0.04264
+sit10  3.20909  2.722455  0.15299 -0.34334  0.15486  0.02634
+sit11  3.06766 -1.687336  0.31393  0.15686 -0.18917  0.11596
+sit12 -0.05491 -0.301609 -1.65187 -3.06119  1.29183 -0.03379
+sit13 -0.16717 -0.081410 -0.67420  0.91543  0.50579 -0.36864
+sit14  3.17373  1.620007  0.19322 -0.21829  0.06885  0.04875
+sit15  3.06766 -1.687336  0.31393  0.15686 -0.18917  0.11596
+sit16  3.06766 -1.687336  0.31393  0.15686 -0.18917  0.11596
+sit17  3.49195 11.542037 -0.16891 -1.34374  0.84291 -0.15289
+sit18 -0.34063  0.010235 -0.71108  0.96386  0.08532  0.61901
+sit19 -0.41150  0.110658 -0.46632  2.32364 -1.77238  0.46910
+sit20 -0.03833  1.215098 -0.29380  1.83557 -1.48304  0.16083
+sit21  3.35052  7.132246 -0.00796 -0.84354  0.49888 -0.06327
+sit22  3.06766 -1.687336  0.31393  0.15686 -0.18917  0.11596
+sit23 -0.37591 -0.163960 -1.80243 -3.24399  2.70293 -1.41928
+sit24  3.49195 11.542037 -0.16891 -1.34374  0.84291 -0.15289
+sit25  3.06766 -1.687336  0.31393  0.15686 -0.18917  0.11596
+sit26 -0.39476  0.004274 -1.05370  0.15706 -0.75548 -1.21836
+sit27 -0.40460  0.011545 -0.72691  0.53089  2.36564  1.04667
+sit28 -0.41957  0.082820 -0.20812  1.55161 -1.25349 -0.73110</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(rodents_cca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11_Multivariate_methods_solutions_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>It appears that invasive species (<em>Rattus rattus</em> and <em>Muscus musculus</em>) are driving the loadings.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rodents_cca)<span class="sc">$</span>species</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                       CA1         CA2         CA3         CA4         CA5
+Rt.rattus        2.6061989  5.29874422 -0.04857056 -0.20529314  0.03006368
+Mus.musculus     2.2895378 -0.77462586  0.09027392  0.02396537 -0.00674700
+Pm.californicus -0.3071181  0.05080108 -0.13409430  0.35500013 -0.06321493
+Pm.eremicus     -0.4132524  0.02486477  1.14723516 -0.27565948 -0.02313896
+Rs.megalotis    -0.3155994 -0.04208708 -0.06906776 -0.13316240  0.53279757
+N.fuscipes      -0.2732769 -0.07662170 -0.52446997 -0.42971810  0.11879332
+N.lepida        -0.4467095  0.02779902  1.35631782 -0.41923277 -0.04451588
+Pg.fallax       -0.2746243 -0.10305312 -0.94289792 -1.12162708 -0.42954482
+M.californicus  -0.3838821 -0.01686660  0.44566658 -0.65495633 -0.74467657
+                         CA6
+Rt.rattus       -0.003757729
+Mus.musculus     0.002850040
+Pm.californicus  0.011529890
+Pm.eremicus     -0.177492479
+Rs.megalotis     0.211411033
+N.fuscipes      -0.153441047
+N.lepida         0.771730556
+Pg.fallax        0.193049692
+M.californicus   0.261513923</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rodents_cca)<span class="sc">$</span>sites</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              CA1          CA2          CA3         CA4         CA5         CA6
+sit1   1.84681376 -1.098735409  0.139189335  0.03544107  0.65872436 -0.40954944
+sit2  -0.45409654  0.028387729  1.475378220 -0.54050126 -0.32520013 -1.03226268
+sit3  -0.13106453 -0.087277026 -0.635820733  1.12197796 -0.09235328 -0.42414574
+sit4  -0.27506595 -0.091636366 -1.138230154 -0.98045754 -1.75567536  0.41337133
+sit5  -0.37103128  0.009338973  0.205367912  0.47983474  0.81370883 -1.12508461
+sit6  -0.44178475  0.027406546  1.276944215 -0.33838712  0.14260695  1.97439271
+sit7   3.06766380 -1.687335649  0.313930805  0.15686425 -0.18916846  0.11595600
+sit8   3.06766380 -1.687335649  0.313930805  0.15686425 -0.18916846  0.11595600
+sit9   3.18337708  1.920674958  0.182248070 -0.25239060  0.09230693  0.04263546
+sit10  3.20909115  2.722455092  0.152985239 -0.34333613  0.15485702  0.02634201
+sit11  3.06766380 -1.687335649  0.313930805  0.15686425 -0.18916846  0.11595600
+sit12 -0.05490512 -0.301609274 -1.651874915 -3.06118525  1.29183391 -0.03378661
+sit13 -0.16716877 -0.081410397 -0.674199522  0.91543170  0.50578546 -0.36864212
+sit14  3.17373431  1.620007407  0.193221631 -0.21828603  0.06885065  0.04874550
+sit15  3.06766380 -1.687335649  0.313930805  0.15686425 -0.18916846  0.11595600
+sit16  3.06766380 -1.687335649  0.313930805  0.15686425 -0.18916846  0.11595600
+sit17  3.49194583 11.542036575 -0.168905891 -1.34373689  0.84290798 -0.15288597
+sit18 -0.34062887  0.010234699 -0.711080679  0.96386393  0.08531798  0.61901315
+sit19 -0.41149579  0.110657901 -0.466317773  2.32363717 -1.77238336  0.46910209
+sit20 -0.03833064  1.215097902 -0.293798251  1.83557020 -1.48304462  0.16082859
+sit21  3.35051849  7.132245834 -0.007960326 -0.84353651  0.49888250 -0.06327198
+sit22  3.06766380 -1.687335649  0.313930805  0.15686425 -0.18916846  0.11595600
+sit23 -0.37590517 -0.163960086 -1.802433393 -3.24399470  2.70292869 -1.41927763
+sit24  3.49194583 11.542036575 -0.168905891 -1.34373689  0.84290798 -0.15288597
+sit25  3.06766380 -1.687335649  0.313930805  0.15686425 -0.18916846  0.11595600
+sit26 -0.39475743  0.004274291 -1.053697437  0.15706278 -0.75548148 -1.21835714
+sit27 -0.40459817  0.011545310 -0.726914344  0.53088842  2.36563584  1.04666752
+sit28 -0.41956768  0.082819918 -0.208124105  1.55161291 -1.25349435 -0.73110448</code></pre>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">© CC BY-NC-SA 4.0</a></div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/solutions/11_Multivariate_methods_solutions.Rmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/solutions/11_Multivariate_methods_solutions.Rmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></div>
+    <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a>.</div>
+  </div>
+</footer>
+
+
+
+</body></html>

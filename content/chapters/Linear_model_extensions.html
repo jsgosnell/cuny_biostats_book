@@ -359,6 +359,18 @@ div.csl-indent {
  <span class="menu-text">Combining numerical and categorical predictors</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/10_Linear_model_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Linear model extensions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/11_Multivariate_methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multivariate methods</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -422,6 +434,18 @@ div.csl-indent {
   <div class="sidebar-item-container"> 
   <a href="../../content/practice_problems/9_Combining_numerical_and_categorical_predictors_solutions.Rmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Combining numerical and categorical predictors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/10_Linear_model_extensions_solutions.Rmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Linear model extensions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/practice_problems/11_Multivariate_methods_solutions.Rmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multivariate methods</span></a>
   </div>
 </li>
       </ul>
@@ -574,17 +598,17 @@ of ggplot2 3.3.4.</code></pre>
 <p><span class="math display">\[
 \epsilon \approx i.i.d.\ N(\mu,\sigma)
 \]</span></p>
-<p>Although the residuals are meant to be homoscedastic (equal or constant across all groups) , it turns out the model is robust of when the largest group variance is 4-10x larger than the smallest group variance and sample sizes are approximately equal <span class="citation" data-cites="blanca2018 fox2015 zuur2010">(<a href="#ref-blanca2018" role="doc-biblioref">Blanca et al. 2018</a>; <a href="#ref-fox2015" role="doc-biblioref">Fox 2015</a>; <a href="#ref-zuur2010" role="doc-biblioref">Zuur, Ieno, and Elphick 2010</a>)</span>, though highly uneven group sizes begin to cause issues <span class="citation" data-cites="blanca2018">(<a href="#ref-blanca2018" role="doc-biblioref">Blanca et al. 2018</a>)</span>.</p>
-<p>Similarly, non-normal data is not an issue. This is partially because the assumptions are focused on residuals, but also because the procedure is highly robust <span class="citation" data-cites="blanca2017">(<a href="#ref-blanca2017" role="doc-biblioref">Blanca et al. 2017</a>)</span>. This finding further supports the graphical consideration of assumptions, especially since many tests for normality are conservative (samples are almost never <em>perfectly</em> normal, and slight deviations are easier to pick up with larger sample sizes despite the fact the central limit theorem suggests this is when the issue is least important <span class="citation" data-cites="zuur2010">Zuur, Ieno, and Elphick (<a href="#ref-zuur2010" role="doc-biblioref">2010</a>)</span>).</p>
-<p>These issues have led some authors to argue violations of the linear model assumptions are less dangerous than trying new, and often less-tested, techniques that may inflate type I error rates <span class="citation" data-cites="knief2021 warton2016">(<a href="#ref-knief2021" role="doc-biblioref">Knief and Forstmeier 2021</a>; <a href="#ref-warton2016" role="doc-biblioref">D. I. Warton et al. 2016</a>)</span>. However, new techniques (or sometimes old techniques that are new to a given field) may be more appropriate when assumptions are clearly broken <span class="citation" data-cites="warton2010 reitan2016 geissinger2022">(<a href="#ref-warton2010" role="doc-biblioref">D. Warton and Hui 2010</a>; <a href="#ref-reitan2016" role="doc-biblioref">Reitan and Nielsen 2016</a>; <a href="#ref-geissinger2022" role="doc-biblioref">Geissinger et al. 2022</a>)</span>. In this section we explore common-ish approaches for analyzing data when the assumptions of a linear model are broken. Our goal here is to introduce these methods. Each could be the focus of their own class, book, or much larger study. Fortunately most can be viewed as extensions to our existing knowledge.</p>
-<p>The various assumptions related to linear models may be prioritized on their relative importance. One such order is <span class="citation" data-cites="gelman2006">(<a href="#ref-gelman2006" role="doc-biblioref">Gelman and Hill 2006</a>)</span></p>
+<p>Although the residuals are meant to be homoscedastic (equal or constant across all groups), it turns out the model is robust of when the largest group variance is 4-10x larger than the smallest group variance and sample sizes are approximately equal <span class="citation" data-cites="blanca2018 fox2015 zuur2010">(<a href="#ref-blanca2018" role="doc-biblioref">Blanca et al. 2018</a>; <a href="#ref-fox2015" role="doc-biblioref">Fox 2015</a>; <a href="#ref-zuur2010" role="doc-biblioref">A. F. Zuur, Ieno, and Elphick 2010</a>)</span>, though highly uneven group sizes begin to cause issues <span class="citation" data-cites="blanca2018">(<a href="#ref-blanca2018" role="doc-biblioref">Blanca et al. 2018</a>)</span>.</p>
+<p>Similarly, non-normal data is not an issue. This is partially because the assumptions are focused on residuals, but also because the procedure is highly robust <span class="citation" data-cites="blanca2017">(<a href="#ref-blanca2017" role="doc-biblioref">Blanca et al. 2017</a>)</span>. This finding further supports the graphical consideration of assumptions , especially since many tests for normality are conservative (samples are almost never <em>perfectly</em> normal, and slight deviations are easier to pick up with larger sample sizes despite the fact the central limit theorem suggests this is when the issue is least important) <span class="citation" data-cites="zuur2010 shatz2023">(<a href="#ref-zuur2010" role="doc-biblioref">A. F. Zuur, Ieno, and Elphick 2010</a>; <a href="#ref-shatz2023" role="doc-biblioref">Shatz 2023</a>)</span>.</p>
+<p>These issues have led some authors to argue violations of the linear model assumptions are less dangerous than trying new, and often less-tested, techniques that may inflate type I error rates <span class="citation" data-cites="knief2021 warton2016">(<a href="#ref-knief2021" role="doc-biblioref">Knief and Forstmeier 2021</a>; <a href="#ref-warton2016" role="doc-biblioref">D. I. Warton et al. 2016</a>)</span>. However, new techniques (or sometimes old techniques that are new to a given field) may be more appropriate when assumptions are clearly broken <span class="citation" data-cites="warton2010 reitan2016 geissinger2022">(<a href="#ref-warton2010" role="doc-biblioref">D. Warton and Hui 2010</a>; <a href="#ref-reitan2016" role="doc-biblioref">Reitan and Nielsen 2016</a>; <a href="#ref-geissinger2022" role="doc-biblioref">Geissinger et al. 2022</a>)</span>. In this section we explore common-ish approaches for analyzing data when the assumptions of a linear model are broken. Our goal here is to introduce these methods. Each could be the focus of their own class, book, or much larger study. Fortunately most can be viewed as extensions to our existing knowledge, although many of the assumptions and techniques for them are less developed/still being argued about.</p>
+<p>The various assumptions related to linear models may be prioritized on their relative importance. One such order is provided (roughly) by <span class="citation" data-cites="gelman2006">Gelman and Hill (<a href="#ref-gelman2006" role="doc-biblioref">2006</a>)</span>.</p>
 <ul>
 <li><p>Model validity</p>
 <ul>
 <li>As noted in the multiple regression chapter, we only should investigate relationships we have a mechanism to explain</li>
 </ul></li>
-<li><p>linear relationship</p></li>
-<li><p>errors are</p>
+<li><p>Linear relationship and additive effects of predictor variables</p></li>
+<li><p>Errors are</p>
 <ul>
 <li><p>independently distributed</p></li>
 <li><p>identical (homoscedastic)</p></li>
@@ -595,13 +619,19 @@ of ggplot2 3.3.4.</code></pre>
 </section>
 <section id="linear-relationship-is-inappropriate" class="level2">
 <h2 class="anchored" data-anchor-id="linear-relationship-is-inappropriate">Linear relationship is inappropriate</h2>
-<p>A key (and often overlooked assumption) of linear models is that the relationship between the predictors and the outcome variable is linear. This may not occur for a number of reasons (each having its own response). When this occurs the resulting residuals are often not normally distributed as well.</p>
+<p>A central (and often overlooked assumption) of linear models is that the relationship between the predictors and the outcome variable is linear and addtive. When the relationship is not linear, the resulting residuals are often not appropriately distributed as well.This may occur for a number of reasons. The outcome may not actually be continuous (e.g.&nbsp;counts. proportions) or may be related to the predictors in different ways (e.g., logarithmic). When this occurs, several options exist.</p>
+<details>
+<summary>
+What’s linear anyway?
+</summary>
+<p>To be clear, the linear model only focuses on the linear and additive relationship between the predictors and the outcome variable (this will become more important/obvious later in this section!). The model doesn’t <em>know</em> what the variables are. For that reason, we can add predictor variables to a model that are squares or cubes of predictors, or we can transform the outcome variable. We just the <span class="math inline">\(Y = X\beta\)</span> relationship to be additive and linear.</p>
+</details>
 <section id="transform-the-data-least-advisable-sometimes" class="level3">
 <h3 class="anchored" data-anchor-id="transform-the-data-least-advisable-sometimes">Transform the data (least advisable, sometimes)</h3>
-<p>One option is to transform the data (typically focusing on the dependent variable) so that the resulting variable meets the linear model assumptions. As noted above, our rank-based approaches are using a similar method (not technically the same, but it works for larger sample sizes). This approach was often used in the past. For example, Box-Cox transformation helped researchers find the best way to transform data to reduce issues with the distribution of residuals; this method also tended to impact linearity and differences in variances.</p>
+<p>One option is to transform the data (typically focusing on the dependent variable) so that the resulting variable meets the linear model assumptions (and thus uses the strengths of linear models that we noted above). As shown above, our rank-based approaches are using a similar method (not technically the same, but it works for larger sample sizes). This approach was often used in the past(e.g., arc-sin transforms of proportion data <span class="citation" data-cites="warton2010">D. Warton and Hui (<a href="#ref-warton2010" role="doc-biblioref">2010</a>)</span>) and supported by various approacheac. For example, Box-Cox transformation helped researchers find the best way to transform data to reduce issues with the distribution of residuals; this method also tended to impact linearity and differences in variances.</p>
 <p>Two things should be noted regarding this approach and transformations in general:</p>
 <ul>
-<li>The Box-Cox approach requires a model - it still focused on transforming data so that <em>residuals</em> met assumptions. Data should not be transformed before model assumptions are analyzed to ensure it is necessary. For example, highly skewed data may arise due to unequal sample sizes (which may pose their own problems, but not outright).</li>
+<li>The Box-Cox approach requires a model - it still focused on transforming data so that <em>residuals</em> met assumptions. Data should not be transformed before model assumptions are analyzed to ensure it is necessary. For example, highly skewed data may arise due to unequal sample sizes (which may pose their own problems, but not outright). Non-normal data, however, may have normalized residuals. However, normal data (or transformed data) does typically lead to normal residuals, so if residuals are not normal transformations may help.</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8</span>)</span>
@@ -650,10 +680,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <ul>
-<li><p>The resulting variable is <em>now</em> linear in respect to the predictors. This highlights the actual assumption of the model. Similarly, higher-terms (squares, cubes, etc) may be added to a linear model. The model does not care what the data represent - it only focuses on if linear relationships exist among them.</p></li>
-<li><p>Conversely, transformations can make model interpretation and prediction difficult.</p></li>
+<li><p>The transformed variable is <em>now</em> linear in respect to the predictors. This highlights the actual assumption of the model. Similarly, higher-terms (squares, cubes, etc) may be added to a linear model. The model does not care what the data represent - it only focuses on if linear relationships exist among them.</p></li>
+<li><p>Transformations can make model interpretation and prediction difficult.</p></li>
 </ul>
-<p>If the decision is made to transform the data, several approaches exist. Some are driven by the distribution of the data, and all depend on it. For example, log and related root transformations are useful for right-skewed data, but some can only be carried out for non-negative (e.g., square root) or strictly positive (e..g., log) values. To address this for log transformations, a small value is often added to 0 measurements.</p>
+<p>If the decision is made to transform the data, several approaches exist. Some are driven by the distribution of the data, and all depend on it. For example, log and related root transformations are useful for right-skewed data, but some can only be carried out for non-negative (e.g., square root) or strictly positive (e.g., log) values. To address this for log transformations, a small value is often added to 0 measurements.</p>
 <p>Let’s data (not residuals) to show what different types of data look like and consider possible fixes (always fit a model first for real analysis!). For example, we can return to our right-skewed blue jay data <a href="../../content/chapters/summarizing_data.html">from the summarizing data chapter</a>(target=“_blank)(idea from <span class="citation" data-cites="hunt">(<a href="#ref-hunt" role="doc-biblioref">Hunt, n.d.</a>)</span>) .</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
@@ -782,12 +812,34 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>Under-dispersion could also happen if data are bounded (e.g., by practicality or due to a measurement issue). Over-dispersion can similarly occur if the model does not account for variability (e.g., missing factors, non-linear relationship) and/or outliers, which might be related to the underlying form of the data <span class="citation" data-cites="payne2017">(<a href="#ref-payne2017" role="doc-biblioref">Payne et al. 2017</a>)</span> (more to come on this). In this way, over- and under-dispersion relate to both the linear relationship.</p>
-<section id="use-a-better-model" class="level4">
-<h4 class="anchored" data-anchor-id="use-a-better-model">Use a better model</h4>
-<p>The linear relationship may be inappropriate because our data doesn’t fit it! For example, if we are modeling proportions, estimates less than 0 or below 1 do not make sense, but a linear model doesn’t account for that. The same issues arise for proportions and binary outcomes. While we may be able to transform the response variable to make it linear, another options is to translate the <em>link</em> function.</p>
-<p>Although we haven’t fully explored it yet, a linear model contains three components. There is always a random component that focuses on the distribution of the data. There is also a systematic component, where a number of covariates and data points produce an estimate. Finally, there is the link function, which connects that estimate to the data distribution.</p>
-<p>Notice this means the link connects to the distribution of the data, not the data itself. So far we have focused on the <em>mean</em> of the data, and the estimate is the mean, so the link has been implied. We can <em>generalize</em> this setup, however, using <em>generalized linear models</em>. These models make different assumptions, which can include removing the need for homoscedasticity or normality of residuals.</p>
-<p>There are numerous types of generalized linear models, commonly known as glm’s (not to be confused with the general linear model, which is just another name sometimes used for the “normal” linear model). Here we outline some of the more common ones.</p>
+<section id="generalized-linear-model-approach-different-data-different-approach" class="level4">
+<h4 class="anchored" data-anchor-id="generalized-linear-model-approach-different-data-different-approach">Generalized linear model approach: Different data, different approach</h4>
+<p>The linear relationship may be inappropriate because our data doesn’t fit it! For example, if we are modeling proportions, estimates less than 0 or below 1 do not make sense, but a linear model doesn’t account for that. The same issues arise for proportions and binary outcomes. While we may be able to transform the response variable to make it linear, another option is to translate the <em>link</em> function.</p>
+<p>Although we haven’t fully explained it yet, a linear model contains three components. There is always a random component that focuses on the distribution of the data. There is also a systematic component, where a number of covariates and data points produce an estimate. Finally, there is the link function, which connects that estimate to the data distribution (this maintains the linearity of the model).</p>
+<p>Notice this means the link connects to the distribution of the data, not the data itself. So far we have focused on the <em>mean</em> of the data, and the estimate is the mean, so the link has been implied. We can <em>generalize</em> this setup to include other distributions in the exponential family (and now others <span class="citation" data-cites="applied2022">(<a href="#ref-applied2022" role="doc-biblioref"><span>“Applied Regression Analysis and Generalized Linear Models”</span> 2022</a>, ch.&nbsp;15)</span>).</p>
+<p>While we won’t develop all the math, exponential family distributions all have a canonical parameter (the mean for Gaussian, or normal, data) and a dispersion parameter (the variance for normal data). Different distributions have different relationships between these two parameters. For normal data, there is <em>no</em> relationship, so the variance is constant. This is not true for other families.</p>
+<p>We can specify other families using <em>generalized linear models</em>(which are different than general linear models, which is another term used to describe our “regular” linear models). These models are also known as glm or glim (we’ll use the glm jargon here). GLM make different assumptions (though everyone does not agree on what they are!). While we still need independence of the residuals (or some extension, see below), they no longer need to be normally distributed <span class="citation" data-cites="zuur2007 zuur2009">(<a href="#ref-zuur2007" role="doc-biblioref">A. Zuur, Ieno, and Smith 2007, 86–87</a>; <a href="#ref-zuur2009" role="doc-biblioref">A. Zuur et al. 2009, sec. 9.8.3</a>)</span> (though normality may hold at large sample sizes for Pearson <span class="citation" data-cites="agresti2007">(<a href="#ref-agresti2007" role="doc-biblioref">Agresti 2007, 87</a>)</span> or deviance <span class="citation" data-cites="montgomery2012">(<a href="#ref-montgomery2012" role="doc-biblioref">Montgomery, Peck, and Vining 2012, sec. 13.4.4</a>)</span> <!-- https://stats.stackexchange.com/questions/92394/checking-residuals-for-normality-in-generalised-linear-models; https://online.stat.psu.edu/stat504/lesson/6/6.1 --> residuals, and some authors argue normality is required for testing <span class="citation" data-cites="feng2020">(<a href="#ref-feng2020" role="doc-biblioref">Feng, Li, and Sadeghpour 2020</a>)</span> ) or constant (homogeneity). As noted above, non-Gaussian families don’t assume a constant variance, so homogeneity assumptions would not be appropriate. However, we need to ensure the correct family (and thus mean-variance link) is chosen. In general, plotting the residuals against</p>
+<ul>
+<li><p>the predicted values</p></li>
+<li><p>each explanatory variable in model</p></li>
+</ul>
+<!-- -->
+<ul>
+<li><p>each explanatory not retained/used in model</p></li>
+<li><p>against time and space</p></li>
+</ul>
+<p>will be useful. Any patterns may suggest missing predictors or lack of independence/correlation among measurements. Patterns in the residuals may also indicate the incorrect family has been chosen <span class="citation" data-cites="zuur2009">(<a href="#ref-zuur2009" role="doc-biblioref">A. Zuur et al. 2009, sec. 9.8.4</a>)</span></p>
+<details>
+<summary>
+What are residuals for a GLM?
+</summary>
+<p>Residuals for a Gaussian/normal glm (what we’ve been doing) are easy to calculate. We simply subtract the estimate for each data point (which is the average for similar observations!) from the observed. However, though these raw or response residuals exist for GLM, they rarely make sense. Variance may increase with mean for some distributions, for example, or outcomes may be binary.</p>
+<p>To account for this, we could divide the residuals by the square root of the variance. This normalizes the residuals and leads to <em>Pearson residuals</em>. Another option is based on something called deviance. Deviance is similar to sums of squares but based on likelihood (which we shortly see is what we use to test for significance in GLM); it can also be considered the generalized form of variance or residuals sums of squares. It is calculated as the difference of log-likelihods between the focal model and the saturated model. Deviance residuals consider how important each point is to the overall deviance. You can also compare the deviance of a model to a perfect fit (no deviance/saturated) model and an intercept-only model (worst fit, D<sub>O</sub>) and generate a pseudo-R<sup>2</sup> measure using the formula</p>
+<p><span class="math display">\[
+1-\frac{D}{D_O}
+\]</span></p>
+</details>
+<p>There are numerous types of GLMs. Here we outline some of the more common ones. Regardless of which ones you use, moving beyond the normal distribution means the residuals do not need to be normally or identically distributed</p>
 <section id="logistic-regression" class="level5">
 <h5 class="anchored" data-anchor-id="logistic-regression">Logistic regression</h5>
 <p>Logistic regression focused on yes/no outcomes; data can be a single answer (Bernoulli) or a collection (binomial).</p>
@@ -811,7 +863,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="in-respect-to-predictors" class="level3">
 <h3 class="anchored" data-anchor-id="in-respect-to-predictors">In respect to predictors</h3>
 <p>A major issue for linear models is when predictors are co-linear. Mathematically speaking, perfect collinearity occurs when any column of the design (<em>X</em>) matrix can be derived by combining other columns. Perfect collinearity will lead to a message noting singularity issues, which is R’s way of telling you the matrix isn’t invertible (which it has to be to solve the equation).</p>
-<p>Even partial collinearity will lead to an increase in Type II errors <span class="citation" data-cites="zuur2010">(<a href="#ref-zuur2010" role="doc-biblioref">Zuur, Ieno, and Elphick 2010</a>)</span>. To put it simply, partitioning variance among related predictors is hard. For this reason, a few approaches may be used.</p>
+<p>Even partial collinearity will lead to an increase in Type II errors <span class="citation" data-cites="zuur2010">(<a href="#ref-zuur2010" role="doc-biblioref">A. F. Zuur, Ieno, and Elphick 2010</a>)</span>. To put it simply, partitioning variance among related predictors is hard. For this reason, a few approaches may be used.</p>
 <section id="check-for-issues" class="level4">
 <h4 class="anchored" data-anchor-id="check-for-issues">Check for issues</h4>
 <p>The first step is identifying issues. From the outset, relationships among predictor variables can be assessed using the <em>pairs</em> function in R. If two variables are highly correlated (r<sup>2</sup> &gt; .8 is a general limit), only one should be included in the model. Similarly, variance inflation factors (vif) can be assessed for the final and other models to consider this issues (all this is covered in the <a href="../../content/chapters/Combining_numerical_and_categorical_predictors.html" target="_blank">previous chapter that introduces multiple regression</a>.</p>
@@ -966,7 +1018,7 @@ predator_cuenormal:temperatureelevated_scenario2  0         -1        </code></p
 <p>Our final option takes a new approach. It considers the units we measured as simply a sample from a larger population. Using that background, we use the information from the units to consider the distribution of sample effects we might see. The impact of unit is then considered a random-effect. For this to work, you probably want 5+ levels of the unit variable. This is because we are using the means to estimate variance (confusing?). For factors with &lt;5 levels, random effects likely offer no benefit <span class="citation" data-cites="gomes2022">(<a href="#ref-gomes2022" role="doc-biblioref">Gomes 2022</a>)</span>.</p>
 <p>When models contain fixed (what we’ve done before) and random effects, we call them mixed-effects models. Two common packages for carrying out this analysis in R are the <strong>nlme</strong> and <strong>lme4</strong> packages. We will focus on the lme4 package here. Random effects can be entered in the <em>lmer</em> (linear mixed-effects regression) function and specified as (1|Grouping Unit). One nice thing about <strong>lme4</strong> is it will handle crossed and random effects on it’s own <strong>as long as you don’t repeat unit names</strong>. For example, we could note</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#library(lme4)</span></span>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>mixed_analysis <span class="ot">&lt;-</span> <span class="fu">lmer</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature<span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>container), experiment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Once built, we need to consider assumptions. The main assumption we add here is that the random effects are normally distributed. This should be checked at each level of grouping. The <em>check_mixed_model</em> function (provided below) offers an automated approach for one level (also known as one-way random effects).</p>
@@ -1108,11 +1160,20 @@ predator_cue:temperature 0.0459  4 3230137 0.9960</code></pre>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-agresti2007" class="csl-entry" role="listitem">
+Agresti, Alan. 2007. <span>“Introduction to Categorical Data Analysis.”</span>
+</div>
+<div id="ref-applied2022" class="csl-entry" role="listitem">
+<span>“Applied Regression Analysis and Generalized Linear Models.”</span> 2022. <a href="https://us.sagepub.com/en-us/nam/applied-regression-analysis-and-generalized-linear-models/book237254">https://us.sagepub.com/en-us/nam/applied-regression-analysis-and-generalized-linear-models/book237254</a>.
+</div>
 <div id="ref-blanca2017" class="csl-entry" role="listitem">
 Blanca, María J., Rafael Alarcón, Jaume Arnau, Roser Bono, and Rebecca Bendayan. 2017. <span>“Non-normal data: Is ANOVA still a valid option?”</span> <em>Psicothema</em> 29 (4): 552–57. <a href="https://doi.org/10.7334/psicothema2016.383">https://doi.org/10.7334/psicothema2016.383</a>.
 </div>
 <div id="ref-blanca2018" class="csl-entry" role="listitem">
 ———. 2018. <span>“Effect of Variance Ratio on ANOVA Robustness: Might 1.5 Be the Limit?”</span> <em>Behavior Research Methods</em> 50 (3): 937–62. <a href="https://doi.org/10.3758/s13428-017-0918-2">https://doi.org/10.3758/s13428-017-0918-2</a>.
+</div>
+<div id="ref-feng2020" class="csl-entry" role="listitem">
+Feng, Cindy, Longhai Li, and Alireza Sadeghpour. 2020. <span>“A Comparison of Residual Diagnosis Tools for Diagnosing Regression Models for Count Data.”</span> <em>BMC Medical Research Methodology</em> 20 (1): 175. <a href="https://doi.org/10.1186/s12874-020-01055-2">https://doi.org/10.1186/s12874-020-01055-2</a>.
 </div>
 <div id="ref-fox2015" class="csl-entry" role="listitem">
 Fox, John. 2015. <em>Applied Regression Analysis and Generalized Linear Models</em>. SAGE Publications.
@@ -1144,11 +1205,17 @@ Lazic, Stanley E. 2010. <span>“The Problem of Pseudoreplication in Neuroscient
 <div id="ref-lindelov" class="csl-entry" role="listitem">
 Lindelov, J. K. n.d. <em>Common Statistical Tests Are Linear Models (or: How to Teach Stats)</em>. <a href="https://lindeloev.github.io/tests-as-linear/">https://lindeloev.github.io/tests-as-linear/</a>.
 </div>
+<div id="ref-montgomery2012" class="csl-entry" role="listitem">
+Montgomery, Douglas C., Elizabeth A. Peck, and G. Geoffrey Vining. 2012. <em>Introduction to Linear Regression Analysis</em>. 5th edition. Hoboken, NJ: Wiley.
+</div>
 <div id="ref-payne2017" class="csl-entry" role="listitem">
 Payne, Elizabeth H., James W. Hardin, Leonard E. Egede, Viswanathan Ramakrishnan, Anbesaw Selassie, and Mulugeta Gebregziabher. 2017. <span>“Approaches for dealing with various sources of overdispersion in modeling count data: Scale adjustment versus modeling.”</span> <em>Statistical Methods in Medical Research</em> 26 (4): 1802–23. <a href="https://doi.org/10.1177/0962280215588569">https://doi.org/10.1177/0962280215588569</a>.
 </div>
 <div id="ref-reitan2016" class="csl-entry" role="listitem">
 Reitan, Trond, and Anders Nielsen. 2016. <span>“Do Not Divide Count Data with Count Data; A Story from Pollination Ecology with Implications Beyond.”</span> <em>PLOS ONE</em> 11 (2): e0149129. <a href="https://doi.org/10.1371/journal.pone.0149129">https://doi.org/10.1371/journal.pone.0149129</a>.
+</div>
+<div id="ref-shatz2023" class="csl-entry" role="listitem">
+Shatz, Itamar. 2023. <span>“Assumption-Checking Rather Than (Just) Testing: The Importance of Visualization and Effect Size in Statistical Diagnostics.”</span> <em>Behavior Research Methods</em>, March. <a href="https://doi.org/10.3758/s13428-023-02072-x">https://doi.org/10.3758/s13428-023-02072-x</a>.
 </div>
 <div id="ref-warton2016" class="csl-entry" role="listitem">
 Warton, David I., Mitchell Lyons, Jakub Stoklosa, and Anthony R. Ives. 2016. <span>“Three Points to Consider When Choosing a LM or GLM Test for Count Data.”</span> <em>Methods in Ecology and Evolution</em> 7 (8): 882–90. <a href="https://doi.org/10.1111/2041-210X.12552">https://doi.org/10.1111/2041-210X.12552</a>.
@@ -1158,6 +1225,12 @@ Warton, David, and Francis Hui. 2010. <span>“The Arcsine Is Asinine: The Analy
 </div>
 <div id="ref-zuur2010" class="csl-entry" role="listitem">
 Zuur, Alain F., Elena N. Ieno, and Chris S. Elphick. 2010. <span>“A Protocol for Data Exploration to Avoid Common Statistical Problems.”</span> <em>Methods in Ecology and Evolution</em> 1 (1): 3–14. https://doi.org/<a href="https://doi.org/10.1111/j.2041-210X.2009.00001.x">https://doi.org/10.1111/j.2041-210X.2009.00001.x</a>.
+</div>
+<div id="ref-zuur2007" class="csl-entry" role="listitem">
+Zuur, Alain, Elena N. Ieno, and Graham M. Smith. 2007. <em>Analyzing Ecological Data</em>. 2007th edition. New York ; London: Springer.
+</div>
+<div id="ref-zuur2009" class="csl-entry" role="listitem">
+Zuur, Alain, Elena N. Ieno, Neil Walker, Anatoly A. Saveliev, and Graham M. Smith. 2009. <em>Mixed Effects Models and Extensions in Ecology with r</em>. New York, NY: Springer.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
