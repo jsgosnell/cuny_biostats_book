@@ -33,7 +33,18 @@ checkPackage(boot)
 checkPackage(grid)
 checkPackage(DiagrammeR)
 checkPackage(simpleboot)
-
+checkPackage(lme4)
+checkPackage(mgcv)
+checkPackage(vegan)
+checkPackage(cluster)    
+checkPackage(factoextra)
+checkPackage(ggforce)
+checkPackage(concaveman)
+checkPackage(LearnBayes)
+checkPackage(BayesFactor)
+checkPackage(rstanarm)
+checkPackage(rnaturalearth)
+checkPackage(ggmap)
 
 
 
