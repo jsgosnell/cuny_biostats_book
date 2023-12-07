@@ -4,7 +4,9 @@ subtitle: Working with a sample
 bibliography: ../references.bib
 ---
 
+
 #note- Kyle will do multiple variable, Evonne single variable, Evonne will do first 3 numerical sections, Kyle last 3. <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -12,6 +14,7 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 source("../globals.R")
 
 ```
+
 
 ![XKCD: Data Trap. It's important to make sure your analysis destroys as much information as it produces.](https://imgs.xkcd.com/comics/data_trap_2x.png){#fig-XKDC2582 fig-alt="Two stick figures in single panel. One sitting at desk states \"Hey, look, we have a bunch of data! I'm gonna analyze it\".  The other responds, \"No, you fool! That will only create more data!\"" fig-align="center"}
 
@@ -25,18 +28,22 @@ Once we have some data, the next step is often to summarize it. In fact, we've a
 
 Think about it this way. We want to know if several species of iris (*Iris versicolor*, *setosa* and *virginica*) have similarly-shaped flowers. Since we can't measure every flower on every plant from these species, we sample several sites and come up with the following data (using R's built-in iris dataset, a dataset we will often use).
 
+
 ```{r}
 iris
 library(binom)
 ```
 
+
 Overwhelming, isn't it? And this isn't a huge dataset! There are only 150 rows, yet some datasets have tens of thousands!
 
 Let's just look at the first few rows of the data
 
+
 ```{r}
 head(iris)
 ```
+
 
 It's really hard (or impossible) to just look at these numbers and infer anything about the population. Summary statistics help us get a better mental image of the distribution of the sample data.
 
@@ -108,6 +115,7 @@ Other parts should only be included when needed.
 
 Occasionally you only want to show the distribution for a single numerical variable (or how the data themselves are distributed). For example, we could want to display sepal lengths for all the *Iris virginica* we sampled. We could do this using a **histogram**.
 
+
 ```{r}
 #| label: fig-normal_virginica_plot
 #| fig-cap: "Example of approximately normal data"
@@ -120,7 +128,9 @@ hist(iris[iris$Species == "virginica", "Sepal.Length"],
      cex.sub=label_size, col = "blue")
 ```
 
+
 The above plot is produced using functions available in all R installs. Many plots now use *ggplot2*, a package you have to install (don't worry we'll get there!). However, since you may come back to this later, I'll also show how to make each of these graphs using ggplot2.
+
 
 ```{r}
 #| label: fig-normal_virginica_ggplot
@@ -135,6 +145,7 @@ ggplot(iris[iris$Species == "virginica",],
        y= "Frequency")
 ```
 
+
 Histograms put the data in bins (usually automatically set by software, but you can update!) and then show the number of samples that fell into each bin. This allows a quick estimate (look at the y, or vertical, axis) of how many samples were taken. The above images also allows us to begin to consider the bounds/range of the data (\~4.5-8 cm), which gives information on the minimum and maximum values. We can also see lengths around 6-7 cm are most common.
 
 <details>
@@ -142,6 +153,7 @@ Histograms put the data in bins (usually automatically set by software, but you 
 <summary>Why do these graphs look slightly different? (Click the grey triangle to see the answer)</summary>
 
 Most programs, including R, have autobreak functions to separate the data into bins. Notice ggplot2 uses a different algorithm to bin the data. That also impacts what you see! Users, however, can override these, so it's worth noting that differences in bin size can influence what distributions look like.
+
 
 ```{r}
 #| label: fig-charts
@@ -156,6 +168,7 @@ hist(iris[iris$Species == "virginica", "Sepal.Length"],        breaks=3, main = 
 hist(iris[iris$Species == "virginica", "Sepal.Length"],        breaks=10, main = "Sepal length histogram, 10 breaks", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue")
 ```
 
+
 A similar issue exists for qualitative data in regards to the categories that are combined/used.
 
 </details>
@@ -163,6 +176,7 @@ A similar issue exists for qualitative data in regards to the categories that ar
 This distribution of this data is approximately normal. We will define normality more later (equations!), but for now note the distribution is roughly symmetric, with tails on either side. Values near the middle of the range are more common, with the chance of getting smaller or larger values declining at an increasing rate...
 
 Comparing the above graph to other distributions may be an easier approach. Consider these graphs.
+
 
 ```{r}
 #| label: fig-cardinals_plot
@@ -196,7 +210,7 @@ ggplot(data.frame(parrots),
        x= "Weight (g)",
        y= "Frequency")
 ```
-#re
+
 ```{r}
 #| label: fig-blue_jays
 #| fig-cap: "Example of right-skewed data"
@@ -211,9 +225,11 @@ ggplot(data.frame(blue_jays),
 
 ```
 
+
 The cardinal @fig-cardinals_ggplot2 data has a longer left tail and is not symmetric. We call this left- or negatively-skewed data (since it's going lower on the x-axis). Compare that to the blue jay @fig-blue_jays data; it has a longer right-tail and is positively- or right-skewed. Again, note this is all relative to symmetric data like you see with the parrots @fig-parrots, which is normally-distributed data.
 
 All symmetric data is not normal, however. Look at the data on robin and woodpecker weights.
+
 
 ```{r}
 #| label: fig-robins
@@ -242,6 +258,7 @@ ggplot(data.frame(woodpeckers),
        y= "Frequency")
 ```
 
+
 Both these are roughly symmetric but clearly different from normally-distributed data (we will return to the woodpecker data!). The robin data is what we call *uniformly* distributed. There are really no tails, as it appears you are just as likely to see any number within the bounds as any other. *Kurtosis* is the statistical term for what proportion of the data points are in the tails. High kurtosis distributions have heavy tails with multiple outliers. The uniform distibution is an example of a low kurtosis distribution (it has no tails!).
 
 This figure may also help.
@@ -256,6 +273,7 @@ Finally, the woodpecker data is what we call bimodal. It is symmetric in this ca
 
 These distributions helps us think about what we would expect to find in future samples (remember, we assume we have good samples!). To think about future sampling, we can change our y-axis from what we saw (frequency) to a probability density.
 
+
 ```{r}
 #| label: fig-normal_virginica_overlay
 #| fig-cap: "Probability density distribution"
@@ -269,7 +287,9 @@ ggplot(iris[iris$Species == "virginica",],
 
 ```
 
+
 These probability density distributions can be calculated from data (as seen above), but they can also be developed from equations. The benefits of using a distribution derived from an equation is that it is consistent and easy to describe (standardized). This is why many common tests we will learn rely upon the data (or some derivative of it) following a known distribution. For example, many parametric tests will rely upon the data (or means of the data, or errors...we'll get there) following a normal distribution. We can see our parrot data (which came from a normal distribution!) is very close to a "perfect" normal distribution as define by an equation.
+
 
 ```{r}
 #| label: fig-parrots_with_overlay
@@ -290,6 +310,7 @@ stat_function(fun = dnorm, args = list(mean = mean(parrots_df$parrots), sd = sd(
 
 ```
 
+
 <details>
 
 <summary>Bonus question: Why isn't it perfect? (Click the grey triangle to see the answer!)</summary>
@@ -301,6 +322,7 @@ This is an easy example of sampling error!
 ##### Box plots (aka, box and whisker plots)
 
 Another way to visualize the distribution of numerical data for a single group is using box-and-whisker plots.
+
 
 ```{r}
 #| label: fig-box_plot_virginica_plot
@@ -314,6 +336,7 @@ ggplot(iris[iris$Species == "virginica",],
 
 ```
 
+
 These plots show the values of the quartiles of the data. In this way they start combining numerical summaries (more to come!) and visual summaries. More to come, but for now imagine you had a 99 data points. If you arrange the data points from smallest to largest, the **median** of the data would be the middle (50th data point). If you took the bottom half of the data (first data to median), the first quartile would be the middle point (or, in this case, the average of the 25th and 26th data points). Similarly, the third quartile is the middle of the top half of the data set (or, if not one number, average of 75th and 76th data point). Note the median is also the 2nd quartile of the data!
 
 The **box** in the box-and-whisker plot shows the first, second, and third quartiles, also known as the inter-quartile range (IQR). The **whiskers** extend to the minimum and maximum values of the dataset **or**, up to values within a set range. In ggplot, whiskers by default can only be as long as 150% of the IQR. This means extreme **outliers** are shown as individual dots. Typically, the most extreme values (minimum and maximum) plus the first, second, and third quartiles are together called the **five number summary**.
@@ -326,25 +349,30 @@ The **box** in the box-and-whisker plot shows the first, second, and third quart
 
 Assume we have data that goes from 1 to 99. The five number summary should be
 
+
 ```{r}
 x <- seq(1:1:99) 
 summary(x)
 ```
 
+
 Note the 1st and 3rd quartiles are averaged!
 
 Similarly, consider the numbers 1-5
+
 
 ```{r}
 x <- seq(1:1:5) 
 summary(x)
 ```
 
+
 </details>
 
 #### Categorical data
 
 For categorical data, a bar chart fills a very similar role. Note, however, we don't bin the data, and there is inherent order for some examples (nominal data). For example, we could examine the colors of our *I. virginica*. To do this, we'll need to add some data to our iris data (notice this produces no output...)...
+
 
 ```{r}
 set.seed(19)
@@ -353,7 +381,9 @@ iris$Color <- factor(sample(colors, size = nrow(iris),replace = T))
 
 ```
 
+
 and then summarize it...
+
 
 ```{r}
 library(Rmisc)
@@ -361,7 +391,9 @@ I_viriginica_colors <- summarySE(iris[iris$Species == "virginica",], measurevar 
                                  groupvars = "Color", na.rm = T)
 ```
 
+
 before we graph it.
+
 
 ```{r}
 #| label: fig-bar_chart_flowers
@@ -375,7 +407,9 @@ barplot(I_viriginica_colors$N,
         main = expression(paste("Color of ",italic("I. virginica "), "flowers")))
 ```
 
+
 Or better
+
 
 ```{r}
 #| label: fig-bar_chart_flowers_with_colors_plot
@@ -390,7 +424,9 @@ barplot(I_viriginica_colors$N,
         col = colors)
 ```
 
+
 Using ggplot2
+
 
 ```{r}
 #| label: fig-bar_chart_flowers_with_colors_ggplot2
@@ -404,7 +440,9 @@ ggplot(iris[iris$Species == "virginica",],
   scale_fill_manual("legend", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))
 ```
 
+
 Note the legend may be superflous here (but consider accessiblity - should we add another distinguishing feature?):
+
 
 ```{r}
 #| label: fig-bar_chart_flowers_with_colors_ggplot2_no_legend
@@ -420,11 +458,13 @@ ggplot(iris[iris$Species == "virginica",],
 
 ```
 
+
 <details>
 
 <summary>\*\*Barchart issues\*\*</summary>
 
 Note all of the bar graphs above share a similar problem. People tend to like bars, but they are actually just using a lot of ink! We could get the same information about sepal lengths focusing on just the "top" of the bar:
+
 
 ```{r}
 #| label: fig-bar_charts_but_lines
@@ -438,7 +478,9 @@ ggplot(iris[iris$Species == "virginica",],
        y= "Frequency")
 ```
 
+
 We can also just display the data!
+
 
 ```{r}
 #| label: fig-bar_charts_but_just_points
@@ -454,31 +496,17 @@ ggplot(iris[iris$Species == "virginica",],
 
 ```
 
+
 </details>
 
 ### Multiple variables
 
-<<<<<<< HEAD
-Often we collect multiple pieces of information instead of just one.
-This can occur for multiple reasons. We may want to consider differences
-in some variable/trait among groups. This means we have either numerical
-or categorical data from various groups, but note that groups themselves
-are now a piece of data! We can think of these analyses as impact of
-group (a category) on traits (numerical or categorical). We will
-eventually call these a t-test **(for two groups)** or ANOVA**(for more than 2 groups)** (when the trait we measure is
-categorical) or a $\chi^2$ test (when the trait is categorical). Either
-way, this is a case where we are collecting a single piece of data from
-multiple groups. Alternatively, we may collect data on multiple traits
-from a single group to see how they impact each other. We will
-eventually analyze this type of data using **linear**regression or correlation.
-Regardless of type, we can also graph this data.
-=======
-Often we collect multiple pieces of information instead of just one. This can occur for multiple reasons. We may want to consider differences in some variable/trait among groups. This means we have either numerical or categorical data from various groups, but note that groups themselves are now a piece of data! We can think of these analyses as impact of group (a category) on traits (numerical or categorical). We will eventually call these a t-test or ANOVA (when the trait we measure is categorical) **or a** $\chi^2$ test (when the trait is categorical). Either way, this is a case where we are collecting a single piece of data from multiple groups. Alternatively, we may collect data on multiple traits from a single group to see how they impact each other. We will eventually analyze this type of data using regression or correlation. Regardless of type, we can also graph this data.
->>>>>>> a718c20b08aef282ae32c666da02262ad84dee7d
+Often we collect multiple pieces of information instead of just one. This can occur for multiple reasons. We may want to consider differences in some variable/trait among groups. This means we have either numerical or categorical data from various groups, but note that groups themselves are now a piece of data! We can think of these analyses as impact of group (a category) on traits (numerical or categorical). We will eventually call these a t-test or ANOVA (when the trait we measure is categorical) ota $\chi^2$ test (when the trait is categorical). Either way, this is a case where we are collecting a single piece of data from multiple groups. Alternatively, we may collect data on multiple traits from a single group to see how they impact each other. We will eventually analyze this type of data using regression or correlation. Regardless of type, we can also graph this data.
 
 #### Numerical variables from multiple groups
 
-When we gather numerical data from **multiple** groups and wish to compare, we can extend our use bar charts and box-whisker plots by using shapes, colors, or other features to **represent** the groups. For example, we can illustrate the mean (coming up in numerical summaries) or other summary statistics using bar plots..
+When we gather numerical data from various groups and wish to compare, we can extend our use bar charts and box-whisker plots by using shapes, colors, or other features to symbolize the groups. For example, we can illustrate the mean (coming up in numerical summaries) or other summary statistics using bar plots..
+
 
 ```{r}
 #| label: fig-bar_charts_all species
@@ -490,7 +518,9 @@ ggplot(iris, aes(y=Sepal.Length, x=Species, fill=Species)) +
        x= "Species")
 ```
 
+
 or the distribution using stacked histograms...
+
 
 ```{r}
 #| label: fig-stacked_histograms_all species 
@@ -498,7 +528,9 @@ or the distribution using stacked histograms...
 ggplot(iris, aes(x=Sepal.Length)) +     geom_histogram(aes(fill=Species))+    labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),        y= "Sepal length (cm)",        x= "Species")
 ```
 
+
 or box-and-whisker plots.
+
 
 ```{r}
 #| label: fig-box_whisker_all species 
@@ -508,7 +540,9 @@ ggplot(iris, aes(y=Sepal.Length, x=Species, fill=Species)) +
   labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),        y= "Sepal length (cm)", x= "Species")
 ```
 
+
 We can also still just display the data for each group...
+
 
 ```{r}
 #| label: fig-point_all species
@@ -520,7 +554,9 @@ ggplot(iris, aes(y=Sepal.Length, x=Species, color=Species)) +
        x= "Species")
 ```
 
+
 We also need to ensure the different groups are visible when distributions overlap. Sometimes stacked histograms (and similar graphs) make it hard to actually visualize each individual group. One option is to instead *facet* these graphs. Faceting means we produce different graphs for each group, treatment, etc, but they (typically) share axes. This makes it easier to compare the groups.
+
 
 ```{r}
 #| label: fig-faceted_histograms_all species
@@ -533,7 +569,9 @@ We also need to ensure the different groups are visible when distributions overl
    facet_wrap(~Species, ncol = 1)
 ```
 
+
 Another option is to show the cumulative frequency distribution for each group.
+
 
 ```{r}
 #| label: fig-cdf_all_species
@@ -544,9 +582,11 @@ ggplot(iris, aes(Sepal.Length, colour = Species)) + stat_ecdf()+
        y= "Cumulative frequency")
 ```
 
+
 #### Categorical data from multiple groups
 
 For our example, let's return to our focus on the color of flowers for various species of iris. One option for this is to consider bar plots. These can be stacked...
+
 
 ```{r}
 #| label: fig-stacked_bar_plot_iris
@@ -560,7 +600,9 @@ ggplot(iris,aes(x=Species)) +
   guides(fill = "none")
 ```
 
+
 or not...
+
 
 ```{r}
 #| label: fig-group_bar_plot_iris
@@ -575,7 +617,9 @@ ggplot(iris,aes(x=Species)) +
 
 ```
 
+
 Other options include divergent plots, but those are best for 2 groups of data. They also require the data to be summarized and somewhat transformed. For example, we could have blue or not blue flowers.
+
 
 ```{r}
 library(plyr)
@@ -583,21 +627,27 @@ iris$blue <- revalue(iris$Color, c("blue"="blue", "purple"="not blue", "orange"=
 
 ```
 
+
 Then we have to summarize the data.
+
 
 ```{r}
 iris_summary <- data.frame(table(iris$blue, iris$Species))
 names(iris_summary) <- c("Blue", "Species", "Frequency")
 ```
 
+
 and make not blue negative
+
 
 ```{r}
 iris_summary[iris_summary$Blue == "not blue", "Frequency"] <- iris_summary[iris_summary$Blue == "not blue", "Frequency"] * -1
 
 ```
 
+
 then plot it.
+
 
 ```{r}
 #| label: fig-divergent_bar_plot_iris
@@ -610,7 +660,9 @@ ggplot(iris_summary,aes(x=Species, y=Frequency)) +
   scale_fill_manual("legend", values = c("blue" = "blue", "not blue" = "orange", "purple" = "purple"))
 ```
 
+
 which we could flip by reversing all x/y arguments..
+
 
 ```{r}
 #| label: fig-divergent_bar_plot_iris_flipped
@@ -623,7 +675,9 @@ ggplot(iris_summary,aes(y=Species, x=Frequency)) +
   scale_fill_manual("legend", values = c("blue" = "blue", "not blue" = "orange", "purple" = "purple"))
 ```
 
+
 or using an additional argument (**remember, a lot of this is for later reference!**)
+
 
 ```{r}
 #| label: fig-divergent_bar_plot_iris_flipped_2
@@ -637,6 +691,7 @@ ggplot(iris_summary,aes(x=Species, y=Frequency)) +
   coord_flip()
 ```
 
+
 <details>
 
 <summary>geom_bar vs geom_col</summary>
@@ -646,6 +701,7 @@ geom_bar and geom_col are very similar commands, but geom_bar assumes its needs 
 </details>
 
 In the above cases, each group was measured the same number of times. However, if this isn't true, visualizations may confound sampling size with summaries. In those cases, focusing on proportion (explained below!) of outcomes may be more useful (and will give you the exact same visualization if all groups were measured the same number of times!). This is sometimes called a mosaic plot; another way to make them (not shown here) is using the package *ggmosaic*.
+
 
 ```{r}
 #| label: fig-mosaic_plot
@@ -659,7 +715,9 @@ ggplot(iris,aes(x=Species)) +
   guides(fill = "none")
 ```
 
+
 Note we could also facet this data if we had other variables. For example, assume sampled another set of populations to the west..
+
 
 ```{r}
 iris_new <- iris
@@ -681,7 +739,9 @@ ggplot(iris_both,aes(x=Species)) +
   facet_wrap(~Population, nrow=1)
 ```
 
+
 Note we can combined these ideas!
+
 
 ```{r}
 #| label: fig-faceted_mosaic_plot_proportion
@@ -695,7 +755,9 @@ ggplot(iris_both,aes(x=Species)) +
   facet_wrap(~Population, nrow=1)
 ```
 
+
 Finally, we can end this section noting a pie chart is just a transformed bar chart.
+
 
 ```{r}
 #| label: fig-faceted_pie_plot_proportion
@@ -711,9 +773,11 @@ ggplot(iris_both,aes(x=Share)) +
  coord_polar(theta="y") 
 ```
 
+
 #### Relationships among data from a single group
 
 Instead of collecting data on a single trait from multiple groups, we may collect data on multiple traits from a single group. For example, we could want to see if petal length is related to sepal width in *I.virginica*. This relationship could be visually summarized using a scatter plot.
+
 
 ```{r}
 #| label: fig-scatterplot
@@ -726,7 +790,9 @@ ggplot(iris[iris$Species == "virginica",],
        y= "Petal Length (cm)")
 ```
 
+
 Obviously we can (and will) combine many of the above approaches. For example, we may want to see if relationships among two numerical variables differ among groups (an ANCOVA!).
+
 
 ```{r}
 #| label: fig-scatterplot_all_species
@@ -739,9 +805,11 @@ ggplot(iris,
        y= "Petal Length (cm)")
 ```
 
+
 We'll get to these later in class, but I just want to note their existence here. Finally, if you are reading this for the first time, don't worry about the tests (just like the code!). We will explain how all these tests are related when we get there!
 
 Finally, note data of this type may include time or dates. We'll use a different dataset to illustrate this.
+
 
 ```{r}
 #| label: fig-scatterplot_regression
@@ -755,7 +823,9 @@ ggplot(airquality, aes(x=Date,y =Temp)) +
        y= expression("Temperature " ( degree*F)))
 ```
 
+
 We can also add lines...
+
 
 ```{r}
 #| label: fig-scatterplot_regression_lines
@@ -768,7 +838,9 @@ ggplot(airquality, aes(x=Date,y =Temp)) +
        y= expression("Temperature " ( degree*F)))
 ```
 
+
 We can even include multiple data sets!
+
 
 ```{r}
 #| label: fig-scatterplot_regression_lines_two
@@ -779,11 +851,13 @@ ggplot(airquality, aes(x =Date,y =Temp)) + geom_point(aes(col ="Temp")) + geom_l
        y= expression("Temperature " ( degree*F)))
 ```
 
+
 #### There's more to do and think about!
 
 This just scratches the surface of potential ways to visualize data. For example, heatmaps can be used to show location specific data and we can build interactive or animated visualizations. However, the basic principles we've examined here should get you started.
 
 The different approaches covered here also indicate there a lots way to display data! Whichever approach you use, you should ensure that you represent the data honestly and clearly. Sometimes that means you just display data (points)! You should also always consider possible ways the data/visualization could be misinterpreted and avoid them. Common mistakes include the decision about which baseline should be included. For example, should charts always include 0 on the y-axis? Not including 0 can may small differences appear large. However, including it can make important changes seem insignificant! Consider
+
 
 ```{r}
 #| label: fig-compare_zero_points
@@ -802,9 +876,11 @@ annotate_figure(compare,
 
 ```
 
+
 If this is changes in temperature, option B may be more useful (this could be a normal temperature (37 C) compared to a fever of 104 (40 C). However, if its a difference in a metabolic rate, it may have minor impacts (and thus we choose option A)!
 
 Similarly, imagine we collected this data
+
 
 ```{r}
 #| label: fig-outliers
@@ -834,6 +910,7 @@ annotate_figure(compare,
 
 ```
 
+
 Whereas the raw data (panel A) may suggest some outliers that are concerning, by panel C we have "smoothed" the data and made an interesting pattern. **In general, thought must be applied to individual situations regarding visualization style and nuance**. Adding information on spread in the data will also help (coming up!).
 
 ## Numerical Summaries
@@ -852,6 +929,7 @@ where $\sim$ means "approximately". Other measures of central tendency include t
 
 Why do we need more than one measure of central tendency? Consider our cardinal data:
 
+
 ```{r}
 #| label: fig-cardinals_ggplot2_ct
 #| fig-cap: "Skew impacts value of and relationships among various measures of central tendency"
@@ -864,14 +942,16 @@ ggplot(data.frame(cardinals),
   labs(title="Weight of Westchester cardinals",
        x= "Weight (g)",
        y= "Frequency")+
-  geom_vline(aes(xintercept=mean(cardinals), color="mean"), size = 2)+
-  geom_vline(aes(xintercept=median(cardinals), color= "median"), size = 2)+
-  geom_vline(aes(xintercept=fun.mode(cardinals), color = "mode"), size = 2) +
+  geom_vline(aes(xintercept=mean(cardinals), color="mean"))+
+  geom_vline(aes(xintercept=median(cardinals), color= "median"))+
+  geom_vline(aes(xintercept=fun.mode(cardinals), color = "mode")) +
   theme_bw()+theme(legend.position="bottom")+
     guides(color = guide_legend(title = "Measure"))
 ```
 
+
 Note the data is left-skewed. so the mean is pulled towards these outliers. The median may offer a better summary of the actual center. We see similar outcomes with right-skewed data.
+
 
 ```{r}
 #| label: fig-blue_jays_ggplot2_ct
@@ -889,7 +969,9 @@ ggplot(data.frame(blue_jays),
     guides(color = guide_legend(title = "Measure"))
 ```
 
+
 But with symmetric data, we see the measures of central tendency align more
+
 
 ```{r}
 #| label: fig-parrots_ggplot2_ct
@@ -900,12 +982,13 @@ ggplot(data.frame(parrots),
   labs(title="Weight of Westchester parrots",
        x= "Weight (g)",
        y= "Frequency")+
-  geom_vline(aes(xintercept=mean(parrots), color="mean"), size = 2)+
-  geom_vline(aes(xintercept=median(parrots), color= "median"), size = 2)+
-  geom_vline(aes(xintercept=fun.mode(parrots), color = "mode"), size = 2) +
+  geom_vline(aes(xintercept=mean(parrots), color="mean"))+
+  geom_vline(aes(xintercept=median(parrots), color= "median"))+
+  geom_vline(aes(xintercept=fun.mode(parrots), color = "mode")) +
   theme_bw()+theme(legend.position="bottom")+
     guides(color = guide_legend(title = "Measure"))
 ```
+
 
 <details>
 
@@ -916,6 +999,7 @@ Note the mode is heavily/totally impacted by data precision and thus can lead to
 </details>
 
 A special case where central tendency may not be the best way to describe a distribution is known as *bimodal* data. In this case, the distribution shows two, not one, clear peak. Remember the woodpecker @fig-woodpeckers data?
+
 
 ```{r}
 #| label: fig-woodpeckers-measures
@@ -928,19 +1012,21 @@ ggplot(data.frame(woodpeckers),
        x= "Weight (g)",
        y= "Proportion")+
     theme_bw()+
-  geom_vline(aes(xintercept=mean(woodpeckers), color="mean"), size = 2)+
-  geom_vline(aes(xintercept=median(woodpeckers), color= "median"), size = 2)+
-  geom_vline(aes(xintercept=fun.mode(woodpeckers), color = "mode"), size = 2) +
+  geom_vline(aes(xintercept=mean(woodpeckers), color="mean"))+
+  geom_vline(aes(xintercept=median(woodpeckers), color= "median"))+
+  geom_vline(aes(xintercept=fun.mode(woodpeckers), color = "mode")) +
   theme_bw()+theme(legend.position="bottom")+
     guides(color = guide_legend(title = "Measure"))
 
 ```
+
 
 Note the mode is (again) off, but the mean and median also represent uncommon individuals!
 
 ### Spread
 
 Along with the central tendency, another set of numerical summaries focus on the spread of the data. In some ways these focus on how much of the data is in the tail (or how *heavy* the tail is). To illustrate this, consider the @fig-normal_virginica_ggplot data.
+
 
 ```{r}
 #| label: fig-normal_virginica_ggplot_2
@@ -955,7 +1041,9 @@ ggplot(iris[iris$Species == "virginica",],
        y= "Frequency")
 ```
 
+
 We can instead plot the raw data
+
 
 ```{r}
 #| label: fig-virginica_raw
@@ -969,7 +1057,9 @@ ggplot(iris[iris$Species == "virginica",],
        x= "Collection #")
 ```
 
+
 Now let's add the mean
+
 
 ```{r}
 #| label: fig-virginica_raw_mean
@@ -984,7 +1074,9 @@ ggplot(iris[iris$Species == "virginica",],
   annotate("text", label = "mean", x = 135, y = mean(iris[iris$Species == "virginica", "Sepal.Length"])+.13, color = "blue") 
 ```
 
+
 Note the points differ in how far they are from the mean! For example, we could find another species with a very similar mean but different spread of the data.
+
 
 ```{r}
 #| label: fig-virginica_raw_mean_new_species
@@ -1004,6 +1096,7 @@ ggplot(iris_hypothetical[iris_hypothetical$Species %in% c("virginica", "uniforma
   scale_color_manual(values=c("blue", "red"))
 ```
 
+
 This spread could be quantified in multiple ways. Here we focus on the variance, which is defined as
 
 $$
@@ -1011,6 +1104,7 @@ s^2 = \frac{\sum_{i=1}^{n} (Y_{i}-\overline{Y})^2}{n-1} \sim \sigma^2
 $$
 
 Again, the population parameter is $\sigma^2$, and the estimate is $s^2$. This is effectively the average distance of each point from the mean squared!
+
 
 ```{r}
 #| label: fig-virginica_raw_mean_lines
@@ -1028,7 +1122,8 @@ ggplot(iris[iris$Species == "virginica",],
   
 ```
 
-Why $n-1$ on the bottom, you might ask? Related reasons focus on degrees of freedom (we'll get there) and bias. Our estimate of $s^2$ is based on our sample mean. Since the sample mean can, at best, be the population mean, our variance estimate may be biased (too small). Dividing by $n-1$ can be shown to correct that. Alternatively, we are estimating one parameter from our data (again, $\mu$), so we need to remove one degree of freedom from our calculation. However, some programs still $n$ on the bottom. Note this will only *really* matter when $n$ is small. In short, as another professor once told me, if the difference is based on whether you use $n$ or $n-1$ in your variance calculation, you likely have other problems.
+
+Why $n-1$ on the bottom, you might ask? Related reasons focus on degrees of freedom (we'll get there) and bias. Our estimate of $s^2$ is based on our sample mean. Since the sample mean can, at best, be the population mean, our variance estimate may be biased (too small). Dividing by $n-1$ can be shown to correcthat. Alternatively, we are estimating one parameter from our data (again, $\mu$), so we need to remove one degree of freedom from our calculation. However, some programs still $n$ on the bottom. Note this will only *really* matter when $n$ is small. In short, as another professor once told me, if the difference is based on whether you use $n$ or $n-1$ in your variance calculation, you likely have other problems.
 
 Note variance has odd (squared) units. If we take the square root of the variance, we get a value called the standard deviation.
 
@@ -1052,11 +1147,14 @@ This scales the variance (spread) of the data by the mean. The $CV$ is unitless 
 
 As noted above in the discussion of five-number summaries, we can also find the assorted quartiles, minimum, and maximum of a dataset. This can be especially helpful when the mean isn't a useful measure of central tendency (since variance and $CV$ rely on the estimate of the mean!). For examples, see @fig-cardinals_plot. The original five number summary is
 
+
 ```{r}
 summary(cardinals)
 ```
 
+
 Note that if we shifted the bottom 10% of the values even *further* left (increasing the skew), the median stays the same, as does the IQR.
+
 
 ```{r}
 #| label: fig-cardinals_ggplot2_shifted
@@ -1073,11 +1171,13 @@ ggplot(data.frame(cardinals_new),
 summary(cardinals_new)
 ```
 
+
 ### Proportions for categorical data
 
 Finally, if we have categorical instead of numerical data, we can find the proportion of data in each category. We mentioned this approach when producing mosaic plots. To find a proportion, you count the number of samples that fall in a given group and divided that by the total number sampled. Alternatively, you can assign a score of *0* for values that are not in the focal group and a score of *1* to samples that are - the average of these scores will give you the proportion.
 
 For example, earlier we plotted how flower color differed among species and location.
+
 
 ```{r}
 ggplot(iris_both,aes(x=Species)) +
@@ -1089,7 +1189,9 @@ ggplot(iris_both,aes(x=Species)) +
   facet_wrap(~Population, nrow=1)
 ```
 
+
 Let's see where this came from. We can count the number of each color in each species in each population:
+
 
 ```{r, echo=F}
 
@@ -1104,7 +1206,9 @@ row.names(flower_count_df) <- NULL
 paged_table(flower_count_df[,1:4])
 ```
 
+
 Then divide them by the number sampled for each species in each population:
+
 
 ```{r}
 flower_prop_df <- data.frame(prop.table(flower_table, margin = c("Population", "Species")))
@@ -1115,6 +1219,8 @@ row.names(flower_prop_df) <- NULL
 paged_table(flower_prop_df[,1:4])
 ```
 
+
 ## Next steps
 
 Now that we can summarize data, we can begin to connect summaries to statistics (and learn/remember some probability along the way!).
+
