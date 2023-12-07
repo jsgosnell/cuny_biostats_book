@@ -393,7 +393,7 @@ be related to the underlying form of the data [@payne2017] (more to come
 on this). In this way, over- and under-dispersion relate to both the
 linear relationship.
 
-#### Generalized linear model approach: Different data, different approach
+### Generalized linear model approach: Different data, different approach
 
 The linear relationship may be inappropriate because our data doesn't
 fit it! For example, if we are modeling proportions, estimates less than
@@ -523,7 +523,7 @@ and fuller treatments are provided by @zuur2009 (chapters 8-11) and
 @fox2016 (chapters 14 - 15). For each I provide the most relevant math,
 an example (or two), and some immediate extensions.
 
-##### Logistic regression: Bernoulli and binomial outcomes
+#### Logistic regression: Bernoulli and binomial outcomes
 
 Logistic regression focuses on modelling yes/no or success/failure
 outcomes (Bernoulli or binomial data) using the *logit* link (thus
@@ -534,7 +534,9 @@ where the systematic component of the model predicts
 
 $$
 logit(\pi) = \ln(\frac{\pi}{1-\pi}), \text{where } \pi \text{ is the probability for a given set of outcomes}
-$$ This logit link is useful as it effectively connects the systematic
+$$
+
+This logit link is useful as it effectively connects the systematic
 component and real data (the purpose of the link). This link also allows
 coefficients to be interpreted as odds and odds ratios (introduced in
 the [comparing proportions among
@@ -548,12 +550,12 @@ $$
 
 For a given coefficient $\beta$, the logit link also means we can say a
 1 unit increase in that single variable leads to a change in the odds
-ratio of $\e^{\beta}$. This also means no impact is shown as
-$\beta = 0$, with positive and negative numbers implying increases or
-decreases in odds, which is convenient. Other link options (not
-discussed here) include the probit and complementary log-log approaches.
-For a final piece of math, note the dispersion parameter for binomial
-data is not estimated - it is assumed to be 1.
+ratio of $e^{\beta}$. This also means no impact is shown as $\beta = 0$,
+with positive and negative numbers implying increases or decreases in
+odds, which is convenient. Other link options (not discussed here)
+include the probit and complementary log-log approaches. For a final
+piece of math, note the dispersion parameter for binomial data is not
+estimated - it is assumed to be 1.
 
 For example, @bueno2020 carried out a series of experiments to determine
 how various factors impacted colonization of a host algae, *Sargassum
@@ -569,20 +571,72 @@ residents. Juveniles were initially placed on patches of atural
 substrate, artificial substrate, or bare areas(no substrate) in the
 aquarium. After 24 hours, the number of juveniles that colonized the
 focal algae were counted. Since the number of introduced juveniles was
-known, the number that did not colonize was also accounted for.
+known, the number that did not colonize was also accounted for (raw data
+estimated from supplemental data given variation in sample size).
 
-Add in McFadden's R\^2.
+```{r}
+juvenile <- read.csv ("data/Supplemental_Data_Bueno_2020-S1-Presence of adults_lab.csv", 
+                      stringsAsFactors = T)
+```
 
-##### Beta regression
+since the *adults* column indicates the presence or absence of adults, let's update
+it for clarity
+
+```{r}
+library(plyr)
+juvenile$adults_updated <- factor(revalue(as.character(juvenile$adults), c("0"= "absent", "4" ="present")))
+```
+
+This is an example of a factorial-design with  the following hypotheses:  
+
+* null hypothesis 
+  * H~O~: There is no impact on the habitat type juveniles start in on their 
+  likelihood to move
+  * H~O~: There is no impact on adult presence in the new habitat on the 
+  likelihood of juveniles to move
+  * H~O~:  There is no interaction between the impacts of the  habitat type 
+  juveniles start in and  adult presence in the new habitat on the 
+  likelihood of juveniles to move
+* alternative hypothesis 
+  * H~A~: There is an impact on the habitat type juveniles start in on their 
+  likelihood to move
+  * H~A~: There is an impact on adult presence in the new habitat on the 
+  likelihood of juveniles to move
+  * H~A~:  There is an interaction between the impacts of the  habitat type 
+  juveniles start in and  adult presence in the new habitat on the 
+  likelihood of juveniles to move
+  
+The outcome,however, is a proportion (or count). Note we *can* fit a linear model
+to the data:
+
+```{r}
+juvenile_fit_lm <- lm(Colonized ~ adults_updated*source.habitat, 
+    juvenile)
+plot(juvenile_fit_lm)
+```
+The assumpitons don't even look that bad, but we know
+
+For this
+reason we will use a generalized linear model to analyze the data. We can  
+fit a glm using the binomial family.
+
+```{r}
+juvenile_fit_glm <- glm(cbind(Juveniles_colonized, Juveniles_not_colonized) ~ adults*source.habitat, 
+    juvenile, family = "binomial")
+```
+
+Add in McFadden's R\^2.rcompanion:compareglm
+
+#### Beta regression
 
 Beta regression focuses on true proportion data where the outcome is
 between 0 and 1.
 
-##### Poisson regression
+#### Poisson regression
 
 Poisson regression focuses on count-based data.
 
-##### Non-linear options
+#### Non-linear options
 
 ## Data are not independent
 

@@ -45,6 +45,7 @@ checkPackage(BayesFactor)
 checkPackage(rstanarm)
 checkPackage(rnaturalearth)
 checkPackage(ggmap)
+checkPackage(psych)
 
 
 
