@@ -43,7 +43,8 @@ checkPackage(concaveman)
 checkPackage(LearnBayes)
 checkPackage(BayesFactor)
 checkPackage(rstanarm)
-
+checkPackage(rnaturalearth)
+checkPackage(ggmap)
 
 
 

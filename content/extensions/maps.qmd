@@ -1,0 +1,108 @@
+---
+title: Maps in R
+subtitle: Where we meet the p-value!
+bibliography: ../references.bib
+---
+
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+source("../globals.R")
+```
+
+Making maps is something many scientists need to do. Understanding the spatial
+relationship among sampling sites, populations, or cities can inform our understanding
+of analysis or results.  While R is not primarily a geographic information
+system, it has the ability to produce maps through multiple libraries (the focus
+of this section). It can also be used to perform spatial analysis.
+
+## Making maps
+
+Producing maps typically involves loading a background/base map of an area and then
+plotting sites or specific data points on it.  For this to work, you have to make
+sure the different maps are using the same coordinate system and map projection.
+Put simply, coordinates (e.g., latitude and longitude) are used to specify a spot 
+on the earth. Various coordinate systems exist, so you need to make sure the base
+map is using the same coordinates you are using to specify location.  Part of 
+different coordinate systems is related to the fact that dislaying a spherical 
+earth on a flat screen/piece of paper is hard.  
+In order for it to end a "complete picture", most projections distort various
+pieces of th earth. 
+
+Map data can be produced using vector or raster data. Vectors mean the software is
+using directions to draw points, lines, or polygons that represent space.  Raster
+means the software is actually stitching together cells or images to represent space.
+
+### Vector approaches
+
+For example, rnaturalearth supplies vector data from NaturalEarth for use in R.
+You can ask for country level data. Note that the data contains info on how to
+"draw" each 
+country, but can also hold other data.
+
+```{r}
+library(rnaturalearth)
+base_map <- ne_countries(type = 'countries', scale = 'small')
+library(rmarkdown)
+paged_table(base_map@data)
+```
+
+this can be plotted immediately
+
+```{r}
+plot(base_map)
+```
+
+Other commands only focus on coastlines
+
+```{r}
+plot(ne_coastline())
+```
+
+You can also turn this object into a dataframe (fortify) and use it in ggplot2
+
+```{r}
+library(ggplot2)
+base_map_fortified=fortify(base_map)
+names(base_map_fortified)[names(base_map_fortified) == "long"] <- "Longitude"
+names(base_map_fortified)[names(base_map_fortified) == "lat"] <- "Latitude"
+
+ggplot(data=base_map_fortified,aes(x=Longitude, y=Latitude, group=group)) +
+  geom_polygon(colour="black", fill="white") +
+  xlab("Longitude")+
+  ylab("Latitude") 
+
+```
+
+Once you have these layers, you can start adding your own sites
+
+```{r}
+sites <- read.csv("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/SurveySiteCoordinates.csv", strip.white = T, stringsAsFactors = T)
+ggplot(data=base_map_fortified,aes(x=Longitude, y=Latitude, group=group)) +
+  geom_polygon(colour="black", fill="white") +
+  xlab("Longitude")+
+  ylab("Latitude") +
+  geom_point(data = sites, 
+             aes_string(x="Longitude",y="Latitude", group = NA), size = 10)
+```
+
+
+### Raster approaches
+
+```{r, eval=F}
+library(ggmap)
+map <- get_stamenmap(c(left = min(sites$Longitude), 
+                       bottom = min(sites$Latitude), 
+                       right =max(sites$Longitude), 
+                       top = max(sites$Latitude)),
+               zoom = 12)
+```
+
+## Next steps
+
+R can also be  used to interact with more map-focused software like QGIS.
+
+
+
