@@ -117,9 +117,6 @@ div.csl-indent {
   }
 }</script>
 
-<link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
@@ -478,7 +475,7 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/primer_material/tools_overview.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/primer_material/tools_overview.qmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tools overview</span></a>
   </div>
 </li>
@@ -529,20 +526,7 @@ div.csl-indent {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#sticking-with-the-linear-model" id="toc-sticking-with-the-linear-model" class="nav-link active" data-scroll-target="#sticking-with-the-linear-model">Sticking with the linear model</a></li>
-  <li><a href="#linear-relationship-is-inappropriate" id="toc-linear-relationship-is-inappropriate" class="nav-link" data-scroll-target="#linear-relationship-is-inappropriate">Linear relationship is inappropriate</a>
-  <ul class="collapse">
-  <li><a href="#transform-the-data-least-advisable-sometimes" id="toc-transform-the-data-least-advisable-sometimes" class="nav-link" data-scroll-target="#transform-the-data-least-advisable-sometimes">Transform the data (least advisable, sometimes)</a></li>
-  </ul></li>
-  <li><a href="#data-are-not-independent" id="toc-data-are-not-independent" class="nav-link" data-scroll-target="#data-are-not-independent">Data are not independent</a>
-  <ul class="collapse">
-  <li><a href="#in-respect-to-predictors" id="toc-in-respect-to-predictors" class="nav-link" data-scroll-target="#in-respect-to-predictors">In respect to predictors</a></li>
-  <li><a href="#in-respect-to-measured-outcomes" id="toc-in-respect-to-measured-outcomes" class="nav-link" data-scroll-target="#in-respect-to-measured-outcomes">In respect to measured outcomes</a></li>
-  </ul></li>
-  <li><a href="#errors-are-not-equal-among-groups" id="toc-errors-are-not-equal-among-groups" class="nav-link" data-scroll-target="#errors-are-not-equal-among-groups">Errors are not equal among groups</a></li>
-  <li><a href="#residuals-are-not-normally-distributed" id="toc-residuals-are-not-normally-distributed" class="nav-link" data-scroll-target="#residuals-are-not-normally-distributed">Residuals are not normally distributed</a></li>
-  <li><a href="#combinining-these" id="toc-combinining-these" class="nav-link" data-scroll-target="#combinining-these">Combinining these</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link active" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Linear_model_extensions.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Linear_model_extensions.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -568,10 +552,7 @@ div.csl-indent {
 </header>
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
-<p>The past several chapters/lessons have focused on linear models. Here we explore options for analysis when linear model assumptions are not met.</p>
-<section id="sticking-with-the-linear-model" class="level2">
-<h2 class="anchored" data-anchor-id="sticking-with-the-linear-model">Sticking with the linear model</h2>
-<p>Linear models are useful for a number of reasons. They are a great way to unify most/many tests from classical statistics. In fact, most of the ranked tests we’ve developed can actually be run as linear models when n &gt;15. For example, we can go back to our Wilcox-Mann Whitney U tests (for 2 populations) and Kruskal-Wallis (for 3+) from the <a href="../../content/chapters/Compare_means_among_populations.html" target="_blank">comparing means among groups chapter</a> and note the outcome from a <em>wilcox.test</em></p>
+<p>The past several chapters/lessons have focused on linear models. That’s because they are a great way to unify most/many tests from classical statistics. In fact, most of the ranked tests we’ve developed can actually be run as linear models when n &gt;15. For example, we can go back to our Wilcox-Mann Whitney U tests (for 2 populations) and Kruskal-Wallis (for 3+) from the <a href="../../content/chapters/Compare_means_among_populations.html" target="_blank">comparing means among groups chapter</a> and note the outcome from a <em>wilcox.test</em></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>two_species_subset <span class="ot">&lt;-</span> iris[iris<span class="sc">$</span>Species<span class="sc">!=</span><span class="st">"setosa"</span>,]</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -586,9 +567,15 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
 <p>is very close to a linear model predicting the signed rank of the data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>signed_rank <span class="ot">=</span> <span class="cf">function</span>(x) <span class="fu">sign</span>(x) <span class="sc">*</span> <span class="fu">rank</span>(<span class="fu">abs</span>(x))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(<span class="fu">signed_rank</span>(Sepal.Length) <span class="sc">~</span> Species, two_species_subset), <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'car' was built under R version 4.3.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: carData</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>signed_rank <span class="ot">=</span> <span class="cf">function</span>(x) <span class="fu">sign</span>(x) <span class="sc">*</span> <span class="fu">rank</span>(<span class="fu">abs</span>(x))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(<span class="fu">signed_rank</span>(Sepal.Length) <span class="sc">~</span> Species, two_species_subset), <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -604,6 +591,49 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>In fact, we could run simulations and show that p values from these 2 approaches are highly correlated (now you know what that means) with a <span class="math inline">\(\beta\)</span> of almost 1 (from <span class="citation" data-cites="lindelov">Lindelov (<a href="#ref-lindelov" role="doc-biblioref">n.d.</a>)</span>).</p>
 <div class="cell">
 <div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyverse' was built under R version 4.3.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'readr' was built under R version 4.3.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'purrr' was built under R version 4.3.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'forcats' was built under R version 4.3.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'lubridate' was built under R version 4.3.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+✖ dplyr::recode() masks car::recode()
+✖ purrr::some()   masks car::some()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: `unnest()` has a new interface. See `?unnest` for details.
+ℹ Try `df %&gt;% unnest(c(mann, ttest))`, with `mutate()` if needed.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `.sep` argument of `unnest()` is deprecated as of tidyr 1.0.0.
+ℹ Use `names_sep = '_'` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'patchwork' was built under R version 4.3.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggpubr' was built under R version 4.3.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
 <pre><code>Warning: The `&lt;scale&gt;` argument of `guides()` cannot be `FALSE`. Use "none" instead as
 of ggplot2 3.3.4.</code></pre>
 </div>
@@ -615,559 +645,10 @@ of ggplot2 3.3.4.</code></pre>
 <p><span class="math display">\[
 \epsilon \approx i.i.d.\ N(\mu,\sigma)
 \]</span></p>
-<p>Although the residuals are meant to be homoscedastic (equal or constant across all groups), it turns out the model is robust of when the largest group variance is 4-10x larger than the smallest group variance and sample sizes are approximately equal <span class="citation" data-cites="blanca2018 fox2015 zuur2010">(<a href="#ref-blanca2018" role="doc-biblioref">Blanca et al. 2018</a>; <a href="#ref-fox2015" role="doc-biblioref">Fox 2015</a>; <a href="#ref-zuur2010" role="doc-biblioref">A. F. Zuur, Ieno, and Elphick 2010</a>)</span>, though highly uneven group sizes begin to cause issues <span class="citation" data-cites="blanca2018">(<a href="#ref-blanca2018" role="doc-biblioref">Blanca et al. 2018</a>)</span>.</p>
-<p>Similarly, non-normal data is not an issue. This is partially because the assumptions are focused on residuals, but also because the procedure is highly robust <span class="citation" data-cites="blanca2017">(<a href="#ref-blanca2017" role="doc-biblioref">Blanca et al. 2017</a>)</span>. This finding further supports the graphical consideration of assumptions , especially since many tests for normality are conservative (samples are almost never <em>perfectly</em> normal, and slight deviations are easier to pick up with larger sample sizes despite the fact the central limit theorem suggests this is when the issue is least important) <span class="citation" data-cites="zuur2010 shatz2023">(<a href="#ref-zuur2010" role="doc-biblioref">A. F. Zuur, Ieno, and Elphick 2010</a>; <a href="#ref-shatz2023" role="doc-biblioref">Shatz 2023</a>)</span>.</p>
-<p>These issues have led some authors to argue violations of the linear model assumptions are less dangerous than trying new, and often less-tested, techniques that may inflate type I error rates <span class="citation" data-cites="knief2021 warton2016">(<a href="#ref-knief2021" role="doc-biblioref">Knief and Forstmeier 2021</a>; <a href="#ref-warton2016" role="doc-biblioref">D. I. Warton et al. 2016</a>)</span>. However, new techniques (or sometimes old techniques that are new to a given field) may be more appropriate when assumptions are clearly broken <span class="citation" data-cites="warton2010 reitan2016 geissinger2022">(<a href="#ref-warton2010" role="doc-biblioref">D. Warton and Hui 2010</a>; <a href="#ref-reitan2016" role="doc-biblioref">Reitan and Nielsen 2016</a>; <a href="#ref-geissinger2022" role="doc-biblioref">Geissinger et al. 2022</a>)</span>. In this section we explore common-ish approaches for analyzing data when the assumptions of a linear model are broken. Our goal here is to introduce these methods. Each could be the focus of their own class, book, or much larger study. Fortunately most can be viewed as extensions to our existing knowledge, although many of the assumptions and techniques for them are less developed/still being argued about.</p>
-<p>The various assumptions related to linear models may be prioritized on their relative importance. One such order is provided (roughly) by <span class="citation" data-cites="gelman2006">Gelman and Hill (<a href="#ref-gelman2006" role="doc-biblioref">2006</a>)</span>.</p>
-<ul>
-<li><p>Model validity</p>
-<ul>
-<li>As noted in the multiple regression chapter, we only should investigate relationships we have a mechanism to explain</li>
-</ul></li>
-<li><p>Linear relationship and additive effects of predictor variables</p></li>
-<li><p>Errors are</p>
-<ul>
-<li><p>independently distributed</p></li>
-<li><p>identical (homoscedastic)</p></li>
-<li><p>follow a normal distribution</p></li>
-</ul></li>
-</ul>
-<p>Many datasets will violate multiple of these assumptions simultaneously, so addressing issues is often best resolved by understanding <em>why</em> this is happening.</p>
-</section>
-<section id="linear-relationship-is-inappropriate" class="level2">
-<h2 class="anchored" data-anchor-id="linear-relationship-is-inappropriate">Linear relationship is inappropriate</h2>
-<p>A central (and often overlooked assumption) of linear models is that the relationship between the predictors and the outcome variable is linear and addtive. When the relationship is not linear, the resulting residuals are often not appropriately distributed as well.This may occur for a number of reasons. The outcome may not actually be continuous (e.g.&nbsp;counts. proportions) or may be related to the predictors in different ways (e.g., logarithmic). When this occurs, several options exist.</p>
-<details>
-<summary>
-What’s linear anyway?
-</summary>
-<p>To be clear, the linear model only focuses on the linear and additive relationship between the predictors and the outcome variable (this will become more important/obvious later in this section!). The model doesn’t <em>know</em> what the variables are. For that reason, we can add predictor variables to a model that are squares or cubes of predictors, or we can transform the outcome variable. We just the <span class="math inline">\(Y = X\beta\)</span> relationship to be additive and linear.</p>
-</details>
-<section id="transform-the-data-least-advisable-sometimes" class="level3">
-<h3 class="anchored" data-anchor-id="transform-the-data-least-advisable-sometimes">Transform the data (least advisable, sometimes)</h3>
-<p>One option is to transform the data (typically focusing on the dependent variable) so that the resulting variable meets the linear model assumptions (and thus uses the strengths of linear models that we noted above). As shown above, our rank-based approaches are using a similar method (not technically the same, but it works for larger sample sizes). This approach was often used in the past(e.g., arc-sin transforms of proportion data <span class="citation" data-cites="warton2010">D. Warton and Hui (<a href="#ref-warton2010" role="doc-biblioref">2010</a>)</span>) and supported by various approacheac. For example, Box-Cox transformation helped researchers find the best way to transform data to reduce issues with the distribution of residuals; this method also tended to impact linearity and differences in variances.</p>
-<p>Two things should be noted regarding this approach and transformations in general:</p>
-<ul>
-<li>The Box-Cox approach requires a model - it still focused on transforming data so that <em>residuals</em> met assumptions. Data should not be transformed before model assumptions are analyzed to ensure it is necessary. For example, highly skewed data may arise due to unequal sample sizes (which may pose their own problems, but not outright). Non-normal data, however, may have normalized residuals. However, normal data (or transformed data) does typically lead to normal residuals, so if residuals are not normal transformations may help.</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>example_skewed <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Population=</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"a"</span>,<span class="dv">40</span>),</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                                           <span class="fu">rep</span>(<span class="st">"b"</span>, <span class="dv">30</span>),</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                                           <span class="fu">rep</span>(letters[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">each=</span><span class="dv">15</span>)), </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">Growth =</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">40</span>,<span class="dv">1</span>),</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="dv">4</span>),</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">rnorm</span>(<span class="dv">15</span>, <span class="dv">7</span>),</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">rnorm</span>(<span class="dv">15</span>,<span class="dv">10</span>)))</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(example_skewed,<span class="fu">aes</span>(<span class="at">x=</span>Growth))<span class="sc">+</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()<span class="sc">+</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Some value"</span>,</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">title=</span><span class="st">"Example of skewed data appearing due to unequal sample size"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">lm</span>(Growth<span class="sc">~</span>Population, example_skewed))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-4.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-5.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Growth<span class="sc">~</span>Population, example_skewed), <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Anova Table (Type III tests)
-
-Response: Growth
-             Sum Sq Df F value    Pr(&gt;F)    
-(Intercept)   38.75  1  32.436 1.344e-07 ***
-Population  1007.71  3 281.175 &lt; 2.2e-16 ***
-Residuals    114.69 96                      
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-</div>
-<ul>
-<li><p>The transformed variable is <em>now</em> linear in respect to the predictors. This highlights the actual assumption of the model. Similarly, higher-terms (squares, cubes, etc) may be added to a linear model. The model does not care what the data represent - it only focuses on if linear relationships exist among them.</p></li>
-<li><p>Transformations can make model interpretation and prediction difficult.</p></li>
-</ul>
-<p>If the decision is made to transform the data, several approaches exist. Some are driven by the distribution of the data, and all depend on it. For example, log and related root transformations are useful for right-skewed data, but some can only be carried out for non-negative (e.g., square root) or strictly positive (e.g., log) values. To address this for log transformations, a small value is often added to 0 measurements.</p>
-<p>Let’s data (not residuals) to show what different types of data look like and consider possible fixes (always fit a model first for real analysis!). For example, we can return to our right-skewed blue jay data <a href="../../content/chapters/summarizing_data.html">from the summarizing data chapter</a>(target=“_blank)(idea from <span class="citation" data-cites="hunt">(<a href="#ref-hunt" role="doc-biblioref">Hunt, n.d.</a>)</span>) .</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>blue_jays <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">2</span>,<span class="dv">8</span>)<span class="sc">*</span><span class="dv">100</span><span class="sc">+</span><span class="fu">runif</span>(<span class="dv">10000</span>,<span class="dv">60</span>,<span class="dv">80</span>),<span class="dv">3</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(blue_jays), </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>blue_jays)) <span class="sc">+</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Westchester blue jays"</span>,</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>Note the right-skewed data shows a convex curve on the Q-Q plot.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(blue_jays)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(blue_jays)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>To help you understand Q-Q plots, remember they are comparing the relative spread of data (quantiles) from a target and theoretical distribution. For right-skewed data, points are shifted right (both smallest and largest observations are larger than you would expect from a normal distribution).</p>
-<p>Conversely, we could also return to our left-skewed cardinal data</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>cardinals <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">10</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="dv">50</span><span class="sc">+</span><span class="fu">runif</span>(<span class="dv">10000</span>,<span class="dv">5</span>,<span class="dv">10</span>),<span class="dv">3</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(cardinals), </span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>cardinals)) <span class="sc">+</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Westchester cardinals"</span>,</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>and note a concave shape is seen in the Q-Q plot,as all points are shifted left.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(cardinals)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(cardinals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>For this type of data, power transformations (raising the variable to the 2, 3, or higher power) may be useful.</p>
-<p>Meanwhile, our uniformly-distributed distributed robin data</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>rochester <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">runif</span>(<span class="dv">1000</span>,<span class="dv">75</span>,<span class="dv">85</span>)),<span class="dv">3</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(rochester), </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>rochester)) <span class="sc">+</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"pink"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Rochester robins"</span>,</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>shows as a s-shape on the Q-Q plot</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(rochester)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(rochester)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>because it is <em>under-dispersed</em> (has no tails). Alternatively, data may be <em>over-dispersed</em>, like this (fake) finch data.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VGAM)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>finch <span class="ot">&lt;-</span> <span class="fu">rlaplace</span>(<span class="dv">1000</span>,<span class="at">location=</span><span class="dv">50</span>, <span class="at">scale=</span><span class="dv">4</span>)</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(finch), </span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>finch)) <span class="sc">+</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"cyan"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of finches"</span>,</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(finch)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(finch)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>Over- and under-dispersed data may mean there’s a missing factor in your analysis. For example, our bi-modal woodpecker data</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>woodpeckers <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">60</span>,<span class="dv">4</span>),<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">80</span>,<span class="dv">4</span>)),<span class="dv">3</span>)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(woodpeckers), </span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>woodpeckers)) <span class="sc">+</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"orange"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of  Westchester woodpeckers"</span>,</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>is under-dispersed due the shape of the distribution.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(woodpeckers)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(woodpeckers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>Under-dispersion could also happen if data are bounded (e.g., by practicality or due to a measurement issue). Over-dispersion can similarly occur if the model does not account for variability (e.g., missing factors, non-linear relationship) and/or outliers, which might be related to the underlying form of the data <span class="citation" data-cites="payne2017">(<a href="#ref-payne2017" role="doc-biblioref">Payne et al. 2017</a>)</span> (more to come on this). In this way, over- and under-dispersion relate to both the linear relationship.</p>
-<section id="generalized-linear-model-approach-different-data-different-approach" class="level4">
-<h4 class="anchored" data-anchor-id="generalized-linear-model-approach-different-data-different-approach">Generalized linear model approach: Different data, different approach</h4>
-<p>The linear relationship may be inappropriate because our data doesn’t fit it! For example, if we are modeling proportions, estimates less than 0 or below 1 do not make sense, but a linear model doesn’t account for that. The same issues arise for proportions and binary outcomes. While we may be able to transform the response variable to make it linear, another option is to translate the <em>link</em> function.</p>
-<p>Although we haven’t fully explained it yet, a linear model contains three components. There is always a random component that focuses on the distribution of the data. There is also a systematic component, where a number of covariates and data points produce an estimate. Finally, there is the link function, which connects that estimate to the data distribution (this maintains the linearity of the model).</p>
-<p>Notice this means the link connects to the distribution of the data, not the data itself. So far we have focused on the <em>mean</em> of the data, and the estimate is the mean, so the link has been implied. We can <em>generalize</em> this setup to include other distributions in the exponential family (and now others <span class="citation" data-cites="applied2022">(<a href="#ref-applied2022" role="doc-biblioref"><span>“Applied Regression Analysis and Generalized Linear Models”</span> 2022</a>, ch.&nbsp;15)</span>).</p>
-<p>While we won’t develop all the math, exponential family distributions all have a canonical parameter (the mean for Gaussian, or normal, data) and a dispersion parameter (the variance for normal data). Different distributions have different relationships between these two parameters. For normal data, there is <em>no</em> relationship, so the variance is constant. This is not true for other families.</p>
-<p>We can specify other families using <em>generalized linear models</em>(which are different than general linear models, which is another term used to describe our “regular” linear models). These models are also known as glm or glim (we’ll use the glm jargon here). GLM make different assumptions (though everyone does not agree on what they are!). While we still need independence of the residuals (or some extension, see below), they no longer need to be normally distributed <span class="citation" data-cites="zuur2007 zuur2009">(<a href="#ref-zuur2007" role="doc-biblioref">A. Zuur, Ieno, and Smith 2007, 86–87</a>; <a href="#ref-zuur2009" role="doc-biblioref">A. Zuur et al. 2009, sec. 9.8.3</a>)</span> (though normality may hold at large sample sizes for Pearson <span class="citation" data-cites="agresti2007">(<a href="#ref-agresti2007" role="doc-biblioref">Agresti 2007, 87</a>)</span> or deviance <span class="citation" data-cites="montgomery2012">(<a href="#ref-montgomery2012" role="doc-biblioref">Montgomery, Peck, and Vining 2012, sec. 13.4.4</a>)</span> <!-- https://stats.stackexchange.com/questions/92394/checking-residuals-for-normality-in-generalised-linear-models; https://online.stat.psu.edu/stat504/lesson/6/6.1 --> residuals, and some authors argue normality is required for testing <span class="citation" data-cites="feng2020">(<a href="#ref-feng2020" role="doc-biblioref">Feng, Li, and Sadeghpour 2020</a>)</span> ) or constant (homogeneity). As noted above, non-Gaussian families don’t assume a constant variance, so homogeneity assumptions would not be appropriate. However, we need to ensure the correct family (and thus mean-variance link) is chosen. In general, plotting the residuals against</p>
-<ul>
-<li><p>the predicted values</p></li>
-<li><p>each explanatory variable in model</p></li>
-</ul>
-<!-- -->
-<ul>
-<li><p>each explanatory not retained/used in model</p></li>
-<li><p>against time and space</p></li>
-</ul>
-<p>will be useful. Any patterns may suggest missing predictors or lack of independence/correlation among measurements. Patterns in the residuals may also indicate the incorrect family has been chosen <span class="citation" data-cites="zuur2009">(<a href="#ref-zuur2009" role="doc-biblioref">A. Zuur et al. 2009, sec. 9.8.4</a>)</span></p>
-<details>
-<summary>
-What are residuals for a GLM?
-</summary>
-<p>Residuals for a Gaussian/normal glm (what we’ve been doing) are easy to calculate. We simply subtract the estimate for each data point (which is the average for similar observations!) from the observed. However, though these raw or response residuals exist for GLM, they rarely make sense. Variance may increase with mean for some distributions, for example, or outcomes may be binary.</p>
-<p>To account for this, we could divide the residuals by the square root of the variance. This normalizes the residuals and leads to <em>Pearson residuals</em>. Another option is based on something called deviance. Deviance is similar to sums of squares but based on likelihood (which we shortly see is what we use to test for significance in GLM); it can also be considered the generalized form of variance or residuals sums of squares. It is calculated as the difference of log-likelihods between the focal model and the saturated model. Deviance residuals consider how important each point is to the overall deviance. You can also compare the deviance of a model to a perfect fit (no deviance/saturated) model and an intercept-only model (worst fit, D<sub>O</sub>) and generate a pseudo-R<sup>2</sup> measure using the formula</p>
-<p><span class="math display">\[
-1-\frac{D}{D_O}
-\]</span></p>
-</details>
-<p>There are numerous types of GLMs. Here we outline some of the more common ones. Regardless of which ones you use, moving beyond the normal distribution means the residuals do not need to be normally or identically distributed</p>
-<section id="logistic-regression" class="level5">
-<h5 class="anchored" data-anchor-id="logistic-regression">Logistic regression</h5>
-<p>Logistic regression focused on yes/no outcomes; data can be a single answer (Bernoulli) or a collection (binomial).</p>
-</section>
-<section id="beta-regression" class="level5">
-<h5 class="anchored" data-anchor-id="beta-regression">Beta regression</h5>
-<p>Beta regression focuses on true porpiton data.</p>
-</section>
-<section id="poisson-regression" class="level5">
-<h5 class="anchored" data-anchor-id="poisson-regression">Poisson regression</h5>
-<p>Poisson regression focuses on count-based data.</p>
-</section>
-<section id="non-linear-options" class="level5">
-<h5 class="anchored" data-anchor-id="non-linear-options">Non-linear options</h5>
-</section>
-</section>
-</section>
-</section>
-<section id="data-are-not-independent" class="level2">
-<h2 class="anchored" data-anchor-id="data-are-not-independent">Data are not independent</h2>
-<section id="in-respect-to-predictors" class="level3">
-<h3 class="anchored" data-anchor-id="in-respect-to-predictors">In respect to predictors</h3>
-<p>A major issue for linear models is when predictors are co-linear. Mathematically speaking, perfect collinearity occurs when any column of the design (<em>X</em>) matrix can be derived by combining other columns. Perfect collinearity will lead to a message noting singularity issues, which is R’s way of telling you the matrix isn’t invertible (which it has to be to solve the equation).</p>
-<p>Even partial collinearity will lead to an increase in Type II errors <span class="citation" data-cites="zuur2010">(<a href="#ref-zuur2010" role="doc-biblioref">A. F. Zuur, Ieno, and Elphick 2010</a>)</span>. To put it simply, partitioning variance among related predictors is hard. For this reason, a few approaches may be used.</p>
-<section id="check-for-issues" class="level4">
-<h4 class="anchored" data-anchor-id="check-for-issues">Check for issues</h4>
-<p>The first step is identifying issues. From the outset, relationships among predictor variables can be assessed using the <em>pairs</em> function in R. If two variables are highly correlated (r<sup>2</sup> &gt; .8 is a general limit), only one should be included in the model. Similarly, variance inflation factors (vif) can be assessed for the final and other models to consider this issues (all this is covered in the <a href="../../content/chapters/Combining_numerical_and_categorical_predictors.html" target="_blank">previous chapter that introduces multiple regression</a>.</p>
-</section>
-</section>
-<section id="in-respect-to-measured-outcomes" class="level3">
-<h3 class="anchored" data-anchor-id="in-respect-to-measured-outcomes">In respect to measured outcomes</h3>
-<p>When outcome variables are linked together, a few options exist. Note this issue may be obvious from checks of assumptions, but it also may be due to experimental design.</p>
-<p>Consider this example. In order to investigate impacts of climate stress on oysters, specimens are placed in individual tanks and held at normal summer (calculated using recent data) temperature or at temperatures predicted under 2 IPCC — Intergovernmental Panel on Climate Change- scenarios. Oysters were also exposed to predator cues by dropping in water from tanks with 0, low (.25/m2), or high (2/m2) predators. After two months changes in oyster shell length (growth) was measured. Twenty-five oysters were measured for each treatment combination.</p>
-<p>You hopefully recognize this as a factorial ANOVA experiment that you know how to analyze. If you need a reminder, see the <a href="../../content/chapters/More_ANOVAs.html" target="_blank">chapter on ANOVA extensions</a>. Experiments like this are odd, however, given the space they require. It is far more common to put lots of organisms in a single container given space and costs. However, this means our measurements are connected; remember <a href="../../content/chapters/More_ANOVAs.html" target="_blank">blocking and paired tests</a>)?</p>
-<p>There are several ways to deal with this. Here we explore each for our oyster example.</p>
-<section id="ignore-it-dont-do-this" class="level4">
-<h4 class="anchored" data-anchor-id="ignore-it-dont-do-this">Ignore it (don’t do this!)</h4>
-<p>First, let’s ignore the lack of independence. This is <em>not</em> an option, but it let’s you see the impact.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>growth_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature, experiment)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(growth_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-16-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-16-4.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(growth_lm, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Anova Table (Type III tests)
-
-Response: growth
-                          Sum Sq  Df F value    Pr(&gt;F)    
-(Intercept)               15.576   1 16.3673 7.265e-05 ***
-predator_cue              22.085   2 11.6031 1.635e-05 ***
-temperature               70.061   2 36.8090 1.753e-14 ***
-predator_cue:temperature  21.376   4  5.6154 0.0002558 ***
-Residuals                205.563 216                      
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-</div>
-<p>We find significant main effects and interactions using this <em>wrong</em> approach.</p>
-</section>
-<section id="find-average-for-each-unit" class="level4">
-<h4 class="anchored" data-anchor-id="find-average-for-each-unit">Find average for each unit</h4>
-<p>One way of doing this focuses on the average for each unit</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>averaged_experiment <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(experiment, <span class="at">measurevar =</span> <span class="st">"growth"</span>,</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"predator_cue"</span>, <span class="st">"temperature"</span>, <span class="st">"container"</span>))</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(averaged_experiment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["predator_cue"],"name":[1],"type":["fct"],"align":["left"]},{"label":["temperature"],"name":[2],"type":["fct"],"align":["left"]},{"label":["container"],"name":[3],"type":["chr"],"align":["left"]},{"label":["N"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["growth"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["se"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["ci"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"high","2":"ambient","3":"c","4":"25","5":"0.7893411","6":"0.7859693","7":"0.1571939","8":"0.3244322"},{"1":"high","2":"elevated_scenario1","3":"f","4":"25","5":"0.8200710","6":"0.6938491","7":"0.1387698","8":"0.2864068"},{"1":"high","2":"elevated_scenario2","3":"i","4":"25","5":"2.8548160","6":"1.0748246","7":"0.2149649","8":"0.4436658"},{"1":"none","2":"ambient","3":"a","4":"25","5":"2.0791580","6":"0.7758511","7":"0.1551702","8":"0.3202556"},{"1":"none","2":"elevated_scenario1","3":"d","4":"25","5":"2.5724463","6":"1.0918574","7":"0.2183715","8":"0.4506966"},{"1":"none","2":"elevated_scenario2","3":"g","4":"25","5":"2.9199695","6":"1.1043899","7":"0.2208780","8":"0.4558697"},{"1":"normal","2":"ambient","3":"b","4":"25","5":"1.7124232","6":"1.1511870","7":"0.2302374","8":"0.4751867"},{"1":"normal","2":"elevated_scenario1","3":"e","4":"25","5":"1.4993876","6":"0.9759186","7":"0.1951837","8":"0.4028394"},{"1":"normal","2":"elevated_scenario2","3":"h","4":"25","5":"3.1388696","6":"1.0096012","7":"0.2019202","8":"0.4167429"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<p>and use that for your analysis.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>average_analysis <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature, averaged_experiment)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(average_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in Anova.lm(average_analysis, type = "III"): residual df = 0</code></pre>
-</div>
-</div>
-<p>but that leads to an issue! Since we only get 9 average outcomes and our model requires 10 degrees of freedom (consider why), we are left with no “noise” to make the denominator for our F ratio! Even when this doesn’t happen, you have reduced your data to a much smaller number of points and are not getting credit for all your work! This is a good example of why you should analyze simulated data before you run an experiment, but there are other options.</p>
-<p>#####Blocking</p>
-<p>The blocking approach we’ve already covered works might seem appropriate here.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>blocking_analysis <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature<span class="sc">+</span>container, experiment)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(blocking_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in Anova.III.lm(mod, error, singular.ok = singular.ok, ...): there are aliased coefficients in the model</code></pre>
-</div>
-</div>
-<p>but its not? Why? This error means now our model matrix has collinearity issues. WE can actually see where</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">alias</span>(blocking_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Model :
-growth ~ predator_cue * temperature + container
-
-Complete :
-                                                 (Intercept) predator_cuenone
-containerf                                        0           0              
-containerg                                       -1           1              
-containerh                                        0           0              
-containeri                                        1          -1              
-predator_cuenone:temperatureelevated_scenario1    0           0              
-predator_cuenormal:temperatureelevated_scenario1  0           0              
-predator_cuenone:temperatureelevated_scenario2   -1           1              
-predator_cuenormal:temperatureelevated_scenario2  0           0              
-                                                 predator_cuenormal
-containerf                                        0                
-containerg                                        0                
-containerh                                        1                
-containeri                                       -1                
-predator_cuenone:temperatureelevated_scenario1    0                
-predator_cuenormal:temperatureelevated_scenario1  0                
-predator_cuenone:temperatureelevated_scenario2    0                
-predator_cuenormal:temperatureelevated_scenario2  1                
-                                                 temperatureelevated_scenario1
-containerf                                        1                           
-containerg                                        1                           
-containerh                                        0                           
-containeri                                       -1                           
-predator_cuenone:temperatureelevated_scenario1    0                           
-predator_cuenormal:temperatureelevated_scenario1  0                           
-predator_cuenone:temperatureelevated_scenario2    1                           
-predator_cuenormal:temperatureelevated_scenario2  0                           
-                                                 temperatureelevated_scenario2
-containerf                                        0                           
-containerg                                        1                           
-containerh                                        0                           
-containeri                                        0                           
-predator_cuenone:temperatureelevated_scenario1    0                           
-predator_cuenormal:temperatureelevated_scenario1  0                           
-predator_cuenone:temperatureelevated_scenario2    1                           
-predator_cuenormal:temperatureelevated_scenario2  0                           
-                                                 containerb containerc
-containerf                                        0          0        
-containerg                                        1          1        
-containerh                                       -1          0        
-containeri                                        0         -1        
-predator_cuenone:temperatureelevated_scenario1    0          0        
-predator_cuenormal:temperatureelevated_scenario1  0          0        
-predator_cuenone:temperatureelevated_scenario2    1          1        
-predator_cuenormal:temperatureelevated_scenario2 -1          0        
-                                                 containerd containere
-containerf                                       -1         -1        
-containerg                                       -1          0        
-containerh                                        0         -1        
-containeri                                        1          1        
-predator_cuenone:temperatureelevated_scenario1    1          0        
-predator_cuenormal:temperatureelevated_scenario1  0          1        
-predator_cuenone:temperatureelevated_scenario2   -1          0        
-predator_cuenormal:temperatureelevated_scenario2  0         -1        </code></pre>
-</div>
-</div>
-<p>though the output is confusing. In general, the issue here is each unit only contributes to one level of other traits..so if we know the average impact of ambient temperatures, for example, and the impacts in two of the treatments that were held at that temperature, we can predict the other. If instead each unit contributed to multiple levels, like in <a href="../../content/chapters/More_ANOVAs.html" target="blank">feather experiment</a>) this isn’t an issue.</p>
-</section>
-<section id="random-effects" class="level4">
-<h4 class="anchored" data-anchor-id="random-effects">Random effects</h4>
-<p>Our final option takes a new approach. It considers the units we measured as simply a sample from a larger population. Using that background, we use the information from the units to consider the distribution of sample effects we might see. The impact of unit is then considered a random-effect. For this to work, you probably want 5+ levels of the unit variable. This is because we are using the means to estimate variance (confusing?). For factors with &lt;5 levels, random effects likely offer no benefit <span class="citation" data-cites="gomes2022">(<a href="#ref-gomes2022" role="doc-biblioref">Gomes 2022</a>)</span>.</p>
-<p>When models contain fixed (what we’ve done before) and random effects, we call them mixed-effects models. Two common packages for carrying out this analysis in R are the <strong>nlme</strong> and <strong>lme4</strong> packages. We will focus on the lme4 package here. Random effects can be entered in the <em>lmer</em> (linear mixed-effects regression) function and specified as (1|Grouping Unit). One nice thing about <strong>lme4</strong> is it will handle crossed and random effects on it’s own <strong>as long as you don’t repeat unit names</strong>. For example, we could note</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>mixed_analysis <span class="ot">&lt;-</span> <span class="fu">lmer</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature<span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>container), experiment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Once built, we need to consider assumptions. The main assumption we add here is that the random effects are normally distributed. This should be checked at each level of grouping. The <em>check_mixed_model</em> function (provided below) offers an automated approach for one level (also known as one-way random effects).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>check_mixed_model <span class="ot">&lt;-</span> <span class="cf">function</span> (model, <span class="at">model_name =</span> <span class="cn">NULL</span>) {</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#collection of things you might check for mixed model</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(<span class="fu">names</span>(<span class="fu">ranef</span>(model))<span class="sc">&lt;</span><span class="dv">2</span>)){</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">ranef</span>(model, <span class="at">drop =</span> T)[[<span class="dv">1</span>]], <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">las =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">1.4</span>, <span class="at">main=</span> <span class="fu">paste</span>(model_name, </span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>                                                                                  <span class="st">"</span><span class="sc">\n</span><span class="st"> Random effects Q-Q plot"</span>))</span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqline</span>(<span class="fu">ranef</span>(model, <span class="at">drop =</span> T)[[<span class="dv">1</span>]])</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="fu">fitted</span>(model),<span class="fu">residuals</span>(model), <span class="at">main =</span> <span class="fu">paste</span>(model_name, </span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">"</span><span class="sc">\n</span><span class="st"> residuals vs fitted"</span>))</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqnorm</span>(<span class="fu">residuals</span>(model), <span class="at">main =</span><span class="fu">paste</span>(model_name, </span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>                                       <span class="st">"</span><span class="sc">\n</span><span class="st">residuals q-q plot"</span>))</span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqline</span>(<span class="fu">residuals</span>(model))</span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(<span class="fu">residuals</span>(model), <span class="at">main =</span> <span class="fu">paste</span>(model_name, </span>
-<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"</span><span class="sc">\n</span><span class="st">residual histogram"</span>))</span>
-<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_mixed_model</span>(mixed_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>Here we have only 9 levels of units, so the spread is not perfect. However, we also know each of these is itself an average,and averages should be normally-distributed under the central limith theorem, so we can plow ahead.</p>
-<p>We can consider the outcome using our <em>summary</em> command - note the output denotes we have 225 observations and 9 grouping levels.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mixed_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Linear mixed model fit by REML ['lmerMod']
-Formula: growth ~ predator_cue * temperature + (1 | container)
-   Data: experiment
-
-REML criterion at convergence: 631.3
-
-Scaled residuals: 
-     Min       1Q   Median       3Q      Max 
--2.68605 -0.79915 -0.02646  0.70023  2.72393 
-
-Random effects:
- Groups    Name        Variance Std.Dev.
- container (Intercept) 4.6171   2.1487  
- Residual              0.9517   0.9755  
-Number of obs: 225, groups:  container, 9
-
-Fixed effects:
-                                                 Estimate Std. Error t value
-(Intercept)                                       0.78934    2.15758   0.366
-predator_cuenone                                  1.28982    3.05129   0.423
-predator_cuenormal                                0.92308    3.05129   0.303
-temperatureelevated_scenario1                     0.03073    3.05129   0.010
-temperatureelevated_scenario2                     2.06547    3.05129   0.677
-predator_cuenone:temperatureelevated_scenario1    0.46256    4.31517   0.107
-predator_cuenormal:temperatureelevated_scenario1 -0.24377    4.31517  -0.056
-predator_cuenone:temperatureelevated_scenario2   -1.22466    4.31517  -0.284
-predator_cuenormal:temperatureelevated_scenario2 -0.63903    4.31517  -0.148
-
-Correlation of Fixed Effects:
-             (Intr) prdtr_cnn prdtr_cnr tmpr_1 tmpr_2 prdtr_cnn:_1 prdtr_cnr:_1
-predatr_cnn  -0.707                                                            
-prdtr_cnrml  -0.707  0.500                                                     
-tmprtrlvt_1  -0.707  0.500     0.500                                           
-tmprtrlvt_2  -0.707  0.500     0.500     0.500                                 
-prdtr_cnn:_1  0.500 -0.707    -0.354    -0.707 -0.354                          
-prdtr_cnr:_1  0.500 -0.354    -0.707    -0.707 -0.354  0.500                   
-prdtr_cnn:_2  0.500 -0.707    -0.354    -0.354 -0.707  0.500        0.250      
-prdtr_cnr:_2  0.500 -0.354    -0.707    -0.354 -0.707  0.250        0.500      
-             prdtr_cnn:_2
-predatr_cnn              
-prdtr_cnrml              
-tmprtrlvt_1              
-tmprtrlvt_2              
-prdtr_cnn:_1             
-prdtr_cnr:_1             
-prdtr_cnn:_2             
-prdtr_cnr:_2  0.500      </code></pre>
-</div>
-</div>
-<p>We can also still use <em>Anova</em> to get p-values. However, these are now calculated by default using likelihood-associated <span class="math inline">\(\chi^2\)</span> tests.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(mixed_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Analysis of Deviance Table (Type III Wald chisquare tests)
-
-Response: growth
-                          Chisq Df Pr(&gt;Chisq)
-(Intercept)              0.1338  1     0.7145
-predator_cue             0.1898  2     0.9095
-temperature              0.6020  2     0.7401
-predator_cue:temperature 0.1837  4     0.9960</code></pre>
-</div>
-</div>
-<p>You can also ask for F tests, but note the degrees of freedom associated with these tests is not clear. It’s somewhere between the “average” and “ignore” approach used above.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(mixed_analysis, <span class="at">type =</span> <span class="st">"III"</span>, <span class="at">test=</span><span class="st">"F"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Analysis of Deviance Table (Type III Wald F tests with Kenward-Roger df)
-
-Response: growth
-                              F Df  Df.res Pr(&gt;F)
-(Intercept)              0.1338  1 3230137 0.7145
-predator_cue             0.0949  2 3230137 0.9095
-temperature              0.3010  2 3230137 0.7401
-predator_cue:temperature 0.0459  4 3230137 0.9960</code></pre>
-</div>
-</div>
-<p>Note this approach suggests we do not have enough data to reject the null hypothesis. Ignoring the linkages among data led to <em>very</em> different results. This issue (pseudopreplication) has been noted in ecology and other fields <span class="citation" data-cites="hurlbert1984 heffner1996 lazic2010">(<a href="#ref-hurlbert1984" role="doc-biblioref">Hurlbert 1984</a>; <a href="#ref-heffner1996" role="doc-biblioref">Heffner, Butler, and Reilly 1996</a>; <a href="#ref-lazic2010" role="doc-biblioref">Lazic 2010</a>)</span>.</p>
-</section>
-</section>
-</section>
-<section id="errors-are-not-equal-among-groups" class="level2">
-<h2 class="anchored" data-anchor-id="errors-are-not-equal-among-groups">Errors are not equal among groups</h2>
-<p>Another option is to use weighted-least squares regression - this approach specifically helps when residuals are not evenly distributed among groups. For example, we could take the sdm_model (just as an example of use! it’s not needed here!) This approach assume you built the model and then noted an issue with heteroscedasticity. If so, we can calculate a weight for each residual that is based on its variance - below makes a value that increases with low variance.</p>
-<p><code>{r} wt_sdm &lt;- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2}</code></p>
-<p>We can then add a new argument to the <em>lm</em> function to use these weights.</p>
-<p><code>{r} sdm_model_wls &lt;-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)}</code></p>
-<p>We can then continue on our normal route:</p>
-<p><code>{r} plot(sdm_model_wls) Anova(sdm_model_wls, type="III")}</code></p>
-<p>If you compare the two models you notice slight differences - these are minimal here due to lack of differences in variance.</p>
-<p><code>{r} summary(sdm_model) summary(sdm_model_wls)}</code></p>
-<p>Why not just always do this? Because weighted least squares implicitly assumes we <em>know</em> the weights. We are actually estimating them, so small datasets may lead to bad estimates and outcomes.</p>
-</section>
-<section id="residuals-are-not-normally-distributed" class="level2">
-<h2 class="anchored" data-anchor-id="residuals-are-not-normally-distributed">Residuals are not normally distributed</h2>
-<p>A very common concern regarding linear models is normality. I list it first here due to how often I see it noted, but in fact this assumption is one of the least important (and the assumption is based on residuals, not data!). However, non-normal residuals are often (not always) connected to other issues, namely linearity, as noted above.</p>
-</section>
-<section id="combinining-these" class="level2">
-<h2 class="anchored" data-anchor-id="combinining-these">Combinining these</h2>
-</section>
+<p>Although the residuals are meant to be homoscedastic (equal or constant across all groups) , it turns out the model is robust of when the largest group variance is 4-10x larger than the smallest group variance and sample sizes are approximately equal <span class="citation" data-cites="blanca2018 fox2015 zuur2010">(<a href="#ref-blanca2018" role="doc-biblioref">Blanca et al. 2018</a>; <a href="#ref-fox2015" role="doc-biblioref">Fox 2015</a>; <a href="#ref-zuur2010" role="doc-biblioref">Zuur, Ieno, and Elphick 2010</a>)</span>, though highly uneven group sizes begin to cause issues <span class="citation" data-cites="blanca2018">(<a href="#ref-blanca2018" role="doc-biblioref">Blanca et al. 2018</a>)</span>.</p>
+<p>Similarly, non-normal data is not an issue. This is partially because the assumptions are focused on residuals, but also because the procedure is highly robust[ <span class="citation" data-cites="blanca2017">(<a href="#ref-blanca2017" role="doc-biblioref">Blanca et al. 2017</a>)</span>. This finding further supports the graphical consideration of assumptions, especially since many tests for normality are conservative (samples are almost never <em>perfectly</em> normal, and slight deviations are easier to pick up with larger sample sizes despite the fact the central limit theorem suggests this is when the issue is least important <span class="citation" data-cites="zuur2010">Zuur, Ieno, and Elphick (<a href="#ref-zuur2010" role="doc-biblioref">2010</a>)</span>).</p>
+<p>some issues to cover(again)</p>
+<p>Dealing with broken assumptions</p>
 <section id="next-steps" class="level2">
 <h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
 <p>These methods can be extended to other models that are used when linear model assumptions are not met, which is the focus of the next chapter.</p>
@@ -1177,77 +658,20 @@ predator_cue:temperature 0.0459  4 3230137 0.9960</code></pre>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-agresti2007" class="csl-entry" role="listitem">
-Agresti, Alan. 2007. <span>“Introduction to Categorical Data Analysis.”</span>
-</div>
-<div id="ref-applied2022" class="csl-entry" role="listitem">
-<span>“Applied Regression Analysis and Generalized Linear Models.”</span> 2022. <a href="https://us.sagepub.com/en-us/nam/applied-regression-analysis-and-generalized-linear-models/book237254">https://us.sagepub.com/en-us/nam/applied-regression-analysis-and-generalized-linear-models/book237254</a>.
-</div>
 <div id="ref-blanca2017" class="csl-entry" role="listitem">
 Blanca, María J., Rafael Alarcón, Jaume Arnau, Roser Bono, and Rebecca Bendayan. 2017. <span>“Non-normal data: Is ANOVA still a valid option?”</span> <em>Psicothema</em> 29 (4): 552–57. <a href="https://doi.org/10.7334/psicothema2016.383">https://doi.org/10.7334/psicothema2016.383</a>.
 </div>
 <div id="ref-blanca2018" class="csl-entry" role="listitem">
 ———. 2018. <span>“Effect of Variance Ratio on ANOVA Robustness: Might 1.5 Be the Limit?”</span> <em>Behavior Research Methods</em> 50 (3): 937–62. <a href="https://doi.org/10.3758/s13428-017-0918-2">https://doi.org/10.3758/s13428-017-0918-2</a>.
 </div>
-<div id="ref-feng2020" class="csl-entry" role="listitem">
-Feng, Cindy, Longhai Li, and Alireza Sadeghpour. 2020. <span>“A Comparison of Residual Diagnosis Tools for Diagnosing Regression Models for Count Data.”</span> <em>BMC Medical Research Methodology</em> 20 (1): 175. <a href="https://doi.org/10.1186/s12874-020-01055-2">https://doi.org/10.1186/s12874-020-01055-2</a>.
-</div>
 <div id="ref-fox2015" class="csl-entry" role="listitem">
 Fox, John. 2015. <em>Applied Regression Analysis and Generalized Linear Models</em>. SAGE Publications.
-</div>
-<div id="ref-geissinger2022" class="csl-entry" role="listitem">
-Geissinger, Emilie A., Celyn L. L. Khoo, Isabella C. Richmond, Sally J. M. Faulkner, and David C. Schneider. 2022. <span>“A Case for Beta Regression in the Natural Sciences.”</span> <em>Ecosphere</em> 13 (2): e3940. <a href="https://doi.org/10.1002/ecs2.3940">https://doi.org/10.1002/ecs2.3940</a>.
-</div>
-<div id="ref-gelman2006" class="csl-entry" role="listitem">
-Gelman, Andrew, and Jennifer Hill. 2006. <em>Data Analysis Using Regression and Multilevel/Hierarchical Models</em>. 1st edition. Cambridge ; New York: Cambridge University Press.
-</div>
-<div id="ref-gomes2022" class="csl-entry" role="listitem">
-Gomes, Dylan G. E. 2022. <span>“Should I Use Fixed Effects or Random Effects When I Have Fewer Than Five Levels of a Grouping Factor in a Mixed-Effects Model?”</span> <em>PeerJ</em> 10 (January): e12794. <a href="https://doi.org/10.7717/peerj.12794">https://doi.org/10.7717/peerj.12794</a>.
-</div>
-<div id="ref-heffner1996" class="csl-entry" role="listitem">
-Heffner, Robert A., Mark J. Butler, and Colleen Keelan Reilly. 1996. <span>“Pseudoreplication Revisited.”</span> <em>Ecology</em> 77 (8): 2558–62. <a href="https://doi.org/10.2307/2265754">https://doi.org/10.2307/2265754</a>.
-</div>
-<div id="ref-hunt" class="csl-entry" role="listitem">
-Hunt, Michael. n.d. <span>“QQ-Plots.”</span> <em>RPubs</em>. <a href="https://rpubs.com/mbh038/725314">https://rpubs.com/mbh038/725314</a>.
-</div>
-<div id="ref-hurlbert1984" class="csl-entry" role="listitem">
-Hurlbert, Stuart H. 1984. <span>“Pseudoreplication and the Design of Ecological Field Experiments.”</span> <em>Ecological Monographs</em> 54 (2): 187–211. <a href="https://doi.org/10.2307/1942661">https://doi.org/10.2307/1942661</a>.
-</div>
-<div id="ref-knief2021" class="csl-entry" role="listitem">
-Knief, Ulrich, and Wolfgang Forstmeier. 2021. <span>“Violating the Normality Assumption May Be the Lesser of Two Evils.”</span> <em>Behavior Research Methods</em> 53 (6): 2576–90. <a href="https://doi.org/10.3758/s13428-021-01587-5">https://doi.org/10.3758/s13428-021-01587-5</a>.
-</div>
-<div id="ref-lazic2010" class="csl-entry" role="listitem">
-Lazic, Stanley E. 2010. <span>“The Problem of Pseudoreplication in Neuroscientific Studies: Is It Affecting Your Analysis?”</span> <em>BMC Neuroscience</em> 11 (1): 5. <a href="https://doi.org/10.1186/1471-2202-11-5">https://doi.org/10.1186/1471-2202-11-5</a>.
 </div>
 <div id="ref-lindelov" class="csl-entry" role="listitem">
 Lindelov, J. K. n.d. <em>Common Statistical Tests Are Linear Models (or: How to Teach Stats)</em>. <a href="https://lindeloev.github.io/tests-as-linear/">https://lindeloev.github.io/tests-as-linear/</a>.
 </div>
-<div id="ref-montgomery2012" class="csl-entry" role="listitem">
-Montgomery, Douglas C., Elizabeth A. Peck, and G. Geoffrey Vining. 2012. <em>Introduction to Linear Regression Analysis</em>. 5th edition. Hoboken, NJ: Wiley.
-</div>
-<div id="ref-payne2017" class="csl-entry" role="listitem">
-Payne, Elizabeth H., James W. Hardin, Leonard E. Egede, Viswanathan Ramakrishnan, Anbesaw Selassie, and Mulugeta Gebregziabher. 2017. <span>“Approaches for dealing with various sources of overdispersion in modeling count data: Scale adjustment versus modeling.”</span> <em>Statistical Methods in Medical Research</em> 26 (4): 1802–23. <a href="https://doi.org/10.1177/0962280215588569">https://doi.org/10.1177/0962280215588569</a>.
-</div>
-<div id="ref-reitan2016" class="csl-entry" role="listitem">
-Reitan, Trond, and Anders Nielsen. 2016. <span>“Do Not Divide Count Data with Count Data; A Story from Pollination Ecology with Implications Beyond.”</span> <em>PLOS ONE</em> 11 (2): e0149129. <a href="https://doi.org/10.1371/journal.pone.0149129">https://doi.org/10.1371/journal.pone.0149129</a>.
-</div>
-<div id="ref-shatz2023" class="csl-entry" role="listitem">
-Shatz, Itamar. 2023. <span>“Assumption-Checking Rather Than (Just) Testing: The Importance of Visualization and Effect Size in Statistical Diagnostics.”</span> <em>Behavior Research Methods</em>, March. <a href="https://doi.org/10.3758/s13428-023-02072-x">https://doi.org/10.3758/s13428-023-02072-x</a>.
-</div>
-<div id="ref-warton2016" class="csl-entry" role="listitem">
-Warton, David I., Mitchell Lyons, Jakub Stoklosa, and Anthony R. Ives. 2016. <span>“Three Points to Consider When Choosing a LM or GLM Test for Count Data.”</span> <em>Methods in Ecology and Evolution</em> 7 (8): 882–90. <a href="https://doi.org/10.1111/2041-210X.12552">https://doi.org/10.1111/2041-210X.12552</a>.
-</div>
-<div id="ref-warton2010" class="csl-entry" role="listitem">
-Warton, David, and Francis Hui. 2010. <span>“The Arcsine Is Asinine: The Analysis of Proportions in Ecology.”</span> <em>Ecology</em> 92 (1): 3–10. <a href="https://doi.org/10.1890/10-0340.1">https://doi.org/10.1890/10-0340.1</a>.
-</div>
 <div id="ref-zuur2010" class="csl-entry" role="listitem">
 Zuur, Alain F., Elena N. Ieno, and Chris S. Elphick. 2010. <span>“A Protocol for Data Exploration to Avoid Common Statistical Problems.”</span> <em>Methods in Ecology and Evolution</em> 1 (1): 3–14. https://doi.org/<a href="https://doi.org/10.1111/j.2041-210X.2009.00001.x">https://doi.org/10.1111/j.2041-210X.2009.00001.x</a>.
-</div>
-<div id="ref-zuur2007" class="csl-entry" role="listitem">
-Zuur, Alain, Elena N. Ieno, and Graham M. Smith. 2007. <em>Analyzing Ecological Data</em>. 2007th edition. New York ; London: Springer.
-</div>
-<div id="ref-zuur2009" class="csl-entry" role="listitem">
-Zuur, Alain, Elena N. Ieno, Neil Walker, Anatoly A. Saveliev, and Graham M. Smith. 2009. <em>Mixed Effects Models and Extensions in Ecology with r</em>. New York, NY: Springer.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

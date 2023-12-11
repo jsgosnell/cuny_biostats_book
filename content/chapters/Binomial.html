@@ -475,7 +475,7 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/primer_material/tools_overview.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/primer_material/tools_overview.qmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tools overview</span></a>
   </div>
 </li>
@@ -1002,8 +1002,11 @@ which \ eventually \ reduces \  to \\
 <li><p>the second argument is the number of trials</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(binom)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.confint</span>(<span class="dv">9</span>,<span class="dv">18</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(binom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'binom' was built under R version 4.3.1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.confint</span>(<span class="dv">9</span>,<span class="dv">18</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          method x  n mean     lower     upper
 1  agresti-coull 9 18  0.5 0.2903102 0.7096898
@@ -1021,19 +1024,19 @@ which \ eventually \ reduces \  to \\
 </div>
 <p>For now, we will use method labelled the Agresti-Coull method, which adjusts for slight bias in other estimates and is useful across sample sizes.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>using_distribution <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">18</span>,<span class="dv">18</span>,.<span class="dv">75</span>)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>finches <span class="ot">&lt;-</span> <span class="fu">data.frame</span> (<span class="at">Number =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">18</span>, <span class="at">Probability =</span> using_distribution)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>Proportion <span class="ot">&lt;-</span> finches<span class="sc">$</span>Number<span class="sc">/</span><span class="dv">18</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria <span class="ot">&lt;-</span> <span class="st">"retain"</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria[<span class="fu">pbinom</span>(finches<span class="sc">$</span>Number, <span class="dv">18</span>, .<span class="dv">75</span>) <span class="sc">&lt;</span> .<span class="dv">025</span>] <span class="ot">&lt;-</span> <span class="st">"reject"</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria[(<span class="dv">1</span><span class="sc">-</span><span class="fu">pbinom</span>(finches<span class="sc">$</span>Number, <span class="dv">18</span>, .<span class="dv">75</span>)) <span class="sc">&lt;</span> .<span class="dv">025</span>] <span class="ot">&lt;-</span> <span class="st">"reject"</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>proportion_observed <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">Proportion =</span> <span class="dv">9</span><span class="sc">/</span><span class="dv">18</span>, <span class="at">Probability =</span> .<span class="dv">15</span>)<span class="co">#sets height</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(finches, <span class="fu">aes</span>(<span class="at">x =</span> Proportion, <span class="at">y =</span> Probability)) <span class="sc">+</span> </span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"identity"</span>, <span class="fu">aes</span>(<span class="at">fill =</span> criteria)) <span class="sc">+</span> </span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> .<span class="dv">29031</span>, <span class="at">xend =</span> .<span class="dv">70968</span>,<span class="at">y=</span> .<span class="dv">15</span> , <span class="at">yend =</span>.<span class="dv">15</span>) <span class="sc">+</span></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> .<span class="dv">75</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">9</span><span class="sc">/</span><span class="dv">18</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span> proportion_observed) <span class="sc">+</span></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Comparing p-values and confidence intervals for finch problem"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>using_distribution <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">18</span>,<span class="dv">18</span>,.<span class="dv">75</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>finches <span class="ot">&lt;-</span> <span class="fu">data.frame</span> (<span class="at">Number =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">18</span>, <span class="at">Probability =</span> using_distribution)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>Proportion <span class="ot">&lt;-</span> finches<span class="sc">$</span>Number<span class="sc">/</span><span class="dv">18</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria <span class="ot">&lt;-</span> <span class="st">"retain"</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria[<span class="fu">pbinom</span>(finches<span class="sc">$</span>Number, <span class="dv">18</span>, .<span class="dv">75</span>) <span class="sc">&lt;</span> .<span class="dv">025</span>] <span class="ot">&lt;-</span> <span class="st">"reject"</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>finches<span class="sc">$</span>criteria[(<span class="dv">1</span><span class="sc">-</span><span class="fu">pbinom</span>(finches<span class="sc">$</span>Number, <span class="dv">18</span>, .<span class="dv">75</span>)) <span class="sc">&lt;</span> .<span class="dv">025</span>] <span class="ot">&lt;-</span> <span class="st">"reject"</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>proportion_observed <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">Proportion =</span> <span class="dv">9</span><span class="sc">/</span><span class="dv">18</span>, <span class="at">Probability =</span> .<span class="dv">15</span>)<span class="co">#sets height</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(finches, <span class="fu">aes</span>(<span class="at">x =</span> Proportion, <span class="at">y =</span> Probability)) <span class="sc">+</span> </span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"identity"</span>, <span class="fu">aes</span>(<span class="at">fill =</span> criteria)) <span class="sc">+</span> </span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> .<span class="dv">29031</span>, <span class="at">xend =</span> .<span class="dv">70968</span>,<span class="at">y=</span> .<span class="dv">15</span> , <span class="at">yend =</span>.<span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> .<span class="dv">75</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">9</span><span class="sc">/</span><span class="dv">18</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span> proportion_observed) <span class="sc">+</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Comparing p-values and confidence intervals for finch problem"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Binomial_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>

@@ -98,9 +98,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-<link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-
 
 </head>
 
@@ -457,7 +454,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/primer_material/tools_overview.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/primer_material/tools_overview.qmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tools overview</span></a>
   </div>
 </li>
@@ -586,10 +583,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'car' was built under R version 4.3.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: carData</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>( Sepal_interaction<span class="sc">~</span> Petal_Length <span class="sc">*</span> Species, iris_example_species), </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>( Sepal_interaction<span class="sc">~</span> Petal_Length <span class="sc">*</span> Species, iris_example_species), </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -606,8 +606,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>interactions do exist. This means we can’t interpret the “general” relationship, so we need to look for each species using regression.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>         iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"baruch"</span>,]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>         iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"baruch"</span>,]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -629,9 +629,9 @@ Residual standard error: 0.8738 on 23 degrees of freedom
 Multiple R-squared:  0.6865,    Adjusted R-squared:  0.6728 
 F-statistic: 50.36 on 1 and 23 DF,  p-value: 3.144e-07</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>         iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"baruch"</span>,]), </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>         iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"baruch"</span>,]), </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -643,8 +643,8 @@ Residuals    17.561 23
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>           iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"hunter"</span>,]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>           iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"hunter"</span>,]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -664,9 +664,9 @@ Residual standard error: 0.9902 on 23 degrees of freedom
 Multiple R-squared:  0.06589,   Adjusted R-squared:  0.02528 
 F-statistic: 1.622 on 1 and 23 DF,  p-value: 0.2155</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>         iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"hunter"</span>,]), </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>         iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"hunter"</span>,]), </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -676,8 +676,8 @@ Response: Sepal_interaction
 Petal_Length  1.5907  1  1.6224 0.2155
 Residuals    22.5503 23               </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>           iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"york"</span>,]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>           iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"york"</span>,]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -699,9 +699,9 @@ Residual standard error: 0.9491 on 23 degrees of freedom
 Multiple R-squared:  0.9214,    Adjusted R-squared:  0.918 
 F-statistic: 269.5 on 1 and 23 DF,  p-value: 3.401e-14</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>         iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"york"</span>,]), </span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Sepal_interaction <span class="sc">~</span> Petal_Length, </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>         iris_example_species[iris_example_species<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"york"</span>,]), </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -725,184 +725,6 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>More information on the dataset is available at</p>
 <p>http://www.statsci.org/data/general/fev.html.</p>
 <p>Does the impact of age on FEV differ among genders? Consider how your answer to this differs from the previous assignment!</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fev <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/general/fev.txt"</span>, <span class="at">header =</span> T, </span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">stringsAsFactors =</span> T)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>fev_age <span class="ot">&lt;-</span> <span class="fu">lm</span>(FEV <span class="sc">~</span> Age<span class="sc">*</span>Sex, fev)</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fev_age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-5-4.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(fev_age, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Anova Table (Type III tests)
-
-Response: FEV
-             Sum Sq  Df F value    Pr(&gt;F)    
-(Intercept)  18.654   1  69.087 5.506e-16 ***
-Age          72.190   1 267.356 &lt; 2.2e-16 ***
-Sex           7.977   1  29.543 7.745e-08 ***
-Age:Sex      17.426   1  64.535 4.467e-15 ***
-Residuals   175.509 650                      
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fev_age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = FEV ~ Age * Sex, data = fev)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--1.64072 -0.34337 -0.04934  0.33206  1.86867 
-
-Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  0.849467   0.102199   8.312 5.51e-16 ***
-Age          0.162729   0.009952  16.351  &lt; 2e-16 ***
-SexMale     -0.775867   0.142745  -5.435 7.74e-08 ***
-Age:SexMale  0.110749   0.013786   8.033 4.47e-15 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.5196 on 650 degrees of freedom
-Multiple R-squared:  0.6425,    Adjusted R-squared:  0.6408 
-F-statistic: 389.4 on 3 and 650 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-</div>
-<p><em>We can explore this question using an ANCOVA since the response is continuous and the explanatory variables combine a categorical and continuous variable. Analysis of residuals indicates the assumptions are met (no pattern, normal distribution). There is a significant interaction among age and gender on FEV (F<sub>1,650</sub>=64.535, p&lt;.001). We should explore impacts of age on each gender separately.</em></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fev_age <span class="ot">&lt;-</span> <span class="fu">lm</span>(FEV <span class="sc">~</span> Age, fev[fev<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"Male"</span>,])</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fev_age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-6-4.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(fev_age, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Anova Table (Type III tests)
-
-Response: FEV
-             Sum Sq  Df  F value Pr(&gt;F)    
-(Intercept)   0.147   1   0.4258 0.5145    
-Age         221.896   1 641.5722 &lt;2e-16 ***
-Residuals   115.518 334                    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fev_age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = FEV ~ Age, data = fev[fev$Sex == "Male", ])
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--1.64072 -0.37752 -0.05318  0.36893  1.86867 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)   0.0736     0.1128   0.653    0.514    
-Age           0.2735     0.0108  25.329   &lt;2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.5881 on 334 degrees of freedom
-Multiple R-squared:  0.6576,    Adjusted R-squared:  0.6566 
-F-statistic: 641.6 on 1 and 334 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-</div>
-<p><em>Age has a significant (F<sub>1,334</sub> = 641, p &lt; 0.01) positive (.27 L yr<sup>-1</sup>) impact on FEV in males.</em></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>fev_age <span class="ot">&lt;-</span> <span class="fu">lm</span>(FEV <span class="sc">~</span> Age, fev[fev<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"Female"</span>,])</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fev_age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-7-4.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(fev_age, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Anova Table (Type III tests)
-
-Response: FEV
-            Sum Sq  Df F value    Pr(&gt;F)    
-(Intercept) 18.654   1  98.262 &lt; 2.2e-16 ***
-Age         72.190   1 380.258 &lt; 2.2e-16 ***
-Residuals   59.991 316                      
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fev_age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = FEV ~ Age, data = fev[fev$Sex == "Female", ])
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--1.09240 -0.28991 -0.03762  0.28749  1.13451 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 0.849467   0.085695   9.913   &lt;2e-16 ***
-Age         0.162729   0.008345  19.500   &lt;2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.4357 on 316 degrees of freedom
-Multiple R-squared:  0.5461,    Adjusted R-squared:  0.5447 
-F-statistic: 380.3 on 1 and 316 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-</div>
-<p><em>Age also has a significant (F<sub>1,316</sub> = 380, p &lt; 0.01) positive (.16 L yr<sup>-1</sup>) impact on FEV in females. The interaction is likely due to the higher rate of increase of FEV with age in males.</em></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fev, <span class="fu">aes</span>(<span class="at">x=</span>Age, <span class="at">y=</span>FEV, <span class="at">color =</span> Sex, <span class="at">shape =</span> Sex)) <span class="sc">+</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"FEV (L)"</span>) <span class="sc">+</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"FEV increases faster </span><span class="sc">\n</span><span class="st"> with age in males"</span>)<span class="sc">+</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">28</span>), </span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">28</span>), </span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y  =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>),</span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x  =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>), </span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>),</span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>, <span class="at">face=</span><span class="st">"bold"</span>),</span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">32</span>)) <span class="sc">+</span></span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
 </section>
 <section id="section-1" class="level3">
 <h3 class="anchored" data-anchor-id="section-1">2</h3>
@@ -911,297 +733,12 @@ F-statistic: 380.3 on 1 and 316 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>More information on the data is available @</p>
 <p>http://www.statsci.org/data/general/insulgas.html</p>
 <p>Is there any relationship between these factors? How would you test this, and what type of plot would you produce to accompany your analysis?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>heat <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/general/insulgas.txt"</span>, </span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">header =</span> T, <span class="at">stringsAsFactors =</span> T)</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(heat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  Insulate Temp Gas
-1   Before -0.8 7.2
-2   Before -0.7 6.9
-3   Before  0.4 6.4
-4   Before  2.5 6.0
-5   Before  2.9 5.8
-6   Before  3.2 5.8</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>heat_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Gas <span class="sc">~</span> Insulate <span class="sc">*</span> Temp, heat)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(heat_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-9-4.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(car)</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(heat_model, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Anova Table (Type III tests)
-
-Response: Gas
-              Sum Sq Df  F value    Pr(&gt;F)    
-(Intercept)   90.636  1 1243.911 &lt; 2.2e-16 ***
-Insulate      12.502  1  171.583 4.709e-16 ***
-Temp           2.783  1   38.191 2.640e-07 ***
-Insulate:Temp  0.757  1   10.391  0.002521 ** 
-Residuals      2.915 40                       
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(heat, <span class="fu">aes_string</span>(<span class="at">x=</span><span class="st">"Temp"</span>, <span class="at">y=</span><span class="st">"Gas"</span>, <span class="at">color =</span> <span class="st">"Insulate"</span>)) <span class="sc">+</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Gas (1000 "</span>,ft<span class="sc">^</span><span class="dv">3</span>, <span class="st">")"</span>)))<span class="sc">+</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Temperature ("</span>, degree<span class="sc">~</span>C, <span class="st">")"</span>)))<span class="sc">+</span></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> F) <span class="sc">+</span></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">28</span>), </span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">28</span>), </span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y  =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>),</span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x  =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>), </span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>),</span>
-<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>, <span class="at">face=</span><span class="st">"bold"</span>),</span>
-<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">32</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
-ℹ Please use tidy evaluation ideoms with `aes()`</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-9-5.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p><em>There is a significant relationship between insulation type (before/after) and temperature on gas usage (F<sub>1,40</sub>=10.39, p&lt;.01). Graphical analysis indicates the old (before) insulation led to higher overall gas usage and gas usage increased faster with colder temperature compared to the new insulation. Statistical analysis bears this out</em></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>heat_model_old <span class="ot">&lt;-</span> <span class="fu">lm</span>(Gas <span class="sc">~</span> Temp, heat[heat<span class="sc">$</span>Insulate <span class="sc">==</span> <span class="st">"Before"</span>,])</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(heat_model_old)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-10-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-10-4.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(heat_model_old)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = Gas ~ Temp, data = heat[heat$Insulate == "Before", 
-    ])
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.62020 -0.19947  0.06068  0.16770  0.59778 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  6.85383    0.11842   57.88   &lt;2e-16 ***
-Temp        -0.39324    0.01959  -20.08   &lt;2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.2813 on 24 degrees of freedom
-Multiple R-squared:  0.9438,    Adjusted R-squared:  0.9415 
-F-statistic: 403.1 on 1 and 24 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(heat_model_old, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Anova Table (Type III tests)
-
-Response: Gas
-             Sum Sq Df F value    Pr(&gt;F)    
-(Intercept) 265.115  1 3349.59 &lt; 2.2e-16 ***
-Temp         31.905  1  403.11 &lt; 2.2e-16 ***
-Residuals     1.900 24                      
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>heat_model_new<span class="ot">&lt;-</span> <span class="fu">lm</span>(Gas <span class="sc">~</span> Temp, heat[heat<span class="sc">$</span>Insulate <span class="sc">==</span> <span class="st">"After"</span>,])</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(heat_model_new)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-10-5.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-10-6.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-10-7.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-10-8.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(heat_model_new)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = Gas ~ Temp, data = heat[heat$Insulate == "After", 
-    ])
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.61677 -0.03594  0.03300  0.10180  0.35901 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  4.59062    0.12145  37.799  &lt; 2e-16 ***
-Temp        -0.24963    0.03769  -6.623 5.86e-06 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.2519 on 16 degrees of freedom
-Multiple R-squared:  0.7327,    Adjusted R-squared:  0.716 
-F-statistic: 43.87 on 1 and 16 DF,  p-value: 5.857e-06</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(heat_model_new, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Anova Table (Type III tests)
-
-Response: Gas
-            Sum Sq Df  F value    Pr(&gt;F)    
-(Intercept) 90.636  1 1428.759 &lt; 2.2e-16 ***
-Temp         2.783  1   43.867 5.857e-06 ***
-Residuals    1.015 16                       
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-</div>
-<p><em>There is a significant relationship between gas usage and temperature for old and new insulation homes. However, the old insulation led to using 400 ft<sup>3</sup> more gas per week to heat the house with every degree drop in temperature, while the new insulation leads to a increase of only 250 ft<sup>3</sup> more gas per week with each degree drop.</em></p>
 </section>
 <section id="section-2" class="level3">
 <h3 class="anchored" data-anchor-id="section-2">3</h3>
 <p>Data on the height, diameter, and volume of cherry trees was collected for use in developing an optimal model to predict timber volume. Data is available @</p>
 <p>http://www.statsci.org/data/general/cherry.txt</p>
 <p>Use the data to justify an optimal model.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>cherry <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/general/cherry.txt"</span>,</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">header =</span> T)</span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cherry)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  Diam Height Volume
-1  8.3     70   10.3
-2  8.6     65   10.3
-3  8.8     63   10.2
-4 10.5     72   16.4
-5 10.7     81   18.8
-6 10.8     83   19.7</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">#if only considering main effects (one option)</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>cherry_full <span class="ot">&lt;-</span> <span class="fu">lm</span>(Volume <span class="sc">~</span> Diam <span class="sc">+</span> Height, cherry)</span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cherry_full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(cherry_full, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Anova Table (Type III tests)
-
-Response: Volume
-            Sum Sq Df  F value    Pr(&gt;F)    
-(Intercept)  679.0  1  45.0632  2.75e-07 ***
-Diam        4783.0  1 317.4129 &lt; 2.2e-16 ***
-Height       102.4  1   6.7943   0.01449 *  
-Residuals    421.9 28                       
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co">#both are significant, so finished</span></span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="co">#could also consider interactions </span></span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>cherry_full <span class="ot">&lt;-</span> <span class="fu">lm</span>(Volume <span class="sc">~</span> Diam <span class="sc">*</span> Height, cherry)</span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cherry_full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-11-5.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-11-6.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-11-7.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-11-8.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(cherry_full, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Anova Table (Type III tests)
-
-Response: Volume
-             Sum Sq Df F value    Pr(&gt;F)    
-(Intercept)  62.185  1  8.4765 0.0071307 ** 
-Diam         68.147  1  9.2891 0.0051087 ** 
-Height      128.566  1 17.5248 0.0002699 ***
-Diam:Height 223.843  1 30.5119 7.484e-06 ***
-Residuals   198.079 27                      
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cherry_full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = Volume ~ Diam * Height, data = cherry)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--6.5821 -1.0673  0.3026  1.5641  4.6649 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 69.39632   23.83575   2.911  0.00713 ** 
-Diam        -5.85585    1.92134  -3.048  0.00511 ** 
-Height      -1.29708    0.30984  -4.186  0.00027 ***
-Diam:Height  0.13465    0.02438   5.524 7.48e-06 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 2.709 on 27 degrees of freedom
-Multiple R-squared:  0.9756,    Adjusted R-squared:  0.9728 
-F-statistic: 359.3 on 3 and 27 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co">#all significant, so finished</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><em>I used multiple regression to consider the impacts of both continuous and categorical explanatory variables on timber volume. I used a top-down approach focused on p-values (F tests) in this example. Both diameter and height (and their interaction) are significant, so the full model is justified by the data. It explains 97.5% of the variation in volume. AIC methods lead to a similar outcome</em></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stepAIC</span>(cherry_full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Start:  AIC=65.49
-Volume ~ Diam * Height
-
-              Df Sum of Sq    RSS    AIC
-&lt;none&gt;                     198.08 65.495
-- Diam:Height  1    223.84 421.92 86.936</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = Volume ~ Diam * Height, data = cherry)
-
-Coefficients:
-(Intercept)         Diam       Height  Diam:Height  
-    69.3963      -5.8558      -1.2971       0.1347  </code></pre>
-</div>
-</div>
 </section>
 <section id="section-3" class="level3">
 <h3 class="anchored" data-anchor-id="section-3">4</h3>
@@ -1259,163 +796,6 @@ Coefficients:
 <p>Using the available data (available at</p>
 <p>https://docs.google.com/spreadsheets/d/e/2PACX-1vToN77M80enimQglwpFroooLzDtcQMh4qKbOuhbu-eVmU9buczh7nVV1BdI4T_ma-PfWUnQYmq-60RZ/pub?gid=942311716&amp;single=true&amp;output=csv )</p>
 <p>determine the optimal subset of explanatory variables that should be used to predict change pulse rate (Change) (focusing on main effects only, no interactions) and explain your choice of methods. Interpret your results. Make sure you can explain any changes you needed to make to the dataset or steps you used in your analysis.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>pulse_class_copy <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://docs.google.com/spreadsheets/d/e/2PACX-1vToN77M80enimQglwpFroooLzDtcQMh4qKbOuhbu-eVmU9buczh7nVV1BdI4T_ma-PfWUnQYmq-60RZ/pub?gid=942311716&amp;single=true&amp;output=csv"</span>, <span class="at">stringsAsFactors =</span> T)</span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>pulse_class_copy<span class="sc">$</span>Gender <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(pulse_class_copy<span class="sc">$</span>Gender)</span>
-<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>pulse_class_copy<span class="sc">$</span>Smokes <span class="ot">&lt;-</span> <span class="fu">as.factor</span> (pulse_class_copy<span class="sc">$</span>Smokes)</span>
-<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>pulse_class_copy<span class="sc">$</span>Alcohol <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(pulse_class_copy<span class="sc">$</span>Alcohol)</span>
-<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>pulse_full <span class="ot">&lt;-</span> <span class="fu">lm</span>(Change <span class="sc">~</span> ., pulse_class_copy )</span>
-<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>pulse_final <span class="ot">&lt;-</span> <span class="fu">step</span>(pulse_full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Start:  AIC=-94.24
-Change ~ Height + Weight + Age + Gender + Smokes + Alcohol + 
-    Exercise + Year
-
-           Df Sum of Sq    RSS     AIC
-- Year      1  0.002178 4.0113 -96.218
-- Gender    1  0.002825 4.0119 -96.211
-- Smokes    1  0.006969 4.0161 -96.163
-- Age       1  0.007498 4.0166 -96.157
-- Weight    1  0.018975 4.0281 -96.026
-- Exercise  1  0.063201 4.0723 -95.524
-&lt;none&gt;                  4.0091 -94.243
-- Height    1  0.248912 4.2580 -93.473
-- Alcohol   1  0.275592 4.2847 -93.185
-
-Step:  AIC=-96.22
-Change ~ Height + Weight + Age + Gender + Smokes + Alcohol + 
-    Exercise
-
-           Df Sum of Sq    RSS     AIC
-- Gender    1  0.002745 4.0140 -98.187
-- Smokes    1  0.008748 4.0200 -98.118
-- Age       1  0.009061 4.0203 -98.115
-- Weight    1  0.020656 4.0319 -97.982
-- Exercise  1  0.061106 4.0724 -97.523
-&lt;none&gt;                  4.0113 -96.218
-- Height    1  0.247630 4.2589 -95.463
-- Alcohol   1  0.280615 4.2919 -95.108
-
-Step:  AIC=-98.19
-Change ~ Height + Weight + Age + Smokes + Alcohol + Exercise
-
-           Df Sum of Sq    RSS      AIC
-- Age       1  0.008872 4.0229 -100.085
-- Smokes    1  0.009773 4.0238 -100.075
-- Weight    1  0.019557 4.0336  -99.963
-- Exercise  1  0.058622 4.0726  -99.520
-&lt;none&gt;                  4.0140  -98.187
-- Height    1  0.258061 4.2721  -97.321
-- Alcohol   1  0.302450 4.3165  -96.845
-
-Step:  AIC=-100.09
-Change ~ Height + Weight + Smokes + Alcohol + Exercise
-
-           Df Sum of Sq    RSS      AIC
-- Smokes    1  0.009335 4.0322 -101.979
-- Weight    1  0.020707 4.0436 -101.849
-- Exercise  1  0.063527 4.0864 -101.365
-&lt;none&gt;                  4.0229 -100.085
-- Height    1  0.270131 4.2930  -99.096
-- Alcohol   1  0.293626 4.3165  -98.845
-
-Step:  AIC=-101.98
-Change ~ Height + Weight + Alcohol + Exercise
-
-           Df Sum of Sq    RSS     AIC
-- Weight    1  0.020452 4.0527 -103.75
-- Exercise  1  0.055663 4.0879 -103.35
-&lt;none&gt;                  4.0322 -101.98
-- Height    1  0.263914 4.2961 -101.06
-- Alcohol   1  0.285822 4.3181 -100.83
-
-Step:  AIC=-103.75
-Change ~ Height + Alcohol + Exercise
-
-           Df Sum of Sq    RSS     AIC
-- Exercise  1   0.07307 4.1258 -104.92
-&lt;none&gt;                  4.0527 -103.75
-- Alcohol   1   0.28662 4.3393 -102.60
-- Height    1   0.39237 4.4451 -101.50
-
-Step:  AIC=-104.92
-Change ~ Height + Alcohol
-
-          Df Sum of Sq    RSS     AIC
-&lt;none&gt;                 4.1258 -104.92
-- Alcohol  1   0.25346 4.3792 -104.18
-- Height   1   0.43164 4.5574 -102.35</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co">#consider assumptions</span></span>
-<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pulse_final)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-13-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="9_Combining_numerical_and_categorical_predictors_solutions_files/figure-html/unnamed-chunk-13-4.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(pulse_final, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Anova Table (Type III tests)
-
-Response: Change
-            Sum Sq Df F value  Pr(&gt;F)  
-(Intercept) 0.0434  1  0.4520 0.50500  
-Height      0.4316  1  4.4987 0.03973 *
-Alcohol     0.2535  1  2.6416 0.11141  
-Residuals   4.1258 43                  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pulse_final)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = Change ~ Height + Alcohol, data = pulse_class_copy)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.62511 -0.17315  0.05539  0.15239  1.01992 
-
-Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)  
-(Intercept) -0.318699   0.474060  -0.672   0.5050  
-Height       0.005658   0.002668   2.121   0.0397 *
-Alcohol2     0.173965   0.107035   1.625   0.1114  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.3098 on 43 degrees of freedom
-Multiple R-squared:  0.1074,    Adjusted R-squared:  0.06585 
-F-statistic: 2.586 on 2 and 43 DF,  p-value: 0.08699</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co">#or</span></span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn)</span>
-<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">na.action =</span> <span class="st">"na.fail"</span>)</span>
-<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>auto <span class="ot">&lt;-</span> <span class="fu">dredge</span>(pulse_full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Fixed term is "(Intercept)"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(auto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["(Intercept)"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Age"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Alcohol"],"name":[3],"type":["fct"],"align":["left"]},{"label":["Exercise"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Gender"],"name":[5],"type":["fct"],"align":["left"]},{"label":["Height"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Smokes"],"name":[7],"type":["fct"],"align":["left"]},{"label":["Weight"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["Year"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[10],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["AICc"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["delta"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["weight"],"name":[14],"type":["mdl.wght"],"align":["right"]}],"data":[{"1":"-0.318699026","2":"NA","3":"+","4":"NA","5":"NA","6":"0.005657939","7":"NA","8":"NA","9":"NA","10":"4","11":"-9.809152","12":"28.59391","13":"0.0000000","14":"5.679219e-02","_rn_":"19"},{"1":"0.045186515","2":"NA","3":"NA","4":"NA","5":"NA","6":"0.003862380","7":"NA","8":"NA","9":"NA","10":"3","11":"-11.180412","12":"28.93225","13":"0.3383387","14":"4.795339e-02","_rn_":"17"},{"1":"0.705905369","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"2","11":"-12.421458","12":"29.12199","13":"0.5280715","14":"4.361334e-02","_rn_":"1"},{"1":"0.438723089","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"0.003981981","9":"NA","10":"3","11":"-11.657527","12":"29.88648","13":"1.2925697","14":"2.975848e-02","_rn_":"65"},{"1":"-0.149068648","2":"NA","3":"+","4":"-0.06199962","5":"NA","6":"0.005422047","7":"NA","8":"NA","9":"NA","10":"5","11":"-9.398155","12":"30.29631","13":"1.7023961","14":"2.424477e-02","_rn_":"23"},{"1":"0.841025934","2":"NA","3":"NA","4":"-0.06278329","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"3","11":"-12.027077","12":"30.62558","13":"2.0316691","14":"2.056446e-02","_rn_":"5"},{"1":"-0.337926335","2":"NA","3":"+","4":"NA","5":"NA","6":"0.004887471","7":"NA","8":"0.002243543","9":"NA","10":"5","11":"-9.597122","12":"30.69424","13":"2.1003294","14":"1.987046e-02","_rn_":"83"},{"1":"0.679835989","2":"NA","3":"+","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"3","11":"-12.097685","12":"30.76680","13":"2.1728843","14":"1.916253e-02","_rn_":"3"},{"1":"0.188913675","2":"NA","3":"NA","4":"-0.04539661","5":"NA","6":"0.003593326","7":"NA","8":"NA","9":"NA","10":"4","11":"-10.969869","12":"30.91535","13":"2.3214348","14":"1.779080e-02","_rn_":"21"},{"1":"-0.152547660","2":"-7.063004e-03","3":"+","4":"NA","5":"NA","6":"0.005503989","7":"NA","8":"NA","9":"NA","10":"5","11":"-9.718283","12":"30.93657","13":"2.3426530","14":"1.760305e-02","_rn_":"20"},{"1":"0.030046054","2":"NA","3":"NA","4":"NA","5":"NA","6":"0.003122272","7":"NA","8":"0.002112546","9":"NA","10":"4","11":"-11.003345","12":"30.98230","13":"2.3883863","14":"1.720510e-02","_rn_":"81"},{"1":"-0.276608454","2":"NA","3":"+","4":"NA","5":"+","6":"0.005491382","7":"NA","8":"NA","9":"NA","10":"5","11":"-9.747060","12":"30.99412","13":"2.4002051","14":"1.710373e-02","_rn_":"27"},{"1":"0.352813967","2":"NA","3":"+","4":"NA","5":"NA","6":"NA","7":"NA","8":"0.004727294","9":"NA","10":"4","11":"-11.046395","12":"31.06840","13":"2.4744856","14":"1.648014e-02","_rn_":"67"},{"1":"-0.819685572","2":"NA","3":"+","4":"NA","5":"NA","6":"0.005712419","7":"NA","8":"NA","9":"5.132252e-03","10":"5","11":"-9.792051","12":"31.08410","13":"2.4901888","14":"1.635125e-02","_rn_":"147"},{"1":"-0.308393175","2":"NA","3":"+","4":"NA","5":"NA","6":"0.005684281","7":"+","8":"NA","9":"NA","10":"5","11":"-9.805063","12":"31.11013","13":"2.5162119","14":"1.613988e-02","_rn_":"51"},{"1":"0.864732451","2":"-7.881387e-03","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"3","11":"-12.311795","12":"31.19502","13":"2.6011038","14":"1.546914e-02","_rn_":"2"},{"1":"0.726764791","2":"NA","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"3","11":"-12.312546","12":"31.19652","13":"2.6026059","14":"1.545753e-02","_rn_":"9"},{"1":"0.002723378","2":"NA","3":"NA","4":"NA","5":"NA","6":"0.003846978","7":"+","8":"NA","9":"NA","10":"4","11":"-11.146126","12":"31.26786","13":"2.6739473","14":"1.491586e-02","_rn_":"49"},{"1":"-0.556335902","2":"NA","3":"NA","4":"NA","5":"NA","6":"0.003932863","7":"NA","8":"NA","9":"6.151406e-03","10":"4","11":"-11.157253","12":"31.29012","13":"2.6962018","14":"1.475081e-02","_rn_":"145"},{"1":"0.099692706","2":"-2.111668e-03","3":"NA","4":"NA","5":"NA","6":"0.003792515","7":"NA","8":"NA","9":"NA","10":"4","11":"-11.172539","12":"31.32069","13":"2.7267735","14":"1.452705e-02","_rn_":"18"},{"1":"0.654145013","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"+","8":"NA","9":"NA","10":"3","11":"-12.378632","12":"31.32869","13":"2.7347784","14":"1.446902e-02","_rn_":"33"},{"1":"0.053878698","2":"NA","3":"NA","4":"NA","5":"+","6":"0.003825934","7":"NA","8":"NA","9":"NA","10":"4","11":"-11.178934","12":"31.33348","13":"2.7395634","14":"1.443444e-02","_rn_":"25"},{"1":"0.708961941","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"-3.189707e-05","10":"3","11":"-12.421457","12":"31.41434","13":"2.8204292","14":"1.386246e-02","_rn_":"129"},{"1":"0.566128314","2":"NA","3":"NA","4":"-0.04340031","5":"NA","6":"NA","7":"NA","8":"0.003475255","9":"NA","10":"4","11":"-11.476232","12":"31.92807","13":"3.3341605","14":"1.072222e-02","_rn_":"69"},{"1":"0.837737834","2":"NA","3":"+","4":"-0.07648371","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"4","11":"-11.523626","12":"32.02286","13":"3.4289481","14":"1.022591e-02","_rn_":"7"},{"1":"0.338149808","2":"NA","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"0.005117564","9":"NA","10":"4","11":"-11.567106","12":"32.10982","13":"3.5159075","14":"9.790819e-03","_rn_":"73"},{"1":"0.543005274","2":"-4.692111e-03","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"0.003837029","9":"NA","10":"4","11":"-11.618439","12":"32.21249","13":"3.6185729","14":"9.300912e-03","_rn_":"66"},{"1":"0.401940990","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"+","8":"0.003940688","9":"NA","10":"4","11":"-11.631769","12":"32.23915","13":"3.6452334","14":"9.177751e-03","_rn_":"97"},{"1":"0.571170777","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"0.003987845","9":"-1.386273e-03","10":"4","11":"-11.656357","12":"32.28832","13":"3.6944090","14":"8.954842e-03","_rn_":"193"},{"1":"0.706150061","2":"NA","3":"+","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"4","11":"-11.847065","12":"32.66974","13":"4.0758253","14":"7.400046e-03","_rn_":"11"},{"1":"0.914545007","2":"-1.192784e-02","3":"+","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"4","11":"-11.857691","12":"32.69099","13":"4.0970778","14":"7.321828e-03","_rn_":"4"},{"1":"-0.181970314","2":"NA","3":"+","4":"-0.05524760","5":"NA","6":"0.004869576","7":"NA","8":"0.001683559","9":"NA","10":"6","11":"-9.281790","12":"32.71743","13":"4.1235128","14":"7.225688e-03","_rn_":"87"},{"1":"-0.027869053","2":"-5.447440e-03","3":"+","4":"-0.05946052","5":"NA","6":"0.005312972","7":"NA","8":"NA","9":"NA","10":"6","11":"-9.343867","12":"32.84158","13":"4.2476672","14":"6.790776e-03","_rn_":"24"},{"1":"-1.022799049","2":"NA","3":"+","4":"-0.06531638","5":"NA","6":"0.005505428","7":"NA","8":"NA","9":"9.043712e-03","10":"6","11":"-9.345244","12":"32.84433","13":"4.2504201","14":"6.781436e-03","_rn_":"151"},{"1":"-0.096793404","2":"NA","3":"+","4":"-0.06744729","5":"NA","6":"0.005496838","7":"+","8":"NA","9":"NA","10":"6","11":"-9.346566","12":"32.84698","13":"4.2530640","14":"6.772477e-03","_rn_":"55"},{"1":"0.944756601","2":"-5.562633e-03","3":"NA","4":"-0.05889491","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"4","11":"-11.973099","12":"32.92181","13":"4.3278939","14":"6.523767e-03","_rn_":"6"},{"1":"-0.140083038","2":"NA","3":"+","4":"-0.05974238","5":"+","6":"0.005370640","7":"NA","8":"NA","9":"NA","10":"6","11":"-9.390513","12":"32.93487","13":"4.3409576","14":"6.481293e-03","_rn_":"31"},{"1":"0.508914163","2":"NA","3":"+","4":"-0.05621022","5":"NA","6":"NA","7":"NA","8":"0.004148301","9":"NA","10":"5","11":"-10.739952","12":"32.97990","13":"4.3859905","14":"6.336989e-03","_rn_":"71"},{"1":"0.840544502","2":"NA","3":"NA","4":"-0.05810028","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"4","11":"-12.005882","12":"32.98737","13":"4.3934606","14":"6.313364e-03","_rn_":"13"},{"1":"0.419044957","2":"NA","3":"NA","4":"-0.06461548","5":"NA","6":"NA","7":"NA","8":"NA","9":"4.444762e-03","10":"4","11":"-12.015551","12":"33.00671","13":"4.4127980","14":"6.252616e-03","_rn_":"133"},{"1":"0.817077848","2":"NA","3":"NA","4":"-0.06109981","5":"NA","6":"NA","7":"+","8":"NA","9":"NA","10":"4","11":"-12.020651","12":"33.01691","13":"4.4229976","14":"6.220810e-03","_rn_":"37"},{"1":"0.654145013","2":"NA","3":"+","4":"NA","5":"NA","6":"NA","7":"+","8":"NA","9":"NA","10":"4","11":"-12.086618","12":"33.14885","13":"4.5549329","14":"5.823681e-03","_rn_":"35"},{"1":"0.852215668","2":"NA","3":"+","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"-1.800462e-03","10":"4","11":"-12.095755","12":"33.16712","13":"4.5732065","14":"5.770713e-03","_rn_":"131"},{"1":"-0.186529566","2":"-6.404959e-03","3":"+","4":"NA","5":"NA","6":"0.004776932","7":"NA","8":"0.002158900","9":"NA","10":"6","11":"-9.522034","12":"33.19791","13":"4.6039999","14":"5.682544e-03","_rn_":"84"},{"1":"0.154896129","2":"NA","3":"NA","4":"-0.03853707","5":"NA","6":"0.003032721","7":"NA","8":"0.001716219","9":"NA","10":"5","11":"-10.856939","12":"33.21388","13":"4.6199638","14":"5.637366e-03","_rn_":"85"},{"1":"0.547873870","2":"-9.201665e-03","3":"+","4":"NA","5":"NA","6":"NA","7":"NA","8":"0.004524990","9":"NA","10":"5","11":"-10.899165","12":"33.29833","13":"4.7044169","14":"5.404276e-03","_rn_":"68"},{"1":"-0.323528623","2":"NA","3":"+","4":"NA","5":"NA","6":"0.004916075","7":"+","8":"0.002269035","9":"NA","10":"6","11":"-9.588847","12":"33.33154","13":"4.7376266","14":"5.315280e-03","_rn_":"115"},{"1":"-0.642913762","2":"NA","3":"+","4":"NA","5":"NA","6":"0.004935828","7":"NA","8":"0.002199426","9":"3.128253e-03","10":"6","11":"-9.590793","12":"33.33543","13":"4.7415189","14":"5.304945e-03","_rn_":"211"},{"1":"-0.693084390","2":"NA","3":"NA","4":"-0.04874946","5":"NA","6":"0.003678047","7":"NA","8":"NA","9":"9.128216e-03","10":"5","11":"-10.919528","12":"33.33906","13":"4.7451425","14":"5.295342e-03","_rn_":"149"},{"1":"-0.347892315","2":"NA","3":"+","4":"NA","5":"+","6":"0.004869184","7":"NA","8":"0.002396523","9":"NA","10":"6","11":"-9.595466","12":"33.34478","13":"4.7508638","14":"5.280216e-03","_rn_":"91"},{"1":"-0.054703567","2":"NA","3":"NA","4":"NA","5":"+","6":"0.003081104","7":"NA","8":"0.003154953","9":"NA","10":"5","11":"-10.928760","12":"33.35752","13":"4.7636053","14":"5.246684e-03","_rn_":"89"},{"1":"0.160965453","2":"NA","3":"NA","4":"-0.04346015","5":"NA","6":"0.003596890","7":"+","8":"NA","9":"NA","10":"5","11":"-10.961125","12":"33.42225","13":"4.8283364","14":"5.079591e-03","_rn_":"53"},{"1":"0.175637015","2":"NA","3":"NA","4":"-0.04800570","5":"+","6":"0.003668167","7":"NA","8":"NA","9":"NA","10":"5","11":"-10.961408","12":"33.42282","13":"4.8289023","14":"5.078154e-03","_rn_":"29"},{"1":"0.205092549","2":"-6.725711e-04","3":"NA","4":"-0.04502344","5":"NA","6":"0.003573285","7":"NA","8":"NA","9":"NA","10":"5","11":"-10.969078","12":"33.43816","13":"4.8442418","14":"5.039355e-03","_rn_":"22"},{"1":"0.862032953","2":"-6.849021e-03","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"4","11":"-12.231295","12":"33.43820","13":"4.8442861","14":"5.039243e-03","_rn_":"10"},{"1":"-0.007254571","2":"NA","3":"NA","4":"NA","5":"NA","6":"0.003123497","7":"+","8":"0.002070117","9":"NA","10":"5","11":"-10.976324","12":"33.45265","13":"4.8587342","14":"5.002970e-03","_rn_":"113"},{"1":"-0.389065447","2":"NA","3":"NA","4":"NA","5":"NA","6":"0.003192527","7":"NA","8":"0.002052332","9":"4.290413e-03","10":"5","11":"-10.992140","12":"33.48428","13":"4.8903652","14":"4.924468e-03","_rn_":"209"},{"1":"-0.122622126","2":"-6.688619e-03","3":"+","4":"NA","5":"+","6":"0.005358880","7":"NA","8":"NA","9":"NA","10":"6","11":"-9.665762","12":"33.48537","13":"4.8914562","14":"4.921783e-03","_rn_":"28"},{"1":"0.067741677","2":"-1.454731e-03","3":"NA","4":"NA","5":"NA","6":"0.003081289","7":"NA","8":"0.002092143","9":"NA","10":"5","11":"-10.999597","12":"33.49919","13":"4.9052796","14":"4.887882e-03","_rn_":"82"},{"1":"0.812718233","2":"-7.798683e-03","3":"NA","4":"NA","5":"NA","6":"NA","7":"+","8":"NA","9":"NA","10":"4","11":"-12.271095","12":"33.51780","13":"4.9238856","14":"4.842621e-03","_rn_":"34"},{"1":"0.298524677","2":"NA","3":"+","4":"NA","5":"+","6":"NA","7":"NA","8":"0.005348835","9":"NA","10":"5","11":"-11.016918","12":"33.53384","13":"4.9399224","14":"4.803946e-03","_rn_":"75"},{"1":"0.681677283","2":"NA","3":"NA","4":"NA","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"4","11":"-12.281797","12":"33.53920","13":"4.9452901","14":"4.791070e-03","_rn_":"41"},{"1":"0.743045234","2":"NA","3":"+","4":"NA","5":"NA","6":"NA","7":"NA","8":"0.004752871","9":"-4.094346e-03","10":"5","11":"-11.035980","12":"33.57196","13":"4.9780457","14":"4.713242e-03","_rn_":"195"},{"1":"-0.508861390","2":"-6.769920e-03","3":"+","4":"NA","5":"NA","6":"0.005548375","7":"NA","8":"NA","9":"3.579552e-03","10":"6","11":"-9.710090","12":"33.57403","13":"4.9801127","14":"4.708374e-03","_rn_":"148"},{"1":"-0.137517688","2":"-7.157634e-03","3":"+","4":"NA","5":"NA","6":"0.005534653","7":"+","8":"NA","9":"NA","10":"6","11":"-9.711963","12":"33.57777","13":"4.9838577","14":"4.699566e-03","_rn_":"52"},{"1":"0.351746477","2":"NA","3":"+","4":"NA","5":"NA","6":"NA","7":"+","8":"0.004724977","9":"NA","10":"5","11":"-11.046369","12":"33.59274","13":"4.9988235","14":"4.664530e-03","_rn_":"99"},{"1":"0.996500017","2":"-7.957351e-03","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"-1.359095e-03","10":"4","11":"-12.310709","12":"33.59703","13":"5.0031145","14":"4.654533e-03","_rn_":"130"},{"1":"0.735950516","2":"NA","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"-9.585104e-05","10":"4","11":"-12.312540","12":"33.60069","13":"5.0067762","14":"4.646019e-03","_rn_":"137"},{"1":"-0.734722680","2":"NA","3":"+","4":"NA","5":"+","6":"0.005544846","7":"NA","8":"NA","9":"4.683350e-03","10":"6","11":"-9.732813","12":"33.61947","13":"5.0255590","14":"4.602591e-03","_rn_":"155"},{"1":"-0.258067599","2":"NA","3":"+","4":"NA","5":"+","6":"0.005523433","7":"+","8":"NA","9":"NA","10":"6","11":"-9.737139","12":"33.62812","13":"5.0342109","14":"4.582723e-03","_rn_":"59"},{"1":"-0.775871320","2":"NA","3":"NA","4":"NA","5":"NA","6":"0.003934101","7":"+","8":"NA","9":"7.874658e-03","10":"5","11":"-11.109502","12":"33.71900","13":"5.1250902","14":"4.379146e-03","_rn_":"177"},{"1":"0.491704641","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"+","8":"NA","9":"1.674643e-03","10":"4","11":"-12.377035","12":"33.72968","13":"5.1357665","14":"4.355832e-03","_rn_":"161"},{"1":"-0.783132007","2":"NA","3":"+","4":"NA","5":"NA","6":"0.005725303","7":"+","8":"NA","9":"4.822602e-03","10":"6","11":"-9.790571","12":"33.73499","13":"5.1410750","14":"4.344286e-03","_rn_":"179"},{"1":"0.056100940","2":"-2.058636e-03","3":"NA","4":"NA","5":"NA","6":"0.003778955","7":"+","8":"NA","9":"NA","10":"5","11":"-11.138633","12":"33.77727","13":"5.1833521","14":"4.253418e-03","_rn_":"50"},{"1":"0.007874314","2":"NA","3":"NA","4":"NA","5":"+","6":"0.003827477","7":"+","8":"NA","9":"NA","10":"5","11":"-11.145699","12":"33.79140","13":"5.1974834","14":"4.223471e-03","_rn_":"57"},{"1":"-0.477063707","2":"-1.665360e-03","3":"NA","4":"NA","5":"NA","6":"0.003873513","7":"NA","8":"NA","9":"5.780330e-03","10":"5","11":"-11.152436","12":"33.80487","13":"5.2109578","14":"4.195112e-03","_rn_":"146"},{"1":"-0.543710717","2":"NA","3":"NA","4":"NA","5":"+","6":"0.003901858","7":"NA","8":"NA","9":"6.096379e-03","10":"5","11":"-11.156227","12":"33.81245","13":"5.2185401","14":"4.179238e-03","_rn_":"153"},{"1":"0.104693599","2":"-2.041886e-03","3":"NA","4":"NA","5":"+","6":"0.003766302","7":"NA","8":"NA","9":"NA","10":"5","11":"-11.171642","12":"33.84328","13":"5.2493698","14":"4.115309e-03","_rn_":"26"},{"1":"0.456085138","2":"NA","3":"NA","4":"-0.05127760","5":"+","6":"NA","7":"NA","8":"0.004886891","9":"NA","10":"5","11":"-11.322246","12":"34.14449","13":"5.5505776","14":"3.539941e-03","_rn_":"77"},{"1":"1.019787688","2":"-9.785152e-03","3":"+","4":"-0.07139937","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"5","11":"-11.360885","12":"34.22177","13":"5.6278556","14":"3.405770e-03","_rn_":"8"},{"1":"0.836379486","2":"NA","3":"+","4":"-0.06770295","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"5","11":"-11.427294","12":"34.35459","13":"5.7606745","14":"3.186941e-03","_rn_":"15"},{"1":"0.636676366","2":"-3.429478e-03","3":"NA","4":"-0.04146812","5":"NA","6":"NA","7":"NA","8":"0.003391869","9":"NA","10":"5","11":"-11.455554","12":"34.41111","13":"5.8171948","14":"3.098139e-03","_rn_":"70"},{"1":"0.543283051","2":"NA","3":"NA","4":"-0.04179438","5":"NA","6":"NA","7":"+","8":"0.003473651","9":"NA","10":"5","11":"-11.470176","12":"34.44035","13":"5.8464380","14":"3.053169e-03","_rn_":"101"},{"1":"0.390883303","2":"NA","3":"NA","4":"-0.04426778","5":"NA","6":"NA","7":"NA","8":"0.003457255","9":"1.860868e-03","10":"5","11":"-11.474178","12":"34.44836","13":"5.8544429","14":"3.040973e-03","_rn_":"197"},{"1":"0.864135260","2":"NA","3":"+","4":"-0.07874634","5":"NA","6":"NA","7":"+","8":"NA","9":"NA","10":"5","11":"-11.516021","12":"34.53204","13":"5.9381287","14":"2.916355e-03","_rn_":"39"},{"1":"0.538454482","2":"NA","3":"+","4":"-0.07771754","5":"NA","6":"NA","7":"NA","8":"NA","9":"3.152544e-03","10":"5","11":"-11.517712","12":"34.53542","13":"5.9415097","14":"2.911429e-03","_rn_":"135"},{"1":"0.448401782","2":"-5.171388e-03","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"0.005010672","9":"NA","10":"5","11":"-11.519624","12":"34.53925","13":"5.9453348","14":"2.905866e-03","_rn_":"74"},{"1":"0.290251981","2":"NA","3":"NA","4":"NA","5":"+","6":"NA","7":"+","8":"0.005127690","9":"NA","10":"5","11":"-11.532403","12":"34.56481","13":"5.9708926","14":"2.868969e-03","_rn_":"105"},{"1":"0.500094608","2":"NA","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"0.005128805","9":"-1.698766e-03","10":"5","11":"-11.565342","12":"34.63068","13":"6.0367696","14":"2.776009e-03","_rn_":"201"},{"1":"0.505902722","2":"-4.660972e-03","3":"NA","4":"NA","5":"NA","6":"NA","7":"+","8":"0.003797115","9":"NA","10":"5","11":"-11.593157","12":"34.68631","13":"6.0923996","14":"2.699858e-03","_rn_":"98"},{"1":"0.749895428","2":"-4.807082e-03","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"0.003842525","9":"-2.138686e-03","10":"5","11":"-11.615670","12":"34.73134","13":"6.1374267","14":"2.639754e-03","_rn_":"194"},{"1":"0.413406086","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"+","8":"0.003941337","9":"-1.186253e-04","10":"5","11":"-11.631761","12":"34.76352","13":"6.1696072","14":"2.597619e-03","_rn_":"225"},{"1":"0.918246881","2":"-1.088968e-02","3":"+","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"5","11":"-11.646755","12":"34.79351","13":"6.1995964","14":"2.558959e-03","_rn_":"12"},{"1":"0.928594744","2":"NA","3":"+","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"-2.322584e-03","10":"5","11":"-11.843821","12":"35.18764","13":"6.5937275","14":"2.101256e-03","_rn_":"139"},{"1":"0.699066784","2":"NA","3":"+","4":"NA","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"5","11":"-11.846288","12":"35.19258","13":"6.5986626","14":"2.096077e-03","_rn_":"43"},{"1":"1.326949360","2":"-1.222892e-02","3":"+","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"-4.245577e-03","10":"5","11":"-11.847001","12":"35.19400","13":"6.6000890","14":"2.094583e-03","_rn_":"132"},{"1":"0.894287051","2":"-1.181026e-02","3":"+","4":"NA","5":"NA","6":"NA","7":"+","8":"NA","9":"NA","10":"5","11":"-11.852260","12":"35.20452","13":"6.6106053","14":"2.083598e-03","_rn_":"36"},{"1":"-0.129170111","2":"NA","3":"+","4":"-0.06072920","5":"NA","6":"0.004941957","7":"+","8":"0.001694087","9":"NA","10":"7","11":"-9.228482","12":"35.40433","13":"6.8104192","14":"1.885493e-03","_rn_":"119"},{"1":"-0.067114282","2":"-5.122499e-03","3":"+","4":"-0.05304178","5":"NA","6":"0.004781884","7":"NA","8":"0.001638222","9":"NA","10":"7","11":"-9.233634","12":"35.41464","13":"6.8207220","14":"1.875805e-03","_rn_":"88"},{"1":"0.667432943","2":"-7.928681e-03","3":"+","4":"-0.05276920","5":"NA","6":"NA","7":"NA","8":"0.004009428","9":"NA","10":"6","11":"-10.630425","12":"35.41470","13":"6.8207813","14":"1.875749e-03","_rn_":"72"},{"1":"0.938515523","2":"-5.249608e-03","3":"NA","4":"-0.05518518","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"5","11":"-11.958322","12":"35.41664","13":"6.8227292","14":"1.873923e-03","_rn_":"14"},{"1":"0.920241964","2":"-5.598194e-03","3":"NA","4":"-0.05710013","5":"NA","6":"NA","7":"+","8":"NA","9":"NA","10":"5","11":"-11.965981","12":"35.43196","13":"6.8380485","14":"1.859625e-03","_rn_":"38"},{"1":"0.630164202","2":"-5.320410e-03","3":"NA","4":"-0.06041054","5":"NA","6":"NA","7":"NA","8":"NA","9":"3.266052e-03","10":"5","11":"-11.966964","12":"35.43393","13":"6.8400143","14":"1.857798e-03","_rn_":"134"},{"1":"-0.876862460","2":"NA","3":"+","4":"-0.05843327","5":"NA","6":"0.004980148","7":"NA","8":"0.001549453","9":"7.219741e-03","10":"7","11":"-9.248654","12":"35.44468","13":"6.8507623","14":"1.847841e-03","_rn_":"215"},{"1":"-0.210033396","2":"NA","3":"+","4":"-0.05772207","5":"+","6":"0.004804463","7":"NA","8":"0.002196474","9":"NA","10":"7","11":"-9.261658","12":"35.47068","13":"6.8767696","14":"1.823968e-03","_rn_":"95"},{"1":"0.435286881","2":"NA","3":"+","4":"-0.06106907","5":"+","6":"NA","7":"NA","8":"0.005095670","9":"NA","10":"6","11":"-10.665258","12":"35.48436","13":"6.8904485","14":"1.811535e-03","_rn_":"79"},{"1":"0.451746492","2":"NA","3":"NA","4":"-0.05998083","5":"+","6":"NA","7":"NA","8":"NA","9":"4.095451e-03","10":"5","11":"-11.996124","12":"35.49225","13":"6.8983338","14":"1.804407e-03","_rn_":"141"},{"1":"0.818260143","2":"NA","3":"NA","4":"-0.05662626","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"5","11":"-12.000316","12":"35.50063","13":"6.9067191","14":"1.796858e-03","_rn_":"45"},{"1":"0.324230844","2":"NA","3":"NA","4":"-0.06278669","5":"NA","6":"NA","7":"+","8":"NA","9":"5.127272e-03","10":"5","11":"-12.005721","12":"35.51144","13":"6.9175276","14":"1.787173e-03","_rn_":"165"},{"1":"0.028711724","2":"-5.580597e-03","3":"+","4":"-0.06498608","5":"NA","6":"0.005387017","7":"+","8":"NA","9":"NA","10":"7","11":"-9.289495","12":"35.52636","13":"6.9324438","14":"1.773894e-03","_rn_":"56"},{"1":"-0.797752323","2":"-4.721724e-03","3":"+","4":"-0.06266004","5":"NA","6":"0.005399433","7":"NA","8":"NA","9":"7.801697e-03","10":"7","11":"-9.305376","12":"35.55812","13":"6.9642071","14":"1.745944e-03","_rn_":"152"},{"1":"-0.851997858","2":"NA","3":"+","4":"-0.06947254","5":"NA","6":"0.005557016","7":"+","8":"NA","9":"7.736236e-03","10":"7","11":"-9.308922","12":"35.56521","13":"6.9712989","14":"1.739764e-03","_rn_":"183"},{"1":"0.545252693","2":"NA","3":"+","4":"-0.05937678","5":"NA","6":"NA","7":"+","8":"0.004175475","9":"NA","10":"6","11":"-10.723252","12":"35.60035","13":"7.0064369","14":"1.709465e-03","_rn_":"103"},{"1":"0.065729593","2":"NA","3":"NA","4":"-0.04572675","5":"+","6":"0.002961386","7":"NA","8":"0.003025509","9":"NA","10":"6","11":"-10.729744","12":"35.61333","13":"7.0194194","14":"1.698404e-03","_rn_":"93"},{"1":"-0.083849065","2":"NA","3":"+","4":"-0.06490359","5":"+","6":"0.005437029","7":"+","8":"NA","9":"NA","10":"7","11":"-9.335261","12":"35.61789","13":"7.0239757","14":"1.694540e-03","_rn_":"63"},{"1":"-0.021586985","2":"-5.370696e-03","3":"+","4":"-0.05748927","5":"+","6":"0.005268800","7":"NA","8":"NA","9":"NA","10":"7","11":"-9.337822","12":"35.62301","13":"7.0290992","14":"1.690204e-03","_rn_":"32"},{"1":"-0.992973634","2":"NA","3":"+","4":"-0.06348890","5":"+","6":"0.005463603","7":"NA","8":"NA","9":"8.806717e-03","10":"7","11":"-9.340726","12":"35.62882","13":"7.0349066","14":"1.685303e-03","_rn_":"159"},{"1":"0.530352049","2":"NA","3":"+","4":"-0.05610898","5":"NA","6":"NA","7":"NA","8":"0.004150767","9":"-2.278783e-04","10":"6","11":"-10.739920","12":"35.63369","13":"7.0397732","14":"1.681207e-03","_rn_":"199"},{"1":"0.744523447","2":"NA","3":"+","4":"NA","5":"NA","6":"NA","7":"+","8":"NA","9":"-9.317364e-04","10":"5","11":"-12.086125","12":"35.67225","13":"7.0783353","14":"1.649103e-03","_rn_":"163"},{"1":"-0.544563075","2":"NA","3":"NA","4":"-0.04174569","5":"NA","6":"0.003144258","7":"NA","8":"0.001581236","9":"7.266725e-03","10":"6","11":"-10.825593","12":"35.80503","13":"7.2111182","14":"1.543172e-03","_rn_":"213"},{"1":"0.128067436","2":"NA","3":"NA","4":"-0.03669057","5":"NA","6":"0.003037697","7":"+","8":"0.001711496","9":"NA","10":"6","11":"-10.848786","12":"35.85142","13":"7.2575037","14":"1.507793e-03","_rn_":"117"},{"1":"0.163320653","2":"-3.477297e-04","3":"NA","4":"-0.03835619","5":"NA","6":"0.003023346","7":"NA","8":"0.001713202","9":"NA","10":"6","11":"-10.856727","12":"35.86730","13":"7.2733853","14":"1.495867e-03","_rn_":"86"},{"1":"0.492764407","2":"-9.321537e-03","3":"+","4":"NA","5":"+","6":"NA","7":"NA","8":"0.005182378","9":"NA","10":"6","11":"-10.865734","12":"35.88531","13":"7.2914010","14":"1.482453e-03","_rn_":"76"},{"1":"0.816923861","2":"-6.839778e-03","3":"NA","4":"NA","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"5","11":"-12.200658","12":"35.90132","13":"7.3074020","14":"1.470640e-03","_rn_":"42"},{"1":"1.120483442","2":"-9.604437e-03","3":"+","4":"NA","5":"NA","6":"NA","7":"NA","8":"0.004553106","9":"-5.918295e-03","10":"6","11":"-10.877542","12":"35.90893","13":"7.3150163","14":"1.465052e-03","_rn_":"196"},{"1":"-0.102216011","2":"NA","3":"NA","4":"NA","5":"+","6":"0.003080167","7":"+","8":"0.003165620","9":"NA","10":"6","11":"-10.893475","12":"35.94080","13":"7.3468824","14":"1.441894e-03","_rn_":"121"},{"1":"0.551640493","2":"-9.222633e-03","3":"+","4":"NA","5":"NA","6":"NA","7":"+","8":"0.004531740","9":"NA","10":"6","11":"-10.898911","12":"35.95167","13":"7.3577539","14":"1.434078e-03","_rn_":"100"},{"1":"-0.821236946","2":"NA","3":"NA","4":"-0.04629824","5":"NA","6":"0.003691621","7":"+","8":"NA","9":"1.003845e-02","10":"6","11":"-10.901892","12":"35.95763","13":"7.3637171","14":"1.429808e-03","_rn_":"181"},{"1":"0.982396727","2":"-6.919513e-03","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"-1.241442e-03","10":"5","11":"-12.230387","12":"35.96077","13":"7.3668592","14":"1.427564e-03","_rn_":"138"},{"1":"-0.748429777","2":"NA","3":"NA","4":"-0.05209321","5":"+","6":"0.003773454","7":"NA","8":"NA","9":"9.532740e-03","10":"6","11":"-10.906908","12":"35.96766","13":"7.3737493","14":"1.422654e-03","_rn_":"157"},{"1":"-0.167320364","2":"-6.520210e-03","3":"+","4":"NA","5":"NA","6":"0.004807694","7":"+","8":"0.002186565","9":"NA","10":"7","11":"-9.511175","12":"35.96972","13":"7.3758038","14":"1.421193e-03","_rn_":"116"},{"1":"-0.198022427","2":"-6.451979e-03","3":"+","4":"NA","5":"+","6":"0.004752992","7":"NA","8":"0.002351758","9":"NA","10":"7","11":"-9.519381","12":"35.98613","13":"7.3922157","14":"1.409579e-03","_rn_":"92"},{"1":"-0.360192074","2":"-6.268783e-03","3":"+","4":"NA","5":"NA","6":"0.004806307","7":"NA","8":"0.002136045","9":"1.748239e-03","10":"7","11":"-9.520085","12":"35.98754","13":"7.3936247","14":"1.408586e-03","_rn_":"212"},{"1":"-0.437796026","2":"NA","3":"NA","4":"NA","5":"+","6":"0.003145967","7":"NA","8":"0.003087618","9":"3.931804e-03","10":"6","11":"-10.919329","12":"35.99250","13":"7.3985899","14":"1.405094e-03","_rn_":"217"},{"1":"-0.700884676","2":"1.578124e-04","3":"NA","4":"-0.04885224","5":"NA","6":"0.003683133","7":"NA","8":"NA","9":"9.169656e-03","10":"6","11":"-10.919486","12":"35.99282","13":"7.3989034","14":"1.404873e-03","_rn_":"150"},{"1":"-0.006453798","2":"-1.932310e-03","3":"NA","4":"NA","5":"+","6":"0.003025783","7":"NA","8":"0.003150251","9":"NA","10":"6","11":"-10.922159","12":"35.99816","13":"7.4042494","14":"1.401123e-03","_rn_":"90"},{"1":"0.785246967","2":"-7.782499e-03","3":"NA","4":"NA","5":"NA","6":"NA","7":"+","8":"NA","9":"2.798164e-04","10":"5","11":"-12.271051","12":"36.04210","13":"7.4481872","14":"1.370678e-03","_rn_":"162"},{"1":"0.145870119","2":"NA","3":"NA","4":"-0.04610226","5":"+","6":"0.003675259","7":"+","8":"NA","9":"NA","10":"6","11":"-10.951897","12":"36.05764","13":"7.4637262","14":"1.360069e-03","_rn_":"61"},{"1":"0.550090715","2":"NA","3":"NA","4":"NA","5":"+","6":"NA","7":"+","8":"NA","9":"1.355838e-03","10":"5","11":"-12.280747","12":"36.06149","13":"7.4675798","14":"1.357451e-03","_rn_":"169"},{"1":"-0.584959350","2":"NA","3":"NA","4":"NA","5":"NA","6":"0.003219459","7":"+","8":"0.001980644","9":"5.847232e-03","10":"6","11":"-10.956307","12":"36.06646","13":"7.4725470","14":"1.354084e-03","_rn_":"241"},{"1":"0.194950279","2":"-8.159151e-04","3":"NA","4":"-0.04761466","5":"+","6":"0.003645624","7":"NA","8":"NA","9":"NA","10":"6","11":"-10.960247","12":"36.07434","13":"7.4804270","14":"1.348760e-03","_rn_":"30"},{"1":"0.177854191","2":"-7.078615e-04","3":"NA","4":"-0.04305777","5":"NA","6":"0.003575815","7":"+","8":"NA","9":"NA","10":"6","11":"-10.960248","12":"36.07434","13":"7.4804286","14":"1.348759e-03","_rn_":"54"},{"1":"0.029679686","2":"-1.420781e-03","3":"NA","4":"NA","5":"NA","6":"0.003083467","7":"+","8":"0.002050325","9":"NA","10":"6","11":"-10.972745","12":"36.09934","13":"7.5054215","14":"1.332009e-03","_rn_":"114"},{"1":"-0.568284021","2":"NA","3":"+","4":"NA","5":"NA","6":"0.004950387","7":"+","8":"0.002230224","9":"2.488961e-03","10":"7","11":"-9.585015","12":"36.11740","13":"7.5234849","14":"1.320033e-03","_rn_":"243"},{"1":"-0.331304825","2":"NA","3":"+","4":"NA","5":"+","6":"0.004901714","7":"+","8":"0.002378002","9":"NA","10":"7","11":"-9.588005","12":"36.12338","13":"7.5294642","14":"1.316092e-03","_rn_":"123"},{"1":"-0.648136627","2":"NA","3":"+","4":"NA","5":"+","6":"0.004917879","7":"NA","8":"0.002344620","9":"3.085212e-03","10":"7","11":"-9.589315","12":"36.12600","13":"7.5320845","14":"1.314369e-03","_rn_":"219"},{"1":"-0.334937864","2":"-1.159025e-03","3":"NA","4":"NA","5":"NA","6":"0.003155836","7":"NA","8":"0.002039538","9":"4.043760e-03","10":"6","11":"-10.989796","12":"36.13344","13":"7.5395244","14":"1.309489e-03","_rn_":"210"},{"1":"0.695756860","2":"NA","3":"+","4":"NA","5":"+","6":"NA","7":"NA","8":"0.005379093","9":"-4.171647e-03","10":"6","11":"-11.006093","12":"36.16603","13":"7.5721192","14":"1.288320e-03","_rn_":"203"},{"1":"0.292034180","2":"NA","3":"+","4":"NA","5":"+","6":"NA","7":"+","8":"0.005348462","9":"NA","10":"6","11":"-11.016236","12":"36.18632","13":"7.5924048","14":"1.275319e-03","_rn_":"107"},{"1":"0.761777556","2":"NA","3":"+","4":"NA","5":"NA","6":"NA","7":"+","8":"0.004761992","9":"-4.251547e-03","10":"6","11":"-11.035672","12":"36.22519","13":"7.6312760","14":"1.250772e-03","_rn_":"227"},{"1":"-0.099325682","2":"-6.797728e-03","3":"+","4":"NA","5":"+","6":"0.005392648","7":"+","8":"NA","9":"NA","10":"7","11":"-9.653272","12":"36.25391","13":"7.6599994","14":"1.232937e-03","_rn_":"60"},{"1":"-0.445643792","2":"-6.428327e-03","3":"+","4":"NA","5":"+","6":"0.005401035","7":"NA","8":"NA","9":"3.241023e-03","10":"7","11":"-9.659040","12":"36.26545","13":"7.6715340","14":"1.225847e-03","_rn_":"156"},{"1":"-0.444551556","2":"-6.888292e-03","3":"+","4":"NA","5":"NA","6":"0.005566259","7":"+","8":"NA","9":"3.053663e-03","10":"7","11":"-9.706262","12":"36.35989","13":"7.7659788","14":"1.169305e-03","_rn_":"180"},{"1":"-0.703693292","2":"-1.466916e-03","3":"NA","4":"NA","5":"NA","6":"0.003881809","7":"+","8":"NA","9":"7.529339e-03","10":"6","11":"-11.105762","12":"36.36537","13":"7.7714569","14":"1.166107e-03","_rn_":"178"},{"1":"-0.771463791","2":"NA","3":"NA","4":"NA","5":"+","6":"0.003925590","7":"+","8":"NA","9":"7.852152e-03","10":"6","11":"-11.109426","12":"36.37270","13":"7.7787834","14":"1.161843e-03","_rn_":"185"},{"1":"-0.657413026","2":"NA","3":"+","4":"NA","5":"+","6":"0.005562618","7":"+","8":"NA","9":"4.041444e-03","10":"7","11":"-9.726994","12":"36.40136","13":"7.8074423","14":"1.145313e-03","_rn_":"187"},{"1":"0.058453584","2":"-2.030083e-03","3":"NA","4":"NA","5":"+","6":"0.003768188","7":"+","8":"NA","9":"NA","10":"6","11":"-11.138480","12":"36.43081","13":"7.8368931","14":"1.128571e-03","_rn_":"58"},{"1":"-0.469623698","2":"-1.607900e-03","3":"NA","4":"NA","5":"+","6":"0.003850572","7":"NA","8":"NA","9":"5.748785e-03","10":"6","11":"-11.151775","12":"36.45740","13":"7.8634824","14":"1.113666e-03","_rn_":"154"},{"1":"1.010541765","2":"-9.355597e-03","3":"+","4":"-0.06351516","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"6","11":"-11.278518","12":"36.71088","13":"8.1169680","14":"9.810958e-04","_rn_":"16"},{"1":"0.532639728","2":"-3.808463e-03","3":"NA","4":"-0.04926000","5":"+","6":"NA","7":"NA","8":"0.004817247","9":"NA","10":"6","11":"-11.296612","12":"36.74707","13":"8.1531560","14":"9.635035e-04","_rn_":"78"},{"1":"0.426700534","2":"NA","3":"NA","4":"-0.04938649","5":"+","6":"NA","7":"+","8":"0.004900691","9":"NA","10":"6","11":"-11.313004","12":"36.77985","13":"8.1859402","14":"9.478384e-04","_rn_":"109"},{"1":"0.264530540","2":"NA","3":"NA","4":"-0.05223568","5":"+","6":"NA","7":"NA","8":"0.004869131","9":"2.032481e-03","10":"6","11":"-11.319779","12":"36.79340","13":"8.1994910","14":"9.414382e-04","_rn_":"205"},{"1":"1.052216622","2":"-9.873357e-03","3":"+","4":"-0.07399250","5":"NA","6":"NA","7":"+","8":"NA","9":"NA","10":"6","11":"-11.350479","12":"36.85480","13":"8.2608904","14":"9.129754e-04","_rn_":"40"},{"1":"0.939662285","2":"-9.715426e-03","3":"+","4":"-0.07176058","5":"NA","6":"NA","7":"NA","8":"NA","9":"8.303477e-04","10":"6","11":"-11.360480","12":"36.87481","13":"8.2808920","14":"9.038904e-04","_rn_":"136"},{"1":"0.871890297","2":"NA","3":"+","4":"-0.07043737","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"6","11":"-11.413558","12":"36.98096","13":"8.3870478","14":"8.571649e-04","_rn_":"47"},{"1":"0.622796329","2":"NA","3":"+","4":"-0.06869534","5":"+","6":"NA","7":"NA","8":"NA","9":"2.249991e-03","10":"6","11":"-11.424285","12":"37.00242","13":"8.4085018","14":"8.480192e-04","_rn_":"143"},{"1":"0.613773491","2":"-3.464613e-03","3":"NA","4":"-0.03978754","5":"NA","6":"NA","7":"+","8":"0.003389356","9":"NA","10":"6","11":"-11.449073","12":"37.05199","13":"8.4580791","14":"8.272564e-04","_rn_":"102"},{"1":"0.524354069","2":"-3.348243e-03","3":"NA","4":"-0.04206162","5":"NA","6":"NA","7":"NA","8":"0.003382479","9":"1.174968e-03","10":"6","11":"-11.454746","12":"37.06334","13":"8.4694250","14":"8.225766e-04","_rn_":"198"},{"1":"0.309183359","2":"NA","3":"NA","4":"-0.04273522","5":"NA","6":"NA","7":"+","8":"0.003449700","9":"2.455066e-03","10":"6","11":"-11.466697","12":"37.08724","13":"8.4933268","14":"8.128046e-04","_rn_":"229"},{"1":"0.400390518","2":"-5.158256e-03","3":"NA","4":"NA","5":"+","6":"NA","7":"+","8":"0.005021034","9":"NA","10":"6","11":"-11.485092","12":"37.12403","13":"8.5301160","14":"7.979901e-04","_rn_":"106"},{"1":"0.614387237","2":"NA","3":"+","4":"-0.07946705","5":"NA","6":"NA","7":"+","8":"NA","9":"2.594535e-03","10":"6","11":"-11.512143","12":"37.17813","13":"8.5842189","14":"7.766927e-04","_rn_":"167"},{"1":"0.694051822","2":"-5.311257e-03","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"0.005024626","9":"-2.545536e-03","10":"6","11":"-11.515690","12":"37.18523","13":"8.5913116","14":"7.739431e-04","_rn_":"202"},{"1":"0.313848271","2":"NA","3":"NA","4":"NA","5":"+","6":"NA","7":"+","8":"0.005129243","9":"-2.443524e-04","10":"6","11":"-11.532368","12":"37.21858","13":"8.6246684","14":"7.611420e-04","_rn_":"233"},{"1":"0.593861860","2":"-4.710140e-03","3":"NA","4":"NA","5":"NA","6":"NA","7":"+","8":"0.003800520","9":"-8.987348e-04","10":"6","11":"-11.592686","12":"37.33922","13":"8.7453051","14":"7.165884e-04","_rn_":"226"},{"1":"1.357345154","2":"-1.120662e-02","3":"+","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"-4.520250e-03","10":"6","11":"-11.634528","12":"37.42290","13":"8.8289887","14":"6.872237e-04","_rn_":"140"},{"1":"0.916940561","2":"-1.088375e-02","3":"+","4":"NA","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"6","11":"-11.646733","12":"37.44731","13":"8.8533984","14":"6.788872e-04","_rn_":"44"},{"1":"0.910662114","2":"NA","3":"+","4":"NA","5":"+","6":"NA","7":"+","8":"NA","9":"-2.178421e-03","10":"6","11":"-11.843570","12":"37.84099","13":"9.2470718","14":"5.575868e-04","_rn_":"171"},{"1":"1.265126744","2":"-1.210923e-02","3":"+","4":"NA","5":"NA","6":"NA","7":"+","8":"NA","9":"-3.760421e-03","10":"6","11":"-11.844282","12":"37.84241","13":"9.2484955","14":"5.571901e-04","_rn_":"164"},{"1":"0.594226616","2":"-7.994071e-03","3":"+","4":"-0.05765817","5":"+","6":"NA","7":"NA","8":"0.004967057","9":"NA","10":"7","11":"-10.553560","12":"38.05449","13":"9.4605742","14":"5.011308e-04","_rn_":"80"},{"1":"0.915575246","2":"-5.291512e-03","3":"NA","4":"-0.05359278","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"6","11":"-11.952004","12":"38.05785","13":"9.4639405","14":"5.002880e-04","_rn_":"46"},{"1":"0.646579031","2":"-5.033569e-03","3":"NA","4":"-0.05669769","5":"+","6":"NA","7":"NA","8":"NA","9":"3.032679e-03","10":"6","11":"-11.953041","12":"38.05993","13":"9.4660136","14":"4.997697e-04","_rn_":"142"},{"1":"0.535755429","2":"-5.312117e-03","3":"NA","4":"-0.05860246","5":"NA","6":"NA","7":"+","8":"NA","9":"3.945112e-03","10":"6","11":"-11.957265","12":"38.06838","13":"9.4744627","14":"4.976629e-04","_rn_":"166"},{"1":"0.362237487","2":"NA","3":"NA","4":"-0.05842727","5":"+","6":"NA","7":"+","8":"NA","9":"4.743513e-03","10":"6","11":"-11.987586","12":"38.12902","13":"9.5351037","14":"4.827999e-04","_rn_":"173"},{"1":"0.708897390","2":"-8.035292e-03","3":"+","4":"-0.05615042","5":"NA","6":"NA","7":"+","8":"0.004036974","9":"NA","10":"7","11":"-10.610784","12":"38.16894","13":"9.5750229","14":"4.732590e-04","_rn_":"104"},{"1":"0.864794337","2":"-8.092908e-03","3":"+","4":"-0.05178140","5":"NA","6":"NA","7":"NA","8":"0.004028879","9":"-2.062991e-03","10":"7","11":"-10.627862","12":"38.20309","13":"9.6091787","14":"4.652453e-04","_rn_":"200"},{"1":"-0.010096051","2":"-5.255323e-03","3":"+","4":"-0.05859491","5":"NA","6":"0.004853692","7":"+","8":"0.001647822","9":"NA","10":"8","11":"-9.177705","12":"38.24730","13":"9.6533881","14":"4.550740e-04","_rn_":"120"},{"1":"0.467813029","2":"NA","3":"+","4":"-0.06353246","5":"+","6":"NA","7":"+","8":"0.005087012","9":"NA","10":"7","11":"-10.653842","12":"38.25505","13":"9.6611391","14":"4.533138e-04","_rn_":"111"},{"1":"0.436190644","2":"NA","3":"+","4":"-0.06106473","5":"+","6":"NA","7":"NA","8":"0.005095757","9":"-9.593329e-06","10":"7","11":"-10.665258","12":"38.27788","13":"9.6839707","14":"4.481683e-04","_rn_":"207"},{"1":"-0.692539673","2":"NA","3":"+","4":"-0.06267688","5":"NA","6":"0.005022639","7":"+","8":"0.001585325","9":"5.792392e-03","10":"8","11":"-9.207767","12":"38.30742","13":"9.7135110","14":"4.415974e-04","_rn_":"247"},{"1":"-0.660210440","2":"-4.582296e-03","3":"+","4":"-0.05593787","5":"NA","6":"0.004883579","7":"NA","8":"0.001530880","9":"6.036264e-03","10":"8","11":"-9.210964","12":"38.31382","13":"9.7199053","14":"4.401878e-04","_rn_":"216"},{"1":"-0.094468088","2":"-5.196596e-03","3":"+","4":"-0.05556830","5":"+","6":"0.004713293","7":"NA","8":"0.002167884","9":"NA","10":"8","11":"-9.212076","12":"38.31604","13":"9.7221301","14":"4.396984e-04","_rn_":"96"},{"1":"-0.155763682","2":"NA","3":"+","4":"-0.06257386","5":"+","6":"0.004882727","7":"+","8":"0.002132003","9":"NA","10":"8","11":"-9.213870","12":"38.31963","13":"9.7257173","14":"4.389105e-04","_rn_":"127"},{"1":"-0.636924136","2":"NA","3":"NA","4":"-0.04895747","5":"+","6":"0.003073338","7":"NA","8":"0.002891364","9":"7.298897e-03","10":"7","11":"-10.697944","12":"38.34326","13":"9.7493425","14":"4.337563e-04","_rn_":"221"},{"1":"-0.906318005","2":"NA","3":"+","4":"-0.06092137","5":"+","6":"0.004915041","7":"NA","8":"0.002063700","9":"7.233307e-03","10":"8","11":"-9.228367","12":"38.34863","13":"9.7547129","14":"4.325932e-04","_rn_":"223"},{"1":"0.032878566","2":"NA","3":"NA","4":"-0.04364499","5":"+","6":"0.002966297","7":"+","8":"0.003037546","9":"NA","10":"7","11":"-10.718355","12":"38.38408","13":"9.7901643","14":"4.249927e-04","_rn_":"125"},{"1":"0.663142095","2":"NA","3":"+","4":"-0.05896580","5":"NA","6":"NA","7":"+","8":"0.004190042","9":"-1.236264e-03","10":"7","11":"-10.722351","12":"38.39207","13":"9.7981562","14":"4.232979e-04","_rn_":"231"},{"1":"0.083957419","2":"-7.687865e-04","3":"NA","4":"-0.04535892","5":"+","6":"0.002940339","7":"NA","8":"0.003024680","9":"NA","10":"7","11":"-10.728703","12":"38.40477","13":"9.8108598","14":"4.206177e-04","_rn_":"94"},{"1":"-0.605001813","2":"-4.973497e-03","3":"+","4":"-0.06691666","5":"NA","6":"0.005448374","7":"+","8":"NA","9":"6.351832e-03","10":"8","11":"-9.264739","12":"38.42137","13":"9.8274558","14":"4.171418e-04","_rn_":"184"},{"1":"0.038446922","2":"-5.489226e-03","3":"+","4":"-0.06270950","5":"+","6":"0.005334340","7":"+","8":"NA","9":"NA","10":"8","11":"-9.280108","12":"38.45211","13":"9.8581942","14":"4.107797e-04","_rn_":"64"},{"1":"-0.805819247","2":"NA","3":"+","4":"-0.06729877","5":"+","6":"0.005505313","7":"+","8":"NA","9":"7.371527e-03","10":"8","11":"-9.301447","12":"38.49479","13":"9.9008729","14":"4.021068e-04","_rn_":"191"},{"1":"-0.772436654","2":"-4.679952e-03","3":"+","4":"-0.06101040","5":"+","6":"0.005362077","7":"NA","8":"NA","9":"7.595704e-03","10":"8","11":"-9.301586","12":"38.49506","13":"9.9011497","14":"4.020511e-04","_rn_":"160"},{"1":"0.799699339","2":"-6.829772e-03","3":"NA","4":"NA","5":"+","6":"NA","7":"+","8":"NA","9":"1.754389e-04","10":"6","11":"-12.200640","12":"38.55513","13":"9.9612132","14":"3.901564e-04","_rn_":"170"},{"1":"-0.664422920","2":"NA","3":"NA","4":"-0.03959321","5":"NA","6":"0.003164327","7":"+","8":"0.001558729","9":"8.129537e-03","10":"7","11":"-10.810664","12":"38.56870","13":"9.9747828","14":"3.875182e-04","_rn_":"245"},{"1":"-0.558906745","2":"2.923526e-04","3":"NA","4":"-0.04193107","5":"NA","6":"0.003153298","7":"NA","8":"0.001582371","9":"7.342158e-03","10":"7","11":"-10.825446","12":"38.59826","13":"10.0043467","14":"3.818321e-04","_rn_":"214"},{"1":"1.075069675","2":"-9.732995e-03","3":"+","4":"NA","5":"+","6":"NA","7":"NA","8":"0.005218732","9":"-6.025205e-03","10":"7","11":"-10.843294","12":"38.63396","13":"10.0400432","14":"3.750775e-04","_rn_":"204"},{"1":"0.137260091","2":"-3.826087e-04","3":"NA","4":"-0.03648626","5":"NA","6":"0.003027395","7":"+","8":"0.001708163","9":"NA","10":"7","11":"-10.848529","12":"38.64443","13":"10.0505119","14":"3.731193e-04","_rn_":"118"},{"1":"0.491121751","2":"-9.314081e-03","3":"+","4":"NA","5":"+","6":"NA","7":"+","8":"0.005182425","9":"NA","10":"7","11":"-10.865698","12":"38.67877","13":"10.0848513","14":"3.667676e-04","_rn_":"108"},{"1":"-0.659596913","2":"NA","3":"NA","4":"NA","5":"+","6":"0.003173224","7":"+","8":"0.003070435","9":"5.649194e-03","10":"7","11":"-10.874730","12":"38.69683","13":"10.1029138","14":"3.634702e-04","_rn_":"249"},{"1":"1.178332589","2":"-9.704632e-03","3":"+","4":"NA","5":"NA","6":"NA","7":"+","8":"0.004577272","9":"-6.389747e-03","10":"7","11":"-10.874991","12":"38.69735","13":"10.1034365","14":"3.633752e-04","_rn_":"228"},{"1":"-0.054220496","2":"-1.919841e-03","3":"NA","4":"NA","5":"+","6":"0.003025204","7":"+","8":"0.003160936","9":"NA","10":"7","11":"-10.886949","12":"38.72127","13":"10.1273525","14":"3.590558e-04","_rn_":"122"},{"1":"-0.887352864","2":"NA","3":"NA","4":"-0.04975470","5":"+","6":"0.003794652","7":"+","8":"NA","9":"1.052030e-02","10":"7","11":"-10.887417","12":"38.72220","13":"10.1282880","14":"3.588879e-04","_rn_":"189"},{"1":"-0.830731655","2":"1.905249e-04","3":"NA","4":"-0.04642084","5":"NA","6":"0.003697770","7":"+","8":"NA","9":"1.008903e-02","10":"7","11":"-10.901830","12":"38.75103","13":"10.1571150","14":"3.537522e-04","_rn_":"182"},{"1":"-0.749384055","2":"1.972056e-05","3":"NA","4":"-0.05210482","5":"+","6":"0.003774054","7":"NA","8":"NA","9":"9.537768e-03","10":"7","11":"-10.906908","12":"38.76118","13":"10.1672702","14":"3.519605e-04","_rn_":"158"},{"1":"-0.361010264","2":"-1.664878e-03","3":"NA","4":"NA","5":"+","6":"0.003092340","7":"NA","8":"0.003089756","9":"3.570394e-03","10":"7","11":"-10.914506","12":"38.77638","13":"10.1824673","14":"3.492963e-04","_rn_":"218"},{"1":"0.166009042","2":"-8.593429e-04","3":"NA","4":"-0.04567747","5":"+","6":"0.003651565","7":"+","8":"NA","9":"NA","10":"7","11":"-10.950609","12":"38.84859","13":"10.2546732","14":"3.369106e-04","_rn_":"62"},{"1":"-0.536577124","2":"-1.003935e-03","3":"NA","4":"NA","5":"NA","6":"0.003187472","7":"+","8":"0.001970110","9":"5.621683e-03","10":"7","11":"-10.954548","12":"38.85647","13":"10.2625515","14":"3.355861e-04","_rn_":"242"},{"1":"-0.176870382","2":"-6.549967e-03","3":"+","4":"NA","5":"+","6":"0.004788245","7":"+","8":"0.002330002","9":"NA","10":"8","11":"-9.509704","12":"38.91130","13":"10.3173861","14":"3.265102e-04","_rn_":"124"},{"1":"-0.256937863","2":"-6.445222e-03","3":"+","4":"NA","5":"NA","6":"0.004821252","7":"+","8":"0.002173588","9":"8.930669e-04","10":"8","11":"-9.510690","12":"38.91327","13":"10.3193579","14":"3.261884e-04","_rn_":"244"},{"1":"-0.364688402","2":"-6.319725e-03","3":"+","4":"NA","5":"+","6":"0.004781906","7":"NA","8":"0.002324395","9":"1.681037e-03","10":"8","11":"-9.517581","12":"38.92705","13":"10.3331393","14":"3.239485e-04","_rn_":"220"},{"1":"0.691882147","2":"NA","3":"+","4":"NA","5":"+","6":"NA","7":"+","8":"0.005378814","9":"-4.140305e-03","10":"7","11":"-11.006081","12":"38.95953","13":"10.3656170","14":"3.187304e-04","_rn_":"235"},{"1":"-0.575919974","2":"NA","3":"+","4":"NA","5":"+","6":"0.004936041","7":"+","8":"0.002338962","9":"2.487715e-03","10":"8","11":"-9.584177","12":"39.06024","13":"10.4663311","14":"3.030775e-04","_rn_":"251"},{"1":"-0.702372022","2":"-1.459819e-03","3":"NA","4":"NA","5":"+","6":"0.003878837","7":"+","8":"NA","9":"7.522480e-03","10":"7","11":"-11.105751","12":"39.15887","13":"10.5649574","14":"2.884943e-04","_rn_":"186"},{"1":"-0.340629983","2":"-6.592640e-03","3":"+","4":"NA","5":"+","6":"0.005419801","7":"+","8":"NA","9":"2.393572e-03","10":"8","11":"-9.649778","12":"39.19145","13":"10.5975335","14":"2.838334e-04","_rn_":"188"},{"1":"1.051348503","2":"-9.449728e-03","3":"+","4":"-0.06648031","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"7","11":"-11.261809","12":"39.47099","13":"10.8770733","14":"2.468097e-04","_rn_":"48"},{"1":"1.003399977","2":"-9.349551e-03","3":"+","4":"-0.06355053","5":"+","6":"NA","7":"NA","8":"NA","9":"7.404941e-05","10":"7","11":"-11.278515","12":"39.50440","13":"10.9104839","14":"2.427209e-04","_rn_":"144"},{"1":"0.503214706","2":"-3.856142e-03","3":"NA","4":"-0.04727934","5":"+","6":"NA","7":"+","8":"0.004830644","9":"NA","10":"7","11":"-11.286724","12":"39.52082","13":"10.9269026","14":"2.407365e-04","_rn_":"110"},{"1":"0.410904467","2":"-3.720630e-03","3":"NA","4":"-0.04990657","5":"+","6":"NA","7":"NA","8":"0.004807731","9":"1.272933e-03","10":"7","11":"-11.295657","12":"39.53868","13":"10.9447686","14":"2.385956e-04","_rn_":"206"},{"1":"0.163149889","2":"NA","3":"NA","4":"-0.05046771","5":"+","6":"NA","7":"+","8":"0.004878177","9":"2.760145e-03","10":"7","11":"-11.308578","12":"39.56453","13":"10.9706113","14":"2.355324e-04","_rn_":"237"},{"1":"1.047629090","2":"-9.869241e-03","3":"+","4":"-0.07400750","5":"NA","6":"NA","7":"+","8":"NA","9":"4.684340e-05","10":"7","11":"-11.350478","12":"39.64832","13":"11.0544102","14":"2.258676e-04","_rn_":"168"},{"1":"0.737284808","2":"NA","3":"+","4":"-0.07090466","5":"+","6":"NA","7":"+","8":"NA","9":"1.397597e-03","10":"7","11":"-11.412437","12":"39.77224","13":"11.1783283","14":"2.122978e-04","_rn_":"175"},{"1":"0.442720950","2":"-3.345410e-03","3":"NA","4":"-0.04053429","5":"NA","6":"NA","7":"+","8":"0.003375003","9":"1.768439e-03","10":"7","11":"-11.447292","12":"39.84195","13":"11.2480383","14":"2.050256e-04","_rn_":"230"},{"1":"0.509336099","2":"-5.219877e-03","3":"NA","4":"NA","5":"+","6":"NA","7":"+","8":"0.005026845","9":"-1.114565e-03","10":"7","11":"-11.484365","12":"39.91610","13":"11.3221852","14":"1.975638e-04","_rn_":"234"},{"1":"1.382426529","2":"-1.124740e-02","3":"+","4":"NA","5":"+","6":"NA","7":"+","8":"NA","9":"-4.717337e-03","10":"7","11":"-11.634095","12":"40.21556","13":"11.6216452","14":"1.700907e-04","_rn_":"172"},{"1":"0.556901151","2":"-5.036899e-03","3":"NA","4":"-0.05513679","5":"+","6":"NA","7":"+","8":"NA","9":"3.682193e-03","10":"7","11":"-11.944430","12":"40.83623","13":"12.2423137","14":"1.247108e-04","_rn_":"174"},{"1":"0.631679655","2":"-8.081347e-03","3":"+","4":"-0.06032604","5":"+","6":"NA","7":"+","8":"0.004956146","9":"NA","10":"8","11":"-10.539739","12":"40.97137","13":"12.3774566","14":"1.165623e-04","_rn_":"112"},{"1":"0.771794274","2":"-8.141442e-03","3":"+","4":"-0.05675563","5":"+","6":"NA","7":"NA","8":"0.004981612","9":"-1.853754e-03","10":"8","11":"-10.551485","12":"40.99486","13":"12.4009472","14":"1.152012e-04","_rn_":"208"},{"1":"1.026435016","2":"-8.307403e-03","3":"+","4":"-0.05495350","5":"NA","6":"NA","7":"+","8":"0.004070835","9":"-3.271789e-03","10":"8","11":"-10.604568","12":"41.10103","13":"12.5071140","14":"1.092455e-04","_rn_":"232"},{"1":"0.548815891","2":"NA","3":"+","4":"-0.06323914","5":"+","6":"NA","7":"+","8":"0.005094429","9":"-8.471635e-04","10":"8","11":"-10.653418","12":"41.19873","13":"12.6048145","14":"1.040370e-04","_rn_":"239"},{"1":"-0.774832084","2":"NA","3":"NA","4":"-0.04663973","5":"+","6":"0.003094883","7":"+","8":"0.002889241","9":"8.280298e-03","10":"8","11":"-10.678584","12":"41.24906","13":"12.6551458","14":"1.014515e-04","_rn_":"253"},{"1":"-0.630400979","2":"-1.344117e-04","3":"NA","4":"-0.04887782","5":"+","6":"0.003069127","7":"NA","8":"0.002891856","9":"7.264241e-03","10":"8","11":"-10.697913","12":"41.28772","13":"12.6938037","14":"9.950942e-05","_rn_":"222"},{"1":"-0.036375232","2":"-5.312221e-03","3":"+","4":"-0.06048408","5":"+","6":"0.004791335","7":"+","8":"0.002101289","9":"NA","10":"9","11":"-9.161972","12":"41.32394","13":"12.7300307","14":"9.772318e-05","_rn_":"128"},{"1":"0.052028226","2":"-8.158461e-04","3":"NA","4":"-0.04324236","5":"+","6":"0.002943990","7":"+","8":"0.003036737","9":"NA","10":"8","11":"-10.717182","12":"41.32626","13":"12.7323429","14":"9.761027e-05","_rn_":"126"},{"1":"-0.453742044","2":"-4.844336e-03","3":"+","4":"-0.06026340","5":"NA","6":"0.004922796","7":"+","8":"0.001567590","9":"4.465688e-03","10":"9","11":"-9.165678","12":"41.33136","13":"12.7374424","14":"9.736171e-05","_rn_":"248"},{"1":"-0.687021313","2":"-4.656796e-03","3":"+","4":"-0.05845954","5":"+","6":"0.004814962","7":"NA","8":"0.002060149","9":"6.030994e-03","10":"9","11":"-9.189424","12":"41.37885","13":"12.7849348","14":"9.507697e-05","_rn_":"224"},{"1":"-0.729075119","2":"NA","3":"+","4":"-0.06459675","5":"+","6":"0.004963363","7":"+","8":"0.002031645","9":"5.888241e-03","10":"9","11":"-9.192457","12":"41.38491","13":"12.7909992","14":"9.478911e-05","_rn_":"255"},{"1":"-0.680272795","2":"3.205154e-04","3":"NA","4":"-0.03979422","5":"NA","6":"0.003174259","7":"+","8":"0.001559950","9":"8.213132e-03","10":"8","11":"-10.810488","12":"41.51287","13":"12.9189530","14":"8.891472e-05","_rn_":"246"},{"1":"-0.563718910","2":"-4.927862e-03","3":"+","4":"-0.06489011","5":"+","6":"0.005400612","7":"+","8":"NA","9":"6.020591e-03","10":"9","11":"-9.258082","12":"41.51616","13":"12.9222505","14":"8.876824e-05","_rn_":"192"},{"1":"1.108875364","2":"-9.787688e-03","3":"+","4":"NA","5":"+","6":"NA","7":"+","8":"0.005220108","9":"-6.291829e-03","10":"8","11":"-10.842477","12":"41.57685","13":"12.9829318","14":"8.611540e-05","_rn_":"236"},{"1":"-0.587541435","2":"-1.520821e-03","3":"NA","4":"NA","5":"+","6":"0.003124002","7":"+","8":"0.003072536","9":"5.304237e-03","10":"8","11":"-10.870701","12":"41.63329","13":"13.0393805","14":"8.371883e-05","_rn_":"250"},{"1":"-0.889505037","2":"4.420309e-05","3":"NA","4":"-0.04978050","5":"+","6":"0.003796000","7":"+","8":"NA","9":"1.053166e-02","10":"8","11":"-10.887413","12":"41.66672","13":"13.0728048","14":"8.233134e-05","_rn_":"190"},{"1":"-0.265534900","2":"-6.475650e-03","3":"+","4":"NA","5":"+","6":"0.004801729","7":"+","8":"0.002316676","9":"8.838902e-04","10":"9","11":"-9.509229","12":"42.01846","13":"13.4245446","14":"6.905352e-05","_rn_":"252"},{"1":"1.148922365","2":"-9.534489e-03","3":"+","4":"-0.06611167","5":"+","6":"NA","7":"+","8":"NA","9":"-9.963880e-04","10":"8","11":"-11.261248","12":"42.41439","13":"13.8204743","14":"5.665142e-05","_rn_":"176"},{"1":"0.309499068","2":"-3.721912e-03","3":"NA","4":"-0.04813649","5":"+","6":"NA","7":"+","8":"0.004816762","9":"2.000875e-03","10":"8","11":"-11.284428","12":"42.46075","13":"13.8668333","14":"5.535337e-05","_rn_":"238"},{"1":"0.912381516","2":"-8.320858e-03","3":"+","4":"-0.05923215","5":"+","6":"NA","7":"+","8":"0.004977527","9":"-2.884911e-03","10":"9","11":"-10.534897","12":"44.06979","13":"15.4758811","14":"2.475961e-05","_rn_":"240"},{"1":"-0.769460056","2":"-1.100127e-04","3":"NA","4":"-0.04657509","5":"+","6":"0.003091431","7":"+","8":"0.002889644","9":"8.251699e-03","10":"9","11":"-10.678563","12":"44.35713","13":"15.7632122","14":"2.144621e-05","_rn_":"254"},{"1":"-0.488833488","2":"-4.894256e-03","3":"+","4":"-0.06221183","5":"+","6":"0.004860843","7":"+","8":"0.002026148","9":"4.550532e-03","10":"10","11":"-9.149479","12":"44.58467","13":"15.9907579","14":"1.913990e-05","_rn_":"256"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">na.action =</span> <span class="st">"na.omit"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><em>I used step based approach (which requires nested models) and large search method above. Using the step approach only height and alcohol usage are retained in the final model, which explains 10% of the variation in pulse change. Model assumptions are also met. The search method finds the same optimal model but notes many other models (including a null model) perform similarly well.</em></p>
 </section>
 <section id="section-4" class="level3">
 <h3 class="anchored" data-anchor-id="section-4">5</h3>

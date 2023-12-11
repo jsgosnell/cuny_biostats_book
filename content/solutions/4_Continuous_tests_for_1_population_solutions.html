@@ -454,7 +454,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/primer_material/tools_overview.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/primer_material/tools_overview.qmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tools overview</span></a>
   </div>
 </li>
@@ -554,6 +554,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/oz/ais.txt"</span>, <span class="at">header =</span> T)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BSDA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'BSDA' was built under R version 4.3.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: lattice</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
@@ -565,7 +568,7 @@ Attaching package: 'BSDA'</code></pre>
 
     Orange</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">z.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">mu =</span> <span class="fl">175.6</span>, <span class="at">sigma.x=</span><span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">z.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">mu =</span> <span class="fl">175.6</span>, <span class="at">sigma.x=</span><span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One-sample z-Test
@@ -582,7 +585,7 @@ mean of x
 </div>
 <p>If we don’t, we use a t-test</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">mu =</span> <span class="fl">175.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">mu =</span> <span class="fl">175.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One Sample t-test
@@ -599,7 +602,7 @@ mean of x
 </div>
 <p>These both assume the means of the data are normal! If we want to relax that assumption, we can use the Wilcoxon test (also known as Mann-Whitney test, signed binary transform, or other terms!). This assumes the distribution of means is symmetric.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">mu =</span> <span class="fl">175.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">mu =</span> <span class="fl">175.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon signed rank test with continuity correction
@@ -611,7 +614,7 @@ alternative hypothesis: true location is not equal to 175.6</code></pre>
 </div>
 <p>or the sign-test/media test.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SIGN.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">md =</span> <span class="fl">175.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SIGN.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">md =</span> <span class="fl">175.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One-sample Sign-Test
@@ -635,8 +638,8 @@ Upper Achieved CI     0.9629  183.9 187.7000</code></pre>
 </div>
 <p>Note this is just transforming data to 1/0 and doing a binomial test!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>above_175<span class="fl">.6</span> <span class="ot">&lt;-</span> <span class="fu">nrow</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span> <span class="sc">&amp;</span> sport<span class="sc">$</span>Ht <span class="sc">&gt;</span> <span class="fl">175.6</span>,])</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(above_175<span class="fl">.6</span>, <span class="fu">nrow</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>,]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>above_175<span class="fl">.6</span> <span class="ot">&lt;-</span> <span class="fu">nrow</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span> <span class="sc">&amp;</span> sport<span class="sc">$</span>Ht <span class="sc">&gt;</span> <span class="fl">175.6</span>,])</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(above_175<span class="fl">.6</span>, <span class="fu">nrow</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>,]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Exact binomial test
@@ -653,8 +656,8 @@ probability of success
 </div>
 <p>We can also bootstrap the data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/bootstrapjsg.R"</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bootstrapjsg</span>(<span class="at">data1=</span>sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">null=</span><span class="fl">175.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/bootstrapjsg.R"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bootstrapjsg</span>(<span class="at">data1=</span>sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">null=</span><span class="fl">175.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'boot'</code></pre>
@@ -665,7 +668,7 @@ Attaching package: 'boot'</code></pre>
     melanoma</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'simpleboot' was built under R version 4.2.3</code></pre>
+<pre><code>Warning: package 'simpleboot' was built under R version 4.3.2</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Simple Bootstrap Routines (1.1-7)</code></pre>
@@ -676,9 +679,9 @@ intervals</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                                                        
-                 "0.95" "% Confidence Interval"      "183.982352941176" 
+                 "0.95" "% Confidence Interval"        "183.9608334134" 
                                                                         
-     "187.038235294118"               "p-value"                     "0" </code></pre>
+     "187.044117647059"               "p-value"                     "0" </code></pre>
 </div>
 </div>
 </section>
@@ -699,7 +702,7 @@ intervals</code></pre>
 </ul>
 <p>For this question, its easiest to just source the main file and see what happens. When you source a script, it is run in R without showing any console output (but graphs and objects are still produced!). Try <em>source(“https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/qqplot_example.R”)</em></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/qqplot_example.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/qqplot_example.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="4_Continuous_tests_for_1_population_solutions_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -765,13 +768,16 @@ intervals</code></pre>
 <p>Review the central_limit_theorem.R code if you need to convince/remind yourself how common normality of means is for even non-normal data. You can source the code using the same approach noted in Question 1.</p>
 <p><em>Here we are focused on how the means look as sample size increases</em></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#make sure you have VGAM library installed</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/central_limit_theorem.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#make sure you have VGAM library installed</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/central_limit_theorem.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Press [enter] to continue</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: VGAM</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'VGAM' was built under R version 4.3.1</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: stats4</code></pre>
@@ -831,9 +837,9 @@ Attaching package: 'VGAM'</code></pre>
 <li>Assuming variance = 275</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>flies <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">183.2</span>, <span class="fl">149.0</span>, <span class="fl">154.0</span>, <span class="fl">167.2</span>, <span class="fl">187.2</span>, <span class="fl">158.0</span>, <span class="fl">143.0</span>)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BSDA)</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">z.test</span>(<span class="at">x=</span>flies, <span class="at">mu =</span> <span class="dv">161</span>, <span class="at">sigma.x=</span><span class="fu">sqrt</span>(<span class="dv">275</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>flies <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">183.2</span>, <span class="fl">149.0</span>, <span class="fl">154.0</span>, <span class="fl">167.2</span>, <span class="fl">187.2</span>, <span class="fl">158.0</span>, <span class="fl">143.0</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BSDA)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">z.test</span>(<span class="at">x=</span>flies, <span class="at">mu =</span> <span class="dv">161</span>, <span class="at">sigma.x=</span><span class="fu">sqrt</span>(<span class="dv">275</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One-sample z-Test
@@ -853,7 +859,7 @@ mean of x
 <li>Estimating the variance from the data</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(<span class="at">x=</span>flies,<span class="at">mu =</span> <span class="dv">161</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(<span class="at">x=</span>flies,<span class="at">mu =</span> <span class="dv">161</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One Sample t-test
@@ -873,7 +879,7 @@ mean of x
 <li>Using rank transform analysis</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(flies, <span class="at">mu=</span><span class="dv">161</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(flies, <span class="at">mu=</span><span class="dv">161</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon signed rank exact test
@@ -888,7 +894,7 @@ alternative hypothesis: true location is not equal to 161</code></pre>
 <li>Using binary transform analysis</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SIGN.test</span>(flies, <span class="at">md=</span><span class="dv">161</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SIGN.test</span>(flies, <span class="at">md=</span><span class="dv">161</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One-sample Sign-Test
@@ -913,7 +919,7 @@ Upper Achieved CI     0.9844 143.0000 187.2000</code></pre>
 <p><em>Using a sign test, which is appropriate when the data is continuous and other assumptions can’t be met, I found a test statistics of s = 3 .This corresponds to a p-value of 1. This p-value is &gt;.05, so I fail to reject the null hypothesis that the median (<strong>Note change here</strong>) of the estimates is 161 flies.</em></p>
 <p>Note there are several ways to load the data! You can make a list (since the list is short):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>flies <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">183.2</span>, <span class="fl">149.0</span>, <span class="fl">154.0</span>, <span class="fl">167.2</span>, <span class="fl">187.2</span>, <span class="fl">158.0</span>, <span class="fl">143.0</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>flies <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">183.2</span>, <span class="fl">149.0</span>, <span class="fl">154.0</span>, <span class="fl">167.2</span>, <span class="fl">187.2</span>, <span class="fl">158.0</span>, <span class="fl">143.0</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>or make a dataframe in a spreadsheet software (eg, Excel, Google Sheets) and then upload using a read.csv command. We did this in the introduction to R!</p>
 </section>
@@ -921,8 +927,8 @@ Upper Achieved CI     0.9844 143.0000 187.2000</code></pre>
 <h4 class="anchored" data-anchor-id="section-3">4</h4>
 <p>Yields of 10 strawberry plants in a uniformity trial are given by Baker and Baker (1953) as 239, 176, 235, 217, 234, 216, 318, 190, 181, and 225 g. Test the hypothesis that µ = 205 * Assuming variance = 1500</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>strawberries <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">239</span>, <span class="dv">176</span>, <span class="dv">235</span>, <span class="dv">217</span>, <span class="dv">234</span>, <span class="dv">216</span>, <span class="dv">318</span>, <span class="dv">190</span>, <span class="dv">181</span>, <span class="dv">225</span>)</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">z.test</span>(<span class="at">x=</span>strawberries,<span class="at">mu =</span> <span class="dv">205</span>, <span class="at">sigma.x=</span><span class="fu">sqrt</span>(<span class="dv">1500</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>strawberries <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">239</span>, <span class="dv">176</span>, <span class="dv">235</span>, <span class="dv">217</span>, <span class="dv">234</span>, <span class="dv">216</span>, <span class="dv">318</span>, <span class="dv">190</span>, <span class="dv">181</span>, <span class="dv">225</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">z.test</span>(<span class="at">x=</span>strawberries,<span class="at">mu =</span> <span class="dv">205</span>, <span class="at">sigma.x=</span><span class="fu">sqrt</span>(<span class="dv">1500</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One-sample z-Test
@@ -942,7 +948,7 @@ mean of x
 <li>Estimating the variance from the data</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(<span class="at">x=</span>strawberries,<span class="at">mu =</span> <span class="dv">205</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(<span class="at">x=</span>strawberries,<span class="at">mu =</span> <span class="dv">205</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One Sample t-test
@@ -962,7 +968,7 @@ mean of x
 <li>Using rank transform analysis</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(strawberries, <span class="at">mu=</span><span class="dv">205</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(strawberries, <span class="at">mu=</span><span class="dv">205</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in wilcox.test.default(strawberries, mu = 205): cannot compute exact
 p-value with ties</code></pre>
@@ -981,7 +987,7 @@ alternative hypothesis: true location is not equal to 205</code></pre>
 <li>Using binary transform analysis</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SIGN.test</span>(strawberries, <span class="at">md=</span><span class="dv">205</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SIGN.test</span>(strawberries, <span class="at">md=</span><span class="dv">205</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One-sample Sign-Test
@@ -1009,8 +1015,8 @@ Upper Achieved CI     0.9785 181.00 239.0000</code></pre>
 <h4 class="anchored" data-anchor-id="section-4">5</h4>
 <p>Evolutionary geneticists predicts the family sex ratio will be 80% female in broods of eagles that successfully fledge &gt;3 young. Nests that fledge 3 or more chicks are very rare but a sample of 30 chicks are obtained from such nests and they yield 25 females and 5 males. Test the hypotheses that that: * a) the sex ratio is 50% females</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co">#a</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">25</span>,<span class="dv">30</span>, <span class="at">p=</span>.<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co">#a</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">25</span>,<span class="dv">30</span>, <span class="at">p=</span>.<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Exact binomial test
@@ -1032,7 +1038,7 @@ probability of success
 </ol></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">25</span>,<span class="dv">30</span>, .<span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">25</span>,<span class="dv">30</span>, .<span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Exact binomial test
@@ -1054,8 +1060,8 @@ probability of success
 <p>Studies of flying snakes have led researchers to posit the mean undulation rate is 1.4 Hz. You wish to test this hypothesis using the small sample of undulation rates shown below. Create a small dataset of the paradise tree snake undulation rates and choose and justify a test you can use to assess the data.</p>
 <p>Undulation rates (in Hz): 0.9, 1.4, 1.2, 1.2, 1.3, 2.0, 1.4, 1.6</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>snakes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.9</span>, <span class="fl">1.4</span>, <span class="fl">1.2</span>, <span class="fl">1.2</span>, <span class="fl">1.3</span>, <span class="fl">2.0</span>, <span class="fl">1.4</span>, <span class="fl">1.6</span>)</span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(snakes, <span class="at">mu=</span><span class="fl">1.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>snakes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.9</span>, <span class="fl">1.4</span>, <span class="fl">1.2</span>, <span class="fl">1.2</span>, <span class="fl">1.3</span>, <span class="fl">2.0</span>, <span class="fl">1.4</span>, <span class="fl">1.6</span>)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(snakes, <span class="at">mu=</span><span class="fl">1.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One Sample t-test
@@ -1076,24 +1082,24 @@ mean of x
 <h4 class="anchored" data-anchor-id="section-6">7</h4>
 <p>Using data from Australian athletes (http://www.statsci.org/data/oz/ais.html for details), determine if the average male training at the Australian Institute of Sport differs in weight from the average Australian male (85.9 kg) using bootstrapping techniques. Data at</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/oz/ais.txt"</span>, <span class="at">header =</span> T, </span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/oz/ais.txt"</span>, <span class="at">header =</span> T, </span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MKinfer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MKinfer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'MKinfer' was built under R version 4.2.3</code></pre>
+<pre><code>Warning: package 'MKinfer' was built under R version 4.3.1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.t.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Wt"</span>], <span class="at">mu=</span> <span class="fl">85.9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.t.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Wt"</span>], <span class="at">mu=</span> <span class="fl">85.9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Bootstrap One Sample t-test
 
 data:  sport[sport$Sex == "male", "Wt"]
-bootstrap p-value = 0.009801 
-bootstrap mean of x (SE) = 82.50399 (1.217666) 
+bootstrap p-value = 0.008001 
+bootstrap mean of x (SE) = 82.5015 (1.217638) 
 95 percent bootstrap percentile confidence interval:
- 80.13419 84.94216
+ 80.11966 84.91228
 
 Results without bootstrap:
 t = -2.7487, df = 101, p-value = 0.007089
