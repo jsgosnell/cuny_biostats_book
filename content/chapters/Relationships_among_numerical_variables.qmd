@@ -1,7 +1,10 @@
 ---
-title: Relationships among numerical variables
+title: Relationships among numerical variables 
 subtitle: When we only have numbers
 bibliography: ../references.bib
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
@@ -19,11 +22,12 @@ to explain variation in numerical outcome variables.
 
 ## Back to the iris data
 
-We will motivate this with an example from our favorite iris data. So
-far we have considered how species impacts measured outcomes. However,
-we might also want to consider the relationship between traits. For
-example, we might want to know if sepal and petal length are related. We
-could plot the data:
+We will begin with an example from our favorite iris data. So far we
+have considered how species (a categorical independent variable) impacts
+measured outcomes (continuous dependent variables). However, we might
+also want to consider the relationship between traits (continuous
+variables). For example, we might want to know if sepal and petal length
+are related. We could plot the data:
 
 ```{r}
 library(ggplot2)
@@ -37,8 +41,8 @@ sepal_petal_relationship
 ```
 
 Our related hypothesis might be a relationship exists among the
-variables; alternatively, one does not. To put this our null hypothesis
-framework, we might write:
+(continuous) variables; alternatively, one does not. To put this our
+null hypothesis framework, we might write:
 
 $$
 \begin{split}
@@ -54,11 +58,12 @@ more in a moment, but how do we test them?
 ### Working with continuous predictors
 
 For some background, consider differences between continuous and
-categorical predictor variables. Unlike examples of when we transformed
-continuous outcomes into binomial data, continuous predictors offers
-information on order and spacing. Compared to un-ordered categorical
-variables (what we've focused on), the numbers mean something! This
-allows us (with caution) to estimate outcomes from un-sampled regions.
+categorical predictor (independent) variables. Unlike examples where we
+transformed continuous outcomes (dependent variables) into binomial
+data, continuous predictors offers information on order and spacing.
+Compared to un-ordered categorical variables (what we've focused on),
+the numbers mean something! This allows us (with caution) to estimate
+outcomes from un-sampled regions.
 
 Consider: We know the mean sepal lengths for three species of irises:
 
@@ -94,20 +99,20 @@ sepal_petal_relationship+geom_smooth(method = "lm",se = F)
 While we can draw this "line of best fit" by sight, linear models
 actually give us a way to formally define it (analyze our hypothesis).
 The line of best fit minimizes the residuals (which means it also offers
-a prediction any value of sepal length!). This approach, however, also
-means we are considering **linear** relationships between our predictor
-variables (but note our predictor variables themselves could be a
-transformation of an actual measurement, such as a square root or value
-cubed!). This is one assumption of linear regression. We can consider
-**non-linear** relationships using other techniques (which we will cover
-later).
+a **prediction** for any value of sepal length!). This approach,
+however, also means we are considering **linear** relationships between
+our predictor variables (but note our predictor variables themselves
+could be a transformation of an actual measurement, such as a square
+root or value cubed!). This is one assumption of linear regression. We
+can consider **non-linear** relationships using other techniques (which
+we will cover later).
 
 If we wanted to carry out a sampling experiment to determine a p-value
 for our hypotheses, we could sample from a population that represents
 our sepal lengths and one that represents our petal lengths. If the two
 populations are not connected, then arbitrary pairs could be made - this
 would indicate no relationship among the variables. For each dataset, we
-could note the potential relationship (now occuring by chance!) between
+could note the potential relationship (now occurring by chance!) between
 our variables, and then compare that null distribution to what we
 actually observed. To make this approach more generalizable, we could
 standardize our data points - using these to calculate our error terms
@@ -148,7 +153,7 @@ plot(iris_regression)
 For numerical relationships we typically see more of a cloud of data,
 but we are still assuming the residuals are normally distributed (with
 the same variance for all fitted values, i.e. identically distributed)
-and indepent. Iassumptions are met consider outcomes.
+and independent. If assumptions are met consider outcomes.
 
 ```{r}
 library(car)
@@ -159,7 +164,7 @@ summary(iris_regression)
 
 Here the ANOVA table tells us there is a significant impact of sepal
 length on petal length, and the summary (and graph) demonstrate that
-relationship is positive. Note we do not need any post-hoc analysis (why
+relationship is positive. Note we do not need any post-hoc analyses (why
 not?).
 
 ## Regression or correlation
@@ -169,7 +174,7 @@ scenarios. We typically consider (but actually rarely use) linear
 regression. Linear regression technically assumes that an approach was
 used to determine how one variable impacts another (so we chose which
 one to vary and how). For this scenario, our sampling experiment
-technically uses the set values of the predictor variable,and our
+technically uses the set values of the predictor variable, and our
 hypotheses focus on the coefficient value
 
 $$
@@ -185,8 +190,21 @@ this should not impact the resulting p-value.
 The other approach, correlation, is more simply measuring association
 between the variables. It's not specifying which, if either, is the
 driver - both variables could be responding to an un-measured variable.
-For example, since we simply observed flower traits, we could easily
-reverse everything above (plot shown here).
+You may have heard the phrase "correlation does not equal causation"
+before, which refers to this "driver-less" model. One famous example of
+correlation is that the murder rate tends to rise as ice cream
+consumption rates rise. Because we have no reason to believe that an
+increase in murder rate would *cause* people to eat more ice cream, nor
+do we have a reason to believe that ice cream consumption would cause
+people to commit murder, all we really want to look at is the
+association between the two. In other words, there is another driver (in
+this case, time spent outside in the summer) that can help explain both
+factors as opposed to one explaining the other. This is important to
+consider before running your analysis *and* when interpreting outcomes.
+
+For an example of an association between variables, since we simply
+observed flower traits, we could easily reverse our previous code (plot
+shown here).
 
 ```{r}
 ggplot(iris, aes(x=Petal.Length, y=Sepal.Length)) +
@@ -196,8 +214,8 @@ ggplot(iris, aes(x=Petal.Length, y=Sepal.Length)) +
        y= "Petal Length (cm)")
 ```
 
-Note that doing so would change the coefficients in our linear model,but
-not the direction of the relationship. For this reason, correlation
+Note that doing so would change the coefficients in our linear model,
+but not the direction of the relationship. For this reason, correlation
 often focuses on a unitless correlation parameter, *r*, instead of a
 coefficient from our $\beta$ matrix.
 
@@ -210,7 +228,7 @@ $$
 
 *r* can vary from -1 (values are perfectly negatively related) to 1
 (values are perfectly positively related), where 0 indicates no
-associatoin. This should sound familiar (hold this thought). For a
+association. This should sound familiar (hold this thought). For a
 related sampling experiment, populations for both traits are simulated
 and then paired (what we described above!).
 
@@ -230,6 +248,97 @@ summary.
 ```{r}
 cor.test(~ Sepal.Length + Petal.Length, data = iris)$estimate^2
 summary(iris_regression)$r.squared
+```
+
+To further explore the difference between regression and correlation,
+let's consider another dataset that comes pre-installed with R: mtcars.
+More information on the data can be found
+[here](https://www.rdocumentation.org/packages/datasets/versions/3.6.2/topics/mtcars).
+
+```{r}
+head(mtcars, 6)
+```
+
+Let's consider two continuous variables: miles per gallon (mpg) and car
+weight (wt). Because we can make a reasonable hypothesis that car weight
+would be a *driver* for miles per gallon, then we should run a
+**regression** in order to see if weight has an impact on the variance
+in miles per gallon and, if so, how much of the variance (R^2^).
+
+\*Note: For regression, it is important that your driver or independent
+variable is always on the x-axis and your outcome variable or dependent
+variable is always on the y-axis.
+
+```{r}
+cars_regression <- lm(mpg ~ wt, mtcars)
+plot(cars_regression)
+Anova(cars_regression, Type = "III")
+summary(cars_regression)
+
+```
+
+Based on our regression, we see that car weight *does* explain
+approximately 75% of the variation in miles per gallon (F~1, 30~ =
+91.375, p \< 0.001). Further, the relationship between the two is
+negative (as car weight increases, mpg decreases).
+
+```{r}
+library(ggplot2)
+car_wt_mpg <- ggplot(mtcars, aes(x=wt, y=mpg)) +
+  geom_point() +
+  labs(title="MPG decreases with car weight",
+       x= "Car weight",
+       y= "MPG")
+car_wt_mpg +                                      
+  stat_smooth(method = "lm", 
+              formula = y ~ x, 
+              geom = "smooth") 
+```
+
+However, if we were to look at miles per gallon and 1/4 mile time
+(qsec), it's less clear which variable might be "driving" the other, so
+we should run a **correlation** to look for an association between the
+two.
+
+```{r}
+cor.test(~ qsec + mpg, data = mtcars)
+```
+
+```{r}
+library(ggplot2)
+car_qsec_mpg <- ggplot(mtcars, aes(x=qsec, y=mpg)) +
+  geom_point() +
+  labs(title="Positive association between 1/4 mile time and MPG",
+       x= "1/4 mile time",
+       y= "MPG")
+car_qsec_mpg + stat_smooth(method = "lm", 
+              formula = y ~ x, 
+              geom = "smooth")
+
+```
+
+We can see that there *is* a significant, positive association between
+1/4 mile time and miles per gallon (t = 2.5252, p = 0.01708), but we
+cannot use either variable to explain the variation in the other.
+
+\*Note: For correlation, which variable is on which axis is not
+important for determining an association. The below code is as correct
+as the code above.
+
+```{r}
+cor.test(~ mpg + qsec, data = mtcars)
+```
+
+```{r}
+library(ggplot2)
+car_mpg_qsec <- ggplot(mtcars, aes(x=mpg, y=qsec)) +
+  geom_point() +
+  labs(title="Positive association between 1/4 mile time and MPG",
+       x= "MPG",
+       y= "1/4 mile time")
+car_mpg_qsec + stat_smooth(method = "lm", 
+              formula = y ~ x, 
+              geom = "smooth")
 ```
 
 ### Other options
@@ -364,6 +473,69 @@ points outside your data range is likely a bad idea.
 
 As shown above, numerical data is often plotted via paired points. You
 can also add regression lines with or without confidence regions.
+
+## Linear Regression - Special Case
+
+It's possible to have a case where the R2 value is near to 1 (i.e R2 \~
+0.9) in a linear regression, but the fit is not homoscedastic (i.e., the
+variance of the residuals is not constant across the range of predictor
+values). This can happen in very specific and contrived scenarios where
+the variance of the error terms changes systematically with the
+independent variable, yet the predicted values still exactly match the
+actual values.
+
+Here's an this example:
+
+```{r}
+# Load necessary library
+library(ggplot2)
+
+# Set seed
+set.seed(123)
+
+# Generate fitting data
+x <- seq(0, 10, length.out = 100)
+y <- 2 * x  #  Linear relationship
+
+# Adding heteroscedastic noise
+error_variance <- x^1.5 * 0.15
+error <- rnorm(100, mean = 0, sd = error_variance)  # Error term
+y_observed <- y + error  # Observed y values
+
+# Fit linear model
+model <- lm(y_observed ~ x)
+
+# Create a dataframe for plotting
+data <- data.frame(x = x, y = y, y_observed = y_observed)
+
+# Plot the data with the fitted line from the model and the actual line
+ggplot(data, aes(x = x, y = y_observed)) +
+  geom_point(color = "blue", alpha = 0.7) +
+  geom_smooth(method = "lm", color = "red") +
+  labs(title = "Comparison of Fitted Model and Actual Data", 
+       x = "X", 
+       y = "Y")
+
+```
+
+Let's now check the assumptions by plotting "model"
+
+```{r}
+plot(model)
+```
+
+there's a potential "funneling" observed in the residuals vs fitted
+plot. You might want to consider another fitting model. However, for
+this example, let's proceed to compute R2.
+
+```{r}
+summary(model)
+```
+
+As you can see, R2 value is near 0.9. However, we might not want to use
+this linear model to fit this data due to potential Heteroscedasticity.
+Take home message: don't only rely on a good R2 value to validate the
+use of a linear regression to your data. Always check your assumptions!
 
 ## Next steps
 
