@@ -139,7 +139,7 @@ Odd and typical feathers were measured on a single bird (note the *Bird*
 column) in the dataset. We might assume feathers on a given bird are
 more closely related in color than feathers on different birds. This
 could be due to diet or other factors making all feathers on a given
-bird brighter or darker than those on another. Regardless of reason (and
+bird brighter or darker than those on another bird. Regardless of reason (and
 "good" p value), we know the measurements are linked in some way. Note
 we could "connect" individual observations.
 
@@ -160,7 +160,7 @@ design has led to measurements being connected/not independent, we need
 to consider these connections in order to properly note (and sometimes
 even observe) impacts of focal variables.
 
-## Blocking, two-way ANOVAs,and paired t-tests
+## Blocking, two-way ANOVAs, and paired t-tests
 
 In this case, the connections may be considered artifacts of the data.
 We didn't assign birds. We also made a choice to compare odd and typical
@@ -194,7 +194,7 @@ $$
 
 We can analyze this using our linear model approach. This is possible
 because, as we noted earlier, we can subdivide variance among multiple
-levels. Under the hood, the linear model approach build a model matrix
+levels. Under the hood, the linear model approach builds a model matrix
 that considers the impact of feather type and bird on outcomes. Since
 both variables are categorical, this is often called a two-way ANOVA.
 First, let's make the object
@@ -284,7 +284,7 @@ focusing on the difference in means (like a 2-sample t-test), the test
 focuses on the mean difference between paired measurements (which would
 be 0 under the null hypothesis!). In this way, it is effectively a
 one-sample test that is pairing the data to reduce variation (blocking).
-We can do carry out the test:
+We can carry out the test:
 
 ```{r}
 t.test(Color_index ~ Feather_type, data=feather, paired=TRUE)
@@ -294,7 +294,32 @@ and get the same results as above (note we don't even have to consider
 corrections like the Welch approach since this a one-sample test).
 Common examples of paired t-tests include before-after and twin studies.
 
-In an earlier chapters we considered options for one- and two-sample
+Another example we can look at of a paired t test is National No Smoking day, observed in the UK (Waters et al, 1998). There is a possible increase in injuries and workplace accidents on National No Smoking Day due to withdrawal effects people may face by not smoking. Data was collected every year on number of injuries before and on National No Smoking Day for 9 years. We would like to compare the number of injuries before and on No Smoking Day
+
+```{r}
+smoking_data <- matrix(c(1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 516, 610, 581, 586, 554, 632, 479, 583, 445, 532, 540, 620, 599, 639, 607, 603, 519, 560, 515, 556),10, 3, byrow=F)
+colnames(smoking_data) <- c("Year", "Injuries_before_No_Smoking_Day", "Injuries_on_No_Smoking_Day")
+```
+
+There is variation from year to year. We could standardize, but there are other factors to consider why the variation may occur, such as changes in size of workforce. To account for this variation, we can block the data by year.
+
+For a paired t test, our null hypothesis would be that work related injuries do not change during No Smoking Days (d=0), while our alternative hypothesis would be that there is a change in work related injuries during No Smoking Days (d≠0).
+
+We can calculate the difference (d)
+
+```{r}
+smoking_data_x <- data.frame(smoking_data)
+smoking_data_x$difference<- smoking_data_x$Injuries_on_No_Smoking_Day - smoking_data_x$Injuries_before_No_Smoking_Day
+```
+
+We can use the difference column to run a one sample t test. But here, let's run a paired t test between the before and on No Smoking Day injuries:
+
+```{r}
+t.test(smoking_data_x$Injuries_before_No_Smoking_Day, smoking_data_x$Injuries_on_No_Smoking_Day, paired=T)
+```
+Report t=-2.3605, df=9, p= 0.04257. Reject null hypothesis
+
+In earlier chapters we considered options for one- and two-sample
 tests when t-tests assumptions were not met. For two-sample tests, one
 of these approaches, the sign or binary test, is only valid for paired
 data. The differences in paired observations are compared to a set value
@@ -303,7 +328,7 @@ proposed median and half should be above. Differences matching the
 proposed value are ignored, thus reducing the sample size and making it
 harder to reject the null hypothesis; this is actually an odd way of
 accounting for them. The proportion of values below the proposed median
-is then evaluated using a binomial test. For two sample, the *SIGN.test*
+is then evaluated using a binomial test. For two-sample test, the *SIGN.test*
 function in the **BSDA** package requires 2 columns of data and assumes
 the order of the column represents paired data.
 
@@ -331,7 +356,7 @@ feather_extra$Feather_type <- factor(feather_extra$Feather_type)
 ```
 
 We could still block for variation using the linear model/ANOVA, but not
-the t-test, approach. As another review, we create the model
+the t-test approach. As another review, we create the model
 
 ```{r}
 more_blocks <-lm(Color_index ~ Feather_type + Bird, data=feather_extra)
@@ -359,17 +384,18 @@ compare <- glht(more_blocks, linfct = mcp(Feather_type = "Tukey"))
 summary(compare)
 ```
 
+There is a significant difference between all of the groups. Special and typical feathers lead to higher color index as compared to odd (because the estimate is positive for these pairs), and typical feathers have lower color index compared to special feathers (negative estimate).
+
 ## Other ways to be in multiple groups
 
-In the bird example, one of our categories (bird) was un-intential. We
+In the bird example, one of our categories (bird) was unintentional. We
 chose to measure odd and typical feathers, and accounting for variation
 among birds was an appropriate step given lack of independence in
 measurements. However, we can also assign units to multiple groups
 (instead of making multiple measurements within one unit).
 
 Consider if we ran an experiment focused on the impact of factors A and
-B on some trait. We can fully cross the factors in an experiment. Doing
-so can let us consider the **main effects** of multiple variables and
+B on some trait. We can fully cross the factors in an experiment (each level of factor A is assigned a level of factor B). Doing so can let us consider the **main effects** (impact) of multiple variables and
 potential **interactions** among them in what is often called a
 **factorial ANOVA.** For starters, let each factor have only 2 levels,
 and let the levels be the absence or presence of the factor.
@@ -441,7 +467,7 @@ We can extend this example to consider more than 2 levels for one or
 more factors. For example, @valdez2023 wanted to consider the impact of
 top-down (snail grazing) and bottom- up (nutrient availability) on marsh
 plant (*Spartina alterniflora*) growth. To do this, they assigned plots
-to one of 3 grazer treatments and one of 2 nitrogen treatments.
+to one of 3 grazer treatments (ambient number of snails, three times ambient number of snails, and snail removal) and one of 2 nitrogen treatments (ambient nitrogen and nitrogen addition). The experiment design also includes uncaged and cage control groups that did not undergo any treatments.
 
 [![Fig 1 from Valdez et al. 2003. Map and conceptual illustration of
 experimental
@@ -539,7 +565,7 @@ it.
 ### Dealing with controls and missing interactions
 
 To fix this (and deal with controls), we need to consider the data.
-@valdez2023 used t-tests (why?) to consider differences between cage and
+@valdez2023 used t-tests (why?) to consider differences between uncaged and
 cage control plots (note %in% and the fact they did not focus on
 above-ground biomass (maybe because uncaged plots had little..). %in%
 allows you to subset data by matching items to list. Remember you can
@@ -601,12 +627,12 @@ If interactions are not significant, they can be handled in 2 ways.
 
 Regardless, we can interpret main effects (though with possibly
 different outcomes). The benefit of approach 2 is we "increase" the
-degrees of freedom associated with the residuals, which ends up reducing
-the the MST. This is because in 2-way ANOVAs we allocate degrees of
+degrees of freedom associated with the residuals and re-partition residuals between the snail and nitrogen groups, which ends up reducing
+the MST (mean square of treatment). This is because in 2-way ANOVAs we allocate degrees of
 freedom to calculating main effects and interactions. This approach was
 likely used in the original manuscript.
 
-Simply using the the provided output (approach 1) and not perform
+Simply using the provided output (approach 1) and not performing
 another series of tests, however, reduces the chances for a Type 1
 error. We will return to this discussion when we get to model selection.
 
@@ -688,10 +714,111 @@ Note the warning; if interactions are significant comparing main effects
 may be inappropriate (which is why other approaches include subsetting
 the data).
 
+## Example: Memory, Age, and Processing
+
+A study by Eysenck (1974) investigated the impact of age and information processing method on memory. The study involved 50 younger and 50 older participants which were randomly assigned into 5 learning groups with individual tasks:
+
+1. Counting group: read through a list of words and count the number of letters in each word (lowest level of processing).
+2. Rhyming group: read each word and think of a word that rhymed with it. 
+3. Adjective group: give an adjective that could reasonably be used to modify each word in the list.
+4. Imagery group: form vivid images of each word (highest level of processing).
+5. Intentional group: memorize the words for later recall.
+
+All the subjects went through a list of 27 words 3 times and then were asked to write down all the words they could recall.
+
+The questions posed in this study would be whether memory depends on age and/or processing strategy (main effects), but also whether the effect on processing strategy changes with age (interaction). The data can be plotted for visualization:
+
+```{r}
+memory <- read.table("http://www.statsci.org/data/general/eysenck.txt", header = T, stringsAsFactors = T)
+str(memory)
+library(plyr)
+memory$Age <- relevel(memory$Age, "Younger")
+library(Rmisc)
+function_output <- summarySE(memory, measurevar="Words", groupvars =
+                               c("Age", "Process"), na.rm = T)
+```
+```{r}
+library(ggplot2)
+ggplot(function_output, aes(x=Age, y=Words,color=Process, 
+                                   shape = Process)) +
+  geom_line(aes(group=Process, linetype = Process), size=2) +
+    geom_point(size = 5) +
+  ylab("Words remembered")+ 
+  xlab("Age") + 
+  ggtitle("Process type interacts with age to impact memory")+
+  theme(axis.title.x = element_text(face="bold", size=20), 
+        axis.title.y = element_text(face="bold", size=20), 
+        axis.text.y  = element_text(size=20),
+        axis.text.x  = element_text(size=20), 
+        legend.text =element_text(size=20),
+        legend.title = element_text(size=20, face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold", size=18))
+```
+
+On the plot we see that all lines are not parallel which indicates that there may be some interactions between factors. Also, some of the processes are more affected by age (adjective, imagery, and intentional), while others are not (counting and rhyming).
+
+In this example, the null hypotheses would be:
+
+$$
+\begin{split}
+H_O: \textrm{age does not impact number of words recalled}\\
+H_O: \textrm{process does not impact number of words recalled}\\
+H_O: \textrm{age and process do not interact to impact number of words recalled}\\
+\end{split}
+$$
+
+Let's build a linear model considering age, process, and their interaction:
+
+```{r}
+memory_interactions <- lm(Words ~ Age * Process, memory)
+```
+
+And check assumptions:
+
+```{r}
+par(mfrow=c(2,2))
+plot(memory_interactions)
+```
+
+The assumptions are met, so we can proceed to making an ANOVA table:
+
+```{r}
+library(car)
+Anova(memory_interactions, type = "III")
+```
+
+First, we look at the interaction term since the main effects cannot be interpreted if interaction is significant. That is the case in the current study (for Age:Process interaction p < 0.05). Next, we can subset the data by age to see the impact of different processing approaches in younger and older group separately by running a one-way ANOVA for each age group. 
+
+```{r}
+memory_interactions_young <- lm(Words ~ Process, memory[memory$Age == "Younger",])
+plot(memory_interactions_young)
+Anova(memory_interactions_young, type = "III")
+```
+We have a significant impact of processing approach on memory for the younger group. To see which approaches have a significant difference, we can run a post-hoc test:
+
+```{r}
+library(multcomp)
+comp_young <- glht(memory_interactions_young, linfct = mcp(Process = "Tukey"))
+summary(comp_young)
+```
+ANOVA for the older group:
+
+```{r}
+memory_interactions_old <- lm(Words ~ Process, memory[memory$Age == "Older",])
+plot(memory_interactions_old)
+Anova(memory_interactions_old, type = "III")
+```
+There is also a significant impact of processing approach on memory for the older group, so we need a post-hoc test again:
+
+```{r}
+comp_old <- glht(memory_interactions_old, linfct = mcp(Process = "Tukey"))
+summary(comp_old)
+```
+
 ## Other options
 
 Bootstrapping and permutation tests options may also be used for two-way
-ANOVAs when assumptions are not met, though there is implementation is
+ANOVAs when assumptions are not met, though implementation is
 more complicated than single-sample designs due to the need to
 randomize/permute interaction impacts.
 
