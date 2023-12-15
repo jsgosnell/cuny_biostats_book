@@ -1,7 +1,10 @@
 ---
-title: Trying to compare means among groups 
+title: Compare means among groups - update by Melaniea and Aimar
 subtitle: More multiple populations!
 bibliography: ../references.bib
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
@@ -117,7 +120,7 @@ hypothesis framework, we need to consider if a more complicated view of
 the world is worth it.
 
 To test this, we can (as always) carry out a sampling experiment. The
-general idea is that species does snot matter (just like we saw in
+general idea is that species does not matter (just like we saw in
 contingency analysis). Given that, we can draw samples that match our
 respective sample sizes for each population from a single population.
 The mean can be set as the pooled mean for the data (since under the
@@ -324,7 +327,7 @@ groups actually differ.
 
 Given these issues, why use the summary command? It does present some
 other useful information. For example, the R^2^ values is a measure of
-how variation the model explains. It can range from 0 (the model
+how much variation the model explains. It can range from 0 (the model
 explains nothing) to 1 (all residuals are zero, in this case meaning all
 members of a given species have the exact same height). The
 adjusted-R^2^ value is similar, but it adjusts the measure to account
@@ -421,6 +424,135 @@ means and large sample sizes, differences in p values are minimal.
 
 There are instances when FWER are not an issue and thus p values do not
 need to be adjusted. This occurs when we explore *orthogonal contrasts*.
+
+··
+
+## An extra example: what happens if we have more than one explanatory variable?
+
+```{r}
+cropdata <- read.csv("content/chapters/cropdata.csv", header = TRUE, colClasses = c("factor", "factor", "factor", "numeric"))
+```
+
+This data contains information on crop yields explained by the type of
+fertilizer used on the fields and/or planting density. These are two
+factors that could potentially affect the crop yield, so finding the
+impact on each could bring some useful information.
+
+We can first check how the data looks:
+
+```{r}
+summary(cropdata)
+```
+
+We could first a model first to visualize how fertilizer type affects
+the yield, under the null hypothesis that:
+
+$$
+\begin{split}
+H_O: \mu_{\textrm{yield of fertilizer 1}} = \mu_{\textrm{yield of fertilizer 2}}....\textrm{for all fertilizers}\\
+H_A: \mu_{\textrm{yield of fertilizer 1}} \neq \mu_{\textrm{yield of fertilizer 2}}....\textrm{for all fertilizers}\\
+\end{split}
+$$
+
+```{r}
+model <- lm(yield ~ fertilizer, data = cropdata)
+Anova(model, type = 'III')
+
+```
+
+We see that fertilizer type actually has an impact on the mean crop
+yield. However, it could be that adding the extra factor added even more
+information, this is considered in what is called a **two-way anova**:
+
+```{r}
+model <- lm(yield ~ fertilizer + density, data = cropdata)
+Anova(model, type = 'III')
+```
+
+Also density seems to have a significant impact on the total crop yield!
+Indeed, this second model seems to have improved the model: the residual
+variance has decreased from 36 to 31.
+
+This definitely adds more information if someone wanted to know how
+fertilizer and planting density affected their crop yields. But what if
+those two factors interact with each other, in a way that, i.e.,
+fertilizer effect is limited (or enhaced) by the density of the plants?
+
+We can check for that by considering their interaction:
+
+```{r}
+model <- lm(yield ~ fertilizer*density, data = cropdata)
+
+Anova(model, type = 'III')
+```
+
+The interaction (shown by ":") does not seem to be significant, so its
+mostly safe to assume fertilizer effect on crop yield is not conditioned
+by plant density.
+
+This already seems like a useful conclusion! But we still have to
+remember to check for the linear model assumptions, or our conclusions
+might be totally wrong!
+
+```{r}
+par(mfrow=c(2,2))
+plot(model)
+par(mfrow=c(1,1))
+```
+
+From the results we see that it is more or less normal (the results are
+not going to be perfect in reality, so these results are pretty good.)
+
+The Q-Q Residuals plot have a slope very similar to 1. And the other
+plots depict apretty horizontal line. Now that we checked for
+homoscedasticity we'll check for a post-hoc test. We know that according
+to fertilizer and plant density, the mean yield is going to be
+different. But we don't know more than that. We don't know which
+fertilizer is driving the significance and how much plant density is
+driving the significance.
+
+So if we use Tukey's post-hoc to test for individual comparisons while
+accounting for the family-wise-error-rate...
+
+```{r}
+model <- lm(yield ~ fertilizer, data = cropdata)
+compare_cont_tukey <- glht(model, linfct = mcp(fertilizer = "Tukey"))
+summary(compare_cont_tukey)
+
+```
+
+From the results we see that there is a significant difference between
+fertilizers group 3-2 and 3-1. But no significant difference between
+groups 2 and 1. Fertilizer group 3 has a 60% more yield that fertilizer
+group 1 and fertilizer group 3 has a 42% more yield that group 2.
+
+```{r}
+model <- lm(yield ~ density, data = cropdata)
+compare_cont_tukey <- glht(model, linfct = mcp(density = "Tukey"))
+summary(compare_cont_tukey)
+```
+
+Regarding plant density, there is a significant difference between 2 -1.
+From the diff variable, we see that group 2 has a 46% more yield than
+group 1.
+
+We can note that doing this post-hoc test is similar to doing a regular
+t-test, as we are only comparing two levels in density:
+
+```{r}
+t.test(yield~density, cropdata)
+```
+
+Lasly, we could also plot the data and see if that brought more useful
+clarity:
+
+```{r}
+# one box per variety
+ggplot(cropdata, aes(x=fertilizer, y=yield, fill=density)) + 
+    geom_boxplot() +
+    facet_wrap(~fertilizer, scale="free_x")
+
+```
 
 ## A little deeper into linear models
 
