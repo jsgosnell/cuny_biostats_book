@@ -13,17 +13,14 @@ source("../globals.R")
 
 ```
 
-![XKCD: Data Trap. It's important to make sure your analysis destroys as much information as it produces.](https://imgs.xkcd.com/comics/data_trap_2x.png){#fig-XKDC2582 fig-alt="Two stick figures in single panel. One sitting at desk states \"Hey, look, we have a bunch of data! I'm gonna analyze it\".  The other responds, \"No, you fool! That will only create more data!\"" fig-align="center"}
 
-Once we have some data, the next step is often to summarize it. In fact, we've already done that in some ways. Some statistics like the mean may be considered a summary of the data. This may be useful because we prefer large datasets #remember sapling error!#(good sampling!) #remember to account for sampling error#, but making sense of a list of numbers can be really hard! Summaries help us describe, and eventually compare, datasets, which we are using to infer something about a population.
+Once we have some data, the next step is often to summarize it. In fact, we've already done that in some ways. Some statistics like the mean may be considered a summary of the data. This may be useful because we prefer large datasets #remember sapling error!#(good sampling!) #remember to account for sampling error#, but making sense of a list of numbers can be really hard! Summaries help us describe, and eventually compare, datasets, which we are using to infer something about a population. (will learn more about family-wise error rate (FWER)later in the semester, reference **Compare proportions among groups**)
 
-# Think about it this way. We want to know if several species of iris (*Iris versicolor*, *setosa* and *virginica*) have similarly-shaped flowers. Since we can't measure every flower on every plant from these species, we sample several sites and come up with the following data (using R's built-in iris dataset, a dataset we will often use).
+Think about it this way. We want to know if several species of iris (*Iris versicolor*, *setosa* and *virginica*) have similarly-shaped flowers. Since we can't measure every flower on every plant from these species, we sample several sites and come up with the following data (using R's built-in iris dataset, a dataset we will often use).
 
 ![XKCD: Data Trap. It's important to make sure your analysis destroys as much information as it produces.](https://imgs.xkcd.com/comics/data_trap_2x.png){fig-alt="Two stick figures in single panel. One sitting at desk states \"Hey, look, we have a bunch of data! I'm gonna analyze it\".  The other responds, \"No, you fool! That will only create more data!\"" fig-align="center"}
 
-Once we have some data, the next step is often to summarize it. In fact, we've already done that in some ways. Some statistics like the mean may be considered a summary of the data. This may be useful because we prefer large datasets #remember to account for sapling error!#(good sampling!) #remember to account for sampling error#, but making sense of a list of numbers can be really hard! Summaries help us describe, and eventually compare, datasets, which we are using to infer something about a population.
 
-Think about it this way. We want to know if several species of iris (*Iris versicolor*, *setosa* and *virginica*) have similarly-shaped flowers. Since we can't measure every flower on every plant from these species, we sample several sites and come up with the following data (using R's built-in iris dataset, a dataset we will often use).
 
 ```{r}
 iris
@@ -31,6 +28,8 @@ library(binom)
 ```
 
 Overwhelming, isn't it? And this isn't a huge dataset! There are only 150 rows, yet some datasets have tens of thousands!
+(reference, )
+
 
 Let's just look at the first few rows of the data
 
@@ -506,7 +505,7 @@ ggplot(iris, aes(y=Sepal.Length, x=Species, color=Species)) +
        x= "Species")
 ```
 
-We also need to ensure the different groups are visible when distributions overlap. Sometimes stacked histograms (and similar graphs) make it hard to actually visualize each individual group. One option is to instead *facet* these graphs. Faceting means we produce different graphs for each group, treatment, etc, but they (typically) share axes(this is important for multiple regression!). This makes it easier to compare the groups.
+We also need to ensure the different groups are visible when distributions overlap. Sometimes stacked histograms (and similar graphs) make it hard to actually visualize each individual group. One option is to instead *facet* these graphs. Faceting means we produce different graphs for each group, treatment, etc, but they (typically) share axes(this is important for chi^2 tables!!). This makes it easier to compare the groups.
 
 ```{r}
 #| label: fig-faceted_histograms_all species
