@@ -4,6 +4,10 @@ subtitle: Working with a sample
 bibliography: ../references.bib
 ---
 
+<<<<<<< HEAD
+=======
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+>>>>>>> 396409476b07eba46ee1abc550fd22e0083ef772
 
 ```{r setup, eval=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -12,22 +16,18 @@ source("../globals.R")
 
 ```
 
-
 Once we have some data, the next step is often to summarize it. In fact, we've already done that in some ways. Some statistics like the mean may be considered a summary of the data. This may be useful because we prefer large datasets #remember sapling error!#(good sampling!) , but making sense of a list of numbers can be really hard! Summaries help us describe, and eventually compare, datasets, which we are using to infer something about a population. (will learn more about family-wise error rate (FWER)later in the semester, reference **Compare proportions among groups**)
 
 Think about it this way. We want to know if several species of iris (*Iris versicolor*, *setosa* and *virginica*) have similarly-shaped flowers. Since we can't measure every flower on every plant from these species, we sample several sites and come up with the following data (using R's built-in iris dataset, a dataset we will often use).
 
 ![XKCD: Data Trap. It's important to make sure your analysis destroys as much information as it produces.](https://imgs.xkcd.com/comics/data_trap_2x.png){fig-alt="Two stick figures in single panel. One sitting at desk states \"Hey, look, we have a bunch of data! I'm gonna analyze it\".  The other responds, \"No, you fool! That will only create more data!\"" fig-align="center"}
 
-
 ```{r}
 iris
 library(binom)
 ```
 
-Overwhelming, isn't it? And this isn't a huge dataset! There are only 150 rows, yet some datasets have tens of thousands!
-(reference,https://dfzljdn9uc3pi.cloudfront.net/2016/1582/1/7roomsFamilies.csv for a large dataset)
-
+Overwhelming, isn't it? And this isn't a huge dataset! There are only 150 rows, yet some datasets have tens of thousands! (reference,https://dfzljdn9uc3pi.cloudfront.net/2016/1582/1/7roomsFamilies.csv for a large dataset)
 
 Let's just look at the first few rows of the data
 
@@ -193,7 +193,9 @@ ggplot(data.frame(parrots),
        x= "Weight (g)",
        y= "Frequency")
 ```
+
 #re
+
 ```{r}
 #| label: fig-blue_jays
 #| fig-cap: "Example of right-skewed data"
@@ -455,9 +457,7 @@ ggplot(iris[iris$Species == "virginica",],
 
 ### Multiple variables
 
-
 Often we collect multiple pieces of information instead of just one. This can occur for multiple reasons. We may want to consider differences in some variable/trait among groups. This means we have either numerical or categorical data from various groups, but note that groups themselves are now a piece of data! We can think of these analyses as impact of group (a category) on traits (numerical or categorical). We will eventually call these a t-test or ANOVA (when the trait we measure is categorical) **or a** $\chi^2$ test (when the trait is categorical). Either way, this is a case where we are collecting a single piece of data from multiple groups. Alternatively, we may collect data on multiple traits from a single group to see how they impact each other. We will eventually analyze this type of data using regression or correlation. Regardless of type, we can also graph this data.
-
 
 #### Numerical variables from multiple groups
 
@@ -503,7 +503,7 @@ ggplot(iris, aes(y=Sepal.Length, x=Species, color=Species)) +
        x= "Species")
 ```
 
-We also need to ensure the different groups are visible when distributions overlap. Sometimes stacked histograms (and similar graphs) make it hard to actually visualize each individual group. One option is to instead *facet* these graphs. Faceting means we produce different graphs for each group, treatment, etc, but they (typically) share axes(this is important for chi^2 tables!!). This makes it easier to compare the groups.
+We also need to ensure the different groups are visible when distributions overlap. Sometimes stacked histograms (and similar graphs) make it hard to actually visualize each individual group. One option is to instead *facet* these graphs. Faceting means we produce different graphs for each group, treatment, etc, but they (typically) share axes(this is important for chi\^2 tables!!). This makes it easier to compare the groups.
 
 ```{r}
 #| label: fig-faceted_histograms_all species
@@ -1108,7 +1108,7 @@ Arrest_data = data.frame(
   UrbanPop = c(58, 48, 80, 50, 91, 78),
   Rape = c(21.2, 44.5, 31.0, 19.5, 40.6, 38.7))
 ```
-Here is a linear model of the data frame to run the *vif* command on. The numbers for each variable demonstrate co linearity to the hypothetical dependent variable, in this case being murder as an example. Numbers around 5 or more are generally considered to demonstrate high co linearity. Another option to do a *Prrinciple Component Analysis* (PCA), but we will go into that, plus linear models in general later in class. 
+Here is a linear model of the data frame to run the *vif* command on. The numbers for each variable demonstrate co linearity to the hypothetical dependent variable, in this case being murder as an example. Numbers around 5 or more are generally considered to demonstrate high co linearity. Another option to do a *Principle Component Analysis* (PCA), but we will go into that, plus linear models in general later in class. 
 
 ```{r}
 library(car)
