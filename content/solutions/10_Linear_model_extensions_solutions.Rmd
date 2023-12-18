@@ -1,22 +1,15 @@
 ---
-title: "11. Linear model extensions answers"
-author: "jsg"
-date: "Last compiled on `r format(Sys.time(), '%d %B, %Y %H:%M')`"
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    keep_md: true
-    self_contained: true
+title: Linear model extensions
+bibliography: ../references.bib
 ---
 
-Before doing this, review the ** Linear Model Extensions** lecture set slides 
-from https://sites.google.com/view/biostats/lessons/linear-model-extensions
-and the  **11_Mixed_models_and_other_extensions.R**
-script in the lecture files folder of the
-[CUNY-BioStats github repository](https://github.com/jsgosnell/CUNY-BioStats). 
-Make sure you are comfortable with null and alternative hypotheses and appropriate plots
-for all examples.
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+source("../globals.R")
+```
 
 Remember you should
 
@@ -48,11 +41,11 @@ needed, can you determine which treatments differ from each other?
 snail <- read.csv("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/snail_modified_for_class.csv")
 head(snail)
 snail$Treatment <- as.factor(snail$Treatment)
-require(plyr)
+library(plyr)
 snail$Treatment_new <- revalue(snail$Treatment, c("1" = "Control", "2" = "Single predator",
                                                   "3" = "Two predators"))
 
-require(lme4)
+library(lme4)
 snail_mm <- lmer(FL ~ Treatment_new + (1|Container), snail)
 summary(snail_mm)
 plot(snail_mm)
@@ -76,10 +69,10 @@ check_mixed_model <- function (model, model_name = NULL) {
 check_mixed_model(snail_mm)
 
 
-require(car)
+library(car)
 Anova(snail_mm, type = "III")
 
-require(multcomp)
+library(multcomp)
 snail_comparison <- glht(snail_mm, linfct = mcp(Treatment_new = "Tukey"))
 summary(snail_comparison)
 
@@ -132,7 +125,7 @@ rings <- read.table("http://www.statsci.org/data/general/challenger.txt",
 rings_poisson <- glm(Damaged ~ Temp, rings, family = "poisson")
 summary(rings_poisson)
 #note dispersion is ok
-require(car)
+library(car)
 Anova(rings_poisson, type = "III")
 #or binomial (preffered as we can add info (number damaged and not!))
 rings_binomial <- glm(cbind(Damaged, 6 - Damaged) ~ Temp, rings, family = "binomial")
@@ -167,7 +160,7 @@ https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/whelk.
 whelk <- read.csv("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/whelk.csv")
 head(whelk)
 summary(whelk)
-require(ggplot2)
+library(ggplot2)
 whelk_plot <- ggplot(whelk, aes_string(x="Shell.Length", y = "Mass")) +
   geom_point(aes_string(colour = "Location")) + 
   theme(axis.title.x = element_text(face="bold", size=28), 
@@ -223,8 +216,8 @@ Team data is available @
 https://raw.github.com/jsgosnell/CUNY-BioStats/blob/master/datasets/team_data_no_spaces.csv 
 
 ```{r}
-require(mgcv)
-require(MuMIn) #for AICc
+library(mgcv)
+library(MuMIn) #for AICc
 team <- read.csv("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/team_data_no_spaces.csv", stringsAsFactors = T)
 elevation_linear <- gam(PlotCarbon.tonnes ~ Elevation, data = team)
 elevation_gam <- gam(PlotCarbon.tonnes ~ s(Elevation), data = team)
