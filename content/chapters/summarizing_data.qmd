@@ -1,12 +1,11 @@
 ---
-title: Summarizing data EDIT 
+title: Summarizing data EDIT, Kyle and Evonne 
 subtitle: Working with a sample
 bibliography: ../references.bib
 ---
 
-#note- Kyle will do multiple variable, Evonne single variable, Evonne will do first 3 numerical sections, Kyle last 3. <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
 
-```{r setup, include=FALSE}
+```{r setup, eval=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 source("../globals.R")
@@ -899,7 +898,7 @@ Note the mode is heavily/totally impacted by data precision and thus can lead to
 
 </details>
 
-A special case where central tendency may not be the best way to describe a distribution is known as *bimodal* data. In this case, the distribution shows two, not one, clear peak. Remember the woodpecker @fig-woodpeckers data?
+A special case where central tendency may not be the best way to describe a distribution is known as *bimodal* data. In this case, the distribution shows two, not one, clear peak. Remember the woodpecker @fig-woodpeckers data?(think about some scenarios where we may see binomial data!)
 
 ```{r}
 #| label: fig-woodpeckers-measures
@@ -1059,7 +1058,7 @@ summary(cardinals_new)
 
 ### Proportions for categorical data
 
-Finally, if we have categorical instead of numerical data, we can find the proportion of data in each category. We mentioned this approach when producing mosaic plots. To find a proportion, you count the number of samples that fall in a given group and divided that by the total number sampled. Alternatively, you can assign a score of *0* for values that are not in the focal group and a score of *1* to samples that are - the average of these scores will give you the proportion.
+Finally, if we have categorical instead of numerical data, we can find the proportion of data in each category. We mentioned this approach when producing mosaic plots. To find a proportion, you count the number of samples that fall in a given group and divided that by the total number sampled. Alternatively, you can assign a score of *0* for values that are not in the focal group and a score of *1* to samples that are - the average of these scores will give you the proportion. (this is binary data!!)
 
 For example, earlier we plotted how flower color differed among species and location.
 
@@ -1099,6 +1098,23 @@ row.names(flower_prop_df) <- NULL
 paged_table(flower_prop_df[,1:4])
 ```
 
+## Brief Exerpt On co-linearity
+
+A useful command to know going forward is the *vif* function to check the correlation of your variables. For example, here is a dataframe based on the "USArrests" dataset
+```{r}
+Arrest_data = data.frame(
+  Murder = c(13.2, 10.0, 8.1, 8.8, 9.0, 7.9),
+  Assault = c(236, 263, 294, 190, 276, 204),
+  UrbanPop = c(58, 48, 80, 50, 91, 78),
+  Rape = c(21.2, 44.5, 31.0, 19.5, 40.6, 38.7))
+```
+Here is a linear model of the data frame to run the *vif* command on. The numbers for each variable demonstrate co linearity to the hypothetical dependent variable, in this case being murder as an example. Numbers around 5 or more are generally considered to demonstrate high co linearity. Another option to do a *Prrinciple Component Analysis* (PCA), but we will go into that, plus linear models in general later in class. 
+
+```{r}
+library(car)
+lm_model = lm(Murder ~ Assault + UrbanPop + Rape, data = Arrest_data)
+vif(lm_model)
+```
 ## Next steps
 
 Now that we can summarize data, we can begin to connect summaries to statistics (and learn/remember some probability along the way!).
