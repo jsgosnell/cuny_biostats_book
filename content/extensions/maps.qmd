@@ -91,6 +91,141 @@ ggplot(data=base_map_fortified,aes(x=Longitude, y=Latitude, group=group)) +
 
 ### Raster approaches
 
+### Raster approaches
+
+So far we have worked with vector data, which uses points, lines, and polygons to represent spatial data. Another common data type used in spatial analyses is raster data. Rasters are simply gridded maps, with values attributed to each cell. These are somewhat analagous to images, where each pixel in an image has certain attribute (color). The advantage of this type of data is that we can store large amounts of information for spatial analyses. We are going to illustrate how these work with some toy data first.
+
+```{r}
+# Load the raster package
+library(raster)
+
+# Set the dimensions of the raster (rows and columns)
+nrows <- 10
+ncols <- 10
+
+# Create a raster with random values
+raster_data <- raster(matrix(round(runif(n = nrows * ncols, min = 0, max = 100), 0), nrow = nrows))
+
+# Plot the raster
+plot(raster_data)
+
+```
+
+As we can see, the resulting image is a grid with 10 rows and 10 columns. Each cell (sometimes called pixel or grain) has some numerical value between 0 and 100. Associated with each value is a color, with a color ramp to the right that shows how color relates to range of values. Right now our cell values are arbirarty, but they could be any information that you would want to map spatially. For example, imagine this raster was a map of a town and the value of each cell was a measure of population density at that location. We would want to know more about the attributes of the raster before doing any analyses. Lets briefly take a look at the attributes
+
+```{r}
+raster_data
+```
+There are several attributes given to us. They are:
+
+- Dimensions: The size (number of cells) of the raster
+
+- Resolution: The size of each cell. Given in units of the axis, often square meters or arc minutes
+
+- Extent: The geographic limits of the raster
+
+- CRS: Coordinate reference system used by raster. This is how the map is projected
+
+- Values: The range of values among raster cells
+
+
+Some of these attributes are neccesary to know for things like data processing, but they are also relevent for general study design. For example, resolution will likely influence your analyses. If the value of each cell was a measure of population density, there will be different patterns across scales. A 5km x 5km cell will capture population density at a finer scale than a 10km x 10km cell. Therefore it is important to consider how the scale of your data impacts the questions you are trying to ask. Luckily, there are ways we can manipulate raster data for our analyses.
+
+Take our previous raster that we made. Say the patterns we were interested in do not occur over finer spatial scales, and we want to resample our data so it is at a coarser resolution. Instead of getting a new map of population densities with larger cell sizes, we can simply resample our previous raster by aggregating multiple smaller cells together.
+
+```{r}
+# Aggregate the raster to a 5x5 raster by taking the mean value of each 2x2 cell block
+aggregated_raster <- aggregate(raster_data, fact = 2, fun = mean)
+
+# Plot the aggregated raster
+plot(aggregated_raster)
+```
+
+We could also do the reverse, where we resample our raster to a finer resolution. Our original raster was at a resolution of 10x10. We can use bilinear interpolation to increase the resolution to 20x20. This method estimates the value of these new pixels based on weighted averages of surrounding cells.
+
+```{r}
+#Make raster with parameters that we want to resample to
+template_raster <- raster(matrix(round(runif(100, min = 0, max = 100), 0), nrow = 20, ncol = 20))
+
+finer_raster <- resample(raster_data, template_raster, method = "bilinear")
+# Plot the raster
+plot(finer_raster)
+```
+
+
+Lets look at all three of our rasters sampled at different resolutions to visualize how these patterns change.
+
+```{r}
+plot(aggregated_raster)
+plot(raster_data)
+plot(finer_raster)
+```
+
+
+
+Now lets illustrate how biologist work with rasters using some real world data. Two common sources of spatial data used by ecologists are species occurences and climate rasters. Species occurences are lat/lon coordinates of where an individual of a species has been observed or collected. This type of data can be found in online databases such as the Global Biodiversity Information Facility (GBIF; https://www.gbif.org/). Climate rasters are maps of variables relating to precipitation and temperature. The 19 bioclimatic variables from Worldclim (https://www.worldclim.org/data/bioclim.html) are commonly used by researchers. We are going to show how rasters of climate can be used to gain information about a species.
+
+
+```{r}
+# Load necessary libraries
+library(rgbif)
+```
+
+We can download this data straight from these sources into R using the rgbif and raster packages. First we will obtain occurence data. We can do any species. Here we will choose the moose (Alces alces)
+
+```{r}
+species_name <- "Alces alces" 
+
+# Search for occurrences of the species using GBIF
+occ_search <- occ_search(scientificName = species_name, return = "data")
+
+# Check the occurrence data
+head(occ_search$data)
+```
+We see that there is a lot of associated data for each occurence on GBIF. While this can be useful, we are only interested in lat/lon coordinates here.
+
+Now we will download our climate rasters. We have to download all 19 bioclim variables, but we will only look at bio1, mean annual temperature. These rasters contain lots of data and can be slow to process, so we will download rasters at the coarsest possible resolution to save RAM. 
+
+```{r}
+# Download a world elevation raster (DEM) from WorldClim
+clim_data <- getData(name = "worldclim", var = "bio", res = 10)
+tmean <- clim_data$bio1 #Seperate raster layer of interest
+
+# Plot the raster
+plot(tmean)
+```
+
+Ok so now we have a raster of annual mean temperature and coordinates of moose occurences. Lets see how occurences are distributed across our raster.
+```{r}
+occurrences <- occ_search$data
+# Filter out rows with NA values in latitude or longitude columns
+occurrences <- occurrences[complete.cases(occurrences[, c("decimalLongitude", "decimalLatitude")]), ]
+coordinates(occurrences) <- c("decimalLongitude", "decimalLatitude")
+
+# Plot occurrence points on the raster
+plot(tmean)
+points(occurrences, col = "red", pch = 20)
+```
+Qualitatively, we can see that moose are distributed in areas with cooler mean annual temperatures. This is because the colors on the map where it occurs are yellow - red, which is at the bottom of the color ramp on the right (Note that temperatures here are reported in degrees celcius * 10). To quantify this relationship, we can sample the raster values at each occurence point
+
+```{r}
+# Extract raster values at occurrence points
+raster_values <- extract(tmean, occurrences)
+
+
+#Calculate mean
+mean(raster_values/10)
+median(raster_values/10)
+
+
+# Create a histogram of means
+hist(raster_values/10, breaks = 20, col = "skyblue", border = "black", xlab = "Annual Mean Temp (°C)", ylab = "Frequency", main = "Frequency of Mean Annual Temperatures for A. alces")
+```
+
+We find that distribution of mean annual temperatures experienced by moose are centered around 3.5 °C, with a mean value of 3.4002. 
+
+Here we have shown how raster data can be used in combination with other spatial data to answer sceintific questions. Rasters are incredibly powerful for researchers because they both hold lots of information and are often widely available to the public. Studying complex spatial patterns and processes is neccesary for climate modeling, resource management, public health, agriculture, and many other scientific disciplines that provide a basis for informed decision making. 
+
 ```{r, eval=F}
 library(ggmap)
 map <- get_stamenmap(c(left = min(sites$Longitude), 
