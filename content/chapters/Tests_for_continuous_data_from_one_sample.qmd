@@ -2,6 +2,9 @@
 title: One sample tests for continuous data
 subtitle: The one where we fully introduce normality
 bibliography: ../references.bib
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
@@ -415,6 +418,26 @@ z.test(iris[iris$Species == "virginica","Sepal.Length"], mu = 7,
 
 Using this approach we get a p-value of .000005 - not 0, but very close!
 
+Here's another example of when to use a z-test:
+
+The average time taken by bartenders at a local bar to make a party of
+20 people drinks is believed to be 30 minutes. The manager at the bar
+has been getting complaints about the wait time from the customers and
+wants to improve. A sample of 25 employees who completed making 20
+drinks after a training program showed an average completion time of 25
+minutes with a standard deviation of 2 minutes.
+
+Is there enough evidence to suggest that the new training program has a
+significant effect on the average completion time?
+
+```{r}
+library(BSDA)
+drink_times <- c(28, 34, 25, 40, 22, 13, 30, 31, 29, 23, 15, 39, 44, 37, 28, 24, 35, 32, 26, 17, 17, 20, 33, 27)
+z_test <- z.test(x = drink_times, mu = 30, sigma.x = 2, alternative = "two.sided")
+print(z_test)
+
+```
+
 ### A little history
 
 Although software now provides us exact (approximate) p-values,
@@ -748,6 +771,25 @@ function.
 wilcox.test(iris[iris$Species == "virginica","Sepal.Length"], mu = 7)
 ```
 
+Here's another example of when to use a Wilcoxon test:
+
+A hair stylist is studying the growth of hair after use of her new
+stimulating oil. The stylist believes that the average growth of her
+clients should be 2 inches after a month. To test this hypothesis, the
+stylist takes a sample of 15 women and measured their hair length. The
+collected data is as follows:
+
+\[2.5,3.2,1.8,1.1,0.5,3.3,1.9,3.0,0.4,2.2,1.7,2.3,1.1,3.8,4.0\]
+
+Is there enough evidence to suggest that the average growth of hair is
+significantly different from 2 inches after using the stimulating oil?
+
+```{r}
+hair_length <- c(2.5,3.2,1.8,1.1,0.5,3.3,1.9,3.0,0.4,2.2,1.7,2.3,1.1,3.8,4.0)
+wilcoxon_test_result <- wilcox.test(hair_length, mu = 2)
+print(wilcoxon_test_result)
+```
+
 ### Sign test (aka the median test)
 
 If the data are not symmetrically distributed, the sign test actually
@@ -758,6 +800,33 @@ is true. The proportion below is compared to .5 using a binomial test.
 
 ```{r}
 SIGN.test(iris[iris$Species == "virginica","Sepal.Length"], md = 7)
+```
+
+Here's another example of how to use the sign test:
+
+The median income of high school teachers in two different cities, the
+Bronx and Brooklyn, is being compared. The board of education believes
+that the median income in the Bronx A is \$50,000. To investigate this
+claim, a random sample of 25 teachers from the Bronx and 25 residents
+from Brooklyn is taken, and their incomes are recorded.
+
+In the Bronx, the median income is \$45,000, and the data is as follows:
+\[42, 48, 50, 38, 40, 43, 49, 52, 47, 41, 44, 46, 45, 49, 55, 43, 46,
+48, 39, 50\]
+
+In Brooklyn, the median income is \$55,000, and the data is as follows:
+\[60,58,56,53,55,62,57,58,54,55,56,59,61,57,53,56,60,58,59,62,55,57,58,59,60\]
+
+Is there enough evidence to suggest that the median income in either
+neighborhood A or B is significantly different from the board of
+education's claim?
+
+```{r}
+library(BSDA)
+bronx_income <- c(42, 48, 50, 38, 40, 43, 49, 52, 47, 41, 44, 46, 45, 49, 55, 43, 46, 48, 39, 50, 34, 65, 70, 45, 50)
+brooklyn_income <- c(60, 58, 56, 53, 55, 62, 57, 58, 54, 55, 56, 59, 61, 57, 53, 56, 60, 58, 59, 62, 55, 57, 58, 59, 60)
+median_test_result <- SIGN.test(x = bronx_income, y = brooklyn_income, md = 50000)
+print(median_test_result)
 ```
 
 ### Bootstrapping
