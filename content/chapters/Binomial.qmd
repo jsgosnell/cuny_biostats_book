@@ -2,6 +2,9 @@
 title: The one where we introduce hypothesis testing via binomial tests
 subtitle: Where we meet the p-value!
 bibliography: ../references.bib
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
@@ -115,7 +118,7 @@ what we are asking.
 In this case, our null hypothesis is comparing our signal to a set
 value. This is common when we measure a single group and want to compare
 it to something. So our null hypothesis could be written as conceptually
-as age does not impact the probabilty a bird collides with glass.
+as age does not impact the probability a bird collides with glass.
 However, its often better (in order to connect it to tests!) to write it
 using numbers. In this case, we could write
 
@@ -280,15 +283,16 @@ Explaining p-values is hard! You can see some statisticians try to
 explain the concept
 [here](https://www.youtube.com/watch?v=bz9nzc-jVEE&t=4s){target="_blank"}.
 
-A smaller p-value therefore means it is less likely to obtain your
-observed signal, or something more extreme, by chance when the null
-hypothesis is true. Traditionally, a p-value of less than .05 is thought
-to be sufficient evidence to reject the null hypothesis. This comparison
-value is sometimes called the $\alpha$ (alpha), or significance, level.
-So if our p-value is \< .05, we often say we have significant evidence
-against H~O~. While we now often get specific p-values from software,
-historically people used tables to find ranges (less than .05, for
-example).
+the p-value measures the probability of obtaining the observed results,
+assuming the null hypothesis is true. The smaller the p-value the less
+likely it is to get your observed signal or something more extreme, by
+chance when the null hypothesis is true. It's become a standard that a
+p-value of less than .05 is low enough to reject the null hypothesis.
+This comparison value is sometimes called the $\alpha$ (alpha), or
+significance, level. So if our p-value is \< .05, we often say we have
+significant evidence against H~O~. While we now often get specific
+p-values from software, historically people used tables to find ranges
+(less than .05, for example).
 
 ## Understand what this implies!
 
@@ -438,11 +442,12 @@ close to what we saw with the simulation.
 
 In the case of our binomial data, very close actually means exact. The
 binomial data is an example of data where we can fully describe the
-probability outcomes a sample may take. The *binomial distribution*
-allows calculations of how often you would expect *s* successes for a
-set number of trials (*n-s*) if a population had a proportion of *p* for
-the focal trait. This means we use the *binomial distribution* to
-calculate our probabilities.
+probability outcomes a sample may take. This is true in the case of the
+outcomes being one or another (i.e. alive or dead, success or failure)
+The *binomial distribution* allows calculations of how often you would
+expect *s* successes for a set number of trials (*n-s*) if a population
+had a proportion of *p* for the focal trait. This means we use the
+*binomial distribution* to calculate our probabilities.
 
 Let's not derive this fully, but just think about it. We have a
 proportion of success *p*, so (1 - *p*) is equal to the probability of
@@ -627,7 +632,11 @@ original location or one of 6 on the same side on which they were
 captured. They were only interested if roads reduced bird movement, so
 they were justified in using a *sided* test. These tests move all the
 rejection region to one side. You can run these by adding an
-*alternative* argument to binom.test
+*alternative* argument to binom.test . The alternative arguments that
+can be used in a binom.test are "less" "greater" or "two.sided". In this
+example "less" is used because we're looking for a reduction in
+movement. if we were to use "greater" it would be checking if roads
+increased bird movement.
 
 ```{r}
 binom.test(116,641, p=.33, alternative = "less")
@@ -743,7 +752,10 @@ binom.confint(9,18)
 
 For now, we will use method labelled the Agresti-Coull method, which
 adjusts for slight bias in other estimates and is useful across sample
-sizes.
+sizes. This method helps make a better guess of true probability when
+faced with limited data and considers that the actual sample might not
+be a great representative of the whole picture. It generates estimates
+that take into account uncertainty.
 
 ```{r}
 using_distribution <- dbinom(0:18,18,.75)
