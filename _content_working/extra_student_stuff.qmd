@@ -1,0 +1,212 @@
+---
+title: stuff from student updates
+---
+
+## Belkis for compare proportions among group
+
+-   In the previous chapter we've covered hypothesis testing for both
+    discrete and continuous data, we'll extend these ideas to compare
+    differences among groups. This means that instead of just looking to
+    data from one group, you will be comparing data from multiple
+    groups.
+
+For example, you are an ornithologist interested in comparing the
+diversity of bird species in three different habitats: Forest,
+Grassland, and Wetland. **What kind of tests would you use? This is what
+we will learn in this chapter.**
+
+Furthermore, in our exploration of these differences, we will discover
+that the same statistical tests can be leveraged to examine whether
+proportions within these groups adhere to a predefined ratio. This is
+particularly relevant when, for instance, you want to determine if the
+distribution of bird species in each habitat aligns with a specified
+proportion. As we delve into this aspect, we will gain insights into how
+these tests can be applied to assess if proportions follow a given
+ratio, enriching our analytical toolkit."
+
+The statistical tests we will explore in this chapter are:
+
+-   Contingency Analysis.
+
+-   Fisher Test.
+
+-   G-Test .
+
+-   Post-hoc comparisons.
+
+-   Goodness of fit tests.
+
+
+*What is a contingency table?*
+
+Before we dive into the R codes used in this test let's first simplify
+this statistical test a bit more:
+
+First what is Contingency Table? Contingency tables are used in
+descriptive statistics to get an overview of two, mostly categorical
+variables. In the crosstab you can read how often the combination of the
+values of two characteristics occurs.
+
+For example:
+
+|           | Bird Type 1 | Bird Type 2 | Bird Type 3 | **Total** |
+|-----------|-------------|-------------|-------------|-----------|
+| Female    | 5           | 10          | 7           | **22**    |
+| Male      | 4           | 21          | 10          | **35**    |
+| **Total** | **9**       | **31**      | **17**      | **57**    |
+
+Usually before we try to run the Chi test we first need to generate our
+contingency table for a better visualization.
+
+*What is the chi-square test ?*
+
+The chi-square test is used as a hypothesis test for categorical
+variables with a nominal or ordinal measurement scale. It aims to
+determine if the frequencies observed in the sample differ significantly
+from the expected frequencies. This involves comparing the observed
+frequencies with the anticipated frequencies and examining the
+deviations between them.
+
+*Running chi-square test :*
+
+Note this takes count-based data and uses a continuous distribution to
+describe it, so it's an approximate test.
+
+### Small summary :
+
+| **Statistical Test**     | **Main Use**                                                      |
+|--------------------------|-------------------------------------------------------------------|
+| **Chi-square test**      | Compare observed and expected frequencies in categorical data.    |
+| **Fisher's exact test**  | Appropriate for small sample sizes in 2x2 contingency tables.     |
+| **G-test**               | Assess likelihood of observed data given a specific distribution. |
+| **Goodness-of-fit test** | Test if a single sample follows a predefined distribution.        |
+
+
+## Aimar and Melanie - put in factorial anova
+
+## An extra example: what happens if we have more than one explanatory variable?
+
+```{r}
+cropdata <- read.csv("content/chapters/cropdata.csv", header = TRUE, colClasses = c("factor", "factor", "factor", "numeric"))
+```
+
+This data contains information on crop yields explained by the type of
+fertilizer used on the fields and/or planting density. These are two
+factors that could potentially affect the crop yield, so finding the
+impact on each could bring some useful information.
+
+We can first check how the data looks:
+
+```{r}
+summary(cropdata)
+```
+
+We could first a model first to visualize how fertilizer type affects
+the yield, under the null hypothesis that:
+
+$$
+\begin{split}
+H_O: \mu_{\textrm{yield of fertilizer 1}} = \mu_{\textrm{yield of fertilizer 2}}....\textrm{for all fertilizers}\\
+H_A: \mu_{\textrm{yield of fertilizer 1}} \neq \mu_{\textrm{yield of fertilizer 2}}....\textrm{for all fertilizers}\\
+\end{split}
+$$
+
+```{r}
+model <- lm(yield ~ fertilizer, data = cropdata)
+Anova(model, type = 'III')
+
+```
+
+We see that fertilizer type actually has an impact on the mean crop
+yield. However, it could be that adding the extra factor added even more
+information, this is considered in what is called a **two-way anova**:
+
+```{r}
+model <- lm(yield ~ fertilizer + density, data = cropdata)
+Anova(model, type = 'III')
+```
+
+Also density seems to have a significant impact on the total crop yield!
+Indeed, this second model seems to have improved the model: the residual
+variance has decreased from 36 to 31.
+
+This definitely adds more information if someone wanted to know how
+fertilizer and planting density affected their crop yields. But what if
+those two factors interact with each other, in a way that, i.e.,
+fertilizer effect is limited (or enhaced) by the density of the plants?
+
+We can check for that by considering their interaction:
+
+```{r}
+model <- lm(yield ~ fertilizer*density, data = cropdata)
+
+Anova(model, type = 'III')
+```
+
+The interaction (shown by ":") does not seem to be significant, so its
+mostly safe to assume fertilizer effect on crop yield is not conditioned
+by plant density.
+
+This already seems like a useful conclusion! But we still have to
+remember to check for the linear model assumptions, or our conclusions
+might be totally wrong!
+
+```{r}
+par(mfrow=c(2,2))
+plot(model)
+par(mfrow=c(1,1))
+```
+
+From the results we see that it is more or less normal (the results are
+not going to be perfect in reality, so these results are pretty good.)
+
+The Q-Q Residuals plot have a slope very similar to 1. And the other
+plots depict apretty horizontal line. Now that we checked for
+homoscedasticity we'll check for a post-hoc test. We know that according
+to fertilizer and plant density, the mean yield is going to be
+different. But we don't know more than that. We don't know which
+fertilizer is driving the significance and how much plant density is
+driving the significance.
+
+So if we use Tukey's post-hoc to test for individual comparisons while
+accounting for the family-wise-error-rate...
+
+```{r}
+model <- lm(yield ~ fertilizer, data = cropdata)
+compare_cont_tukey <- glht(model, linfct = mcp(fertilizer = "Tukey"))
+summary(compare_cont_tukey)
+
+```
+
+From the results we see that there is a significant difference between
+fertilizers group 3-2 and 3-1. But no significant difference between
+groups 2 and 1. Fertilizer group 3 has a 60% more yield that fertilizer
+group 1 and fertilizer group 3 has a 42% more yield that group 2.
+
+```{r}
+model <- lm(yield ~ density, data = cropdata)
+compare_cont_tukey <- glht(model, linfct = mcp(density = "Tukey"))
+summary(compare_cont_tukey)
+```
+
+Regarding plant density, there is a significant difference between 2 -1.
+From the diff variable, we see that group 2 has a 46% more yield than
+group 1.
+
+We can note that doing this post-hoc test is similar to doing a regular
+t-test, as we are only comparing two levels in density:
+
+```{r}
+t.test(yield~density, cropdata)
+```
+
+Lasly, we could also plot the data and see if that brought more useful
+clarity:
+
+```{r}
+# one box per variety
+ggplot(cropdata, aes(x=fertilizer, y=yield, fill=density)) + 
+    geom_boxplot() +
+    facet_wrap(~fertilizer, scale="free_x")
+
+```
