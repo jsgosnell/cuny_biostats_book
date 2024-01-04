@@ -533,6 +533,7 @@ div.csl-indent {
   <li><a href="#linear-relationship-is-inappropriate" id="toc-linear-relationship-is-inappropriate" class="nav-link" data-scroll-target="#linear-relationship-is-inappropriate">Linear relationship is inappropriate</a>
   <ul class="collapse">
   <li><a href="#transform-the-data-least-advisable-sometimes" id="toc-transform-the-data-least-advisable-sometimes" class="nav-link" data-scroll-target="#transform-the-data-least-advisable-sometimes">Transform the data (least advisable, sometimes)</a></li>
+  <li><a href="#generalized-linear-model-approach-different-data-different-approach" id="toc-generalized-linear-model-approach-different-data-different-approach" class="nav-link" data-scroll-target="#generalized-linear-model-approach-different-data-different-approach">Generalized linear model approach: Different data, different approach</a></li>
   </ul></li>
   <li><a href="#data-are-not-independent" id="toc-data-are-not-independent" class="nav-link" data-scroll-target="#data-are-not-independent">Data are not independent</a>
   <ul class="collapse">
@@ -568,7 +569,12 @@ div.csl-indent {
 </header>
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
-<p>The past several chapters/lessons have focused on linear models. Here we explore options for analysis when linear model assumptions are not met.</p>
+<p>The past several chapters/lessons have focused on linear models. Here we explore options for analysis when linear model assumptions are not met. In doing so, we review several different approaches, many of which could be (and are) the focal topic of courses and books. The goal here is to</p>
+<ul>
+<li><p>help you figure out when you may need to employ these methods by having you understand what they do/fix</p></li>
+<li><p>give you a start on doing these analyses in R</p></li>
+</ul>
+<p>citations to relevant articles papers and books are noted throughout for further exploration.</p>
 <section id="sticking-with-the-linear-model" class="level2">
 <h2 class="anchored" data-anchor-id="sticking-with-the-linear-model">Sticking with the linear model</h2>
 <p>Linear models are useful for a number of reasons. They are a great way to unify most/many tests from classical statistics. In fact, most of the ranked tests we’ve developed can actually be run as linear models when n &gt;15. For example, we can go back to our Wilcox-Mann Whitney U tests (for 2 populations) and Kruskal-Wallis (for 3+) from the <a href="../../content/chapters/Compare_means_among_populations.html" target="_blank">comparing means among groups chapter</a> and note the outcome from a <em>wilcox.test</em></p>
@@ -603,10 +609,6 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>In fact, we could run simulations and show that p values from these 2 approaches are highly correlated (now you know what that means) with a <span class="math inline">\(\beta\)</span> of almost 1 (from <span class="citation" data-cites="lindelov">Lindelov (<a href="#ref-lindelov" role="doc-biblioref">n.d.</a>)</span>).</p>
 <div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: The `&lt;scale&gt;` argument of `guides()` cannot be `FALSE`. Use "none" instead as
-of ggplot2 3.3.4.</code></pre>
-</div>
 <div class="cell-output-display">
 <p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -641,7 +643,7 @@ of ggplot2 3.3.4.</code></pre>
 <summary>
 What’s linear anyway?
 </summary>
-<p>To be clear, the linear model only focuses on the linear and additive relationship between the predictors and the outcome variable (this will become more important/obvious later in this section!). The model doesn’t <em>know</em> what the variables are. For that reason, we can add predictor variables to a model that are squares or cubes of predictors, or we can transform the outcome variable. We just the <span class="math inline">\(Y = X\beta\)</span> relationship to be additive and linear.</p>
+<p>To be clear, the linear model only focuses on the linear and additive relationship between the predictors and the outcome variable (this will become more important/obvious later in this section!). The model doesn’t <em>know</em> what the variables are. For that reason, we can add predictor variables to a model that are squares or cubes of predictors, or we can transform the outcome variable. We just need the <span class="math inline">\(Y = X\beta\)</span> relationship to be additive and linear.</p>
 </details>
 <section id="transform-the-data-least-advisable-sometimes" class="level3">
 <h3 class="anchored" data-anchor-id="transform-the-data-least-advisable-sometimes">Transform the data (least advisable, sometimes)</h3>
@@ -651,26 +653,26 @@ What’s linear anyway?
 <li>The Box-Cox approach requires a model - it still focused on transforming data so that <em>residuals</em> met assumptions. Data should not be transformed before model assumptions are analyzed to ensure it is necessary. For example, highly skewed data may arise due to unequal sample sizes (which may pose their own problems, but not outright). Non-normal data, however, may have normalized residuals. However, normal data (or transformed data) does typically lead to normal residuals, so if residuals are not normal transformations may help.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>example_skewed <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Population=</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"a"</span>,<span class="dv">40</span>),</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                                           <span class="fu">rep</span>(<span class="st">"b"</span>, <span class="dv">30</span>),</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                                           <span class="fu">rep</span>(letters[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">each=</span><span class="dv">15</span>)), </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">Growth =</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">40</span>,<span class="dv">1</span>),</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="dv">4</span>),</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">rnorm</span>(<span class="dv">15</span>, <span class="dv">7</span>),</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">rnorm</span>(<span class="dv">15</span>,<span class="dv">10</span>)))</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(example_skewed,<span class="fu">aes</span>(<span class="at">x=</span>Growth))<span class="sc">+</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()<span class="sc">+</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Some value"</span>,</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">title=</span><span class="st">"Example of skewed data appearing due to unequal sample size"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>example_skewed <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Population=</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"a"</span>,<span class="dv">40</span>),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                                           <span class="fu">rep</span>(<span class="st">"b"</span>, <span class="dv">30</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                                           <span class="fu">rep</span>(letters[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">each=</span><span class="dv">15</span>)), </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">Growth =</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">40</span>,<span class="dv">1</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="dv">4</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">rnorm</span>(<span class="dv">15</span>, <span class="dv">7</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">rnorm</span>(<span class="dv">15</span>,<span class="dv">10</span>)))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(example_skewed,<span class="fu">aes</span>(<span class="at">x=</span>Growth))<span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()<span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Some value"</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">title=</span><span class="st">"Example of skewed data appearing due to unequal sample size"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
 <p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">lm</span>(Growth<span class="sc">~</span>Population, example_skewed))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">lm</span>(Growth<span class="sc">~</span>Population, example_skewed))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
 </div>
@@ -683,7 +685,7 @@ What’s linear anyway?
 <div class="cell-output-display">
 <p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-5.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Growth<span class="sc">~</span>Population, example_skewed), <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Growth<span class="sc">~</span>Population, example_skewed), <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -701,16 +703,16 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <li><p>Transformations can make model interpretation and prediction difficult.</p></li>
 </ul>
 <p>If the decision is made to transform the data, several approaches exist. Some are driven by the distribution of the data, and all depend on it. For example, log and related root transformations are useful for right-skewed data, but some can only be carried out for non-negative (e.g., square root) or strictly positive (e.g., log) values. To address this for log transformations, a small value is often added to 0 measurements.</p>
-<p>Let’s data (not residuals) to show what different types of data look like and consider possible fixes (always fit a model first for real analysis!). For example, we can return to our right-skewed blue jay data <a href="../../content/chapters/summarizing_data.html">from the summarizing data chapter</a>(target=“_blank)(idea from <span class="citation" data-cites="hunt">(<a href="#ref-hunt" role="doc-biblioref">Hunt, n.d.</a>)</span>) .</p>
+<p>Let’s use data (not residuals) to show what different types of data look like and consider possible fixes (always fit a model first for real analysis!). For example, we can return to our right-skewed blue jay data <a href="../../content/chapters/summarizing_data.html">from the summarizing data chapter</a>(target=“_blank)(idea from <span class="citation" data-cites="hunt">(<a href="#ref-hunt" role="doc-biblioref">Hunt, n.d.</a>)</span>) .</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>blue_jays <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">2</span>,<span class="dv">8</span>)<span class="sc">*</span><span class="dv">100</span><span class="sc">+</span><span class="fu">runif</span>(<span class="dv">10000</span>,<span class="dv">60</span>,<span class="dv">80</span>),<span class="dv">3</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(blue_jays), </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>blue_jays)) <span class="sc">+</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Westchester blue jays"</span>,</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>blue_jays <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">2</span>,<span class="dv">8</span>)<span class="sc">*</span><span class="dv">100</span><span class="sc">+</span><span class="fu">runif</span>(<span class="dv">10000</span>,<span class="dv">60</span>,<span class="dv">80</span>),<span class="dv">3</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(blue_jays), </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>blue_jays)) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Westchester blue jays"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -720,8 +722,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>Note the right-skewed data shows a convex curve on the Q-Q plot.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(blue_jays)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(blue_jays)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(blue_jays)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(blue_jays)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -729,14 +731,14 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>To help you understand Q-Q plots, remember they are comparing the relative spread of data (quantiles) from a target and theoretical distribution. For right-skewed data, points are shifted right (both smallest and largest observations are larger than you would expect from a normal distribution).</p>
 <p>Conversely, we could also return to our left-skewed cardinal data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>cardinals <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">10</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="dv">50</span><span class="sc">+</span><span class="fu">runif</span>(<span class="dv">10000</span>,<span class="dv">5</span>,<span class="dv">10</span>),<span class="dv">3</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(cardinals), </span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>cardinals)) <span class="sc">+</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Westchester cardinals"</span>,</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>cardinals <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">10</span>,<span class="dv">2</span>)<span class="sc">*</span><span class="dv">50</span><span class="sc">+</span><span class="fu">runif</span>(<span class="dv">10000</span>,<span class="dv">5</span>,<span class="dv">10</span>),<span class="dv">3</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(cardinals), </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>cardinals)) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Westchester cardinals"</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -746,8 +748,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>and note a concave shape is seen in the Q-Q plot,as all points are shifted left.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(cardinals)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(cardinals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(cardinals)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(cardinals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -755,14 +757,14 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>For this type of data, power transformations (raising the variable to the 2, 3, or higher power) may be useful.</p>
 <p>Meanwhile, our uniformly-distributed distributed robin data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>rochester <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">runif</span>(<span class="dv">1000</span>,<span class="dv">75</span>,<span class="dv">85</span>)),<span class="dv">3</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(rochester), </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>rochester)) <span class="sc">+</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"pink"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Rochester robins"</span>,</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>rochester <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">runif</span>(<span class="dv">1000</span>,<span class="dv">75</span>,<span class="dv">85</span>)),<span class="dv">3</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(rochester), </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>rochester)) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"pink"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of Rochester robins"</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -772,23 +774,23 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>shows as a s-shape on the Q-Q plot</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(rochester)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(rochester)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(rochester)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(rochester)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>because it is <em>under-dispersed</em> (has no tails). Alternatively, data may be <em>over-dispersed</em>, like this (fake) finch data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VGAM)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>finch <span class="ot">&lt;-</span> <span class="fu">rlaplace</span>(<span class="dv">1000</span>,<span class="at">location=</span><span class="dv">50</span>, <span class="at">scale=</span><span class="dv">4</span>)</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(finch), </span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>finch)) <span class="sc">+</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"cyan"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of finches"</span>,</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VGAM)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>finch <span class="ot">&lt;-</span> <span class="fu">rlaplace</span>(<span class="dv">1000</span>,<span class="at">location=</span><span class="dv">50</span>, <span class="at">scale=</span><span class="dv">4</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(finch), </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>finch)) <span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"cyan"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of finches"</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -797,22 +799,22 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(finch)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(finch)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(finch)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(finch)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Over- and under-dispersed data may mean there’s a missing factor in your analysis. For example, our bi-modal woodpecker data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>woodpeckers <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">60</span>,<span class="dv">4</span>),<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">80</span>,<span class="dv">4</span>)),<span class="dv">3</span>)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(woodpeckers), </span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>woodpeckers)) <span class="sc">+</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"orange"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of  Westchester woodpeckers"</span>,</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>woodpeckers <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">60</span>,<span class="dv">4</span>),<span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">80</span>,<span class="dv">4</span>)),<span class="dv">3</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(woodpeckers), </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>woodpeckers)) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"orange"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Weight of  Westchester woodpeckers"</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -822,30 +824,37 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>is under-dispersed due the shape of the distribution.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(woodpeckers)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(woodpeckers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(woodpeckers)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(woodpeckers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Under-dispersion could also happen if data are bounded (e.g., by practicality or due to a measurement issue). Over-dispersion can similarly occur if the model does not account for variability (e.g., missing factors, non-linear relationship) and/or outliers, which might be related to the underlying form of the data <span class="citation" data-cites="payne2017">(<a href="#ref-payne2017" role="doc-biblioref">Payne et al. 2017</a>)</span> (more to come on this). In this way, over- and under-dispersion relate to both the linear relationship.</p>
-<section id="generalized-linear-model-approach-different-data-different-approach" class="level4">
-<h4 class="anchored" data-anchor-id="generalized-linear-model-approach-different-data-different-approach">Generalized linear model approach: Different data, different approach</h4>
+</section>
+<section id="generalized-linear-model-approach-different-data-different-approach" class="level3">
+<h3 class="anchored" data-anchor-id="generalized-linear-model-approach-different-data-different-approach">Generalized linear model approach: Different data, different approach</h3>
 <p>The linear relationship may be inappropriate because our data doesn’t fit it! For example, if we are modeling proportions, estimates less than 0 or below 1 do not make sense, but a linear model doesn’t account for that. The same issues arise for proportions and binary outcomes. While we may be able to transform the response variable to make it linear, another option is to translate the <em>link</em> function.</p>
 <p>Although we haven’t fully explained it yet, a linear model contains three components. There is always a random component that focuses on the distribution of the data. There is also a systematic component, where a number of covariates and data points produce an estimate. Finally, there is the link function, which connects that estimate to the data distribution (this maintains the linearity of the model).</p>
 <p>Notice this means the link connects to the distribution of the data, not the data itself. So far we have focused on the <em>mean</em> of the data, and the estimate is the mean, so the link has been implied. We can <em>generalize</em> this setup to include other distributions in the exponential family (and now others <span class="citation" data-cites="applied2022">(<a href="#ref-applied2022" role="doc-biblioref"><span>“Applied Regression Analysis and Generalized Linear Models”</span> 2022</a>, ch.&nbsp;15)</span>).</p>
 <p>While we won’t develop all the math, exponential family distributions all have a canonical parameter (the mean for Gaussian, or normal, data) and a dispersion parameter (the variance for normal data). Different distributions have different relationships between these two parameters. For normal data, there is <em>no</em> relationship, so the variance is constant. This is not true for other families.</p>
-<p>We can specify other families using <em>generalized linear models</em>(which are different than general linear models, which is another term used to describe our “regular” linear models). These models are also known as glm or glim (we’ll use the glm jargon here). GLM make different assumptions (though everyone does not agree on what they are!). While we still need independence of the residuals (or some extension, see below), they no longer need to be normally distributed <span class="citation" data-cites="zuur2007 zuur2009">(<a href="#ref-zuur2007" role="doc-biblioref">A. Zuur, Ieno, and Smith 2007, 86–87</a>; <a href="#ref-zuur2009" role="doc-biblioref">A. Zuur et al. 2009, sec. 9.8.3</a>)</span> (though normality may hold at large sample sizes for Pearson <span class="citation" data-cites="agresti2007">(<a href="#ref-agresti2007" role="doc-biblioref">Agresti 2007, 87</a>)</span> or deviance <span class="citation" data-cites="montgomery2012">(<a href="#ref-montgomery2012" role="doc-biblioref">Montgomery, Peck, and Vining 2012, sec. 13.4.4</a>)</span> <!-- https://stats.stackexchange.com/questions/92394/checking-residuals-for-normality-in-generalised-linear-models; https://online.stat.psu.edu/stat504/lesson/6/6.1 --> residuals, and some authors argue normality is required for testing <span class="citation" data-cites="feng2020">(<a href="#ref-feng2020" role="doc-biblioref">Feng, Li, and Sadeghpour 2020</a>)</span> ) or constant (homogeneity). As noted above, non-Gaussian families don’t assume a constant variance, so homogeneity assumptions would not be appropriate. However, we need to ensure the correct family (and thus mean-variance link) is chosen. In general, plotting the residuals against</p>
+<p>We can specify other families using <em>generalized linear models</em> (which are different than general linear models, which is another term used to describe our “regular” linear models). These models are also known as glm or glim (we’ll use the glm jargon here). GLM make different assumptions (though everyone does not agree on what they are!). While we still need independence of the residuals (or some extension, see below), they no longer need to be normally distributed <span class="citation" data-cites="zuur2007 zuur2009">(<a href="#ref-zuur2007" role="doc-biblioref">A. Zuur, Ieno, and Smith 2007, 86–87</a>; <a href="#ref-zuur2009" role="doc-biblioref">A. Zuur et al. 2009, sec. 9.8.3</a>)</span> (though normality may hold at large sample sizes for Pearson <span class="citation" data-cites="agresti2007">(<a href="#ref-agresti2007" role="doc-biblioref">Agresti 2007, 87</a>)</span> or deviance <span class="citation" data-cites="montgomery2012">(<a href="#ref-montgomery2012" role="doc-biblioref">Montgomery, Peck, and Vining 2012, sec. 13.4.4</a>)</span> <!-- https://stats.stackexchange.com/questions/92394/checking-residuals-for-normality-in-generalised-linear-models; https://online.stat.psu.edu/stat504/lesson/6/6.1 --> residuals, and some authors argue normality is required for testing <span class="citation" data-cites="feng2020">(<a href="#ref-feng2020" role="doc-biblioref">Feng, Li, and Sadeghpour 2020</a>)</span> ) or constant (homogeneity). As noted above, non-Gaussian families don’t assume a constant variance, so homogeneity assumptions would not be appropriate <span class="citation" data-cites="fox2016">(<a href="#ref-fox2016" role="doc-biblioref">Fox 2016</a>)</span>. However, we need to ensure the correct family (and thus mean-variance link) is chosen. In general, plotting the residuals against <span class="citation" data-cites="zuur2009">(<a href="#ref-zuur2009" role="doc-biblioref">A. Zuur et al. 2009</a>)</span></p>
 <ul>
-<li><p>the predicted values</p></li>
-<li><p>each explanatory variable in model</p></li>
-</ul>
-<!-- -->
+<li><p>the predicted values</p>
 <ul>
-<li><p>each explanatory not retained/used in model</p></li>
+<li>to check for model fit</li>
+</ul></li>
+<li><p>each explanatory variable in model</p>
+<ul>
+<li>to check for linearity</li>
+</ul></li>
+<li><p>each explanatory not retained/used in model</p>
+<ul>
+<li>to check for missing patterns</li>
+</ul></li>
 <li><p>against time and space</p></li>
 </ul>
-<p>will be useful. Any patterns may suggest missing predictors or lack of independence/correlation among measurements. Patterns in the residuals may also indicate the incorrect family has been chosen <span class="citation" data-cites="zuur2009">(<a href="#ref-zuur2009" role="doc-biblioref">A. Zuur et al. 2009, sec. 9.8.4</a>)</span></p>
+<p>will be useful. Any patterns may suggest missing predictors or lack of independence/correlation among measurements. Patterns in the residuals may also indicate the incorrect family has been chosen <span class="citation" data-cites="zuur2009">(<a href="#ref-zuur2009" role="doc-biblioref">A. Zuur et al. 2009, sec. 9.8.4</a>)</span>; for families with fixed dispersion parameters, inspection of the estimated dispersion parameter can also be a related diagnostic.</p>
 <details>
 <summary>
 What are residuals for a GLM?
@@ -855,23 +864,91 @@ What are residuals for a GLM?
 <p><span class="math display">\[
 1-\frac{D}{D_O}
 \]</span></p>
+<p>This is known as McFadden’s pseudo-R<sup>2</sup> value.</p>
 </details>
-<p>There are numerous types of GLMs. Here we outline some of the more common ones. Regardless of which ones you use, moving beyond the normal distribution means the residuals do not need to be normally or identically distributed</p>
-<section id="logistic-regression" class="level5">
-<h5 class="anchored" data-anchor-id="logistic-regression">Logistic regression</h5>
-<p>Logistic regression focused on yes/no outcomes; data can be a single answer (Bernoulli) or a collection (binomial).</p>
+<p>Once developed, GLMs can use most of the tools we developed for basic linear models. However, a few key differences exist. Estimation of parameters and significance for these models rely on maximum-likelihood methods (remember, the ratio of likelihood values follow a <span class="math inline">\(\chi^2\)</span> distribution and can thus provide a p-value to compare possible models as noted in introducing G tests in (Compare_proportions_among_populations.qmd).This may be represented as a Z test for single parameters (since a <span class="math inline">\(\chi^2\)</span> distribution is a Z distribution squared - sometimes labelled a Wald test/statistic). F test reappear for distributions where we estimate the dispersion parameter (like the normal), but otherwise we can use the dispersion parameter to check that the right approach was taken.</p>
+<p>It should be noted that solving for coefficents also requires iterative approaches due to non-linearity;common methods (not described here) include the Newton-Raphson or Fisher scoring methods. The key point here for practice is any noted issues with optimization are due to this process. Finally, it should be noted that coefficients and predictions are related to the estimate, which is <strong>no longer</strong> the actual mean. This means impacts and outcomes will need to be transformed (based on the link) to the actual scale.</p>
+<p>There are numerous types of GLMs. Here we outline some of the more common ones. Each of these deserves a much fuller treatment - remember, the intent here is to get you to a place to where you can begin working with them. <span class="citation" data-cites="harrison2018">Harrison et al. (<a href="#ref-harrison2018" role="doc-biblioref">2018</a>)</span> provides an excellent review of these models, and fuller treatments are provided by <span class="citation" data-cites="zuur2009">A. Zuur et al. (<a href="#ref-zuur2009" role="doc-biblioref">2009</a>)</span> (chapters 8-11) and <span class="citation" data-cites="fox2016">Fox (<a href="#ref-fox2016" role="doc-biblioref">2016</a>)</span> (chapters 14 - 15). For each I provide the most relevant math, an example (or two), and some immediate extensions.</p>
+<section id="logistic-regression-bernoulli-and-binomial-outcomes" class="level4">
+<h4 class="anchored" data-anchor-id="logistic-regression-bernoulli-and-binomial-outcomes">Logistic regression: Bernoulli and binomial outcomes</h4>
+<p>Logistic regression focuses on modelling yes/no or success/failure outcomes (Bernoulli or binomial data) using the <em>logit</em> link (thus logistic regression). The easy-to-understand issue here is that we want to focus on probability (<span class="math inline">\(\pi\)</span>), but that can only vary from 0 to 1. Linear models are thus inappropriate, but the logit link can be used where the systematic component of the model predicts</p>
+<p><span class="math display">\[
+logit(\pi) = \ln(\frac{\pi}{1-\pi}), \text{where } \pi \text{ is the probability for a given set of outcomes}
+\]</span></p>
+<p>This logit link is useful as it effectively connects the systematic component and real data (the purpose of the link). This link also allows coefficients to be interpreted as odds and odds ratios (introduced in the <a href="content/Compare_proportions_among_populations.qmd">comparing proportions among groups</a>- we’ll continue to see connections this chapter for logistic regression). Remember, the odds can be written as</p>
+<p><span class="math display">\[
+\frac{\pi}{1-\pi}
+\]</span></p>
+<p>For a given coefficient <span class="math inline">\(\beta\)</span>, the logit link also means we can say a 1 unit increase in that single variable leads to a change in the odds ratio of <span class="math inline">\(e^{\beta}\)</span>. This also means no impact is shown as <span class="math inline">\(\beta = 0\)</span>, with positive and negative numbers implying increases or decreases in odds, which is convenient. Other link options (not discussed here) include the probit and complementary log-log approaches. For a final piece of math, note the dispersion parameter for binomial data is not estimated - it is assumed to be 1.</p>
+<p>For example, <span class="citation" data-cites="bueno2020">Bueno, Machado, and Leite (<a href="#ref-bueno2020" role="doc-biblioref">2020</a>)</span> carried out a series of experiments to determine how various factors impacted colonization of a host algae, <em>Sargassum filipendula</em>, by a small amphipod, <em>Cymadusa filosa</em>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://molecol-unesp-clp.jimdofree.com/2017/03/01/the-first-set-of-microsatellite-markers-for-the-amphipod-cymadusa-filosa/"><img src="../..\images/Cymadusa_filosa.jpg" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">Rob Young, Centre for Biodiversity Genomics - CC - BY - NC - S</figcaption>
+</figure>
+</div>
+<p>For one experiment, they stocked portions of aquariums with pieces of algal. Half the algae pieces had adult amphipods present(4 total; the species builds tubes to live on algae) while the other half had no adult residents. Juveniles were initially placed on patches of atural substrate, artificial substrate, or bare areas(no substrate) in the aquarium. After 24 hours, the number of juveniles that colonized the focal algae were counted. Since the number of introduced juveniles was known, the number that did not colonize was also accounted for (raw data estimated from supplemental data given variation in sample size).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>juvenile <span class="ot">&lt;-</span> <span class="fu">read.csv</span> (<span class="st">"data/Supplemental_Data_Bueno_2020-S1-Presence of adults_lab.csv"</span>, </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>since the <em>adults</em> column indicates the presence or absence of adults, let’s update it for clarity</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plyr)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>juvenile<span class="sc">$</span>adults_updated <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">revalue</span>(<span class="fu">as.character</span>(juvenile<span class="sc">$</span>adults), <span class="fu">c</span>(<span class="st">"0"</span><span class="ot">=</span> <span class="st">"absent"</span>, <span class="st">"4"</span> <span class="ot">=</span><span class="st">"present"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is an example of a factorial-design with the following hypotheses:</p>
+<ul>
+<li>null hypothesis
+<ul>
+<li>H<sub>O</sub>: There is no impact on the habitat type juveniles start in on their likelihood to move</li>
+<li>H<sub>O</sub>: There is no impact on adult presence in the new habitat on the likelihood of juveniles to move</li>
+<li>H<sub>O</sub>: There is no interaction between the impacts of the habitat type juveniles start in and adult presence in the new habitat on the likelihood of juveniles to move</li>
+</ul></li>
+<li>alternative hypothesis
+<ul>
+<li>H<sub>A</sub>: There is an impact on the habitat type juveniles start in on their likelihood to move</li>
+<li>H<sub>A</sub>: There is an impact on adult presence in the new habitat on the likelihood of juveniles to move</li>
+<li>H<sub>A</sub>: There is an interaction between the impacts of the habitat type juveniles start in and adult presence in the new habitat on the likelihood of juveniles to move</li>
+</ul></li>
+</ul>
+<p>The outcome,however, is a proportion (or count). Note we <em>can</em> fit a linear model to the data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>juvenile_fit_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(Colonized <span class="sc">~</span> adults_updated<span class="sc">*</span>source.habitat, </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    juvenile)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(juvenile_fit_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-17-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-17-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The assumpitons don’t even look that bad, but we know</p>
+<p>For this reason we will use a generalized linear model to analyze the data. We can<br>
+fit a glm using the binomial family.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>juvenile_fit_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Colonized, Not_colonized) <span class="sc">~</span> adults<span class="sc">*</span>source.habitat, </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    juvenile, <span class="at">family =</span> <span class="st">"binomial"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Add in McFadden’s R^2.rcompanion:compareglm</p>
 </section>
-<section id="beta-regression" class="level5">
-<h5 class="anchored" data-anchor-id="beta-regression">Beta regression</h5>
-<p>Beta regression focuses on true porpiton data.</p>
+<section id="beta-regression" class="level4">
+<h4 class="anchored" data-anchor-id="beta-regression">Beta regression</h4>
+<p>Beta regression focuses on true proportion data where the outcome is between 0 and 1.</p>
 </section>
-<section id="poisson-regression" class="level5">
-<h5 class="anchored" data-anchor-id="poisson-regression">Poisson regression</h5>
+<section id="poisson-regression" class="level4">
+<h4 class="anchored" data-anchor-id="poisson-regression">Poisson regression</h4>
 <p>Poisson regression focuses on count-based data.</p>
 </section>
-<section id="non-linear-options" class="level5">
-<h5 class="anchored" data-anchor-id="non-linear-options">Non-linear options</h5>
-</section>
+<section id="non-linear-options" class="level4">
+<h4 class="anchored" data-anchor-id="non-linear-options">Non-linear options</h4>
 </section>
 </section>
 </section>
@@ -896,22 +973,22 @@ What are residuals for a GLM?
 <h4 class="anchored" data-anchor-id="ignore-it-dont-do-this">Ignore it (don’t do this!)</h4>
 <p>First, let’s ignore the lack of independence. This is <em>not</em> an option, but it let’s you see the impact.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>growth_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature, experiment)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(growth_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>growth_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature, experiment)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(growth_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-16-3.png" class="img-fluid" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-20-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-16-4.png" class="img-fluid" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-20-4.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(growth_lm, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(growth_lm, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -932,11 +1009,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <h4 class="anchored" data-anchor-id="find-average-for-each-unit">Find average for each unit</h4>
 <p>One way of doing this focuses on the average for each unit</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>averaged_experiment <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(experiment, <span class="at">measurevar =</span> <span class="st">"growth"</span>,</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"predator_cue"</span>, <span class="st">"temperature"</span>, <span class="st">"container"</span>))</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(averaged_experiment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>averaged_experiment <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(experiment, <span class="at">measurevar =</span> <span class="st">"growth"</span>,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"predator_cue"</span>, <span class="st">"temperature"</span>, <span class="st">"container"</span>))</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(averaged_experiment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -948,8 +1025,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>and use that for your analysis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>average_analysis <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature, averaged_experiment)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(average_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>average_analysis <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature, averaged_experiment)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(average_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in Anova.lm(average_analysis, type = "III"): residual df = 0</code></pre>
 </div>
@@ -958,15 +1035,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>#####Blocking</p>
 <p>The blocking approach we’ve already covered works might seem appropriate here.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>blocking_analysis <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature<span class="sc">+</span>container, experiment)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(blocking_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>blocking_analysis <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature<span class="sc">+</span>container, experiment)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(blocking_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in Anova.III.lm(mod, error, singular.ok = singular.ok, ...): there are aliased coefficients in the model</code></pre>
 </div>
 </div>
 <p>but its not? Why? This error means now our model matrix has collinearity issues. WE can actually see where</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">alias</span>(blocking_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">alias</span>(blocking_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Model :
 growth ~ predator_cue * temperature + container
@@ -1035,38 +1112,38 @@ predator_cuenormal:temperatureelevated_scenario2  0         -1        </code></p
 <p>Our final option takes a new approach. It considers the units we measured as simply a sample from a larger population. Using that background, we use the information from the units to consider the distribution of sample effects we might see. The impact of unit is then considered a random-effect. For this to work, you probably want 5+ levels of the unit variable. This is because we are using the means to estimate variance (confusing?). For factors with &lt;5 levels, random effects likely offer no benefit <span class="citation" data-cites="gomes2022">(<a href="#ref-gomes2022" role="doc-biblioref">Gomes 2022</a>)</span>.</p>
 <p>When models contain fixed (what we’ve done before) and random effects, we call them mixed-effects models. Two common packages for carrying out this analysis in R are the <strong>nlme</strong> and <strong>lme4</strong> packages. We will focus on the lme4 package here. Random effects can be entered in the <em>lmer</em> (linear mixed-effects regression) function and specified as (1|Grouping Unit). One nice thing about <strong>lme4</strong> is it will handle crossed and random effects on it’s own <strong>as long as you don’t repeat unit names</strong>. For example, we could note</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>mixed_analysis <span class="ot">&lt;-</span> <span class="fu">lmer</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature<span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>container), experiment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>mixed_analysis <span class="ot">&lt;-</span> <span class="fu">lmer</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature<span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>container), experiment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Once built, we need to consider assumptions. The main assumption we add here is that the random effects are normally distributed. This should be checked at each level of grouping. The <em>check_mixed_model</em> function (provided below) offers an automated approach for one level (also known as one-way random effects).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>check_mixed_model <span class="ot">&lt;-</span> <span class="cf">function</span> (model, <span class="at">model_name =</span> <span class="cn">NULL</span>) {</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#collection of things you might check for mixed model</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(<span class="fu">names</span>(<span class="fu">ranef</span>(model))<span class="sc">&lt;</span><span class="dv">2</span>)){</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">ranef</span>(model, <span class="at">drop =</span> T)[[<span class="dv">1</span>]], <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">las =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">1.4</span>, <span class="at">main=</span> <span class="fu">paste</span>(model_name, </span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>                                                                                  <span class="st">"</span><span class="sc">\n</span><span class="st"> Random effects Q-Q plot"</span>))</span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqline</span>(<span class="fu">ranef</span>(model, <span class="at">drop =</span> T)[[<span class="dv">1</span>]])</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="fu">fitted</span>(model),<span class="fu">residuals</span>(model), <span class="at">main =</span> <span class="fu">paste</span>(model_name, </span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">"</span><span class="sc">\n</span><span class="st"> residuals vs fitted"</span>))</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqnorm</span>(<span class="fu">residuals</span>(model), <span class="at">main =</span><span class="fu">paste</span>(model_name, </span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>                                       <span class="st">"</span><span class="sc">\n</span><span class="st">residuals q-q plot"</span>))</span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqline</span>(<span class="fu">residuals</span>(model))</span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(<span class="fu">residuals</span>(model), <span class="at">main =</span> <span class="fu">paste</span>(model_name, </span>
-<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"</span><span class="sc">\n</span><span class="st">residual histogram"</span>))</span>
-<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>check_mixed_model <span class="ot">&lt;-</span> <span class="cf">function</span> (model, <span class="at">model_name =</span> <span class="cn">NULL</span>) {</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#collection of things you might check for mixed model</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(<span class="fu">names</span>(<span class="fu">ranef</span>(model))<span class="sc">&lt;</span><span class="dv">2</span>)){</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">ranef</span>(model, <span class="at">drop =</span> T)[[<span class="dv">1</span>]], <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">las =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">1.4</span>, <span class="at">main=</span> <span class="fu">paste</span>(model_name, </span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                                                                                  <span class="st">"</span><span class="sc">\n</span><span class="st"> Random effects Q-Q plot"</span>))</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqline</span>(<span class="fu">ranef</span>(model, <span class="at">drop =</span> T)[[<span class="dv">1</span>]])</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="fu">fitted</span>(model),<span class="fu">residuals</span>(model), <span class="at">main =</span> <span class="fu">paste</span>(model_name, </span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">"</span><span class="sc">\n</span><span class="st"> residuals vs fitted"</span>))</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqnorm</span>(<span class="fu">residuals</span>(model), <span class="at">main =</span><span class="fu">paste</span>(model_name, </span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>                                       <span class="st">"</span><span class="sc">\n</span><span class="st">residuals q-q plot"</span>))</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqline</span>(<span class="fu">residuals</span>(model))</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(<span class="fu">residuals</span>(model), <span class="at">main =</span> <span class="fu">paste</span>(model_name, </span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"</span><span class="sc">\n</span><span class="st">residual histogram"</span>))</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_mixed_model</span>(mixed_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_mixed_model</span>(mixed_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Here we have only 9 levels of units, so the spread is not perfect. However, we also know each of these is itself an average,and averages should be normally-distributed under the central limith theorem, so we can plow ahead.</p>
 <p>We can consider the outcome using our <em>summary</em> command - note the output denotes we have 225 observations and 9 grouping levels.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mixed_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mixed_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Linear mixed model fit by REML ['lmerMod']
 Formula: growth ~ predator_cue * temperature + (1 | container)
@@ -1119,7 +1196,7 @@ prdtr_cnr:_2  0.500      </code></pre>
 </div>
 <p>We can also still use <em>Anova</em> to get p-values. However, these are now calculated by default using likelihood-associated <span class="math inline">\(\chi^2\)</span> tests.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(mixed_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(mixed_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table (Type III Wald chisquare tests)
 
@@ -1133,7 +1210,7 @@ predator_cue:temperature 0.1837  4     0.9960</code></pre>
 </div>
 <p>You can also ask for F tests, but note the degrees of freedom associated with these tests is not clear. It’s somewhere between the “average” and “ignore” approach used above.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(mixed_analysis, <span class="at">type =</span> <span class="st">"III"</span>, <span class="at">test=</span><span class="st">"F"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(mixed_analysis, <span class="at">type =</span> <span class="st">"III"</span>, <span class="at">test=</span><span class="st">"F"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table (Type III Wald F tests with Kenward-Roger df)
 
@@ -1151,7 +1228,7 @@ predator_cue:temperature 0.0459  4 3230137 0.9960</code></pre>
 </section>
 <section id="errors-are-not-equal-among-groups" class="level2">
 <h2 class="anchored" data-anchor-id="errors-are-not-equal-among-groups">Errors are not equal among groups</h2>
-<p>Another option is to use weighted-least squares regression - this approach specifically helps when residuals are not evenly distributed among groups. For example, we could take the sdm_model (just as an example of use! it’s not needed here!) This approach assume you built the model and then noted an issue with heteroscedasticity. If so, we can calculate a weight for each residual that is based on its variance - below makes a value that increases with low variance.</p>
+<p>Another option is to use weighted-least squares regression - this approach specifically helps when residuals are not evenly distributed among groups (or when a funnel/cone appears when you plot the model to check assumptions). For example, we could take the sdm_model (just as an example of use! it’s not needed here!) This approach assume you built the model and then noted an issue with heteroscedasticity. If so, we can calculate a weight for each residual that is based on its variance. Doing this requires an iterative process similar to those used for estimation for generalized linear modes. - below makes a value that increases with low variance.</p>
 <p><code>{r} wt_sdm &lt;- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2}</code></p>
 <p>We can then add a new argument to the <em>lm</em> function to use these weights.</p>
 <p><code>{r} sdm_model_wls &lt;-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)}</code></p>
@@ -1189,11 +1266,17 @@ Blanca, María J., Rafael Alarcón, Jaume Arnau, Roser Bono, and Rebecca Bendaya
 <div id="ref-blanca2018" class="csl-entry" role="listitem">
 ———. 2018. <span>“Effect of Variance Ratio on ANOVA Robustness: Might 1.5 Be the Limit?”</span> <em>Behavior Research Methods</em> 50 (3): 937–62. <a href="https://doi.org/10.3758/s13428-017-0918-2">https://doi.org/10.3758/s13428-017-0918-2</a>.
 </div>
+<div id="ref-bueno2020" class="csl-entry" role="listitem">
+Bueno, Marilia, Glauco B. O. Machado, and Fosca P. P. Leite. 2020. <span>“Colonization of Novel Algal Habitats by Juveniles of a Marine Tube-Dwelling Amphipod.”</span> <em>PeerJ</em> 8 (October): e10188. <a href="https://doi.org/10.7717/peerj.10188">https://doi.org/10.7717/peerj.10188</a>.
+</div>
 <div id="ref-feng2020" class="csl-entry" role="listitem">
 Feng, Cindy, Longhai Li, and Alireza Sadeghpour. 2020. <span>“A Comparison of Residual Diagnosis Tools for Diagnosing Regression Models for Count Data.”</span> <em>BMC Medical Research Methodology</em> 20 (1): 175. <a href="https://doi.org/10.1186/s12874-020-01055-2">https://doi.org/10.1186/s12874-020-01055-2</a>.
 </div>
 <div id="ref-fox2015" class="csl-entry" role="listitem">
 Fox, John. 2015. <em>Applied Regression Analysis and Generalized Linear Models</em>. SAGE Publications.
+</div>
+<div id="ref-fox2016" class="csl-entry" role="listitem">
+———. 2016. <em>Applied Regression Analysis and Generalized Linear Models</em>. Third Edition. Los Angeles: SAGE.
 </div>
 <div id="ref-geissinger2022" class="csl-entry" role="listitem">
 Geissinger, Emilie A., Celyn L. L. Khoo, Isabella C. Richmond, Sally J. M. Faulkner, and David C. Schneider. 2022. <span>“A Case for Beta Regression in the Natural Sciences.”</span> <em>Ecosphere</em> 13 (2): e3940. <a href="https://doi.org/10.1002/ecs2.3940">https://doi.org/10.1002/ecs2.3940</a>.
@@ -1203,6 +1286,9 @@ Gelman, Andrew, and Jennifer Hill. 2006. <em>Data Analysis Using Regression and 
 </div>
 <div id="ref-gomes2022" class="csl-entry" role="listitem">
 Gomes, Dylan G. E. 2022. <span>“Should I Use Fixed Effects or Random Effects When I Have Fewer Than Five Levels of a Grouping Factor in a Mixed-Effects Model?”</span> <em>PeerJ</em> 10 (January): e12794. <a href="https://doi.org/10.7717/peerj.12794">https://doi.org/10.7717/peerj.12794</a>.
+</div>
+<div id="ref-harrison2018" class="csl-entry" role="listitem">
+Harrison, Xavier A., Lynda Donaldson, Maria Eugenia Correa-Cano, Julian Evans, David N. Fisher, Cecily E. D. Goodwin, Beth S. Robinson, David J. Hodgson, and Richard Inger. 2018. <span>“A Brief Introduction to Mixed Effects Modelling and Multi-Model Inference in Ecology.”</span> <em>PeerJ</em> 6 (May): e4794. <a href="https://doi.org/10.7717/peerj.4794">https://doi.org/10.7717/peerj.4794</a>.
 </div>
 <div id="ref-heffner1996" class="csl-entry" role="listitem">
 Heffner, Robert A., Mark J. Butler, and Colleen Keelan Reilly. 1996. <span>“Pseudoreplication Revisited.”</span> <em>Ecology</em> 77 (8): 2558–62. <a href="https://doi.org/10.2307/2265754">https://doi.org/10.2307/2265754</a>.

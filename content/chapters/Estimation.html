@@ -928,19 +928,16 @@ Need to see this another way?
 <p>Notice the differences! We will typically use 95% confidence intervals in class, but you should always specify in your captions and note when you read other papers!</p>
 <p>Visualizations of spread are commonly used with bar graphs (despite the earlier issues we noted with bar graphs!). For example, we can return to our iris data and add</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: lattice</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>function_output <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(iris, <span class="at">measurevar=</span><span class="st">"Sepal.Length"</span>, <span class="at">groupvars =</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">c</span>(<span class="st">"Species"</span>))</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(function_output, <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>Species, <span class="at">fill=</span>Species)) <span class="sc">+</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Species)) <span class="sc">+</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Sepal.Length<span class="sc">-</span>ci, <span class="at">ymax=</span>Sepal.Length<span class="sc">+</span>ci)) <span class="sc">+</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. species"</span>))),</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>function_output <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(iris, <span class="at">measurevar=</span><span class="st">"Sepal.Length"</span>, <span class="at">groupvars =</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">c</span>(<span class="st">"Species"</span>))</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(function_output, <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>Species, <span class="at">fill=</span>Species)) <span class="sc">+</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Species)) <span class="sc">+</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Sepal.Length<span class="sc">-</span>ci, <span class="at">ymax=</span>Sepal.Length<span class="sc">+</span>ci)) <span class="sc">+</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. species"</span>))),</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Estimation_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>

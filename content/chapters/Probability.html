@@ -788,7 +788,7 @@ P[roll=blue] + P[roll=6] - P[roll=6 \ and \ blue]= \frac{1}{2} + \frac{1}{6} -\f
 <p><img src="Probability_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Notice here we find the probability of rolling a sum of 5 is 0.1113 which is very close to <span class="math inline">\(\frac{4}{36}\)</span>.</p>
+<p>Notice here we find the probability of rolling a sum of 5 is 0.11012 which is very close to <span class="math inline">\(\frac{4}{36}\)</span>.</p>
 <p>To find the probability using math, we have to note that the dice rolls are independent. For example, even though we only want a <strong>4</strong> on the second dice if we roll a <strong>1</strong> on the first dice, the roll of the first die does not influence the roll of the second. We should also note the desired outcomes are mutually exclusive. So we can find the probability of each happening and then add them. It’s easy to see how probability can get complicated!</p>
 </section>
 </section>
@@ -819,125 +819,123 @@ P[A|B] = \frac{P[B|A]*P[A]}{P[B]}
 <p>Here’s anoher similar (in concept) example. Medical trials are designed to test the effectiveness of drugs or treatments. In these trials, drug efficacy is considered by comparing outcomes in people who receive the drug or treatment compared to those who receive a placebo (such as a sugar pill). Note this only works if participants do not know which group (drug vs placebo) they are in (why?). In a given trial, people who receive the drug recover 60% of the time (or avoid some other adverse outcome). This may seem good, but it’s only relevant when compared to the placebo group. What if people receiving the placebo recovered 80% of the time? Also, if we know the probability of recovering without the drug, we can consider the total probability of recovery. For now, let’s assume that 20% of people who receive the placebo recover.</p>
 <p>We could use a tree diagram to consider possible options:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'DiagrammeR' was built under R version 4.2.3</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>bayes_probability_tree <span class="ot">&lt;-</span> <span class="cf">function</span>(prior, true_positive, true_negative, <span class="at">label1 =</span> <span class="st">"Prior"</span>, </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">label2 =</span> <span class="st">"Complimentary Prior"</span>, <span class="at">label3 =</span> <span class="st">"True Positive"</span>,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">label4 =</span> <span class="st">"False Negative"</span>, <span class="at">label5 =</span> <span class="st">"False Positive"</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">label6 =</span> <span class="st">"True Negative"</span>) {</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">all</span>(<span class="fu">c</span>(prior, true_positive, true_negative) <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">&amp;&amp;</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">c</span>(prior, true_positive, true_negative) <span class="sc">&lt;</span> <span class="dv">1</span>)) {</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"probabilities must be greater than 0 and less than 1."</span>,</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">call. =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  c_prior <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> prior</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  c_tp <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> true_positive</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  c_tn <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> true_negative</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  round4 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">partial</span>(round, <span class="at">digits =</span> <span class="dv">5</span>)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  b1 <span class="ot">&lt;-</span> <span class="fu">round4</span>(prior <span class="sc">*</span> true_positive)</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  b2 <span class="ot">&lt;-</span> <span class="fu">round4</span>(prior <span class="sc">*</span> c_tp)</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  b3 <span class="ot">&lt;-</span> <span class="fu">round4</span>(c_prior <span class="sc">*</span> c_tn)</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  b4 <span class="ot">&lt;-</span> <span class="fu">round4</span>(c_prior <span class="sc">*</span> true_negative)</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  bp <span class="ot">&lt;-</span>  <span class="fu">round4</span>(b1<span class="sc">/</span>(b1 <span class="sc">+</span> b3))</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  labs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"X"</span>, prior, c_prior, true_positive, c_tp, true_negative, c_tn, b1, b2, b4, b3)</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  tree <span class="ot">&lt;-</span></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">create_graph</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_n_nodes</span>(</span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">n =</span> <span class="dv">11</span>,</span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"path"</span>,</span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> labs,</span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">node_aes =</span> <span class="fu">node_aes</span>(</span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">shape =</span> <span class="st">"circle"</span>,</span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">height =</span> <span class="dv">1</span>,</span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">width =</span> <span class="dv">1</span>,</span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>),</span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
-<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">1</span>,</span>
-<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">2</span>,</span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
-<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label1</span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
-<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">1</span>, </span>
-<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">3</span>,</span>
-<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
-<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label2</span>
-<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
-<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">2</span>,</span>
-<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">4</span>,</span>
-<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
-<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label3</span>
-<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
-<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">2</span>,</span>
-<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">5</span>,</span>
-<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
-<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label4</span>
-<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
-<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">3</span>,</span>
-<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">7</span>,</span>
-<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
-<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label5</span>
-<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
-<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">3</span>,</span>
-<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">6</span>,</span>
-<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
-<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label6</span>
-<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
-<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">4</span>,</span>
-<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">8</span>,</span>
-<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
-<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">"="</span></span>
-<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
-<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">5</span>,</span>
-<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">9</span>,</span>
-<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
-<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">"="</span></span>
-<span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-93"><a href="#cb10-93" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
-<span id="cb10-94"><a href="#cb10-94" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">7</span>,</span>
-<span id="cb10-95"><a href="#cb10-95" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">11</span>,</span>
-<span id="cb10-96"><a href="#cb10-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
-<span id="cb10-97"><a href="#cb10-97" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">"="</span></span>
-<span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
-<span id="cb10-101"><a href="#cb10-101" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">6</span>,</span>
-<span id="cb10-102"><a href="#cb10-102" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">10</span>,</span>
-<span id="cb10-103"><a href="#cb10-103" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
-<span id="cb10-104"><a href="#cb10-104" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">"="</span></span>
-<span id="cb10-105"><a href="#cb10-105" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb10-106"><a href="#cb10-106" aria-hidden="true" tabindex="-1"></a>    ) </span>
-<span id="cb10-107"><a href="#cb10-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"The probability of having {label1} after testing {label3} is {bp}"</span>))</span>
-<span id="cb10-108"><a href="#cb10-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">render_graph</span>(tree))</span>
-<span id="cb10-109"><a href="#cb10-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(tree)</span>
-<span id="cb10-110"><a href="#cb10-110" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb10-111"><a href="#cb10-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-112"><a href="#cb10-112" aria-hidden="true" tabindex="-1"></a><span class="co">#first example</span></span>
-<span id="cb10-113"><a href="#cb10-113" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_probability_tree</span>(<span class="at">prior =</span> <span class="fl">0.5</span>, <span class="at">true_positive =</span> <span class="fl">0.8</span>, <span class="at">true_negative =</span> <span class="fl">0.8</span>, <span class="at">label1 =</span> <span class="st">"medicine"</span>, <span class="at">label2 =</span> <span class="st">"placebo"</span>,</span>
-<span id="cb10-114"><a href="#cb10-114" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label3 =</span> <span class="st">"cured"</span>, <span class="at">label4 =</span> <span class="st">"not cured"</span>,</span>
-<span id="cb10-115"><a href="#cb10-115" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label5 =</span> <span class="st">"cured"</span>, <span class="at">label6 =</span> <span class="st">"not cured"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>bayes_probability_tree <span class="ot">&lt;-</span> <span class="cf">function</span>(prior, true_positive, true_negative, <span class="at">label1 =</span> <span class="st">"Prior"</span>, </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">label2 =</span> <span class="st">"Complimentary Prior"</span>, <span class="at">label3 =</span> <span class="st">"True Positive"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">label4 =</span> <span class="st">"False Negative"</span>, <span class="at">label5 =</span> <span class="st">"False Positive"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">label6 =</span> <span class="st">"True Negative"</span>) {</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">all</span>(<span class="fu">c</span>(prior, true_positive, true_negative) <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">&amp;&amp;</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">c</span>(prior, true_positive, true_negative) <span class="sc">&lt;</span> <span class="dv">1</span>)) {</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"probabilities must be greater than 0 and less than 1."</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">call. =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  c_prior <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> prior</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  c_tp <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> true_positive</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  c_tn <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> true_negative</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  round4 <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">partial</span>(round, <span class="at">digits =</span> <span class="dv">5</span>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  b1 <span class="ot">&lt;-</span> <span class="fu">round4</span>(prior <span class="sc">*</span> true_positive)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  b2 <span class="ot">&lt;-</span> <span class="fu">round4</span>(prior <span class="sc">*</span> c_tp)</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  b3 <span class="ot">&lt;-</span> <span class="fu">round4</span>(c_prior <span class="sc">*</span> c_tn)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  b4 <span class="ot">&lt;-</span> <span class="fu">round4</span>(c_prior <span class="sc">*</span> true_negative)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  bp <span class="ot">&lt;-</span>  <span class="fu">round4</span>(b1<span class="sc">/</span>(b1 <span class="sc">+</span> b3))</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  labs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"X"</span>, prior, c_prior, true_positive, c_tp, true_negative, c_tn, b1, b2, b4, b3)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  tree <span class="ot">&lt;-</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">create_graph</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_n_nodes</span>(</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">n =</span> <span class="dv">11</span>,</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"path"</span>,</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> labs,</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">node_aes =</span> <span class="fu">node_aes</span>(</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">shape =</span> <span class="st">"circle"</span>,</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">height =</span> <span class="dv">1</span>,</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">width =</span> <span class="dv">1</span>,</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>),</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">1</span>,</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">2</span>,</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label1</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">1</span>, </span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">3</span>,</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label2</span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">2</span>,</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">4</span>,</span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label3</span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">2</span>,</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">5</span>,</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label4</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">3</span>,</span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">7</span>,</span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label5</span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">3</span>,</span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">6</span>,</span>
+<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> label6</span>
+<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">4</span>,</span>
+<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">8</span>,</span>
+<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">"="</span></span>
+<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">5</span>,</span>
+<span id="cb8-90"><a href="#cb8-90" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">9</span>,</span>
+<span id="cb8-91"><a href="#cb8-91" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb8-92"><a href="#cb8-92" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">"="</span></span>
+<span id="cb8-93"><a href="#cb8-93" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-94"><a href="#cb8-94" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-95"><a href="#cb8-95" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">7</span>,</span>
+<span id="cb8-97"><a href="#cb8-97" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">11</span>,</span>
+<span id="cb8-98"><a href="#cb8-98" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb8-99"><a href="#cb8-99" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">"="</span></span>
+<span id="cb8-100"><a href="#cb8-100" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-101"><a href="#cb8-101" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-102"><a href="#cb8-102" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_edge</span>(</span>
+<span id="cb8-103"><a href="#cb8-103" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">6</span>,</span>
+<span id="cb8-104"><a href="#cb8-104" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="dv">10</span>,</span>
+<span id="cb8-105"><a href="#cb8-105" aria-hidden="true" tabindex="-1"></a>      <span class="at">edge_aes =</span> <span class="fu">edge_aes</span>(</span>
+<span id="cb8-106"><a href="#cb8-106" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">"="</span></span>
+<span id="cb8-107"><a href="#cb8-107" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-108"><a href="#cb8-108" aria-hidden="true" tabindex="-1"></a>    ) </span>
+<span id="cb8-109"><a href="#cb8-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"The probability of having {label1} after testing {label3} is {bp}"</span>))</span>
+<span id="cb8-110"><a href="#cb8-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">render_graph</span>(tree))</span>
+<span id="cb8-111"><a href="#cb8-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(tree)</span>
+<span id="cb8-112"><a href="#cb8-112" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-113"><a href="#cb8-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-114"><a href="#cb8-114" aria-hidden="true" tabindex="-1"></a><span class="co">#first example</span></span>
+<span id="cb8-115"><a href="#cb8-115" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_probability_tree</span>(<span class="at">prior =</span> <span class="fl">0.5</span>, <span class="at">true_positive =</span> <span class="fl">0.8</span>, <span class="at">true_negative =</span> <span class="fl">0.8</span>, <span class="at">label1 =</span> <span class="st">"medicine"</span>, <span class="at">label2 =</span> <span class="st">"placebo"</span>,</span>
+<span id="cb8-116"><a href="#cb8-116" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label3 =</span> <span class="st">"cured"</span>, <span class="at">label4 =</span> <span class="st">"not cured"</span>,</span>
+<span id="cb8-117"><a href="#cb8-117" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label5 =</span> <span class="st">"cured"</span>, <span class="at">label6 =</span> <span class="st">"not cured"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>The probability of having medicine after testing cured is 0.8</code></pre>
 </div>
@@ -955,12 +953,12 @@ P[A|B] = .169
 <p>In other words, only 17% of people with positive screenings actually have cancer.</p>
 <p>To show this in a probability tree:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_probability_tree</span>(<span class="at">prior =</span> <span class="fl">0.0021</span>, <span class="at">true_positive =</span> <span class="fl">0.95</span>, <span class="at">true_negative =</span> <span class="fl">0.99</span>, <span class="at">label1 =</span> <span class="st">"cancer"</span>, </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label2 =</span> <span class="st">"not cancer"</span>,</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label3 =</span> <span class="st">"positive"</span>, </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label4 =</span> <span class="st">"negative"</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label5 =</span> <span class="st">"positive"</span>, </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label6 =</span> <span class="st">"negative"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_probability_tree</span>(<span class="at">prior =</span> <span class="fl">0.0021</span>, <span class="at">true_positive =</span> <span class="fl">0.95</span>, <span class="at">true_negative =</span> <span class="fl">0.99</span>, <span class="at">label1 =</span> <span class="st">"cancer"</span>, </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label2 =</span> <span class="st">"not cancer"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label3 =</span> <span class="st">"positive"</span>, </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label4 =</span> <span class="st">"negative"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label5 =</span> <span class="st">"positive"</span>, </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label6 =</span> <span class="st">"negative"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>The probability of having cancer after testing positive is 0.16625</code></pre>
 </div>

@@ -1152,14 +1152,8 @@ Female    12     7       11     3       7</code></pre>
 </div>
 <p>Let’ s us see we want to compare columns.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'rcompanion' was built under R version 4.2.3</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>bonf_correct <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(bird_ratio_table, <span class="at">compare=</span><span class="st">"col"</span>, <span class="at">method =</span> <span class="st">"bonf"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>bonf_correct <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(bird_ratio_table, <span class="at">compare=</span><span class="st">"col"</span>, <span class="at">method =</span> <span class="st">"bonf"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
 
@@ -1169,9 +1163,11 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
 
 Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
 
+Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
+
 Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>bonf_correct</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>bonf_correct</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           Comparison p.Fisher p.adj.Fisher  p.Gtest p.adj.Gtest p.Chisq
 1       Finch : Junco  0.71200       1.0000 0.643000     1.00000 0.93800
@@ -1200,7 +1196,7 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</c
 <p>The test then shows all-pair comparisons with regular (what we should compare to .005 now, but we don’t usually know that!) and adjusted p-values (which have compensated for multiple tests so we can use our normal .05 cutoff- use this one!) for each test we have covered (you should use a post-hoc that matches what you did for the overall, or <em>omnibus</em>, comparison).</p>
 <p>You can order and display these differently if it helps. For example, if we used the <span class="math inline">\(\chi^2\)</span> test.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>bonf_correct[<span class="fu">order</span>(bonf_correct<span class="sc">$</span>p.adj.Chisq), <span class="fu">c</span>(<span class="st">"Comparison"</span>, <span class="st">"p.adj.Chisq"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>bonf_correct[<span class="fu">order</span>(bonf_correct<span class="sc">$</span>p.adj.Chisq), <span class="fu">c</span>(<span class="st">"Comparison"</span>, <span class="st">"p.adj.Chisq"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           Comparison p.adj.Chisq
 4     Finch : Catbird      0.0141
@@ -1217,7 +1213,7 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</c
 </div>
 <p>We see that catbirds different from finches and cardinals in the proportion of males and females, while all other species do not differ. Note the un-adjusted p-value for this comparison pair is the same we would have found from just comparing the two groups</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">30</span>,<span class="dv">12</span>,<span class="dv">7</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">30</span>,<span class="dv">12</span>,<span class="dv">7</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">byrow=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's Chi-squared test with Yates' continuity correction
@@ -1225,7 +1221,7 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</c
 data:  matrix(c(6, 30, 12, 7), nrow = 2, byrow = T)
 X-squared = 10.189, df = 1, p-value = 0.001413</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>bonf_correct[bonf_correct<span class="sc">$</span>Comparison<span class="sc">==</span><span class="st">"Finch : Catbird"</span>, <span class="st">"p.Chisq"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>bonf_correct[bonf_correct<span class="sc">$</span>Comparison<span class="sc">==</span><span class="st">"Finch : Catbird"</span>, <span class="st">"p.Chisq"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.00141</code></pre>
 </div>
@@ -1234,7 +1230,7 @@ X-squared = 10.189, df = 1, p-value = 0.001413</code></pre>
 <p>The sequential Bonferroni, or Holm’s, method, allocates your <span class="math inline">\(\alpha\)</span> to accept as many tests as signficant as possible while still controlling for the FWER. To do this, it orders the post-hoc tests by p-value, smallest to largest. It then rejects the null hypothesis attached to the smallest p-value and subtracts that p-value from <span class="math inline">\(\alpha\)</span>. It continues to do this until <span class="math inline">\(\alpha\)</span> is too small to reject the next smallest p-value. I think of it as buying p-values with <span class="math inline">\(\alpha\)</span>.</p>
 <p>We can use this approach by simply changing the method. Let’s also order our results again for viewing.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>holm_correct <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(bird_ratio_table, <span class="at">compare=</span><span class="st">"col"</span>, <span class="at">method =</span> <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>holm_correct <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(bird_ratio_table, <span class="at">compare=</span><span class="st">"col"</span>, <span class="at">method =</span> <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
 
@@ -1248,7 +1244,7 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
 
 Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>holm_correct[<span class="fu">order</span>(holm_correct<span class="sc">$</span>p.adj.Chisq), <span class="fu">c</span>(<span class="st">"Comparison"</span>, <span class="st">"p.adj.Chisq"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>holm_correct[<span class="fu">order</span>(holm_correct<span class="sc">$</span>p.adj.Chisq), <span class="fu">c</span>(<span class="st">"Comparison"</span>, <span class="st">"p.adj.Chisq"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           Comparison p.adj.Chisq
 4     Finch : Catbird      0.0141
@@ -1266,7 +1262,7 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</c
 <p>Although we still reject the same null hypotheses, notice the adjusted p-value for the junco:catbird comparison is slightly lower. This is due to the “holm” approach.</p>
 <p>A final approach we will demonstrate is called the False Discovery Rate, or FDR, approach. It’s similar to the Holm’s approach in that it starts by ordering the post-hoc tests by p-value, smallest to largest. However, it then rejects the null hypothesis attached to the largest p-value that is &lt; <span class="math inline">\(\alpha\)</span> and subsequently rejects all null hypotheses attached to smaller p-values. It is thus less conservative but basically attempts to maximize the number of hypotheses you reject given a set <span class="math inline">\(\alpha\)</span>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>fdr_correct <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(bird_ratio_table, <span class="at">compare=</span><span class="st">"col"</span>, <span class="at">method =</span> <span class="st">"fdr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>fdr_correct <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(bird_ratio_table, <span class="at">compare=</span><span class="st">"col"</span>, <span class="at">method =</span> <span class="st">"fdr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
 
@@ -1280,7 +1276,7 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
 
 Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>fdr_correct[<span class="fu">order</span>(fdr_correct<span class="sc">$</span>p.adj.Chisq), <span class="fu">c</span>(<span class="st">"Comparison"</span>, <span class="st">"p.adj.Chisq"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>fdr_correct[<span class="fu">order</span>(fdr_correct<span class="sc">$</span>p.adj.Chisq), <span class="fu">c</span>(<span class="st">"Comparison"</span>, <span class="st">"p.adj.Chisq"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           Comparison p.adj.Chisq
 4     Finch : Catbird      0.0141
@@ -1309,7 +1305,7 @@ H_A: \textrm{data do not come from a particular discrete probability distributio
 \]</span></p>
 <p>For example, we used a binomial test in earlier chapters to see if our observed number of old (9) and young (9) finches matched a probability of .75.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="at">x=</span><span class="dv">9</span>, <span class="at">n=</span><span class="dv">18</span>, <span class="at">p=</span>.<span class="dv">75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="at">x=</span><span class="dv">9</span>, <span class="at">n=</span><span class="dv">18</span>, <span class="at">p=</span>.<span class="dv">75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Exact binomial test
@@ -1326,7 +1322,7 @@ probability of success
 </div>
 <p>Note we instead consider what we observed vs what we expected using a <span class="math inline">\(\chi^2\)</span> test.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">9</span>), <span class="at">p=</span><span class="fu">c</span>(.<span class="dv">75</span>,.<span class="dv">25</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">9</span>), <span class="at">p=</span><span class="fu">c</span>(.<span class="dv">75</span>,.<span class="dv">25</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(c(9, 9), p = c(0.75, 0.25)): Chi-squared approximation
 may be incorrect</code></pre>
