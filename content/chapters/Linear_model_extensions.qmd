@@ -22,7 +22,7 @@ be (and are) the focal topic of courses and books. The goal here is to
 
 -   give you a start on doing these analyses in R
 
-citations to relevant articles papers and books are noted throughout for
+Citations to relevant articles papers and books are noted throughout for
 further exploration.
 
 ## Sticking with the linear model
@@ -186,11 +186,7 @@ is happening.
 A central (and often overlooked assumption) of linear models is that the
 relationship between the predictors and the outcome variable is linear
 and addtive. When the relationship is not linear, the resulting
-residuals are often not appropriately distributed as well.This may occur
-for a number of reasons. The outcome may not actually be continuous
-(e.g. counts. proportions) or may be related to the predictors in
-different ways (e.g., logarithmic). When this occurs, several options
-exist.
+residuals are often not appropriately distributed as well.
 
 <details>
 
@@ -206,31 +202,37 @@ relationship to be additive and linear.
 
 </details>
 
+When non-linearity occurs, several options to address it exist. The best
+approach may depend on why the relationship is non-linear, as
+relationships among variables may be non-linear for a number of reasons.
+For example, the outcome may not actually be continuous (e.g. counts.
+proportions), and thus true linear relationships are not possible;
+outcomes may also be related to the predictors in different ways (e.g.,
+logarithmic).
+
 ### Transform the data (least advisable, sometimes)
 
-One option is to transform the data (typically focusing on the dependent
-variable) so that the resulting variable meets the linear model
-assumptions (and thus uses the strengths of linear models that we noted
-above). As shown above, our rank-based approaches are using a similar
-method (not technically the same, but it works for larger sample sizes).
-This approach was often used in the past(e.g., arc-sin transforms of
-proportion data @warton2010) and supported by various approacheac. For
-example, Box-Cox transformation helped researchers find the best way to
-transform data to reduce issues with the distribution of residuals; this
-method also tended to impact linearity and differences in variances.
+One way to address non-linearity is to transform the data (typically
+focusing on the dependent variable) so that the resulting variable meets
+the linear model assumptions (and thus uses the strengths of linear
+models that we noted above). As shown above, our rank-based approaches
+are using a similar method (not technically the same, but it works for
+larger sample sizes). This approach was often used in the past (e.g.,
+arc-sin transforms of proportion data @warton2010) and supported by
+various approaches. For example, the Box-Cox transformation helped
+researchers find the best way to transform data to reduce issues with
+the distribution of residuals; this method also tended to impact
+linearity and differences in variances.
 
 Two things should be noted regarding this approach and transformations
 in general:
 
 -   The Box-Cox approach requires a model - it still focused on
-    transforming data so that *residuals* met assumptions. Data should
+    transforming data so that *residuals* meet assumptions. Data should
     not be transformed before model assumptions are analyzed to ensure
     it is necessary. For example, highly skewed data may arise due to
     unequal sample sizes (which may pose their own problems, but not
-    outright). Non-normal data, however, may have normalized residuals.
-    However, normal data (or transformed data) does typically lead to
-    normal residuals, so if residuals are not normal transformations may
-    help.
+    outright), but models using this data may meet assumptions.
 
 ```{r}
 set.seed(8)
@@ -250,6 +252,11 @@ plot(lm(Growth~Population, example_skewed))
 Anova(lm(Growth~Population, example_skewed), type="III")
                              
 ```
+
+-   Similary (and already noted!). non-normal data may lead to models
+    with normal residuals. However, normal data (or data transformed to
+    be *more* normal) does typically lead to normal residuals, so if
+    residuals are not normal transformations may help.
 
 -   The transformed variable is *now* linear in respect to the
     predictors. This highlights the actual assumption of the model.
@@ -272,7 +279,7 @@ Let's use data (not residuals) to show what different types of data look
 like and consider possible fixes (always fit a model first for real
 analysis!). For example, we can return to our right-skewed blue jay data
 [from the summarizing data
-chapter](summarizing_data.qmd)(target="\_blank)(idea from [@hunt]) .
+chapter](summarizing_data.qmd)(target="\_blank")(idea from [@hunt]) .
 
 ```{r}
 set.seed(19)
@@ -344,8 +351,11 @@ qqnorm(rochester)
 qqline(rochester)
 ```
 
-because it is *under-dispersed* (has no tails). Alternatively, data may
-be *over-dispersed*, like this (fake) finch data.
+because it is *under-dispersed* (has no tails, and thus the lower points
+are larger than expected and the higher points are smaller than
+expected). Alternatively, data may be *over-dispersed*, like this (fake)
+finch data where lower points are lower than expected and higher points
+are higher.
 
 ```{r}
 set.seed(19)
@@ -378,7 +388,8 @@ ggplot(data.frame(woodpeckers),
        y= "Frequency")
 ```
 
-is under-dispersed due the shape of the distribution.
+is under-dispersed due the shape of the distribution, but there also
+signs of other issues.
 
 ```{r}
 qqnorm(woodpeckers)
@@ -393,13 +404,14 @@ be related to the underlying form of the data [@payne2017] (more to come
 on this). In this way, over- and under-dispersion relate to both the
 linear relationship.
 
-### Generalized linear model approach: Different data, different approach
+### Different data require a different approach: Introducing generalized linear models
 
 The linear relationship may be inappropriate because our data doesn't
 fit it! For example, if we are modeling proportions, estimates less than
 0 or below 1 do not make sense, but a linear model doesn't account for
-that. The same issues arise for proportions and binary outcomes. While
-we may be able to transform the response variable to make it linear,
+that. The same issues arise for binary outcomes (outcome must be 0 or 1)
+and count data (where outcomes can't be non-integer). While we may be
+able to transform the response variable to make relationships linear,
 another option is to translate the *link* function.
 
 Although we haven't fully explained it yet, a linear model contains
@@ -410,17 +422,20 @@ is the link function, which connects that estimate to the data
 distribution (this maintains the linearity of the model).
 
 Notice this means the link connects to the distribution of the data, not
-the data itself. So far we have focused on the *mean* of the data, and
-the estimate is the mean, so the link has been implied. We can
-*generalize* this setup to include other distributions in the
-exponential family (and now others [@applied2022, ch. 15]).
+the data itself (which is what transforming the data is doing). So far
+we have focused on the *mean* of the data, and the estimate is the mean,
+so the link has been implied. We can *generalize* this setup to include
+other distributions in the exponential family (and now others
+[@applied2022, ch. 15]).
 
 While we won't develop all the math, exponential family distributions
 all have a canonical parameter (the mean for Gaussian, or normal, data)
 and a dispersion parameter (the variance for normal data). Different
 distributions have different relationships between these two parameters.
 For normal data, there is *no* relationship, so the variance is
-constant. This is not true for other families.
+constant. This is not true for other families; for example, the variance
+in binomial data depends on the *p* parameter (as we noted in the
+\[chapter introducing binomial data)(Binomial.qmd){target="\_blank"))!
 
 We can specify other families using *generalized linear models* (which
 are different than general linear models, which is another term used to
@@ -434,11 +449,11 @@ sizes for Pearson [@agresti2007, p. 87] or deviance [@montgomery2012,
 section 13.4.4]
 <!-- https://stats.stackexchange.com/questions/92394/checking-residuals-for-normality-in-generalised-linear-models; https://online.stat.psu.edu/stat504/lesson/6/6.1 -->
 residuals, and some authors argue normality is required for testing
-[@feng2020] ) or constant (homogeneity). As noted above, non-Gaussian
-families don't assume a constant variance, so homogeneity assumptions
-would not be appropriate [@fox2016]. However, we need to ensure the
-correct family (and thus mean-variance link) is chosen. In general,
-plotting the residuals against [@zuur2009]
+[@feng2020]) . As noted above, non-Gaussian families don't assume a
+constant variance, so homogeneity assumptions would not be appropriate
+[@fox2016]. However, we need to ensure the correct family (and thus
+mean-variance link) is chosen. In general, plotting the residuals
+against [@zuur2009]
 
 -   the predicted values
 
@@ -452,7 +467,9 @@ plotting the residuals against [@zuur2009]
 
     -   to check for missing patterns
 
--   against time and space
+-   against time and space (if applicable)
+
+    -   to check for patterns and correlation
 
 will be useful. Any patterns may suggest missing predictors or lack of
 independence/correlation among measurements. Patterns in the residuals
@@ -468,17 +485,17 @@ diagnostic.
 Residuals for a Gaussian/normal glm (what we've been doing) are easy to
 calculate. We simply subtract the estimate for each data point (which is
 the average for similar observations!) from the observed. However,
-though these raw or response residuals exist for GLM, they rarely make
-sense. Variance may increase with mean for some distributions, for
-example, or outcomes may be binary.
+though these *raw* or *response* residuals exist for GLM, they rarely
+make sense. Variance may increase with mean for some distributions, for
+example, or outcomes may be binary (so every residual is 0 or 1!).
 
 To account for this, we could divide the residuals by the square root of
 the variance. This normalizes the residuals and leads to *Pearson
 residuals*. Another option is based on something called deviance.
 Deviance is similar to sums of squares but based on likelihood (which we
 shortly see is what we use to test for significance in GLM); it can also
-be considered the generalized form of variance or residuals sums of
-squares. It is calculated as the difference of log-likelihods between
+be considered the generalized form of variance or residual sums of
+squares. It is calculated as the difference of log-likelihoods between
 the focal model and the saturated model. Deviance residuals consider how
 important each point is to the overall deviance. You can also compare
 the deviance of a model to a perfect fit (no deviance/saturated) model
@@ -498,13 +515,13 @@ linear models. However, a few key differences exist. Estimation of
 parameters and significance for these models rely on maximum-likelihood
 methods (remember, the ratio of likelihood values follow a $\chi^2$
 distribution and can thus provide a p-value to compare possible models
-as noted in [introducing G tests]
-(Compare_proportions_among_populations.qmd).This may be
-represented as a Z test for single parameters (since a $\chi^2$
-distribution is a Z distribution squared - sometimes labelled a Wald
-test/statistic). F test reappear for distributions where we estimate the
-dispersion parameter (like the normal), but otherwise we can use the
-dispersion parameter to check that the right approach was taken.
+as noted in \[introducing G tests\]
+(Compare_proportions_among_populations.qmd).This may be represented as a
+Z test for single parameters (since a $\chi^2$ distribution is a Z
+distribution squared - sometimes labelled a Wald test/statistic). F test
+reappear for distributions where we estimate the dispersion parameter
+(like the normal), but otherwise we can use the dispersion parameter to
+check that the right approach was taken.
 
 It should be noted that solving for coefficents also requires iterative
 approaches due to non-linearity;common methods (not described here)
@@ -540,9 +557,9 @@ This logit link is useful as it effectively connects the systematic
 component and real data (the purpose of the link). This link also allows
 coefficients to be interpreted as odds and odds ratios (introduced in
 the [comparing proportions among
-groups](Compare_proportions_among_populations.qmd)- we'll
-continue to see connections this chapter for logistic regression).
-Remember, the odds can be written as
+groups](Compare_proportions_among_populations.qmd)- we'll continue to
+see connections this chapter for logistic regression). Remember, the
+odds can be written as
 
 $$
 \frac{\pi}{1-\pi}
@@ -579,45 +596,46 @@ juvenile <- read.csv ("data/Supplemental_Data_Bueno_2020-S1-Presence of adults_l
                       stringsAsFactors = T)
 ```
 
-since the *adults* column indicates the presence or absence of adults, let's update
-it for clarity
+since the *adults* column indicates the presence or absence of adults,
+let's update it for clarity
 
 ```{r}
 library(plyr)
 juvenile$adults_updated <- factor(revalue(as.character(juvenile$adults), c("0"= "absent", "4" ="present")))
 ```
 
-This is an example of a factorial-design with  the following hypotheses:  
+This is an example of a factorial-design with the following hypotheses:
 
-* null hypothesis 
-  * H~O~: There is no impact on the habitat type juveniles start in on their 
-  likelihood to move
-  * H~O~: There is no impact on adult presence in the new habitat on the 
-  likelihood of juveniles to move
-  * H~O~:  There is no interaction between the impacts of the  habitat type 
-  juveniles start in and  adult presence in the new habitat on the 
-  likelihood of juveniles to move
-* alternative hypothesis 
-  * H~A~: There is an impact on the habitat type juveniles start in on their 
-  likelihood to move
-  * H~A~: There is an impact on adult presence in the new habitat on the 
-  likelihood of juveniles to move
-  * H~A~:  There is an interaction between the impacts of the  habitat type 
-  juveniles start in and  adult presence in the new habitat on the 
-  likelihood of juveniles to move
-  
-The outcome,however, is a proportion (or count). Note we *can* fit a linear model
-to the data:
+-   null hypothesis
+    -   H~O~: There is no impact on the habitat type juveniles start in
+        on their likelihood to move
+    -   H~O~: There is no impact on adult presence in the new habitat on
+        the likelihood of juveniles to move
+    -   H~O~: There is no interaction between the impacts of the habitat
+        type juveniles start in and adult presence in the new habitat on
+        the likelihood of juveniles to move
+-   alternative hypothesis
+    -   H~A~: There is an impact on the habitat type juveniles start in
+        on their likelihood to move
+    -   H~A~: There is an impact on adult presence in the new habitat on
+        the likelihood of juveniles to move
+    -   H~A~: There is an interaction between the impacts of the habitat
+        type juveniles start in and adult presence in the new habitat on
+        the likelihood of juveniles to move
+
+The outcome,however, is a proportion (or count). Note we *can* fit a
+linear model to the data:
 
 ```{r}
 juvenile_fit_lm <- lm(Colonized ~ adults_updated*source.habitat, 
     juvenile)
 plot(juvenile_fit_lm)
 ```
+
 The assumpitons don't even look that bad, but we know
 
-For this
-reason we will use a generalized linear model to analyze the data. We can  
+For this reason we will use a generalized linear model to analyze the
+data. We can\
 fit a glm using the binomial family.
 
 ```{r}
