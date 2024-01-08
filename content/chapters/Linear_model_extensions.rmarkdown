@@ -1,0 +1,991 @@
+---
+title: Linear model extensions
+subtitle: How to fix it when it's broken
+bibliography: ../references.bib
+---
+
+
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+source("../globals.R")
+```
+
+
+The past several chapters/lessons have focused on linear models. Here we
+explore options for analysis when linear model assumptions are not met.
+In doing so, we review several different approaches, many of which could
+be (and are) the focal topic of courses and books. The goal here is to
+
+-   help you figure out when you may need to employ these methods by
+    having you understand what they do/fix
+
+-   give you a start on doing these analyses in R
+
+Citations to relevant articles papers and books are noted throughout for
+further exploration.
+
+## Sticking with the linear model
+
+Linear models are useful for a number of reasons. They are a great way
+to unify most/many tests from classical statistics. In fact, most of the
+ranked tests we've developed can actually be run as linear models when n
+\>15. For example, we can go back to our Wilcox-Mann Whitney U tests
+(for 2 populations) and Kruskal-Wallis (for 3+) from the [comparing
+means among groups
+chapter](Compare_means_among_populations.qmd){target="_blank"} and note
+the outcome from a *wilcox.test*
+
+
+```{r}
+two_species_subset <- iris[iris$Species!="setosa",]
+wilcox.test(Sepal.Length ~ Species, two_species_subset)
+```
+
+
+is very close to a linear model predicting the signed rank of the data
+
+
+```{r}
+library(car)
+signed_rank = function(x) sign(x) * rank(abs(x))
+Anova(lm(signed_rank(Sepal.Length) ~ Species, two_species_subset), type="III")
+```
+
+
+In fact, we could run simulations and show that p values from these 2
+approaches are highly correlated (now you know what that means) with a
+$\beta$ of almost 1 (from @lindelov).
+
+
+```{r, echo=F, warning=F, message=F}
+library(tidyverse)
+set.seed(21)
+weird_data <- c(rnorm(10000), exp(rnorm(10000)), runif(10000, min=-3, max=-2))
+
+
+# Parameters
+Ns = c(seq(from=6, to=20, by=2), 30, 50, 80)
+mus = c(0, 0.5, 1)  # Means
+PERMUTATIONS = 1:200
+
+# Run it
+D = expand.grid(set=PERMUTATIONS, mu=mus, N=Ns) %>%
+  mutate(
+    # Generate data. One normal and one weird
+    data = map2(N, mu, ~cbind(sample(weird_data, .x), .y + rnorm(.x))),
+    
+    # Built-in
+    mann_raw = map(data, ~ wilcox.test(.x[,1], .x[,2])),
+    
+    # Ttest
+    ranked_value = map(data, ~ rank(c(.x))),  # As 1D ranked vector for t.test
+    ttest_raw = map2(ranked_value, N, ~t.test(.x[1:.y], .x[-(1:.y)], var.equal=TRUE)),
+    
+    # Tidy it up
+    mann = map(mann_raw, broom::tidy),
+    ttest = map(ttest_raw, broom::tidy)
+  ) %>%
+  
+  # Get as columns instead of lists; then remove "old" columns
+  unnest(c(mann, ttest), names_sep='_')
+D$N = factor(D$N)  # Make N a factor for prettier plotting
+
+library(ggplot2)
+library(patchwork)
+
+# A straight-up comparison of the p-values
+library(ggpubr)
+
+p_relative = ggplot(D, aes(x=mann_p.value, y=ttest_p.value, color=N)) + 
+  geom_line() + 
+  geom_vline(xintercept=0.05, lty=2) +
+  geom_hline(yintercept=0.05, lty=2) +
+  
+  labs(title='Absolute relation', x = 'Mann-Whitney p-value', y = 'T-test p-value') + 
+  #coord_cartesian(xlim=c(0, 0.10), ylim=c(0, 0.11)) + 
+  theme_gray(13) + 
+  guides(color=FALSE)+
+    stat_cor(p.accuracy = 0.001, r.accuracy = 0.01)
+
+# Looking at the difference (error) between p-values
+p_error_all = ggplot(D, aes(x=mann_p.value, y=ttest_p.value-mann_p.value, color=N)) + 
+  geom_line() + 
+  geom_vline(xintercept=0.05, lty=2) +
+  labs(title='Error', x = 'Mann-Whitney p-value', y = 'T-test p-value deviation') + 
+  theme_gray(13) + 
+  guides(color=FALSE)
+# Same, but zoomed in around p=0.05
+p_error_zoom = ggplot(D, aes(x=mann_p.value, y=ttest_p.value-mann_p.value, color=N)) + 
+  geom_line() + 
+  geom_vline(xintercept=0.05, lty=2) +
+  
+  labs(title='Zoomed error', x = 'Mann-Whitney p-value', y = 'T-test p-value deviation') + 
+  coord_cartesian(xlim=c(0, 0.10), ylim=c(-0.020, 0.000)) + 
+  theme_gray(13)
+
+# Show it. Patchwork is your friend!
+p_relative + p_error_all + p_error_zoom
+```
+
+
+Linear models are also extremely robust. Consider the basic assumptions
+of a linear model
+
+$$
+\epsilon \approx i.i.d.\ N(\mu,\sigma)
+$$
+
+Although the residuals are meant to be homoscedastic (equal or constant
+across all groups), it turns out the model is robust of when the largest
+group variance is 4-10x larger than the smallest group variance and
+sample sizes are approximately equal [@blanca2018; @fox2015; @zuur2010],
+though highly uneven group sizes begin to cause issues [@blanca2018].
+
+Similarly, non-normal data is not an issue. This is partially because
+the assumptions are focused on residuals, but also because the procedure
+is highly robust [@blanca2017]. This finding further supports the
+graphical consideration of assumptions , especially since many tests for
+normality are conservative (samples are almost never *perfectly* normal,
+and slight deviations are easier to pick up with larger sample sizes
+despite the fact the central limit theorem suggests this is when the
+issue is least important) [@zuur2010; @shatz2023].
+
+These issues have led some authors to argue violations of the linear
+model assumptions are less dangerous than trying new, and often
+less-tested, techniques that may inflate type I error rates [@knief2021;
+@warton2016]. However, new techniques (or sometimes old techniques that
+are new to a given field) may be more appropriate when assumptions are
+clearly broken [@warton2010; @reitan2016; @geissinger2022]. In this
+section we explore common-ish approaches for analyzing data when the
+assumptions of a linear model are broken. Our goal here is to introduce
+these methods. Each could be the focus of their own class, book, or much
+larger study. Fortunately most can be viewed as extensions to our
+existing knowledge, although many of the assumptions and techniques for
+them are less developed/still being argued about.
+
+The various assumptions related to linear models may be prioritized on
+their relative importance. One such order is provided (roughly) by
+@gelman2006.
+
+-   Model validity
+
+    -   As noted in the multiple regression chapter, we only should
+        investigate relationships we have a mechanism to explain
+
+-   Linear relationship and additive effects of predictor variables
+
+-   Errors are
+
+    -   independently distributed
+
+    -   identical (homoscedastic)
+
+    -   follow a normal distribution
+
+Many datasets will violate multiple of these assumptions simultaneously,
+so addressing issues is often best resolved by understanding *why* this
+is happening.
+
+## Linear relationship is inappropriate
+
+A central (and often overlooked assumption) of linear models is that the
+relationship between the predictors and the outcome variable is linear
+and addtive. When the relationship is not linear, the resulting
+residuals are often not appropriately distributed as well.
+
+<details>
+
+<summary>What's linear anyway?</summary>
+
+To be clear, the linear model only focuses on the linear and additive
+relationship between the predictors and the outcome variable (this will
+become more important/obvious later in this section!). The model doesn't
+*know* what the variables are. For that reason, we can add predictor
+variables to a model that are squares or cubes of predictors, or we can
+transform the outcome variable. We just need the $Y = X\beta$
+relationship to be additive and linear.
+
+</details>
+
+When non-linearity occurs, several options to address it exist. The best
+approach may depend on why the relationship is non-linear, as
+relationships among variables may be non-linear for a number of reasons.
+For example, the outcome may not actually be continuous (e.g. counts.
+proportions), and thus true linear relationships are not possible;
+outcomes may also be related to the predictors in different ways (e.g.,
+logarithmic).
+
+### Transform the data (least advisable, sometimes)
+
+One way to address non-linearity is to transform the data (typically
+focusing on the dependent variable) so that the resulting variable meets
+the linear model assumptions (and thus uses the strengths of linear
+models that we noted above). As shown above, our rank-based approaches
+are using a similar method (not technically the same, but it works for
+larger sample sizes). This approach was often used in the past (e.g.,
+arc-sin transforms of proportion data @warton2010) and supported by
+various approaches. For example, the Box-Cox transformation helped
+researchers find the best way to transform data to reduce issues with
+the distribution of residuals; this method also tended to impact
+linearity and differences in variances.
+
+Two things should be noted regarding this approach and transformations
+in general:
+
+-   The Box-Cox approach requires a model - it still focused on
+    transforming data so that *residuals* meet assumptions. Data should
+    not be transformed before model assumptions are analyzed to ensure
+    it is necessary. For example, highly skewed data may arise due to
+    unequal sample sizes (which may pose their own problems, but not
+    outright), but models using this data may meet assumptions.
+
+
+```{r}
+set.seed(8)
+example_skewed <- data.frame(Population= c(rep("a",40),
+                                           rep("b", 30),
+                                           rep(letters[3:4], each=15)), 
+                             Growth = c(rnorm(40,1),
+                                    rnorm(30, 4),
+                                    rnorm(15, 7),
+                                    rnorm(15,10)))
+library(ggplot2)
+ggplot(example_skewed,aes(x=Growth))+
+  geom_histogram()+
+  labs(y="Some value",
+       title="Example of skewed data appearing due to unequal sample size")
+plot(lm(Growth~Population, example_skewed))
+Anova(lm(Growth~Population, example_skewed), type="III")
+                             
+```
+
+
+-   Similary (and already noted!). non-normal data may lead to models
+    with normal residuals. However, normal data (or data transformed to
+    be *more* normal) does typically lead to normal residuals, so if
+    residuals are not normal transformations may help.
+
+-   The transformed variable is *now* linear in respect to the
+    predictors. This highlights the actual assumption of the model.
+    Similarly, higher-terms (squares, cubes, etc) may be added to a
+    linear model. The model does not care what the data represent - it
+    only focuses on if linear relationships exist among them.
+
+-   Transformations can make model interpretation and prediction
+    difficult.
+
+If the decision is made to transform the data, several approaches exist.
+Some are driven by the distribution of the data, and all depend on it.
+For example, log and related root transformations are useful for
+right-skewed data, but some can only be carried out for non-negative
+(e.g., square root) or strictly positive (e.g., log) values. To address
+this for log transformations, a small value is often added to 0
+measurements.
+
+Let's use data (not residuals) to show what different types of data look
+like and consider possible fixes (always fit a model first for real
+analysis!). For example, we can return to our right-skewed blue jay data
+[from the summarizing data
+chapter](summarizing_data.qmd)(target="\_blank")(idea from [@hunt]) .
+
+
+```{r}
+set.seed(19)
+blue_jays <- round(rbeta(10000,2,8)*100+runif(10000,60,80),3)
+ggplot(data.frame(blue_jays), 
+       aes(x=blue_jays)) +
+  geom_histogram( fill="blue", color="black") +
+  labs(title="Weight of Westchester blue jays",
+       x= "Weight (g)",
+       y= "Frequency")
+```
+
+
+Note the right-skewed data shows a convex curve on the Q-Q plot.
+
+
+```{r}
+qqnorm(blue_jays)
+qqline(blue_jays)
+
+```
+
+
+To help you understand Q-Q plots, remember they are comparing the
+relative spread of data (quantiles) from a target and theoretical
+distribution. For right-skewed data, points are shifted right (both
+smallest and largest observations are larger than you would expect from
+a normal distribution).
+
+Conversely, we could also return to our left-skewed cardinal data
+
+
+```{r}
+set.seed(19)
+cardinals <- round(rbeta(10000,10,2)*50+runif(10000,5,10),3)
+ggplot(data.frame(cardinals), 
+       aes(x=cardinals)) +
+  geom_histogram( fill="red", color="black") +
+  labs(title="Weight of Westchester cardinals",
+       x= "Weight (g)",
+       y= "Frequency")
+```
+
+
+and note a concave shape is seen in the Q-Q plot,as all points are
+shifted left.
+
+
+```{r}
+qqnorm(cardinals)
+qqline(cardinals)
+
+```
+
+
+For this type of data, power transformations (raising the variable to
+the 2, 3, or higher power) may be useful.
+
+Meanwhile, our uniformly-distributed distributed robin data
+
+
+```{r}
+set.seed(19)
+rochester <- round(c(runif(1000,75,85)),3)
+ggplot(data.frame(rochester), 
+       aes(x=rochester)) +
+  geom_histogram( fill="pink", color="black") +
+  labs(title="Weight of Rochester robins",
+       x= "Weight (g)",
+       y= "Frequency")
+```
+
+
+shows as a s-shape on the Q-Q plot
+
+
+```{r}
+qqnorm(rochester)
+qqline(rochester)
+```
+
+
+because it is *under-dispersed* (has no tails, and thus the lower points
+are larger than expected and the higher points are smaller than
+expected). Alternatively, data may be *over-dispersed*, like this (fake)
+finch data where lower points are lower than expected and higher points
+are higher.
+
+
+```{r}
+set.seed(19)
+library(VGAM)
+finch <- rlaplace(1000,location=50, scale=4)
+ggplot(data.frame(finch), 
+       aes(x=finch)) +
+  geom_histogram( fill="cyan", color="black") +
+  labs(title="Weight of finches",
+       x= "Weight (g)",
+       y= "Frequency")
+```
+
+```{r}
+qqnorm(finch)
+qqline(finch)
+```
+
+
+Over- and under-dispersed data may mean there's a missing factor in your
+analysis. For example, our bi-modal woodpecker data
+
+
+```{r}
+set.seed(19)
+woodpeckers <- round(c(rnorm(100,60,4),rnorm(100,80,4)),3)
+ggplot(data.frame(woodpeckers), 
+       aes(x=woodpeckers)) +
+  geom_histogram( fill="orange", color="black") +
+  labs(title="Weight of  Westchester woodpeckers",
+       x= "Weight (g)",
+       y= "Frequency")
+```
+
+
+is under-dispersed due the shape of the distribution, but there also
+signs of other issues.
+
+
+```{r}
+qqnorm(woodpeckers)
+qqline(woodpeckers)
+```
+
+
+Under-dispersion could also happen if data are bounded (e.g., by
+practicality or due to a measurement issue). Over-dispersion can
+similarly occur if the model does not account for variability (e.g.,
+missing factors, non-linear relationship) and/or outliers, which might
+be related to the underlying form of the data [@payne2017] (more to come
+on this). In this way, over- and under-dispersion relate to both the
+linear relationship.
+
+### Different data require a different approach: Introducing generalized linear models
+
+The linear relationship may be inappropriate because our data doesn't
+fit it! For example, if we are modeling proportions, estimates less than
+0 or below 1 do not make sense, but a linear model doesn't account for
+that. The same issues arise for binary outcomes (outcome must be 0 or 1)
+and count data (where outcomes can't be non-integer). While we may be
+able to transform the response variable to make relationships linear,
+another option is to translate the *link* function.
+
+Although we haven't fully explained it yet, a linear model contains
+three components. There is always a random component that focuses on the
+distribution of the data. There is also a systematic component, where a
+number of covariates and data points produce an estimate. Finally, there
+is the link function, which connects that estimate to the data
+distribution (this maintains the linearity of the model).
+
+Notice this means the link connects to the distribution of the data, not
+the data itself (which is what transforming the data is doing). So far
+we have focused on the *mean* of the data, and the estimate is the mean,
+so the link has been implied. We can *generalize* this setup to include
+other distributions in the exponential family (and now others
+[@applied2022, ch. 15]).
+
+While we won't develop all the math, exponential family distributions
+all have a canonical parameter (the mean for Gaussian, or normal, data)
+and a dispersion parameter (the variance for normal data). Different
+distributions have different relationships between these two parameters.
+For normal data, there is *no* relationship, so the variance is
+constant. This is not true for other families; for example, the variance
+in binomial data depends on the *p* parameter (as we noted in the
+[chapter introducing binomial data)(Binomial.qmd){target="_blank"))!
+
+We can specify other families using *generalized linear models* (which
+are different than general linear models, which is another term used to
+describe our "regular" linear models). These models are also known as
+glm or glim (we'll use the glm jargon here). GLM make different
+assumptions (though everyone does not agree on what they are!). While we
+still need independence of the residuals (or some extension, see below),
+they no longer need to be normally distributed [@zuur2007, p. 86-87;
+@zuur2009, section 9.8.3] (though normality may hold at large sample
+sizes for Pearson [@agresti2007, p. 87] or deviance [@montgomery2012,
+section 13.4.4]
+<!-- https://stats.stackexchange.com/questions/92394/checking-residuals-for-normality-in-generalised-linear-models; https://online.stat.psu.edu/stat504/lesson/6/6.1 -->
+residuals, and some authors argue normality is required for testing
+[@feng2020]) . As noted above, non-Gaussian families don't assume a
+constant variance, so homogeneity assumptions would not be appropriate
+[@fox2016]. However, we need to ensure the correct family (and thus
+mean-variance link) is chosen. In general, plotting the residuals
+against [@zuur2009]
+
+-   the predicted values
+
+    -   to check for model fit
+
+-   each explanatory variable in model
+
+    -   to check for linearity
+
+-   each explanatory not retained/used in model
+
+    -   to check for missing patterns
+
+-   against time and space (if applicable)
+
+    -   to check for patterns and correlation
+
+will be useful. Any patterns may suggest missing predictors or lack of
+independence/correlation among measurements. Patterns in the residuals
+may also indicate the incorrect family has been chosen [@zuur2009,
+section 9.8.4]; for families with fixed dispersion parameters,
+inspection of the estimated dispersion parameter can also be a related
+diagnostic.
+
+<details>
+
+<summary>What are residuals for a GLM?</summary>
+
+Residuals for a Gaussian/normal glm (what we've been doing) are easy to
+calculate. We simply subtract the estimate for each data point (which is
+the average for similar observations!) from the observed. However,
+though these *raw* or *response* residuals exist for GLM, they rarely
+make sense. Variance may increase with mean for some distributions, for
+example, or outcomes may be binary (so every residual is 0 or 1!).
+
+To account for this, we could divide the residuals by the standard
+deviation of the observations. This normalizes the residuals and leads
+to *Pearson residuals*. Another option is based on something called
+deviance. Deviance is similar to sums of squares but based on likelihood
+(which we shortly see is what we use to test for significance in GLM);
+it can also be considered the generalized form of variance or residual
+sums of squares. It is calculated as the difference of log-likelihoods
+between the focal model and the saturated model (or a model that has a
+coefficient for every observation and thus will have perfect fit).
+Deviance residuals consider how important each point is to the overall
+deviance. You can also compare the deviance of a model to a perfect fit
+(no deviance/saturated) model and an intercept-only model (worst fit,
+D~O~) and generate a pseudo-R^2^ measure using the formula
+
+$$
+1-\frac{D}{D_O}
+$$
+
+This is known as McFadden's pseudo-R^2^ value.
+
+</details>
+
+Once developed, GLMs can use most of the tools we developed for basic
+linear models. However, a few key differences exist. Estimation of
+parameters and significance for these models rely on maximum-likelihood
+methods (remember, the ratio of likelihood values follow a $\chi^2$
+distribution and can thus provide a p-value to compare possible models
+as noted in \[introducing G
+tests\](Compare_proportions_among_populations.qmd).This may be
+represented as a Z test for single parameters (since a $\chi^2$
+distribution is a Z distribution squared - sometimes labelled a Wald
+test/statistic). F test reappear for distributions where we estimate the
+dispersion parameter (like the normal), but otherwise we can use the
+dispersion parameter to check that the right approach was taken.
+
+It should be noted that solving for coefficents also requires iterative
+approaches due to non-linearity; common methods (not described here)
+include the Newton-Raphson or Fisher scoring methods. The key point here
+for practice is any noted issues with optimization are due to this
+process. Finally, it should be noted that coefficients and predictions
+are related to the estimate, which is **no longer** the actual mean.
+This means impacts and outcomes will need to be transformed (based on
+the link) to the actual scale.
+
+There are numerous types of GLMs. Here we outline some of the more
+common ones. Each of these deserves a much fuller treatment - remember,
+the intent here is to get you to a place to where you can begin working
+with them. @harrison2018 provides an excellent review of these models,
+and fuller treatments are provided by @zuur2009 (chapters 8-11) and
+@fox2016 (chapters 14 - 15). For each I provide the most relevant math,
+an example (or two), and some immediate extensions.
+
+#### Logistic regression: Bernoulli and binomial outcomes
+
+Logistic regression focuses on modelling yes/no or success/failure
+outcomes (Bernoulli or binomial data) using the *logit* link (thus
+logistic regression). The easy-to-understand issue here is that we want
+to focus on probability ($\pi$), but that can only vary from 0 to 1.
+Linear models are thus inappropriate, but the logit link can be used
+where the systematic component of the model predicts
+
+$$
+logit(\pi) = \ln(\frac{\pi}{1-\pi}), \text{where } \pi \text{ is the probability for a given set of outcomes}
+$$
+
+This logit link is useful as it effectively connects the systematic
+component and real data (the purpose of the link). This link also allows
+coefficients to be interpreted as odds and odds ratios (introduced in
+the [comparing proportions among
+groups](Compare_proportions_among_populations.qmd)- we'll continue to
+see connections this chapter for logistic regression). Remember, the
+odds can be written as
+
+$$
+\frac{\pi}{1-\pi}
+$$
+
+For a given coefficient $\beta$, the logit link also means we can say a
+1 unit increase in that single variable leads to a change in the odds
+ratio of $e^{\beta}$. This also means no impact is shown as $\beta = 0$,
+with positive and negative numbers implying increases or decreases in
+odds, which is convenient. Other link options (not discussed here)
+include the probit and complementary log-log approaches. For a final
+piece of math, note the dispersion parameter for binomial data is not
+estimated - it is assumed to be 1.
+
+For example, @bueno2020 carried out a series of experiments to determine
+how various factors impacted colonization of a host algae, *Sargassum
+filipendula*, by a small amphipod, *Cymadusa filosa*.
+
+[![Rob Young, Centre for Biodiversity Genomics - CC - BY - NC -
+S](/images/Cymadusa_filosa.jpg)](https://molecol-unesp-clp.jimdofree.com/2017/03/01/the-first-set-of-microsatellite-markers-for-the-amphipod-cymadusa-filosa/)
+
+For one experiment, they stocked portions of aquariums with pieces of
+algal. Half the algae pieces had adult amphipods present(4 total; the
+species builds tubes to live on algae) while the other half had no adult
+residents. Juveniles were initially placed on patches of atural
+substrate, artificial substrate, or bare areas(no substrate) in the
+aquarium. After 24 hours, the number of juveniles that colonized the
+focal algae were counted. Since the number of introduced juveniles was
+known, the number that did not colonize was also accounted for (raw data
+estimated from supplemental data given variation in sample size).
+
+
+```{r}
+juvenile <- read.csv ("data/Supplemental_Data_Bueno_2020-S1-Presence of adults_lab.csv", 
+                      stringsAsFactors = T)
+```
+
+
+since the *adults* column indicates the presence or absence of adults,
+let's update it for clarity
+
+
+```{r}
+library(plyr)
+juvenile$adults_updated <- factor(revalue(as.character(juvenile$adults), c("0"= "absent", "4" ="present")))
+```
+
+
+This is an example of a factorial-design with the following hypotheses:
+
+-   null hypothesis
+    -   H~O~: There is no impact on the habitat type juveniles start in
+        on their likelihood to move
+    -   H~O~: There is no impact on adult presence in the new habitat on
+        the likelihood of juveniles to move
+    -   H~O~: There is no interaction between the impacts of the habitat
+        type juveniles start in and adult presence in the new habitat on
+        the likelihood of juveniles to move
+-   alternative hypothesis
+    -   H~A~: There is an impact on the habitat type juveniles start in
+        on their likelihood to move
+    -   H~A~: There is an impact on adult presence in the new habitat on
+        the likelihood of juveniles to move
+    -   H~A~: There is an interaction between the impacts of the habitat
+        type juveniles start in and adult presence in the new habitat on
+        the likelihood of juveniles to move
+
+The outcome,however, is a proportion (or count). Note we *can* fit a
+linear model to the data:
+
+
+```{r}
+juvenile_fit_lm <- lm(Colonized ~ adults_updated*source.habitat, 
+    juvenile)
+plot(juvenile_fit_lm)
+```
+
+
+The assumpitons don't even look that bad, but we know
+
+For this reason we will use a generalized linear model to analyze the
+data. We can\
+fit a glm using the binomial family.
+
+
+```{r}
+juvenile_fit_glm <- glm(cbind(Colonized, Not_colonized) ~ adults*source.habitat, 
+    juvenile, family = "binomial")
+```
+
+
+Add in McFadden's R\^2.rcompanion:compareglm
+
+#### Beta regression
+
+Beta regression focuses on true proportion data where the outcome is
+between 0 and 1.
+
+#### Poisson regression
+
+Poisson regression focuses on count-based data.
+
+#### Non-linear options
+
+## Data are not independent
+
+### In respect to predictors
+
+A major issue for linear models is when predictors are co-linear.
+Mathematically speaking, perfect collinearity occurs when any column of
+the design (*X*) matrix can be derived by combining other columns.
+Perfect collinearity will lead to a message noting singularity issues,
+which is R's way of telling you the matrix isn't invertible (which it
+has to be to solve the equation).
+
+Even partial collinearity will lead to an increase in Type II errors
+[@zuur2010]. To put it simply, partitioning variance among related
+predictors is hard. For this reason, a few approaches may be used.
+
+#### Check for issues
+
+The first step is identifying issues. From the outset, relationships
+among predictor variables can be assessed using the *pairs* function in
+R. If two variables are highly correlated (r^2^ \> .8 is a general
+limit), only one should be included in the model. Similarly, variance
+inflation factors (vif) can be assessed for the final and other models
+to consider this issues (all this is covered in the [previous chapter
+that introduces multiple
+regression](Combining_numerical_and_categorical_predictors.qmd){target="_blank"}.
+
+### In respect to measured outcomes
+
+When outcome variables are linked together, a few options exist. Note
+this issue may be obvious from checks of assumptions, but it also may be
+due to experimental design.
+
+Consider this example. In order to investigate impacts of climate stress
+on oysters, specimens are placed in individual tanks and held at normal
+summer (calculated using recent data) temperature or at temperatures
+predicted under 2 IPCC --- Intergovernmental Panel on Climate Change-
+scenarios. Oysters were also exposed to predator cues by dropping in
+water from tanks with 0, low (.25/m2), or high (2/m2) predators. After
+two months changes in oyster shell length (growth) was measured.
+Twenty-five oysters were measured for each treatment combination.
+
+You hopefully recognize this as a factorial ANOVA experiment that you
+know how to analyze. If you need a reminder, see the [chapter on ANOVA
+extensions](../chapters/More_ANOVAs.qmd){target="_blank"}. Experiments
+like this are odd, however, given the space they require. It is far more
+common to put lots of organisms in a single container given space and
+costs. However, this means our measurements are connected; remember
+[blocking and paired
+tests](../chapters/More_ANOVAs.qmd){target="_blank"})?
+
+There are several ways to deal with this. Here we explore each for our
+oyster example.
+
+
+```{r, echo=F}
+set.seed(19)
+experiment <- data.frame(temperature = factor(c(rep("ambient",75), rep("elevated_scenario1", 75), rep("elevated_scenario2", 75))),
+                         predator_cue = factor(c(rep(c(rep("none",25),
+                                               rep("normal",25),
+                                               rep("high",25)),3))),
+                         growth = c(rnorm(25,2),
+                                    rnorm(25, 1.5),
+                                    rnorm(25, .7),
+                                    rnorm(25,2.7),
+                                    rnorm(25,1.0),
+                                    rnorm(25, .4),
+                                    rnorm(25, 3.1),
+                                    rnorm(25, 3.1),
+                                    rnorm(25, 3.1)),
+                         container = c(rep(letters[1:9],each=25)))
+experiment[experiment$growth<0, "growth"] <- 0
+```
+
+
+#### Ignore it (don't do this!)
+
+First, let's ignore the lack of independence. This is *not* an option,
+but it let's you see the impact.
+
+
+```{r}
+growth_lm <- lm(growth~predator_cue*temperature, experiment)
+plot(growth_lm)
+library(car)
+Anova(growth_lm, type="III")
+```
+
+
+We find significant main effects and interactions using this *wrong*
+approach.
+
+#### Find average for each unit
+
+One way of doing this focuses on the average for each unit
+
+
+```{r}
+library(Rmisc)
+averaged_experiment <- summarySE(experiment, measurevar = "growth",
+                             groupvars = c("predator_cue", "temperature", "container"))
+library(rmarkdown)
+paged_table(averaged_experiment)
+```
+
+
+and use that for your analysis.
+
+
+```{r, error=T}
+average_analysis <- lm(growth~predator_cue*temperature, averaged_experiment)
+Anova(average_analysis, type = "III")
+```
+
+
+but that leads to an issue! Since we only get 9 average outcomes and our
+model requires 10 degrees of freedom (consider why), we are left with no
+"noise" to make the denominator for our F ratio! Even when this doesn't
+happen, you have reduced your data to a much smaller number of points
+and are not getting credit for all your work! This is a good example of
+why you should analyze simulated data before you run an experiment, but
+there are other options.
+
+#####Blocking
+
+The blocking approach we've already covered works might seem appropriate
+here.
+
+
+```{r, error=T}
+blocking_analysis <- lm(growth~predator_cue*temperature+container, experiment)
+Anova(blocking_analysis, type = "III")
+```
+
+
+but its not? Why? This error means now our model matrix has collinearity
+issues. WE can actually see where
+
+
+```{r}
+alias(blocking_analysis)
+```
+
+
+though the output is confusing. In general, the issue here is each unit
+only contributes to one level of other traits..so if we know the average
+impact of ambient temperatures, for example, and the impacts in two of
+the treatments that were held at that temperature, we can predict the
+other. If instead each unit contributed to multiple levels, like in
+[feather experiment](../chapters/More_ANOVAs.qmd){target="blank"}) this
+isn't an issue.
+
+#### Random effects
+
+Our final option takes a new approach. It considers the units we
+measured as simply a sample from a larger population. Using that
+background, we use the information from the units to consider the
+distribution of sample effects we might see. The impact of unit is then
+considered a random-effect. For this to work, you probably want 5+
+levels of the unit variable. This is because we are using the means to
+estimate variance (confusing?). For factors with \<5 levels, random
+effects likely offer no benefit [@gomes2022].
+
+When models contain fixed (what we've done before) and random effects,
+we call them mixed-effects models. Two common packages for carrying out
+this analysis in R are the **nlme** and **lme4** packages. We will focus
+on the lme4 package here. Random effects can be entered in the *lmer*
+(linear mixed-effects regression) function and specified as (1\|Grouping
+Unit). One nice thing about **lme4** is it will handle crossed and
+random effects on it's own **as long as you don't repeat unit names**.
+For example, we could note
+
+
+```{r}
+library(lme4)
+mixed_analysis <- lmer(growth~predator_cue*temperature+(1|container), experiment)
+```
+
+
+Once built, we need to consider assumptions. The main assumption we add
+here is that the random effects are normally distributed. This should be
+checked at each level of grouping. The *check_mixed_model* function
+(provided below) offers an automated approach for one level (also known
+as one-way random effects).
+
+
+```{r}
+check_mixed_model <- function (model, model_name = NULL) {
+  #collection of things you might check for mixed model
+  par(mfrow = c(2,3))
+  if(length(names(ranef(model))<2)){
+    qqnorm(ranef(model, drop = T)[[1]], pch = 19, las = 1, cex = 1.4, main= paste(model_name, 
+                                                                                  "\n Random effects Q-Q plot"))
+    qqline(ranef(model, drop = T)[[1]])
+  }
+  plot(fitted(model),residuals(model), main = paste(model_name, 
+                                                    "\n residuals vs fitted"))
+  qqnorm(residuals(model), main =paste(model_name, 
+                                       "\nresiduals q-q plot"))
+  qqline(residuals(model))
+  hist(residuals(model), main = paste(model_name, 
+                                      "\nresidual histogram"))
+}
+```
+
+```{r}
+check_mixed_model(mixed_analysis)
+```
+
+
+Here we have only 9 levels of units, so the spread is not perfect.
+However, we also know each of these is itself an average,and averages
+should be normally-distributed under the central limith theorem, so we
+can plow ahead.
+
+We can consider the outcome using our *summary* command - note the
+output denotes we have 225 observations and 9 grouping levels.
+
+
+```{r}
+summary(mixed_analysis)
+```
+
+
+We can also still use *Anova* to get p-values. However, these are now
+calculated by default using likelihood-associated $\chi^2$ tests.
+
+
+```{r}
+Anova(mixed_analysis, type = "III")
+```
+
+
+You can also ask for F tests, but note the degrees of freedom associated
+with these tests is not clear. It's somewhere between the "average" and
+"ignore" approach used above.
+
+
+```{r}
+Anova(mixed_analysis, type = "III", test="F")
+```
+
+
+Note this approach suggests we do not have enough data to reject the
+null hypothesis. Ignoring the linkages among data led to *very*
+different results. This issue (pseudopreplication) has been noted in
+ecology and other fields [@hurlbert1984; @heffner1996; @lazic2010].
+
+## Errors are not equal among groups
+
+Another option is to use weighted-least squares regression - this
+approach specifically helps when residuals are not evenly distributed
+among groups (or when a funnel/cone appears when you plot the model to
+check assumptions). For example, we could take the sdm_model (just as an
+example of use! it's not needed here!) This approach assume you built
+the model and then noted an issue with heteroscedasticity. If so, we can
+calculate a weight for each residual that is based on its variance.
+Doing this requires an iterative process similar to those used for
+estimation for generalized linear modes. - below makes a value that
+increases with low variance.
+
+`{r} wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2}`
+
+We can then add a new argument to the *lm* function to use these
+weights.
+
+`{r} sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)}`
+
+We can then continue on our normal route:
+
+`{r} plot(sdm_model_wls) Anova(sdm_model_wls, type="III")}`
+
+If you compare the two models you notice slight differences - these are
+minimal here due to lack of differences in variance.
+
+`{r} summary(sdm_model) summary(sdm_model_wls)}`
+
+Why not just always do this? Because weighted least squares implicitly
+assumes we *know* the weights. We are actually estimating them, so small
+datasets may lead to bad estimates and outcomes.
+
+## Residuals are not normally distributed
+
+A very common concern regarding linear models is normality. I list it
+first here due to how often I see it noted, but in fact this assumption
+is one of the least important (and the assumption is based on residuals,
+not data!). However, non-normal residuals are often (not always)
+connected to other issues, namely linearity, as noted above.
+
+## Combinining these
+
+## Next steps
+
+These methods can be extended to other models that are used when linear
+model assumptions are not met, which is the focus of the next chapter.
+
