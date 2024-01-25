@@ -1421,15 +1421,13 @@ predator_cue:temperature 0.0459  4 3230137 0.9960</code></pre>
 <section id="errors-are-not-equal-among-groups" class="level2">
 <h2 class="anchored" data-anchor-id="errors-are-not-equal-among-groups">Errors are not equal among groups</h2>
 <p>Another option is to use weighted-least squares regression - this approach specifically helps when residuals are not evenly distributed among groups (or when a funnel/cone appears when you plot the model to check assumptions). For example, we could take the sdm_model (just as an example of use! it’s not needed here!) This approach assume you built the model and then noted an issue with heteroscedasticity. If so, we can calculate a weight for each residual that is based on its variance. Doing this requires an iterative process similar to those used for estimation for generalized linear modes. - below makes a value that increases with low variance.</p>
-<!-- `{r} wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2}` -->
-<!-- We can then add a new argument to the *lm* function to use these -->
-<!-- weights. -->
-<!-- `{r} sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)}` -->
-<!-- We can then continue on our normal route: -->
-<!-- `{r} plot(sdm_model_wls) Anova(sdm_model_wls, type="III")}` -->
-<!-- If you compare the two models you notice slight differences - these are -->
-<!-- minimal here due to lack of differences in variance. -->
-<!-- `{r} summary(sdm_model) summary(sdm_model_wls)}` -->
+<p><code>{r} wt_sdm &lt;- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2}</code></p>
+<p>We can then add a new argument to the <em>lm</em> function to use these weights.</p>
+<p><code>{r} sdm_model_wls &lt;-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)}</code></p>
+<p>We can then continue on our normal route:</p>
+<p><code>{r} plot(sdm_model_wls) Anova(sdm_model_wls, type="III")}</code></p>
+<p>If you compare the two models you notice slight differences - these are minimal here due to lack of differences in variance.</p>
+<p><code>{r} summary(sdm_model) summary(sdm_model_wls)}</code></p>
 <p>Why not just always do this? Because weighted least squares implicitly assumes we <em>know</em> the weights. We are actually estimating them, so small datasets may lead to bad estimates and outcomes.</p>
 </section>
 <section id="residuals-are-not-normally-distributed" class="level2">
