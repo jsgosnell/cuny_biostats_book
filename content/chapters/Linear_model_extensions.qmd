@@ -623,34 +623,33 @@ classified as "binomial".
 as_glm <- glm(movement~ageclass, behavior, family = "binomial")
 ```
 
-We can then use our normal approach (including *summary*, *Anova*, and *glht* 
-functions) to consider the outcomes.  Checking assumptions is a little trickier
-than for linear models (as noted above).  One major check is typically ensuring 
-the dispersion parameter is correct. We can typically check the parameter by
-dividing the residual deviance by its associated degrees of freedom; this 
-information is provided by the *summary* function (here, 112.84/86); 
+We can then use our normal approach (including *summary*, *Anova*, and
+*glht* functions) to consider the outcomes. Checking assumptions is a
+little trickier than for linear models (as noted above). One major check
+is typically ensuring the dispersion parameter is correct. We can
+typically check the parameter by dividing the residual deviance by its
+associated degrees of freedom; this information is provided by the
+*summary* function (here, 112.84/86);
 
 ```{r}
 summary(as_glm)
 ```
 
 For Bernoulli data like this, however, over-dispersion is not an issue
-[@molenberghs2012]. Forbinomial and
-Poisson data, this should be approximately. We can 
-note the impact of
-given factors using *Anova*
+[@molenberghs2012]. Forbinomial and Poisson data, this should be
+approximately. We can note the impact of given factors using *Anova*
 
 ```{r}
 Anova(as_glm, type="III")
 ```
 
-which now uses likelihood-based tests by
-default. Similarly, the *summary* output notes details related to
-fitting the model (Number of Fisher scoring iterations). To interpret
-the coefficient from the glm, we need to consider the link function (here, the 
-logit). If we backtransform the logit link function, we
-can actually say that juveniles had a $e^\beta$ greater odds of movement
-than adults, which is equal to
+which now uses likelihood-based tests by default. Similarly, the
+*summary* output notes details related to fitting the model (Number of
+Fisher scoring iterations). To interpret the coefficient from the glm,
+we need to consider the link function (here, the logit). If we
+backtransform the logit link function, we can actually say that
+juveniles had a $e^\beta$ greater odds of movement than adults, which is
+equal to
 
 ```{r}
 exp(.1335)
@@ -658,18 +657,17 @@ exp(.1335)
 
 and very close to 1 (thus the high p-value given our small sample size).
 
-While this example simply replicates the $\chi^2$ tests we learned earlier (deviations
-may arise when counts are low or high for any group, and thus $\hat{p}$ approaches
-extreme values and breaks the assumptions!), the power of these models comes 
-from the ability to consider *multiple*
-variables (which we couldn't do before). These models are sometimes
-called log-linear models. 
+While this example simply replicates the $\chi^2$ tests we learned
+earlier (deviations may arise when counts are low or high for any group,
+and thus $\hat{p}$ approaches extreme values and breaks the
+assumptions!), the power of these models comes from the ability to
+consider *multiple* variables (which we couldn't do before). These
+models are sometimes called log-linear models.
 
-To consider this approach and extend glm to binomial data, consider work by
-@bueno2020. The authors carried out a series
-of experiments to determine how various factors impacted colonization of
-a host algae, *Sargassum filipendula*, by a small amphipod, *Cymadusa
-filosa*.
+To consider this approach and extend glm to binomial data, consider work
+by @bueno2020. The authors carried out a series of experiments to
+determine how various factors impacted colonization of a host algae,
+*Sargassum filipendula*, by a small amphipod, *Cymadusa filosa*.
 
 [![Rob Young, Centre for Biodiversity Genomics - CC - BY - NC -
 S](/images/Cymadusa_filosa.jpg)](https://molecol-unesp-clp.jimdofree.com/2017/03/01/the-first-set-of-microsatellite-markers-for-the-amphipod-cymadusa-filosa/)
@@ -747,8 +745,9 @@ summary(juvenile_fit_glm)
 Anova(juvenile_fit_glm, type="III")
 ```
 
-We see that there is a significant interaction between the presence of adults and 
-source habitat on the proportion of amphipods that move to colonize algae.
+We see that there is a significant interaction between the presence of
+adults and source habitat on the proportion of amphipods that move to
+colonize algae.
 
 ADD RESULTS...break up one way anova, etc.
 
