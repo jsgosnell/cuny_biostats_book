@@ -632,9 +632,9 @@ Fit: lm(formula = Sepal.Length ~ Species, data = iris)
 
 Linear Hypotheses:
                             Estimate Std. Error t value Pr(&gt;|t|)    
-versicolor - setosa == 0       0.930      0.103   9.033   &lt;1e-08 ***
-virginica - setosa == 0        1.582      0.103  15.366   &lt;1e-08 ***
-virginica - versicolor == 0    0.652      0.103   6.333   &lt;1e-08 ***
+versicolor - setosa == 0       0.930      0.103   9.033  &lt; 1e-09 ***
+virginica - setosa == 0        1.582      0.103  15.366  &lt; 1e-09 ***
+virginica - versicolor == 0    0.652      0.103   6.333 4.59e-09 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)</code></pre>
@@ -776,9 +776,9 @@ Fit: lm(formula = Sepal.Length ~ Species * Petal.Length, data = iris)
 
 Linear Hypotheses:
                             Estimate Std. Error t value Pr(&gt;|t|)    
-versicolor - setosa == 0     -1.8056     0.5984  -3.017  0.00846 ** 
-virginica - setosa == 0      -3.1535     0.6341  -4.973  &lt; 0.001 ***
-virginica - versicolor == 0  -1.3479     0.6544  -2.060  0.10177    
+versicolor - setosa == 0     -1.8056     0.5984  -3.017  0.00834 ** 
+virginica - setosa == 0      -3.1535     0.6341  -4.973  &lt; 1e-04 ***
+virginica - versicolor == 0  -1.3479     0.6544  -2.060  0.10170    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)</code></pre>
@@ -1875,7 +1875,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 <section id="option-3-compare-models-nested-or-not-using-aic" class="level3">
 <h3 class="anchored" data-anchor-id="option-3-compare-models-nested-or-not-using-aic">Option 3: Compare models (nested or not) using AIC</h3>
-<p>You may have noted the AIC values above. AIC is “an information criteria” that uses maximum likelihood..</p>
+<p>You may have noted the AIC values above. AIC is “an information criteria” that uses maximum likelihood to compare models.</p>
 <details>
 <summary>
 Remember that? from <a href="../../content/chapters/Compare_proportions_among_populations.html" target="_blank">the chapter on comparing proportions</a>
@@ -1888,7 +1888,7 @@ Remember that? from <a href="../../content/chapters/Compare_proportions_among_po
 </div>
 <p>Similar to calculating sum square errors from models, what is most likely is what we saw, but we know there is always noise in the data. Thankfully, it turns out the ratio of likelihood values follow a <span class="math inline">\(\chi^2\)</span> distribution and can thus provide a p-value to compare possible models. We will return to likelihood-based approaches later, in fact, as they can be used for any dataset we can generate a model for and can be used to compare multiple models.</p>
 </details>
-<p>to compare models. To do so, it obtains a likelihood value for a model and takes a log of it. It then multiples that by -2 and adds a penalty parameter multiplied by the number of parameters in the model. Why? Because the algorithms used mean an extra parameter will always make a model better (or at least no worse).</p>
+<p>To do so, it obtains a likelihood value for a model and takes a log of it. It then multiples that by -2 and adds a penalty parameter multiplied by the number of parameters in the model. Why? Because the algorithms used mean an extra parameter will always make a model better (or at least no worse).</p>
 <p>The true <em>AIC</em> process uses a penalty parameter of 2; other approaches vary this. The Bayesian information criterion (BIC), for example, uses a penalty parameter of of log(n), where n is the number of observations. Given this formula, the “best” model has the <strong>lowest</strong> AIC value.</p>
 <p>AIC and other information criteria can be used to compare nested models (the value of adding or removing a single variable). This can be done in a few ways. The default for <em>drop1</em> focuses on AIC</p>
 <div class="cell">
@@ -1989,15 +1989,27 @@ subset         -0.005591655</code></pre>
 </div>
 <p>While AIC and other IC may be an interesting approach, a few points should be made.</p>
 <ul>
-<li><p>AIC values are relative only to models fit with the same data.</p>
+<li><p>AIC values are relative only to models fit with the same data in the same way.</p>
 <ul>
-<li>So there is no “good” AIC value</li>
+<li><p>So there is no “good” AIC value</p></li>
+<li><p>Different programs may use different additive components, so be careful in using functions or different pieces of software to calculate AIC for different models that you want to compare. In R, an easy example is the following functions (both in base R) give different output (as noted in their respective help files)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(fev_full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 617.602</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a><span class="fu">extractAIC</span>(fev_full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]    16.00 -1240.37</code></pre>
+</div>
+</div></li>
 </ul></li>
 <li><p>AIC outcomes actually correspond to using an <span class="math inline">\(\alpha\)</span> level of .15 <span class="citation" data-cites="steyerberg2000">(<a href="#ref-steyerberg2000" role="doc-biblioref">Steyerberg et al. 2000</a>)</span>, so AIC approaches typically favor larger models</p></li>
 <li><p>AIC relies on large-sample approximations</p>
 <ul>
 <li>AICc corrects for small samples and can always be used.</li>
 </ul></li>
+<li><p>Models that are being compared must focus on the same set of outcomes. One model can’t use fewer rows due to missing data, and different responses (we’ll cover transformations and glms in a few chapters) can’t be compared. Note, however, models may differ in the number of explanatory variables.</p></li>
 </ul>
 </section>
 <section id="option-4-compare-r2-or-adjusted-r2-values" class="level3">
@@ -2010,7 +2022,7 @@ subset         -0.005591655</code></pre>
 <p>Regardless of the the method that is used, the linear models still need to meet basic assumptions. For this reason, the final model (and probably all those developed in route to getting there, though this rarely happens) should be assessed for assumptions.</p>
 <p>A new approach we have not used previously focuses on variance inflation factors (vif) to ensure collinearity (more on this in next section) isn’t an issue. In general you want these values to be less than 5. When working with normal linear models, especially those have factors that have more than 2 levels, focusing on the generalized form of the vif for predictors is appropriate.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(fev_full_working, <span class="at">type=</span><span class="st">"predictor"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(fev_full_working, <span class="at">type=</span><span class="st">"predictor"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>GVIFs computed for predictors</code></pre>
 </div>
