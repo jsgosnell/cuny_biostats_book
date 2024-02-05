@@ -13,7 +13,7 @@ source("../globals.R")
 
 ```
 
-[![XKCD: Data Trap. It\'s important to make sure your analysis destroys
+[![XKCD: Data Trap. It's important to make sure your analysis destroys
 as much information as it produces. https://xkcd.com/2582/, CC BY-NC 2.5
 https://creativecommons.org/licenses/by-nc/2.5/.](https://imgs.xkcd.com/comics/data_trap_2x.png){#fig-XKDC2582
 fig-alt="Two stick figures in single panel. One sitting at desk states \"Hey, look, we have a bunch of data! I'm gonna analyze it\".  The other responds, \"No, you fool! That will only create more data!\""
@@ -276,7 +276,7 @@ approach to understanding normality. Consider these graphs.
 
 ```{r, message=F}
 #| label: fig-cardinals_ggplot2
-#| fig-cap: "Example of left-skewed data (ggplot2)"
+#| fig-cap: "Example of left-skewed data (ggplot2). Note this is not actual data, only simulated for use in example."
 set.seed(19)
 cardinals <- round(rbeta(10000,10,2)*50+runif(10000,5,10),3)
 ggplot(data.frame(cardinals), 
@@ -289,7 +289,7 @@ ggplot(data.frame(cardinals),
 
 ```{r, message=F}
 #| label: fig-parrots
-#| fig-cap: "Example of normal data"
+#| fig-cap: "Example of normal data.  Note this is not actual data, only simulated for use in example."
 set.seed(19)
 parrots<- round(c(rnorm(1000,400,10)),3)
 ggplot(data.frame(parrots), 
@@ -302,7 +302,7 @@ ggplot(data.frame(parrots),
 
 ```{r, message=F}
 #| label: fig-blue_jays
-#| fig-cap: "Example of right-skewed data"
+#| fig-cap: "Example of right-skewed data.  Note this is not actual data, only simulated for use in example."
 set.seed(19)
 blue_jays <- round(rbeta(10000,2,8)*100+runif(10000,60,80),3)
 ggplot(data.frame(blue_jays), 
@@ -327,7 +327,7 @@ woodpecker weights.
 
 ```{r, message=F}
 #| label: fig-robins
-#| fig-cap: "Example of uniform data"
+#| fig-cap: "Example of uniform data.  Note this is not actual data, only simulated for use in example."
 set.seed(19)
 rochester <- round(c(runif(1000,75,85)),3)
 ggplot(data.frame(rochester), 
@@ -339,9 +339,9 @@ ggplot(data.frame(rochester),
 
 ```
 
-```{r}
+```{r, message=F}
 #| label: fig-woodpeckers
-#| fig-cap: "Example of bimodal data"
+#| fig-cap: "Example of bimodal data.  Note this is not actual data, only simulated for use in example."
 set.seed(19)
 woodpeckers <- round(c(rnorm(100,60,4),rnorm(100,80,4)),3)
 ggplot(data.frame(woodpeckers), 
@@ -414,9 +414,9 @@ data, or errors...we'll get there) following a normal distribution. We
 can see our parrot data (which came from a normal distribution!) is very
 close to a "perfect" normal distribution as defined by an equation.
 
-```{r}
+```{r, message=F}
 #| label: fig-parrots_with_overlay
-#| fig-cap: "Comparing the distribution of the data to a perfect normal distribution"
+#| fig-cap: "Comparing the distribution of the data to a perfect normal distribution.  Note this is not actual data, only simulated for use in example."
 parrots_df <- data.frame(parrots)
 colors <- c("PDF from data" = "black", "normal curve" = "red")
 ggplot(parrots_df, 
@@ -662,7 +662,7 @@ ggplot(iris, aes(y=Sepal.Length, x=Species, fill=Species)) +
 
 or the distribution using stacked histograms...
 
-```{r}
+```{r, message=F}
 #| label: fig-stacked_histograms_all species 
 #| #| fig-cap: "Individual bars use colors to denote how many of each group fall in a given bin"  
 ggplot(iris, aes(x=Sepal.Length)) +     geom_histogram(aes(fill=Species))+    labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),        y= "Sepal length (cm)",        x= "Species")
@@ -697,7 +697,7 @@ to instead *facet* these graphs. Faceting means we produce different
 graphs for each group, treatment, etc, but they (typically) share axes.
 This makes it easier to compare the groups.
 
-```{r}
+```{r, message=F}
 #| label: fig-faceted_histograms_all species
 #| fig-cap: "Note how common axes allow comparison."
  ggplot(iris, aes(x=Sepal.Length)) + 
@@ -1001,7 +1001,7 @@ important changes seem insignificant! Consider
 
 ```{r}
 #| label: fig-compare_zero_points
-#| fig-cap: "The decision of where to start the y-axis can have major impacts on interpretation"
+#| fig-cap: "The decision of where to start the y-axis can have major impacts on interpretation. A is bar charts for the data, with 0 included on the y-axis.  B is the same dataset using scatter plots and y-axis set (by default) to not include 0"
 small_difference <- data.frame(Treatment = c("a","b"), mean=c(37,40))
 library(ggpubr)
 bp <- ggplot(small_difference, aes(x=Treatment, y=mean, fill=Treatment))+
@@ -1025,7 +1025,7 @@ Similarly, imagine we collected this data
 
 ```{r}
 #| label: fig-outliers
-#| fig-cap: "This would likely indicate"
+#| fig-cap: "Same data graphed 3 ways. A is raw data, B is raw data with smooth (averaged) curve added, and C is curve only (which also rescales by default."
 
 good_fit_x <- runif(100, 1, 50) 
 good_fit_y <- rnorm(100,25,2) 
@@ -1092,7 +1092,7 @@ if all data were placed in ascending order (remember box plots!)).
 Why do we need more than one measure of central tendency? Consider our
 cardinal data:
 
-```{r}
+```{r, message=F}
 #| label: fig-cardinals_ggplot2_ct
 #| fig-cap: "Skew impacts value of and relationships among various measures of central tendency"
 # function to calculate mode
@@ -1115,9 +1115,9 @@ Note the data is left-skewed. so the mean is pulled towards these
 outliers. The median may offer a better summary of the actual center. We
 see similar outcomes with right-skewed data.
 
-```{r}
+```{r, message=F}
 #| label: fig-blue_jays_ggplot2_ct
-#| fig-cap: "Skew impacts value of and relationships among various measures of central tendency"
+#| fig-cap: "Skew impacts value of and relationships among various measures of central tendency. . Note this is not actual data, only simulated for use in example."
 ggplot(data.frame(blue_jays), 
        aes(x=blue_jays)) +
   geom_histogram(color="black") +
@@ -1134,9 +1134,9 @@ ggplot(data.frame(blue_jays),
 But with symmetric data, we see the measures of central tendency align
 more
 
-```{r}
+```{r, message=F}
 #| label: fig-parrots_ggplot2_ct
-#| fig-cap: "For symmetric data, measures of central tendency are more aligned."
+#| fig-cap: "For symmetric data, measures of central tendency are more aligned. . Note this is not actual data, only simulated for use in example."
 ggplot(data.frame(parrots), 
        aes(x=parrots)) +
   geom_histogram(color="black") +
@@ -1169,9 +1169,9 @@ describe a distribution is known as *bimodal* data. In this case, the
 distribution shows two, not one, clear peak. Remember the woodpecker
 @fig-woodpeckers data?
 
-```{r}
+```{r, message=F}
 #| label: fig-woodpeckers-measures
-#| fig-cap: "Example of bimodal data with various measures"
+#| fig-cap: "Example of bimodal data with various measures. Note this is not actual data, only simulated for use in example."
 ggplot(data.frame(woodpeckers), 
        aes(x=woodpeckers)) +
   geom_histogram(aes(y=..density..), color="black") +
@@ -1198,7 +1198,7 @@ focus on the spread of the data. In some ways these focus on how much of
 the data is in the tail (or how *heavy* the tail is). To illustrate
 this, consider the @fig-normal_virginica_ggplot data.
 
-```{r}
+```{r, message=F}
 #| label: fig-normal_virginica_ggplot_2
 #| fig-cap: "Remember this example of approximately normal data?"
 
@@ -1285,7 +1285,7 @@ ggplot(iris[iris$Species == "virginica",],
        x= "Collection #")+
   geom_hline(aes(yintercept=mean(iris[iris$Species == "virginica", "Sepal.Length"])), color = "blue")+
   annotate("text", label = "mean", x = 135, y = mean(iris[iris$Species == "virginica", "Sepal.Length"])+.13, color = "blue") +
-  annotate("text", label = "square each red line \n and find average!", x = 145, y = 7.5 , color = "red") + geom_segment(data = segment_data, aes(x = x, y = y, xend = xend, yend = yend), color= "red", size = 1.1) 
+  annotate("text", label = "square each blue line \n and find average!", x = 145, y = 7.5 , color = "blue") + geom_segment(data = segment_data, aes(x = x, y = y, xend = xend, yend = yend), color= "blue", size = 1.1, linetype="dotted") 
   
 ```
 
@@ -1337,21 +1337,47 @@ summary(cardinals)
 ```
 
 Note that if we shifted the bottom 10% of the values even *further* left
-(increasing the skew), the median stays the same, as does the IQR.
+(increasing the skew), the median stays the same, as does the first
+quartile (and thus the IQR), even though the mean and minimum move.
 
-```{r}
+```{r, message=F}
 #| label: fig-cardinals_ggplot2_shifted
-#| fig-cap: "Shifted cardinal data"
-cardinals_new <- cardinals
-cardinals_new[cardinals_new < quantile(cardinals_new, probs= .1)] <- cardinals_new[cardinals_new < quantile(cardinals_new, probs= .1)]-.4
+#| fig-cap: "Shifted cardinal data. Note this is not actual data, only simulated for use in example."
 
-ggplot(data.frame(cardinals_new), 
-       aes(x=cardinals_new)) +
-  geom_histogram( fill="red", color="black") +
-  labs(title="Weight of Westchester cardinals (shifted)",
-       x= "Weight (g)",
-       y= "Frequency")
+
+cardinals_new <- cardinals
+cardinals_new[cardinals_new < quantile(cardinals_new, probs= .1)] <- pmax(cardinals_new[cardinals_new < quantile(cardinals_new, probs= .1)]-30,0)
+
 summary(cardinals_new)
+
+original_cardinal <- ggplot(data.frame(cardinals), 
+       aes(x=cardinals)) +
+  geom_histogram(color="black") +
+  labs(title="Weight of Westchester cardinals",
+       x= "Weight (g)",
+       y= "Frequency")+
+  geom_vline(aes(xintercept=mean(cardinals), color="mean"))+
+  geom_vline(aes(xintercept=median(cardinals), color= "median"))+
+  geom_vline(aes(xintercept=fun.mode(cardinals), color = "mode")) +
+  theme_bw()+theme(legend.position="bottom")+
+    guides(color = guide_legend(title = "Measure"))
+
+new_cardinal <- ggplot(data.frame(cardinals_new), 
+       aes(x=cardinals_new)) +
+  geom_histogram(color="black") +
+  labs(title="Weight of Westchester cardinals",
+       x= "Weight (g)",
+       y= "Frequency")+
+  geom_vline(aes(xintercept=mean(cardinals_new), color="mean"))+
+  geom_vline(aes(xintercept=median(cardinals_new), color= "median"))+
+  geom_vline(aes(xintercept=fun.mode(cardinals_new), color = "mode")) +
+  theme_bw()+theme(legend.position="bottom")+
+    guides(color = guide_legend(title = "Measure"))
+
+compare <- ggarrange(original_cardinal, new_cardinal, labels = c("A", "B"),
+          ncol = 2, nrow = 1,common.legend = TRUE, legend="bottom")
+annotate_figure(compare,
+                top = text_grob("Impacts of shifting data on 5-number summary", color = "red", face = "bold", size = 14))
 ```
 
 ### Proportions for categorical data
