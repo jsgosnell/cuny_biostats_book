@@ -691,7 +691,7 @@ add1(fev_under_a, ~ . + Height + Sex, test = "F")
 ### Option 3: Compare models (nested or not) using AIC
 
 You may have noted the AIC values above. AIC is "an information
-criteria" that uses maximum likelihood..
+criteria" that uses maximum likelihood to compare models.
 
 <details>
 
@@ -750,11 +750,11 @@ used to compare multiple models.
 
 </details>
 
-to compare models. To do so, it obtains a likelihood value for a model
-and takes a log of it. It then multiples that by -2 and adds a penalty
-parameter multiplied by the number of parameters in the model. Why?
-Because the algorithms used mean an extra parameter will always make a
-model better (or at least no worse).
+To do so, it obtains a likelihood value for a model and takes a log of
+it. It then multiples that by -2 and adds a penalty parameter multiplied
+by the number of parameters in the model. Why? Because the algorithms
+used mean an extra parameter will always make a model better (or at
+least no worse).
 
 The true *AIC* process uses a penalty parameter of 2; other approaches
 vary this. The Bayesian information criterion (BIC), for example, uses a
@@ -812,9 +812,21 @@ model.avg(auto, subset = delta < 2)
 While AIC and other IC may be an interesting approach, a few points
 should be made.
 
--   AIC values are relative only to models fit with the same data.
+-   AIC values are relative only to models fit with the same data in the
+    same way.
 
     -   So there is no "good" AIC value
+
+    -   Different programs may use different additive components, so be
+        careful in using functions or different pieces of software to
+        calculate AIC for different models that you want to compare. In
+        R, an easy example is the following functions (both in base R)
+        give different output (as noted in their respective help files)
+
+        ```{r}
+        AIC(fev_full)
+        extractAIC(fev_full)
+        ```
 
 -   AIC outcomes actually correspond to using an $\alpha$ level of .15
     [@steyerberg2000], so AIC approaches typically favor larger models
@@ -822,6 +834,12 @@ should be made.
 -   AIC relies on large-sample approximations
 
     -   AICc corrects for small samples and can always be used.
+
+-   Models that are being compared must focus on the same set of
+    outcomes. One model can't use fewer rows due to missing data, and
+    different responses (we'll cover transformations and glms in a few
+    chapters) can't be compared. Note, however, models may differ in the
+    number of explanatory variables.
 
 ### Option 4: Compare r^2^ (or adjusted r^2^) values
 
