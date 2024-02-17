@@ -53,7 +53,7 @@ ggplot(finch_data, aes (x=age, y = collisions))+
 ```
 
 And although we haven't discussed it, you should understand we could
-develop a confidence interval fr this type of data (we'll do so below).
+develop a confidence interval for this type of data (we'll do so below).
 That would tell us the range of proportions we might typically expect.
 But does that really answer the question of whether age impacts
 likelihood of colliding with glass?
@@ -101,15 +101,15 @@ answer. Instead, think about what we would expect to see if age had no
 impact on collisions. We would not necessarily expect a 50/50 split in
 older and younger birds *because that may not be what the population
 looks like*. In fact, previous research has suggested the population is
-split closer to 3:1, with 3 older birds for every younger bird. This
+split closer to 3:1, with 3 younger birds for every older bird. This
 means if age has no impact on collisions, we should see about (due to
-sampling error!) 3 older birds for every younger bird in our samples of
-birds that hit glass.
+sampling error!) 3 younger birds for every one older bird in our samples
+of birds that hit glass.
 
-What did we actually see? We saw 5 old birds and 5 young birds. That is
-not a 3:1 split, but its also a small sample size. If we had a
-population with a 3:1 split and randomly selected 10 birds from it, how
-rare would it be to get 5 younger and 5 older birds? That' (close) to
+What did we actually see? We saw 9 younger birds and 9 older birds. That
+is not a 3:1 split, but its also a small sample size. If we had a
+population with a 3:1 split and randomly selected 18 birds from it, how
+rare would it be to get 9 younger and 9 older birds? That' (close) to
 what we are asking.
 
 In this case, our null hypothesis is comparing our signal to a set
@@ -123,7 +123,7 @@ $$
 H_O: p=.75
 $$
 
-where *p* is the probability of a bird in our sample being old (for a
+where *p* is the probability of a bird in our sample being young (for a
 single draw), or what we expect on average over larger samples (a
 proportion!). Remember, to find a proportion, you count the number of
 samples that fall in a given group and divided that by the total number
@@ -131,7 +131,7 @@ sampled. Alternatively, you can assign a score of *0* for values that
 are not in the focal group and a score of *1* to samples that are - the
 average of these scores will give you the proportion.
 
-Note we could instead focus on young birds and get:\
+Note we could instead focus on old birds and get:\
 $$
 H_O: p=.25
 $$
@@ -139,7 +139,7 @@ $$
 We also have alternative hypotheses (abbreviated H~A~)to accompany each
 of these. Our alternative is just the opposite of the null. Together,
 they encompass all the probability space. **It is usually just as simple
-as switching signs**. For example, if we focus on older birds, we get
+as switching signs**. For example, if we focus on younger birds, we get
 
 $$
 \begin{split}
@@ -165,7 +165,7 @@ one bird, one coin flip). We call this *Bernoulli* data.
 
 **For any type of data, we can simulate a distribution under the null
 hypothesis**. For this example, we could put 4 pieces of paper in a hat,
-3 labelled *older* and 1 labelled *younger*. We can then draw a sample
+3 labelled *younger* and 1 labelled *older*. We can then draw a sample
 of 18 (the number we actually observed) by drawing a piece of paper,
 writing down what it says, returning it to the hat, and repeating the
 process 9 more times to get single sample. For each sample, you could
@@ -242,7 +242,7 @@ of the time.
 ```{r}
 
 sampling_experiment$Proportion = ifelse(sampling_experiment$observed_proportion <= .5, 
-                                  '<= .5', ifelse(sampling_experiment$observed_proportion >= 1, '>.5 & < 1', '>= 1'))
+                                  '<= .5', ifelse(sampling_experiment$observed_proportion < 1, '>.5 & < 1', '>= 1'))
 
 
 
@@ -298,23 +298,23 @@ $\alpha$ of .05,we would expect to see something this extreme by chance
 1 time out of 20! In other words, we can have errors. Think about it
 this way:
 
-+---------------------+---------------------+--------------------+
-|                     | **Biological        |                    |
-|                     | reality**           |                    |
-+---------------------+---------------------+--------------------+
-| \                   | **H~O~ True**       | **H~O~ False**     |
-|                     |                     |                    |
-| **Decision (based   |                     |                    |
-| on analysis of      |                     |                    |
-| sample data)**      |                     |                    |
-+---------------------+---------------------+--------------------+
-| **Reject H~O~**     | Type I error        | Power (1- $\beta$  |
-|                     | (P\[ɑ\])            | )                  |
-+---------------------+---------------------+--------------------+
-| **Do not reject     | Correct (P\[1- ɑ\]) | Type II Error (    |
-| H~O~**              |                     | Pr\                |
-|                     |                     | \[$\beta$\])       |
-+---------------------+---------------------+--------------------+
++--------------------+--------------------+-------------------+
+|                    | **Biological       |                   |
+|                    | reality**          |                   |
++--------------------+--------------------+-------------------+
+| \                  | **H~O~ True**      | **H~O~ False**    |
+|                    |                    |                   |
+| **Decision (based  |                    |                   |
+| on analysis of     |                    |                   |
+| sample data)**     |                    |                   |
++--------------------+--------------------+-------------------+
+| **Reject H~O~**    | Type I error       | Power (1- $\beta$ |
+|                    | (P\[ɑ\])           | )                 |
++--------------------+--------------------+-------------------+
+| **Do not reject    | Correct (P\[1-     | Type II Error (   |
+| H~O~**             | ɑ\])               | Pr\               |
+|                    |                    | \[$\beta$\])      |
++--------------------+--------------------+-------------------+
 
 $\alpha$ sets the limit we are ok with for rejecting H~O~ when it is
 true (a *Type 1* error). Alternatively, a *Type II* error is when we do
@@ -533,7 +533,7 @@ for(i in 1:number_of_simulations){
 sampling_experiment$observed_proportion[i] = sum(sample(choices,number_of_draws, replace=T))/number_of_draws
 }
 sampling_experiment$Proportion = ifelse(sampling_experiment$observed_proportion <= .5, 
-                                  '<= .5', ifelse(sampling_experiment$observed_proportion >= 1, '>.5 & < 1', '>= 1'))
+                                  '<= .5', ifelse(sampling_experiment$observed_proportion < 1, '>.5 & < 1', '>= 1'))
 
 
 ggplot(sampling_experiment,
@@ -607,18 +607,18 @@ However, we can instead decide we want to consider differences to one
 for our null and alternative hypotheses (note *C* is a constant value
 here!):
 
-+---------------+----------------+----------------+----------------+
-|               | -              | **Focused on   | **Focused on   |
-|               |    \*Two-sided | signals        | signals less   |
-|               |     (          | greater than   | than predicted |
-|               |                | predicted in   | in null**      |
-|               |                | null**         |                |
-|               |   typical)\*\* |                |                |
-+---------------+----------------+----------------+----------------+
-| **H~O~**      | p = C          | p \<= C        | p \>= C        |
-+---------------+----------------+----------------+----------------+
-| **H~A~**      | p $\neq$ C     | p \> C         | p \< C         |
-+---------------+----------------+----------------+----------------+
++---------------+---------------+---------------+---------------+
+|               | -             | **Focused on  | **Focused on  |
+|               |   \*Two-sided | signals       | signals less  |
+|               |     (         | greater than  | than          |
+|               |               | predicted in  | predicted in  |
+|               |               | null**        | null**        |
+|               |  typical)\*\* |               |               |
++---------------+---------------+---------------+---------------+
+| **H~O~**      | p = C         | p \<= C       | p \>= C       |
++---------------+---------------+---------------+---------------+
+| **H~A~**      | p $\neq$ C    | p \> C        | p \< C        |
++---------------+---------------+---------------+---------------+
 
 For example, Claramunt et al @claramunt2022 wished to consider if roads
 impaired bird movement. To do they considered if banded birds were more
