@@ -91,14 +91,38 @@ ggplot(data=base_map_fortified,aes(x=Longitude, y=Latitude, group=group)) +
 
 ### Raster approaches
 
-```{r, eval=F}
-library(ggmap)
-map <- get_stamenmap(c(left = min(sites$Longitude), 
-                       bottom = min(sites$Latitude), 
-                       right =max(sites$Longitude), 
-                       top = max(sites$Latitude)),
-               zoom = 12)
+Note using google maps now requires an api.  This can be created @ , but should
+not be shared with others.  To use yours here, save it in a file called
+
+```{r}
+source("content/extensions/private_info.R")
 ```
+
+```{r}
+
+map <- get_map(location =c(lon = mean(bysite$Longitude), lat = mean(bysite$Latitude)),
+               zoom = 12, maptype = "satellite")
+#toner is another option
+ggmap(map)+ 
+  # xlab(expression(paste("Longitude ", ( degree~W)))) +
+  # ylab(expression(paste("Latitude ", ( degree~N)))) +
+  xlab(expression(paste("Longitude"))) +
+  ylab(expression(paste("Latitude"))) +
+  geom_point(data = bysite, 
+             aes(x=Longitude, y=Latitude, group = NA, 
+                 color = Location), 
+             shape = 21, size = 5, stroke = 1.5) +
+  #scale_x_continous (labels=abs) to get rid of negatives
+  # scale_x_continuous(labels=abs) +
+  scale_color_manual(values = c("white", "yellow")) +
+  annotate("text", label="Yellow Bar Hassock", x=-73.85, y=40.59, size=10, 
+           #          color =  hue_pal()(2)[2]) +
+           color = "yellow") +
+  annotate("text", label="Black Bar Marsh", x=-73.82, y=40.64, size=10, 
+           #           color =  hue_pal()(2)[1]),
+           color = "white") 
+```
+
 
 ## Next steps
 
