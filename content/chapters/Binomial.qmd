@@ -169,16 +169,16 @@ hypothesis**. For this example, we could put 4 pieces of paper in a hat,
 of 18 (the number we actually observed) by drawing a piece of paper,
 writing down what it says, returning it to the hat, and repeating the
 process 9 more times to get single sample. For each sample, you could
-then calculate the observed proportion of older birds. You could
+then calculate the observed proportion of younger birds. You could
 visualize the spread of those results using a histogram. It's important
 to realize this is *doable* without a computer (think it through), but
 it would take a lot of time because you need a lot of samples (**we'll
 come back to this**).
 
 For now, let's do it with the computer. Let's also take a shortcut:
-Instead of younger and older, let's label the pieces of paper 0 and 1.
+Instead of younger and older, let's label the pieces of paper 1 and 0.
 We will also call the 0's failures and the 1's successes. Then we can
-sum the draws and divide by 10 to get the proportion of successes (make
+sum the draws and divide by 18 to get the proportion of successes (make
 sure you understand why!). For now, let's do a 1000 random draws of 18.
 
 ```{r}
@@ -298,23 +298,24 @@ $\alpha$ of .05,we would expect to see something this extreme by chance
 1 time out of 20! In other words, we can have errors. Think about it
 this way:
 
-+--------------------+--------------------+-------------------+
-|                    | **Biological       |                   |
-|                    | reality**          |                   |
-+--------------------+--------------------+-------------------+
-| \                  | **H~O~ True**      | **H~O~ False**    |
-|                    |                    |                   |
-| **Decision (based  |                    |                   |
-| on analysis of     |                    |                   |
-| sample data)**     |                    |                   |
-+--------------------+--------------------+-------------------+
-| **Reject H~O~**    | Type I error       | Power (1- $\beta$ |
-|                    | (P\[ɑ\])           | )                 |
-+--------------------+--------------------+-------------------+
-| **Do not reject    | Correct (P\[1-     | Type II Error (   |
-| H~O~**             | ɑ\])               | Pr\               |
-|                    |                    | \[$\beta$\])      |
-+--------------------+--------------------+-------------------+
++------------------+------------------+-----------------+
+|                  | **Biological     |                 |
+|                  | reality**        |                 |
++------------------+------------------+-----------------+
+| \                | **H~O~ True**    | **H~O~ False**  |
+|                  |                  |                 |
+| **Decision       |                  |                 |
+| (based on        |                  |                 |
+| analysis of      |                  |                 |
+| sample data)**   |                  |                 |
++------------------+------------------+-----------------+
+| **Reject H~O~**  | Type I error     | Power (1-       |
+|                  | (P\[ɑ\])         | $\beta$ )       |
++------------------+------------------+-----------------+
+| **Do not reject  | Correct (P\[1-   | Type II Error ( |
+| H~O~**           | ɑ\])             | Pr\             |
+|                  |                  | \[$\beta$\])    |
++------------------+------------------+-----------------+
 
 $\alpha$ sets the limit we are ok with for rejecting H~O~ when it is
 true (a *Type 1* error). Alternatively, a *Type II* error is when we do
@@ -520,7 +521,7 @@ obtained using the binomial distribution will stay the same.
 
 Now that we can "easily" run a binomial test, let's do it a few times to
 see the impact of sample sizes. For example, we could see the same
-proportion/signal (50%) of older birds in our sample, but if we only
+proportion/signal (50%) of younger birds in our sample, but if we only
 collected 8 individuals we would not be able to reject H~O~. Note what
 happens to our simulation outcomes:
 
@@ -563,8 +564,8 @@ differentiate between *statistical significance* and *importance*.
 
 Given a large enough sample size, we can detect very small differences
 from our parameter value under the null hypothesis. For example, what if
-data from another population of finches showed 780 older birds out of a
-sample of 1000 birds that collided with windows. If we assume the
+data from another population of finches showed 780 younger birds out of
+a sample of 1000 birds that collided with windows. If we assume the
 population distribution in regards to age is the same, we are still
 testing
 
@@ -607,18 +608,18 @@ However, we can instead decide we want to consider differences to one
 for our null and alternative hypotheses (note *C* is a constant value
 here!):
 
-+---------------+---------------+---------------+---------------+
-|               | -             | **Focused on  | **Focused on  |
-|               |   \*Two-sided | signals       | signals less  |
-|               |     (         | greater than  | than          |
-|               |               | predicted in  | predicted in  |
-|               |               | null**        | null**        |
-|               |  typical)\*\* |               |               |
-+---------------+---------------+---------------+---------------+
-| **H~O~**      | p = C         | p \<= C       | p \>= C       |
-+---------------+---------------+---------------+---------------+
-| **H~A~**      | p $\neq$ C    | p \> C        | p \< C        |
-+---------------+---------------+---------------+---------------+
++-------------+-------------+-------------+-------------+
+|             | -           | **Focused   | **Focused   |
+|             | \*Two-sided | on signals  | on signals  |
+|             |     (       | greater     | less than   |
+|             |             | than        | predicted   |
+|             | t           | predicted   | in null**   |
+|             | ypical)\*\* | in null**   |             |
++-------------+-------------+-------------+-------------+
+| **H~O~**    | p = C       | p \<= C     | p \>= C     |
++-------------+-------------+-------------+-------------+
+| **H~A~**    | p $\neq$ C  | p \> C      | p \< C      |
++-------------+-------------+-------------+-------------+
 
 For example, Claramunt et al @claramunt2022 wished to consider if roads
 impaired bird movement. To do they considered if banded birds were more
@@ -657,8 +658,8 @@ Let's return to our bird collision example and connect estimation and
 p-values (and teach you how to estimate confidence intervals for
 binomial data).
 
-Remember, we found 9 older birds in our sample of 18. This means our
-estimate for the proportion of older birds `r 9/18`. Just like for
+Remember, we found 9 younger birds in our sample of 18. This means our
+estimate for the proportion of younger birds is `r 9/18`. Just like for
 continuous data, we can consider sampling error in our estimate. Let's
 think about how that might happen.
 
