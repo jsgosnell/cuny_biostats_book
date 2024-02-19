@@ -936,7 +936,6 @@ random effects on it's own **as long as you don't repeat unit names**.
 For example, we could note
 
 ```{r}
-library(lme4)
 mixed_analysis <- lmer(growth~predator_cue*temperature+(1|container), experiment)
 ```
 
@@ -1014,21 +1013,29 @@ Doing this requires an iterative process similar to those used for
 estimation for generalized linear modes. - below makes a value that
 increases with low variance.
 
-`{r} wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2}`
+```{r, eval=F} 
+wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2}
+```
 
 We can then add a new argument to the *lm* function to use these
 weights.
 
-`{r} sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)}`
+```{r, eval=F} 
+sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)
+```
 
 We can then continue on our normal route:
 
-`{r} plot(sdm_model_wls) Anova(sdm_model_wls, type="III")}`
+```{r, eval=F} 
+plot(sdm_model_wls) Anova(sdm_model_wls, type="III")
+```
 
 If you compare the two models you notice slight differences - these are
 minimal here due to lack of differences in variance.
 
-`{r} summary(sdm_model) summary(sdm_model_wls)}`
+```{r, eval=F} 
+summary(sdm_model) summary(sdm_model_wls)
+```
 
 Why not just always do this? Because weighted least squares implicitly
 assumes we *know* the weights. We are actually estimating them, so small

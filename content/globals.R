@@ -46,8 +46,9 @@ checkPackage(rstanarm)
 checkPackage(rnaturalearth)
 checkPackage(ggmap)
 checkPackage(psych)
-
-
+checkPackage(rnaturalearthdata)
+checkPackage(raster)
+checkPackage(rgbif)
 
 
 
