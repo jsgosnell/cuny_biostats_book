@@ -1542,21 +1542,164 @@ predator_cue:temperature 0.0459  4 3230137 0.9960</code></pre>
 </section>
 <section id="errors-are-not-equal-among-groups" class="level2">
 <h2 class="anchored" data-anchor-id="errors-are-not-equal-among-groups">Errors are not equal among groups</h2>
-<p>Another option is to use weighted-least squares regression - this approach specifically helps when residuals are not evenly distributed among groups (or when a funnel/cone appears when you plot the model to check assumptions). For example, we could take the sdm_model (just as an example of use! it’s not needed here!) This approach assume you built the model and then noted an issue with heteroscedasticity. If so, we can calculate a weight for each residual that is based on its variance. Doing this requires an iterative process similar to those used for estimation for generalized linear modes. - below makes a value that increases with low variance.</p>
+<p>Another option is to use weighted-least squares regression - this approach specifically helps when residuals are not evenly distributed among groups (or when a funnel/cone appears when you plot the model to check assumptions). For example, we could take the model on below-ground biomass that we developed in the <a href="../../content/chapters/More_ANOVAs.html">More Anovas chapter</a>. As a reminder, <span class="citation" data-cites="valdez2023">Valdez et al. (<a href="#ref-valdez2023" role="doc-biblioref">2023</a>)</span> wanted to consider the impact of top-down (snail grazing) and bottom- up (nutrient availability) on marsh plant (<em>Spartina alterniflora</em>) growth. To do this, they assigned plots to one of 3 grazer treatments and one of 2 nitrogen treatments. We focused on the impact of these treatments on standing dead mass and noted a funnel-shape when reviewing the residuals.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>wt_sdm <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">lm</span>(<span class="fu">abs</span>(sdm_model<span class="sc">$</span>residuals) <span class="sc">~</span> sdm_model<span class="sc">$</span>fitted.values)<span class="sc">$</span>fitted.values<span class="sc">^</span><span class="dv">2</span><span class="er">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>valdez_2023 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Spartina_alterniflora_traits.csv"</span>, <span class="at">stringsAsFactors =</span> T)</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>sdm_model <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,])</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-40-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-40-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-40-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To address the, we can use weighted least squares. This approach assume you built the model and then noted an issue with heteroscedasticity. To use, we can calculate a weight for each residual that is based on its variance. Doing this requires an iterative process similar to those used for estimation for generalized linear models (we’ll get to these) - below makes a value that increases with low variance.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>wt_sdm <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">lm</span>(<span class="fu">abs</span>(sdm_model<span class="sc">$</span>residuals) <span class="sc">~</span> sdm_model<span class="sc">$</span>fitted.values)<span class="sc">$</span>fitted.values<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can then add a new argument to the <em>lm</em> function to use these weights.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>sdm_model_wls <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,], <span class="at">weights =</span> wt_sdm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>sdm_model_wls <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,], <span class="at">weights =</span> wt_sdm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can then continue on our normal route:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model_wls) <span class="fu">Anova</span>(sdm_model_wls, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model_wls) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-43-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-43-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-43-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model_wls, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Standing.Dead..dry..m2.
+                            Sum Sq Df F value    Pr(&gt;F)    
+(Intercept)                203.228  1  76.442 1.497e-06 ***
+Snail.Level                157.447  2  29.611 2.288e-05 ***
+Nitrogen.level             130.416  1  49.054 1.427e-05 ***
+Snail.Level:Nitrogen.level 143.013  2  26.896 3.681e-05 ***
+Residuals                   31.903 12                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
 </div>
 <p>If you compare the two models you notice slight differences - these are minimal here due to lack of differences in variance.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model) <span class="fu">summary</span>(sdm_model_wls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Standing.Dead..dry..m2. ~ Snail.Level * Nitrogen.level, 
+    data = valdez_2023[valdez_2023$Snail.Level != "uncaged", 
+        ])
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.5800 -0.8350 -0.0317  0.6600  3.7400 
+
+Coefficients:
+                                                Estimate Std. Error t value
+(Intercept)                                       18.710      1.032  18.124
+Snail.Levelremoval                               -14.150      1.460  -9.692
+Snail.Levelsnail addition                         -7.567      1.460  -5.183
+Nitrogen.levelwithout                            -15.240      1.460 -10.439
+Snail.Levelremoval:Nitrogen.levelwithout          16.153      2.065   7.824
+Snail.Levelsnail addition:Nitrogen.levelwithout   10.357      2.065   5.016
+                                                Pr(&gt;|t|)    
+(Intercept)                                     4.39e-10 ***
+Snail.Levelremoval                              5.02e-07 ***
+Snail.Levelsnail addition                       0.000228 ***
+Nitrogen.levelwithout                           2.25e-07 ***
+Snail.Levelremoval:Nitrogen.levelwithout        4.72e-06 ***
+Snail.Levelsnail addition:Nitrogen.levelwithout 0.000301 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.788 on 12 degrees of freedom
+Multiple R-squared:  0.9284,    Adjusted R-squared:  0.8986 
+F-statistic: 31.14 on 5 and 12 DF,  p-value: 1.792e-06</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model_wls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Standing.Dead..dry..m2. ~ Snail.Level * Nitrogen.level, 
+    data = valdez_2023[valdez_2023$Snail.Level != "uncaged", 
+        ], weights = wt_sdm)
+
+Weighted Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.31784 -0.89013 -0.03702  0.92266  2.46121 
+
+Coefficients:
+                                                Estimate Std. Error t value
+(Intercept)                                       18.710      2.140   8.743
+Snail.Levelremoval                               -14.150      2.202  -6.426
+Snail.Levelsnail addition                         -7.567      2.490  -3.039
+Nitrogen.levelwithout                            -15.240      2.176  -7.004
+Snail.Levelremoval:Nitrogen.levelwithout          16.153      2.322   6.956
+Snail.Levelsnail addition:Nitrogen.levelwithout   10.357      2.620   3.953
+                                                Pr(&gt;|t|)    
+(Intercept)                                     1.50e-06 ***
+Snail.Levelremoval                              3.27e-05 ***
+Snail.Levelsnail addition                        0.01030 *  
+Nitrogen.levelwithout                           1.43e-05 ***
+Snail.Levelremoval:Nitrogen.levelwithout        1.53e-05 ***
+Snail.Levelsnail addition:Nitrogen.levelwithout  0.00192 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.631 on 12 degrees of freedom
+Multiple R-squared:  0.8747,    Adjusted R-squared:  0.8225 
+F-statistic: 16.75 on 5 and 12 DF,  p-value: 4.789e-05</code></pre>
+</div>
 </div>
 <p>Why not just always do this? Because weighted least squares implicitly assumes we <em>know</em> the weights. We are actually estimating them, so small datasets may lead to bad estimates and outcomes.</p>
 </section>
@@ -1647,6 +1790,9 @@ Reitan, Trond, and Anders Nielsen. 2016. <span>“Do Not Divide Count Data with 
 </div>
 <div id="ref-shatz2023" class="csl-entry" role="listitem">
 Shatz, Itamar. 2023. <span>“Assumption-Checking Rather Than (Just) Testing: The Importance of Visualization and Effect Size in Statistical Diagnostics.”</span> <em>Behavior Research Methods</em>, March. <a href="https://doi.org/10.3758/s13428-023-02072-x">https://doi.org/10.3758/s13428-023-02072-x</a>.
+</div>
+<div id="ref-valdez2023" class="csl-entry" role="listitem">
+Valdez, Stephanie R., Pedro Daleo, David S. DeLaMater Iii, and Brian R. Silliman. 2023. <span>“Variable Responses to Top-down and Bottom-up Control on Multiple Traits in the Foundational Plant, Spartina Alterniflora.”</span> <em>PLOS ONE</em> 18 (5): e0286327. <a href="https://doi.org/10.1371/journal.pone.0286327">https://doi.org/10.1371/journal.pone.0286327</a>.
 </div>
 <div id="ref-warton2016" class="csl-entry" role="listitem">
 Warton, David I., Mitchell Lyons, Jakub Stoklosa, and Anthony R. Ives. 2016. <span>“Three Points to Consider When Choosing a LM or GLM Test for Count Data.”</span> <em>Methods in Ecology and Evolution</em> 7 (8): 882–90. <a href="https://doi.org/10.1111/2041-210X.12552">https://doi.org/10.1111/2041-210X.12552</a>.
