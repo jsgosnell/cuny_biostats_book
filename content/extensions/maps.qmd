@@ -152,11 +152,6 @@ plot(finer_raster)
 Now lets illustrate how biologist work with rasters using some real world data. Two common sources of spatial data used by ecologists are species occurences and climate rasters. Species occurences are lat/lon coordinates of where an individual of a species has been observed or collected. This type of data can be found in online databases such as the Global Biodiversity Information Facility (GBIF; https://www.gbif.org/). Climate rasters are maps of variables relating to precipitation and temperature. The 19 bioclimatic variables from Worldclim (https://www.worldclim.org/data/bioclim.html) are commonly used by researchers. We are going to show how rasters of climate can be used to gain information about a species.
 
 
-```{r}
-# Load necessary libraries
-library(rgbif)
-```
-
 We can download this data straight from these sources into R using the rgbif and raster packages. First we will obtain occurence data. We can do any species. Here we will choose the moose (Alces alces)
 
 ```{r}
@@ -172,7 +167,7 @@ Now we will download our climate rasters. We have to download all 19 bioclim var
 
 ```{r}
 # Download a world elevation raster (DEM) from WorldClim
-clim_data <- getData(name = "worldclim", var = "bio", res = 10)
+clim_data <- getData(name = "worldclim", var = "bio", res = 10, path = "data" )
 tmean <- clim_data$bio1 #Seperate raster layer of interest
 # Plot the raster
 plot(tmean)

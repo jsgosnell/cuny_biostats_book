@@ -49,7 +49,7 @@ checkPackage(psych)
 checkPackage(rnaturalearthdata)
 checkPackage(raster)
 checkPackage(rgbif)
-
+checkPackage(geodata)
 
 
 
