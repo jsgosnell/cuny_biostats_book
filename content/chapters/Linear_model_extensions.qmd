@@ -1005,36 +1005,52 @@ ecology and other fields [@hurlbert1984; @heffner1996; @lazic2010].
 Another option is to use weighted-least squares regression - this
 approach specifically helps when residuals are not evenly distributed
 among groups (or when a funnel/cone appears when you plot the model to
-check assumptions). For example, we could take the sdm_model (just as an
-example of use! it's not needed here!) This approach assume you built
-the model and then noted an issue with heteroscedasticity. If so, we can
-calculate a weight for each residual that is based on its variance.
-Doing this requires an iterative process similar to those used for
-estimation for generalized linear modes. - below makes a value that
-increases with low variance.
+check assumptions). For example, we could take the model on below-ground
+biomass that we developed in the [More Anovas chapter](More_ANOVAs.qmd).
+As a reminder, @valdez2023 wanted to consider the impact of top-down
+(snail grazing) and bottom- up (nutrient availability) on marsh plant
+(*Spartina alterniflora*) growth. To do this, they assigned plots to one
+of 3 grazer treatments and one of 2 nitrogen treatments. We focused on
+the impact of these treatments on standing dead mass and noted a
+funnel-shape when reviewing the residuals.
 
-```{r, eval=F} 
-wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2}
+```{r}
+valdez_2023 <- read.csv("data/Spartina_alterniflora_traits.csv", stringsAsFactors = T)
+sdm_model <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",])
+plot(sdm_model)
+```
+
+To address the, we can use weighted least squares. This approach assume
+you built the model and then noted an issue with heteroscedasticity. To
+use, we can calculate a weight for each residual that is based on its
+variance. Doing this requires an iterative process similar to those used
+for estimation for generalized linear models (we'll get to these) -
+below makes a value that increases with low variance.
+
+```{r}
+wt_sdm <- 1 / lm(abs(sdm_model$residuals) ~ sdm_model$fitted.values)$fitted.values^2
 ```
 
 We can then add a new argument to the *lm* function to use these
 weights.
 
-```{r, eval=F} 
+```{r}
 sdm_model_wls <-lm(Standing.Dead..dry..m2.~Snail.Level * Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], weights = wt_sdm)
 ```
 
 We can then continue on our normal route:
 
-```{r, eval=F} 
-plot(sdm_model_wls) Anova(sdm_model_wls, type="III")
+```{r}
+plot(sdm_model_wls) 
+Anova(sdm_model_wls, type="III")
 ```
 
 If you compare the two models you notice slight differences - these are
 minimal here due to lack of differences in variance.
 
-```{r, eval=F} 
-summary(sdm_model) summary(sdm_model_wls)
+```{r}
+summary(sdm_model) 
+summary(sdm_model_wls)
 ```
 
 Why not just always do this? Because weighted least squares implicitly
