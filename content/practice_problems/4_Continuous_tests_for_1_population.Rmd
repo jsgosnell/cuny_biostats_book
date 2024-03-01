@@ -66,7 +66,6 @@ binom.test(above_175.6, nrow(sport[sport$Sex == "male",]))
 ```
 
 
-
 We can also bootstrap the data.
 
 ```{r}
@@ -103,9 +102,16 @@ ggplot(data.frame(results$t), aes(x=results.t)) +
        y= "Frequency")
 quantile( results$t, probs=c(.025, .975) ) 
 boot.ci(results)       
-
-
 ```
+
+Another option (recommended) is the *boot.t.test* function in the **MKinfer** package.
+
+```{r}
+library(MKinfer)
+boot.t.test(sport[sport$Sex == "male", "Ht"], mu = 175.6)
+```
+
+
 
 ## Let's practice!
 

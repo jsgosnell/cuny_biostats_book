@@ -65,12 +65,54 @@ above_175.6 <- nrow(sport[sport$Sex == "male" & sport$Ht > 175.6,])
 binom.test(above_175.6, nrow(sport[sport$Sex == "male",]))
 ```
 
+
 We can also bootstrap the data.
 
 ```{r}
-source("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/bootstrapjsg.R")
-bootstrapjsg(data1=sport[sport$Sex == "male", "Ht"], null=175.6)
+number_of_simulations <- 1000
+library(ggplot2)
+boostrap_data<- sport[sport$Sex == "male", "Ht"]
+boostrap_outcomes <- data.frame(mean = rep(NA, number_of_simulations), sd = NA)
+for (i in 1:number_of_simulations){
+iris_bootstrap <-sample(boostrap_data, length(boostrap_data), replace = T)
+boostrap_outcomes$mean[i] <- mean(iris_bootstrap)
+boostrap_outcomes$sd[i] <- sd(iris_bootstrap)
+}
+ggplot(boostrap_outcomes, aes(x=mean)) +
+  geom_histogram(color="black") +
+  labs(title=expression(paste("Bootstrapped means")),
+       x= "Mean value",
+       y= "Frequency")
 ```
+
+and find associated quantile-based 95% confidence intervals:
+```{r}
+quantile(boostrap_outcomes$mean, probs=c(.025, .975) ) 
+```
+
+or using functions in the *boot* library
+```{r}
+library(boot)
+results <- boot(data=boostrap_data, statistic = function(x, inds) mean(x[inds]),
+   R=number_of_simulations)
+ggplot(data.frame(results$t), aes(x=results.t)) +
+  geom_histogram(color="black") +
+  labs(title=expression(paste("Bootstrapped means")),
+       x= "Mean value",
+       y= "Frequency")
+quantile( results$t, probs=c(.025, .975) ) 
+boot.ci(results)       
+```
+
+Another option (recommended) is the *boot.t.test* function in the **MKinfer** package.
+
+```{r}
+library(MKinfer)
+boot.t.test(sport[sport$Sex == "male", "Ht"], mu = 175.6)
+```
+
+
+
 
 ## Let's practice!
 
