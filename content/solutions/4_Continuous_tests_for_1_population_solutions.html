@@ -548,7 +548,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Remember you should</p>
 <ul>
 <li>add code chunks by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Ctrl+Alt+I</em> to answer the questions!</li>
-<li><strong>knit</strong> your file to produce a markdown version that you can see!</li>
+<li>use visual mode or <strong>render</strong> your file to produce a version that you can see!</li>
+<li><strong>render</strong> your file to make sure it runs (and that you haven’t been working out of order)</li>
 <li>save your work often
 <ul>
 <li><strong>commit</strong> it via git!</li>
@@ -684,7 +685,7 @@ probability of success
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(boostrap_outcomes<span class="sc">$</span>mean, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-184.0071 187.0617 </code></pre>
+184.0590 186.9599 </code></pre>
 </div>
 </div>
 <p>or using functions in the <em>boot</em> library</p>
@@ -710,7 +711,7 @@ probability of success
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>( results<span class="sc">$</span>t, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-183.9903 187.0679 </code></pre>
+183.9254 186.9570 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(results)       </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -726,10 +727,10 @@ boot.ci(boot.out = results)
 
 Intervals : 
 Level      Normal              Basic         
-95%   (184.0, 187.0 )   (183.9, 187.1 )  
+95%   (184.0, 187.0 )   (184.0, 187.1 )  
 
 Level     Percentile            BCa          
-95%   (184.0, 187.1 )   (183.9, 187.0 )  
+95%   (183.9, 187.0 )   (183.9, 186.9 )  
 Calculations and Intervals on Original Scale</code></pre>
 </div>
 </div>
@@ -743,9 +744,9 @@ Calculations and Intervals on Original Scale</code></pre>
 
 data:  sport[sport$Sex == "male", "Ht"]
 bootstrap p-value &lt; 2.2e-16 
-bootstrap mean of x (SE) = 185.508 (0.7757956) 
+bootstrap mean of x (SE) = 185.5132 (0.7773105) 
 95 percent bootstrap percentile confidence interval:
- 183.9804 187.0186
+ 183.9882 187.0216
 
 Results without bootstrap:
 t = 12.658, df = 101, p-value &lt; 2.2e-16
@@ -1209,10 +1210,10 @@ mean of x
     Bootstrap One Sample t-test
 
 data:  sport[sport$Sex == "male", "Wt"]
-bootstrap p-value = 0.008801 
-bootstrap mean of x (SE) = 82.53494 (1.219815) 
+bootstrap p-value = 0.009201 
+bootstrap mean of x (SE) = 82.52724 (1.219619) 
 95 percent bootstrap percentile confidence interval:
- 80.09049 84.93775
+ 80.15887 84.95637
 
 Results without bootstrap:
 t = -2.7487, df = 101, p-value = 0.007089

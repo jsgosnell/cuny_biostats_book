@@ -575,7 +575,8 @@ div.csl-indent {
 <p>Remember you should</p>
 <ul>
 <li>add code chunks by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Ctrl+Alt+I</em> to answer the questions!</li>
-<li><strong>knit</strong> your file to produce a markdown version that you can see!</li>
+<li>use visual mode or <strong>render</strong> your file to produce a version that you can see!</li>
+<li><strong>render</strong> your file to make sure it runs (and that you haven’t been working out of order)</li>
 <li>save your work often
 <ul>
 <li><strong>commit</strong> it via git!</li>
@@ -1133,30 +1134,30 @@ Effective number of bootstrap samples was 599.
 Test statistic: 16.5244 
 p-value: 0 
 Variance explained: 0.031 
-Effect size: 0.177 </code></pre>
+Effect size: 0.175 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcppb20</span>(Tonn.Hect <span class="sc">~</span> DistrictPosition, cane)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 mcppb20(formula = Tonn.Hect ~ DistrictPosition, data = cane)
 
-           psihat  ci.lower  ci.upper p-value
-S vs. N -56.10126 -94.68921 -19.95174 0.00000
-S vs. E -12.51609 -52.43587  22.15568 0.36060
-S vs. W  39.25821   6.76996  71.71667 0.00000
-S vs. C  -0.97532 -29.40651  27.49520 0.92154
-N vs. E  43.58517   0.71357  80.58648 0.00334
-N vs. W  95.35948  65.12886 128.57460 0.00000
-N vs. C  55.12595  24.21179  86.86894 0.00000
-E vs. W  51.77430  23.93670  84.05836 0.00000
-E vs. C  11.54077 -14.10380  45.11236 0.25042
-W vs. C -40.23353 -59.97274 -14.47447 0.00000</code></pre>
+           psihat   ci.lower  ci.upper p-value
+S vs. N -56.10126 -104.87304 -17.13266 0.00000
+S vs. E -12.51609  -48.70298  23.59598 0.34391
+S vs. W  39.25821    3.18442  66.22076 0.00000
+S vs. C  -0.97532  -33.59406  28.80839 0.93823
+N vs. E  43.58517   -3.98654  89.17201 0.00668
+N vs. W  95.35948   59.71125 135.37212 0.00000
+N vs. C  55.12595   21.41322  88.61768 0.00000
+E vs. W  51.77430   15.99038  83.59448 0.00000
+E vs. C  11.54077  -19.49465  41.36110 0.30384
+W vs. C -40.23353  -60.93525 -12.47860 0.00000</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">mcppb20</span>(Tonn.Hect <span class="sc">~</span> DistrictPosition, cane)</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(<span class="fu">as.numeric</span>(p<span class="sc">$</span>comp[,<span class="dv">6</span>]), <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.0000000 0.8714524 0.0000000 0.8948247 0.0000000 0.0000000 0.0000000
- [8] 0.0000000 0.8714524 0.0000000</code></pre>
+<pre><code> [1] 0.00000000 0.78797997 0.01669449 0.96828047 0.02671119 0.00000000
+ [7] 0.00000000 0.00000000 0.76126878 0.00000000</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">#compare to lm apporach</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(car)</span>
@@ -1186,16 +1187,16 @@ Fit: lm(formula = Tonn.Hect ~ DistrictPosition, data = cane)
 
 Linear Hypotheses:
            Estimate Std. Error t value Pr(&gt;|t|)    
-E - C == 0   39.360     14.249   2.762  0.04406 *  
+E - C == 0   39.360     14.249   2.762  0.04395 *  
 N - C == 0   20.252     14.487   1.398  0.62080    
-S - C == 0  -42.955     13.777  -3.118  0.01525 *  
+S - C == 0  -42.955     13.777  -3.118  0.01518 *  
 W - C == 0   -7.317     11.298  -0.648  0.96582    
-N - E == 0  -19.108     14.601  -1.309  0.67822    
+N - E == 0  -19.108     14.601  -1.309  0.67820    
 S - E == 0  -82.315     13.896  -5.924  &lt; 0.001 ***
 W - E == 0  -46.677     11.444  -4.079  &lt; 0.001 ***
 S - N == 0  -63.207     14.141  -4.470  &lt; 0.001 ***
-W - N == 0  -27.569     11.739  -2.348  0.12599    
-W - S == 0   35.638     10.850   3.285  0.00894 ** 
+W - N == 0  -27.569     11.739  -2.348  0.12596    
+W - S == 0   35.638     10.850   3.285  0.00876 ** 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)</code></pre>
@@ -1419,10 +1420,10 @@ alternative hypothesis: two.sided</code></pre>
     Bootstrap Welch Two Sample t-test
 
 data:  drug_b and drug_g
-bootstrap p-value = 0.0192 
-bootstrap difference of means (SE) = -0.9969795 (0.3532994) 
+bootstrap p-value = 0.0168 
+bootstrap difference of means (SE) = -0.9877793 (0.3534934) 
 95 percent bootstrap percentile confidence interval:
- -1.7072619 -0.3141667
+ -1.6952381 -0.3119048
 
 Results without bootstrap:
 t = -2.5454, df = 10.701, p-value = 0.02774
@@ -1539,10 +1540,10 @@ Upper Achieved CI     0.9787 -0.2410 -0.0140</code></pre>
     Bootstrap Paired t-test
 
 data:  Color_index by Feather
-bootstrap p-value = 0.0008001 
-bootstrap mean of the differences (SE) = -0.1366545 (0.03236595) 
+bootstrap p-value = 2e-04 
+bootstrap mean of the differences (SE) = -0.1373897 (0.03234859) 
 95 percent bootstrap percentile confidence interval:
- -0.20318750 -0.07437188
+ -0.2028125 -0.0755000
 
 Results without bootstrap:
 t = -4.0647, df = 15, p-value = 0.001017

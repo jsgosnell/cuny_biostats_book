@@ -545,9 +545,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview">Overview</h3>
 <p>The focus of this overview is to get you used to tools we will be using in class. Before completing it you should have a basic understanding of using R. We will do an introduction in class <a href="../primer_materials/R_primer.R">(download help file)</a>. You should also be comfortable using Rstudio and github <a href="../../content/primer_materials/tools_overview.html" target="_blank">(see help file)</a>.</p>
-<section id="rmd-basics" class="level4">
-<h4 class="anchored" data-anchor-id="rmd-basics">Rmd basics</h4>
-<p>Rmd files differ from R files in that they combine regular text with code chunks. This is a code chunk</p>
+<section id="qmd-basics" class="level4">
+<h4 class="anchored" data-anchor-id="qmd-basics">qmd basics</h4>
+<p>qmd files differ from R files in that they combine regular text with code chunks. This is a code chunk</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"this is a chunk"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -555,16 +555,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Code chunks combine code with output. When combined with regular text/prose, this makes it easier to produce a range of documents. You set the output in the YAML header (the stuff between the 3 dashes you see at top of this document).</p>
-<p>After you write the file, you <strong>Knit</strong> it to turn the Rmd file into the selected output. Try it now. Note the first time you do this in a project you may be prompted to install a number of packages! If you are using a webservice you may also need to allow pop-ups in your browser. Don’t be surprised if a new window pops up (it should).</p>
+<p>After you write the file, you <strong>Render</strong> it to turn the qmd file into the selected output. Try it now. Note the first time you do this in a project you may be prompted to install a number of packages! If you are using a webservice you may also need to allow pop-ups in your browser. Don’t be surprised if a new window pops up (it should).</p>
+<p><strong>Note</strong>: qmd is a newer form of rmd. Rmd files used to be <strong>knit</strong>. Once qmd files were established, both those and Rmd files were rendered. Some files in the book are still rmd but are being transitioned over time. This has little impact on the user.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://lh3.googleusercontent.com/pw/ACtC-3dlSoGJDHtdGqEBr8L2X-yqZ-08Z95RHUMvaxHqF9EOFcBnqtamYMAWOr75mohUSL_KvWtBTt-u4KrdoHgceHc-sZiViw6l9ZqEQToLIsy6AwvQIQMrJgLbtXfV6gNLDgQvgT3N7aq9pk9-x5ugpegjYA=w378-h109-no.png" class="img-fluid figure-img"></p>
-<figcaption>The knit button turns your .rmd file into other products</figcaption>
+<p><img src="../..\images/render.png" class="img-fluid figure-img"></p>
+<figcaption>The render button turns your .qmd file into other products</figcaption>
 </figure>
 </div>
-<p>The <strong>Knit</strong> button saves the .Rmd file and renders a new version whose output depends on what you selected in the header. Here we have html_document, so if everything works a preview of a webpage like document should appear. The file also produces a github friendly .md file. <strong>This means you should only edit the Rmd file (leave the md and output files alone! They are automatically produced any changes you make there will be overwritten by your next knit)</strong>.</p>
-<p>When you <strong>Knit</strong> a file, it runs in a totally new R instance. this means anything you only added in your instance (like working in the console) won’t be available. In other words, its the best way to see what a “new” user gets when they use your code.</p>
-<p>however, you don’t have to knit the file every time. if you just want to see output, note you can press the green button next to an R chunk.</p>
+<p>The <strong>Render</strong> button saves the .qmd file and renders a new version whose output depends on what you selected in the header. Here we have html_document, so if everything works a preview of a webpage like document should appear. The file also produces a github friendly .md file. <strong>This means you should only edit the qmd file! Everything else is automatically produced and any changes you make will be overwritten by your next render</strong>.</p>
+<p>When you <strong>Render</strong> a file, it runs in a totally new R instance. this means anything you only added in your instance (like working in the console) won’t be available. In other words, its the best way to see what a “new” user gets when they use your code.</p>
+<p>However, you can also work with the file interactively. To do this, press the green button next to an R chunk.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://lh3.googleusercontent.com/pw/AM-JKLUYgHbhk7YzhXdAZwV-fvLFlnOc4IcCMwt6U21qsHP7sXcjQ5xDL86NewZo2THSGAveP0Y1cL2PP4yysUTLn4N6iXoO6B1h_8RtAlqmNONY2W5V_j_4hqtQ8d3GhroTNJewT3oEqSVA-Vjh4IkDRqE-pw=w784-h73-no?authuser=0.png" class="img-fluid figure-img"></p>
@@ -592,8 +593,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 <li>lots of other options exist!</li>
 </ul>
-<p>The main idea is Rmd files allow you to combine code, text, graphs, etc into multiple outputs that you can share (including with coding illiterate colleagues who just want output).</p>
-<p>To practice working with Rmd files and R, work through the questions below. You can also get more help with <a href="https://www.youtube.com/watch?v=shs95EH4EhY&amp;list=PLmnVhyQ-20EUFRmsjpYTyB5--zyolr6-o&amp;index=9&amp;t=24s" target="_blank">this video</a></p>
+<p>You can also switch to visual mode to more easily work with formatting.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../..\images/visual_mode.png" class="img-fluid figure-img"></p>
+<figcaption>Selecting visual mode will show you what your markdown code actually looks like</figcaption>
+</figure>
+</div>
+<p>The main idea is qmd files allow you to combine code, text, graphs, etc into multiple outputs that you can share (including with coding illiterate colleagues who just want output).</p>
+<p>To practice working with qmd files and R, work through the questions below. You can also get more help with <a href="https://www.youtube.com/watch?v=shs95EH4EhY&amp;list=PLmnVhyQ-20EUFRmsjpYTyB5--zyolr6-o&amp;index=9&amp;t=24s" target="_blank">this video</a></p>
 </section>
 </section>
 <section id="practice-in-r" class="level3">
