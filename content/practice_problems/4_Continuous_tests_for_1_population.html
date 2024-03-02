@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Biostatistics! - Tests for continuous data from one sample</title>
+<title>Biostatistics - Tests for continuous data from one sample</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -135,7 +135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <img src="../../images/image-from-rawpixel-id-547642-jpeg.jpg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
-      <a href="../../">Biostatistics: Concepts and approaches for collecting good data and turning it into knowledge!</a> 
+      <a href="../../">An introduction to statistics and modern tools</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://www.gosnelllab.com/" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
     <a href="https://github.com/jsgosnell" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
@@ -512,10 +512,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a>
-  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
-  </ul></li>
   <li><a href="#lets-practice" id="toc-lets-practice" class="nav-link" data-scroll-target="#lets-practice">Let’s practice!</a>
   <ul class="collapse">
   <li><a href="#recognizing-and-assessing-normality" id="toc-recognizing-and-assessing-normality" class="nav-link" data-scroll-target="#recognizing-and-assessing-normality">Recognizing and assessing normality</a></li>
@@ -559,9 +557,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>This practice reviews the <a href="../../content/chapters/Tests_for_continuous_data_from_one_sample.html">Tests for continuous data from one sample lecture</a>.</p>
-<section id="examples" class="level3">
-<h3 class="anchored" data-anchor-id="examples">Examples</h3>
+<p>This practice reviews the <a href="../../content/chapters/Tests_for_continuous_data_from_one_sample.html" target="_blank">Tests for continuous data from one sample lecture</a>.</p>
+</section>
+<section id="examples" class="level2">
+<h2 class="anchored" data-anchor-id="examples">Examples</h2>
 <p>From lecture! Consider if average height of males training at the Australian Institute of Sport is different than average of human population.</p>
 <p>These are all one sample tests, but they differ in what we know. If we know the variance of our population, we use a z test (function in BSDA package).</p>
 <div class="cell">
@@ -697,7 +696,7 @@ probability of success
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(boostrap_outcomes<span class="sc">$</span>mean, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-183.9675 187.1663 </code></pre>
+183.9614 187.0975 </code></pre>
 </div>
 </div>
 <p>or using functions in the <em>boot</em> library</p>
@@ -732,7 +731,7 @@ Attaching package: 'boot'</code></pre>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>( results<span class="sc">$</span>t, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-184.0194 186.9952 </code></pre>
+184.0353 186.9051 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(results)       </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -748,14 +747,37 @@ boot.ci(boot.out = results)
 
 Intervals : 
 Level      Normal              Basic         
-95%   (183.9, 187.0 )   (184.0, 187.0 )  
+95%   (184.0, 187.0 )   (184.1, 187.0 )  
 
 Level     Percentile            BCa          
-95%   (184.0, 187.0 )   (183.9, 186.9 )  
+95%   (184.0, 186.9 )   (184.1, 187.1 )  
 Calculations and Intervals on Original Scale</code></pre>
 </div>
 </div>
-</section>
+<p>Another option (recommended) is the <em>boot.t.test</em> function in the <strong>MKinfer</strong> package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MKinfer)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.t.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">mu =</span> <span class="fl">175.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Bootstrap One Sample t-test
+
+data:  sport[sport$Sex == "male", "Ht"]
+bootstrap p-value &lt; 2.2e-16 
+bootstrap mean of x (SE) = 185.5084 (0.7766755) 
+95 percent bootstrap percentile confidence interval:
+ 184.0313 187.0158
+
+Results without bootstrap:
+t = 12.658, df = 101, p-value &lt; 2.2e-16
+alternative hypothesis: true mean is not equal to 175.6
+95 percent confidence interval:
+ 183.9535 187.0583
+sample estimates:
+mean of x 
+ 185.5059 </code></pre>
+</div>
+</div>
 </section>
 <section id="lets-practice" class="level2">
 <h2 class="anchored" data-anchor-id="lets-practice">Let’s practice!</h2>
@@ -778,7 +800,7 @@ Calculations and Intervals on Original Scale</code></pre>
 <h4 class="anchored" data-anchor-id="section-1">2</h4>
 <p>Review the central_limit_theorem.R code (remember</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VGAM)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VGAM)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: stats4</code></pre>
 </div>
@@ -794,11 +816,11 @@ Attaching package: 'VGAM'</code></pre>
 
     logit, simplex</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/central_limit_theorem.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/central_limit_theorem.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4_Continuous_tests_for_1_population_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="4_Continuous_tests_for_1_population_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -808,7 +830,7 @@ Attaching package: 'VGAM'</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4_Continuous_tests_for_1_population_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="4_Continuous_tests_for_1_population_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -818,7 +840,7 @@ Attaching package: 'VGAM'</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4_Continuous_tests_for_1_population_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="4_Continuous_tests_for_1_population_files/figure-html/unnamed-chunk-10-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -828,7 +850,7 @@ Attaching package: 'VGAM'</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4_Continuous_tests_for_1_population_files/figure-html/unnamed-chunk-9-4.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="4_Continuous_tests_for_1_population_files/figure-html/unnamed-chunk-10-4.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -838,7 +860,7 @@ Attaching package: 'VGAM'</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4_Continuous_tests_for_1_population_files/figure-html/unnamed-chunk-9-5.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="4_Continuous_tests_for_1_population_files/figure-html/unnamed-chunk-10-5.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -848,7 +870,7 @@ Attaching package: 'VGAM'</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="4_Continuous_tests_for_1_population_files/figure-html/unnamed-chunk-9-6.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="4_Continuous_tests_for_1_population_files/figure-html/unnamed-chunk-10-6.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -870,7 +892,7 @@ Attaching package: 'VGAM'</code></pre>
 </ul>
 <p>Note there are several ways to load the data! You can make a list (since the list is short):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>flies <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">183.2</span>, <span class="fl">149.0</span>, <span class="fl">154.0</span>, <span class="fl">167.2</span>, <span class="fl">187.2</span>, <span class="fl">158.0</span>, <span class="fl">143.0</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>flies <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">183.2</span>, <span class="fl">149.0</span>, <span class="fl">154.0</span>, <span class="fl">167.2</span>, <span class="fl">187.2</span>, <span class="fl">158.0</span>, <span class="fl">143.0</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>or make a dataframe in a spreadsheet software (eg, Excel, Google Sheets) and then upload using a read.csv command. We did this in your introduction to R!</p>
 </section>
@@ -891,8 +913,8 @@ Attaching package: 'VGAM'</code></pre>
 <h4 class="anchored" data-anchor-id="section-6">7</h4>
 <p>Using data from Australian athletes (http://www.statsci.org/data/oz/ais.html for details), determine if the average male training at the Australian Institute of Sport differs in weight from the average Australian male (85.9 kg) using bootstrapping techniques. Data at</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/oz/ais.txt"</span>, <span class="at">header =</span> T, </span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/oz/ais.txt"</span>, <span class="at">header =</span> T, </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
