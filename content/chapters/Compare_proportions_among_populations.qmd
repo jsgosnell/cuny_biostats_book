@@ -46,8 +46,8 @@ data in a table.
 |                   | **Observed** |         |                |
 |-------------------|--------------|---------|----------------|
 |                   | *Finch*      | *Junco* | **Row Totals** |
-|                   | 9            | 4       | 13             |
-|                   | 9            | 7       | 16             |
+| *Older*           | 9            | 4       | 13             |
+| *Younger*         | 9            | 7       | 16             |
 | **Column Totals** | 18           | 11      | N = 29         |
 
 First, we could plot our data
@@ -120,8 +120,8 @@ Since we have 13/29 birds are old, we should expect
 |                   | **Observed** |             |                |
 |-------------------|--------------|-------------|----------------|
 |                   | *Finch*      | *Junco*     | **Row Totals** |
-|                   | 18 \* 13/29  | 11 \* 13/29 | 13             |
-|                   | 18 \* 16/29  | 11 \* 16/29 | 16             |
+| *Older*           | 18 \* 13/29  | 11 \* 13/29 | 13             |
+| *Younger*         | 18 \* 16/29  | 11 \* 16/29 | 16             |
 | **Column Totals** | 18           | 11          | N = 29         |
 
 In order to carry out a sampling experiment to consider noise from this
@@ -584,7 +584,8 @@ Let' s us see we want to compare columns.
 ```{r}
 library(rcompanion)
 bonf_correct <- pairwiseNominalIndependence(bird_ratio_table, compare="col", method = "bonf")
-bonf_correct
+library(rmarkdown)
+paged_table(bonf_correct)
 
 ```
 
@@ -599,7 +600,7 @@ You can order and display these differently if it helps. For example, if
 we used the $\chi^2$ test.
 
 ```{r}
-bonf_correct[order(bonf_correct$p.adj.Chisq), c("Comparison", "p.adj.Chisq")]
+paged_table(bonf_correct[order(bonf_correct$p.adj.Chisq), c("Comparison", "p.adj.Chisq")])
 ```
 
 We see that catbirds different from finches and cardinals in the
@@ -609,20 +610,32 @@ would have found from just comparing the two groups
 
 ```{r}
 chisq.test(matrix(c(6,30,12,7), nrow=2, byrow=T))
-bonf_correct[bonf_correct$Comparison=="Finch : Catbird", "p.Chisq"]
+paged_table(bonf_correct[bonf_correct$Comparison=="Finch : Catbird", "p.Chisq"])
 
 ```
 
-However, this comparison is very conservative. Many other options exist,
-and we will explore two here.
+Since we have 10 comparisons, the adusted value is an order of magnitude
+larger:
+
+```{r}
+paged_table(bonf_correct[bonf_correct$Comparison=="Finch : Catbird", c("p.Chisq", "p.adj.Chisq")])
+```
+
+If the un-adjusted p-value was greater than .1, the adjusted value
+becomes 1. However, this comparison is very conservative. Many other
+options exist, and we will explore two here.
 
 The sequential Bonferroni, or Holm's, method, allocates your $\alpha$ to
-accept as many tests as signficant as possible while still controlling
+accept as many tests as significant as possible while still controlling
 for the FWER. To do this, it orders the post-hoc tests by p-value,
 smallest to largest. It then rejects the null hypothesis attached to the
 smallest p-value and subtracts that p-value from $\alpha$. It continues
 to do this until $\alpha$ is too small to reject the next smallest
 p-value. I think of it as buying p-values with $\alpha$.
+
+Alternatively, you can consider summing up the smallest p-values
+associated with the pairs of tests until the cumulative sum is as close
+as you can get to $\alpha$.
 
 We can use this approach by simply changing the method. Let's also order
 our results again for viewing.
