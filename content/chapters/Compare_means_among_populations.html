@@ -54,7 +54,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -662,19 +682,23 @@ H_O: \mu_{sepal \ length, \ setosa} = \mu_{sepal \ length, \ virginica} = \mu_{s
 H_A: \mu_{sepal \ length, \ setosa} \neq \mu_{sepal \ length, \ virginica} \neq \mu_{sepal \ length, \ versicolor}\\
 \end{split}
 \]</span></p>
-<p>Given that, our overall idea is to consider if the data are better explained by an overall group average or by species-specific averages. To visualize this, we could use</p>
+<p>Given that, our overall idea is to consider if the data are better explained by an overall group average or by species-specific averages. To visualize this, we could use this image.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"group means"</span> <span class="ot">=</span> <span class="st">"black"</span>, <span class="st">"overall average"</span> <span class="ot">=</span> <span class="st">"orange"</span>)</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(Species,Sepal.Length)) <span class="sc">+</span> </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">colour=</span>Species), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Sepal.Length, <span class="at">ymax=</span>Sepal.Length, <span class="at">color=</span><span class="st">"group means"</span>), </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Sepal.Length, <span class="at">ymax=</span>Sepal.Length, <span class="at">color=</span><span class="st">"group means"</span>), <span class="at">size=</span><span class="fl">1.5</span>, </span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> function_output) <span class="sc">+</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(Sepal.Length),  <span class="at">color =</span> <span class="st">"overall average"</span>))<span class="sc">+</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span>colors)<span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(Sepal.Length),  <span class="at">color =</span> <span class="st">"overall average"</span>),  <span class="at">size=</span><span class="fl">1.5</span>)<span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#619CFF"</span>,<span class="st">"#F8766D"</span>))<span class="sc">+</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. species"</span>))),</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>, </span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span> <span class="st">"Focus"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -686,31 +710,28 @@ H_A: \mu_{sepal \ length, \ setosa} \neq \mu_{sepal \ length, \ virginica} \neq 
 <p>Like our earlier considerations of variance and SSE, the data will obviously be fit better by species-specific averages. Its impossible for them to do worse than the overall average, and at worst they all <em>are</em> the group average. However, we should also remember that these are samples, so we know sampling error is an issue. Therefore, we have to consider if the species-specific averages do enough of a better job explaining the data to warrant using them. To put this in our SSE and hypothesis framework, we need to consider if a more complicated view of the world is worth it.</p>
 <p>To test this, we can (as always) carry out a sampling experiment. The general idea is that species does snot matter (just like we saw in contingency analysis). Given that, we can draw samples that match our respective sample sizes for each population from a single population. The mean can be set as the pooled mean for the data (since under the null tested factors don’t matter). Since we don’t know or set sigma, we can again estimate it from the data. One such sample might look like</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>variance_estimate <span class="ot">&lt;-</span> <span class="fu">sum</span>((function_output<span class="sc">$</span>N <span class="sc">-</span><span class="dv">1</span>) <span class="sc">*</span> (function_output<span class="sc">$</span>sd)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>(<span class="fu">sum</span>(function_output<span class="sc">$</span>N)<span class="sc">-</span><span class="fu">length</span>(function_output<span class="sc">$</span>N))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mean_sepal <span class="ot">&lt;-</span> <span class="fu">mean</span>(iris<span class="sc">$</span>Sepal.Length)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>simulated_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Species=</span><span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"setosa"</span>, <span class="dv">50</span>), </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">rep</span>(<span class="st">"versicolor"</span>, <span class="dv">50</span>),</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">rep</span>(<span class="st">"virginica"</span>,<span class="dv">50</span>)),</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">Sepal.Length=</span><span class="fu">rnorm</span>(<span class="dv">150</span>, mean_sepal, </span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">sd=</span> <span class="fu">sqrt</span>(variance_estimate)))</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>function_output <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(simulated_data, <span class="at">measurevar=</span><span class="st">"Sepal.Length"</span>, <span class="at">groupvars =</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">c</span>(<span class="st">"Species"</span>))</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(simulated_data, <span class="fu">aes</span>(Species,Sepal.Length)) <span class="sc">+</span> </span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">colour=</span>Species), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Sepal Length (cm)"</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Sepal Length of various iris species"</span>)<span class="sc">+</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">28</span>), </span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">28</span>), </span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y  =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>),</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x  =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>), </span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>),</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>, <span class="at">face=</span><span class="st">"bold"</span>),</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face=</span><span class="st">"bold"</span>)) <span class="sc">+</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Sepal.Length, <span class="at">ymax=</span>Sepal.Length, <span class="at">color=</span><span class="st">"group means"</span>), </span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> function_output) <span class="sc">+</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(Sepal.Length),  <span class="at">color =</span> <span class="st">"overall average"</span>))<span class="sc">+</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span>colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>variance_estimate <span class="ot">&lt;-</span> <span class="fu">sum</span>((function_output<span class="sc">$</span>N <span class="sc">-</span><span class="dv">1</span>) <span class="sc">*</span> (function_output<span class="sc">$</span>sd)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>(<span class="fu">sum</span>(function_output<span class="sc">$</span>N)<span class="sc">-</span><span class="fu">length</span>(function_output<span class="sc">$</span>N))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>mean_sepal <span class="ot">&lt;-</span> <span class="fu">mean</span>(iris<span class="sc">$</span>Sepal.Length)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>simulated_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Species=</span><span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"setosa"</span>, <span class="dv">50</span>), </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">rep</span>(<span class="st">"versicolor"</span>, <span class="dv">50</span>),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">rep</span>(<span class="st">"virginica"</span>,<span class="dv">50</span>)),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">Sepal.Length=</span><span class="fu">rnorm</span>(<span class="dv">150</span>, mean_sepal, </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">sd=</span> <span class="fu">sqrt</span>(variance_estimate)))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>function_output <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(simulated_data, <span class="at">measurevar=</span><span class="st">"Sepal.Length"</span>, <span class="at">groupvars =</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">c</span>(<span class="st">"Species"</span>))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(simulated_data, <span class="fu">aes</span>(Species,Sepal.Length)) <span class="sc">+</span> </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Sepal.Length, <span class="at">ymax=</span>Sepal.Length, <span class="at">color=</span><span class="st">"group means"</span>), <span class="at">size=</span><span class="fl">1.5</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> function_output) <span class="sc">+</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(Sepal.Length),  <span class="at">color =</span> <span class="st">"overall average"</span>),  <span class="at">size=</span><span class="fl">1.5</span>)<span class="sc">+</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#619CFF"</span>,<span class="st">"#F8766D"</span>))<span class="sc">+</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. species"</span>))),</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>, </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span> <span class="st">"Focus"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -725,7 +746,7 @@ H_A: \mu_{sepal \ length, \ setosa} \neq \mu_{sepal \ length, \ virginica} \neq 
 <ul>
 <li><p>calculating variance for each point around its respective group-specific mean</p>
 <ul>
-<li>this leads to 3 estimates of variance, which we can multiple by (n-1) to account for differences in sample size and then divide by the number of groups to get an overall estimate of variance
+<li>this leads to 3 estimates of variance, which we can multiply by (n<sub>j</sub>-1) to account for differences in sample size and then divide by the number of samples to get an overall estimate of variance
 <ul>
 <li>this is referred to as mean square error</li>
 </ul></li>
@@ -735,47 +756,43 @@ H_A: \mu_{sepal \ length, \ setosa} \neq \mu_{sepal \ length, \ virginica} \neq 
 \textrm{Remember, }s^2 = \frac{\sum_{i=1}^{n} (Y_{i}-\overline{Y})^2}{n-1} \sim \sigma^2\\
 \textrm{So if we have j groups, for each group we can see}\\
 s_j^2 = \frac{\sum_{i=1}^{n_j} (Y_{ij}-\overline{Y_j})^2}{n_j-1} \sim \sigma_j^2\\
-\textrm{which we can combine to estimate }\sigma_{overall}\\
-\frac{(n_1-1)s_1^2 + (n_2-1)s_2^2 ...(n_j-1)s_j^2}{n_1+n_2+...n_j-1} = s_{overall}^2\\
+\textrm{which we can combine to estimate }\sigma^2_{overall}\\
+\frac{(n_1-1)s_1^2 + (n_2-1)s_2^2 ...(n_j-1)s_j^2}{n_1+n_2+...n_j-j} = s_{overall}^2\\
 \end{split}
 \]</span></p></li>
 <li><p>calculating variance for each group mean around the overall mean</p>
 <ul>
-<li>this is called mean square treatment</li>
+<li><p>this can be multiplied by <span class="math inline">\(n\)</span> to get <span class="math inline">\(\sigma^2\)</span></p></li>
+<li><p>this is referred to as mean square treatment</p></li>
 </ul></li>
 </ul>
 <p><span class="math display">\[
-\begin{split}
-\frac{\sum_{j=1}^{j} (\overline{Y_j}-Y_{overall}{i})^2}{j-1} = \frac{s^2}{n} \\
-\textrm{where j is the number of groups. This can be multiplied by n to get }s^2 \\
-\end{split}
+        \begin{split}
+        \frac{\sum_{j=1}^{j} (\overline{Y_j}-\overline{\overline{Y}})^2}{j-1} = \frac{s^2}{n} \\
+        \textrm{where j is the number of groups and }\ \overline{\overline{Y}}\ \textrm{is the overall mean.}\\
+        \end{split}
 \]</span></p>
-<p>In other words, variance among groups should be equal to variance within groups. You should also note this means we can partition the variance for any given observation as its distance from its group mean and its group means distance from the overall</p>
-<p>Under the null hypothesis, the ratio of these estimates should tend towards 1. We can see this using a sampling experiment.</p>
+<p>In other words, variance among groups should be equal to variance within groups. Under the null hypothesis, the ratio of these estimates should tend towards 1. We can see this using a sampling experiment.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#sample</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  ratio <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">rep =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>, <span class="at">mse =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">10000</span>), </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">msg =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">10000</span>), <span class="at">ratio =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">10000</span>))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>){</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    setosa <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, mean_sepal, <span class="at">sd=</span> <span class="fu">sqrt</span>(variance_estimate))</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    versicolor <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, mean_sepal, <span class="at">sd=</span> <span class="fu">sqrt</span>(variance_estimate))</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    virginica <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, mean_sepal, <span class="at">sd=</span> <span class="fu">sqrt</span>(variance_estimate))</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    mean_overall <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">c</span>(setosa, versicolor, virginica))</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    ratio<span class="sc">$</span>mse[i] <span class="ot">&lt;-</span> (<span class="dv">49</span> <span class="sc">*</span> <span class="fu">var</span>(setosa) <span class="sc">+</span> <span class="dv">49</span> <span class="sc">*</span> <span class="fu">var</span>(versicolor) <span class="sc">+</span> <span class="dv">49</span> <span class="sc">*</span> <span class="fu">var</span>(virginica))<span class="sc">/</span>(<span class="dv">150</span> <span class="sc">-</span> <span class="dv">3</span>)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    ratio<span class="sc">$</span>msg[i] <span class="ot">&lt;-</span> (<span class="dv">50</span> <span class="sc">*</span> (<span class="fu">mean</span>(setosa)<span class="sc">-</span>mean_overall)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> </span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                 <span class="dv">50</span> <span class="sc">*</span> (<span class="fu">mean</span>(versicolor)<span class="sc">-</span>mean_overall)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                 <span class="dv">50</span> <span class="sc">*</span> (<span class="fu">mean</span> (virginica)<span class="sc">-</span>mean_overall)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    ratio<span class="sc">$</span>ratio[i] <span class="ot">&lt;-</span> ratio<span class="sc">$</span>msg[i]<span class="sc">/</span>ratio<span class="sc">$</span>mse[i]</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal.Length<span class="sc">~</span>Species, iris))<span class="sc">$</span>fstatistic[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   value 
-119.2645 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ratio, <span class="fu">aes</span>(ratio)) <span class="sc">+</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..count..<span class="sc">/</span><span class="fu">sum</span>(..count..)), <span class="at">fill =</span> <span class="st">"orange"</span>, <span class="at">bins=</span><span class="dv">15</span>)<span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">main =</span> <span class="st">"Ratio under null hypothesis"</span>, <span class="at">y=</span> <span class="st">"Probability"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#sample</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  ratio <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">rep =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>, <span class="at">mse =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">10000</span>), </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">msg =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">10000</span>), <span class="at">ratio =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">10000</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>){</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    setosa <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, mean_sepal, <span class="at">sd=</span> <span class="fu">sqrt</span>(variance_estimate))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    versicolor <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, mean_sepal, <span class="at">sd=</span> <span class="fu">sqrt</span>(variance_estimate))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    virginica <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, mean_sepal, <span class="at">sd=</span> <span class="fu">sqrt</span>(variance_estimate))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    mean_overall <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">c</span>(setosa, versicolor, virginica))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    ratio<span class="sc">$</span>mse[i] <span class="ot">&lt;-</span> (<span class="dv">49</span> <span class="sc">*</span> <span class="fu">var</span>(setosa) <span class="sc">+</span> <span class="dv">49</span> <span class="sc">*</span> <span class="fu">var</span>(versicolor) <span class="sc">+</span> <span class="dv">49</span> <span class="sc">*</span> <span class="fu">var</span>(virginica))<span class="sc">/</span>(<span class="dv">150</span> <span class="sc">-</span> <span class="dv">3</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    ratio<span class="sc">$</span>msg[i] <span class="ot">&lt;-</span> (<span class="dv">50</span> <span class="sc">*</span> (<span class="fu">mean</span>(setosa)<span class="sc">-</span>mean_overall)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                 <span class="dv">50</span> <span class="sc">*</span> (<span class="fu">mean</span>(versicolor)<span class="sc">-</span>mean_overall)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> </span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                 <span class="dv">50</span> <span class="sc">*</span> (<span class="fu">mean</span> (virginica)<span class="sc">-</span>mean_overall)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    ratio<span class="sc">$</span>ratio[i] <span class="ot">&lt;-</span> ratio<span class="sc">$</span>msg[i]<span class="sc">/</span>ratio<span class="sc">$</span>mse[i]</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ratio, <span class="fu">aes</span>(ratio)) <span class="sc">+</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..count..<span class="sc">/</span><span class="fu">sum</span>(..count..)), <span class="at">fill =</span> <span class="st">"orange"</span>, <span class="at">bins=</span><span class="dv">15</span>)<span class="sc">+</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">main =</span> <span class="st">"Ratio under null hypothesis"</span>, <span class="at">y=</span> <span class="st">"Probability"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: The dot-dot notation (`..count..`) was deprecated in ggplot2 3.4.0.
 ℹ Please use `after_stat(count)` instead.</code></pre>
@@ -788,12 +805,13 @@ s_j^2 = \frac{\sum_{i=1}^{n_j} (Y_{ij}-\overline{Y_j})^2}{n_j-1} \sim \sigma_j^2
 </div>
 </div>
 </div>
-<p>Using this approach, we could determine how unusual our data were (get a p-value!). However, finding a distribution that approximates this shape would make future work easier. It turns out all the squared terms above lead to this being a rato of <span class="math inline">\(\chi^2\)</span> distributions, where the numerator has degrees of freedom j-1 (# of groups - 1) and the numerator had degrees of freedom n-j-1; the “lost” degrees of freedom are used to estimate group and overall means.</p>
+<p>Using this approach, we could determine how unusual our data were (get a p-value!). In our example, we found a signal of 119.265. Looking at the x-axis above, it’s obvious getting a sample this or more extreme is going to be very rare by chance!</p>
+<p>However, finding a distribution that approximates this shape would make future work easier. It turns out all the squared terms above lead to this being a rato of <span class="math inline">\(\chi^2\)</span> distributions, where the numerator has degrees of freedom j-1 (# of groups - 1) and the numerator had degrees of freedom n-j-1 (the “lost” degrees of freedom are used to estimate group and overall means). We call this the F distribution.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ratio, <span class="fu">aes</span>(ratio)) <span class="sc">+</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..count..<span class="sc">/</span><span class="fu">sum</span>(..count..)), <span class="at">fill =</span> <span class="st">"orange"</span>, <span class="at">bins =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">main =</span> <span class="st">"Ratio under null hypothesis"</span>, <span class="at">y=</span> <span class="st">"Probability"</span>)<span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_function</span>(<span class="at">fun =</span> df, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df1 =</span><span class="dv">2</span>, <span class="at">df2 =</span> <span class="dv">147</span>), <span class="at">color =</span> <span class="st">"green"</span>)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ratio, <span class="fu">aes</span>(ratio)) <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..count..<span class="sc">/</span><span class="fu">sum</span>(..count..)), <span class="at">fill =</span> <span class="st">"orange"</span>, <span class="at">bins =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">main =</span> <span class="st">"Ratio under null hypothesis"</span>, <span class="at">y=</span> <span class="st">"Probability"</span>)<span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_function</span>(<span class="at">fun =</span> df, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df1 =</span><span class="dv">2</span>, <span class="at">df2 =</span> <span class="dv">147</span>), <span class="at">color =</span> <span class="st">"green"</span>)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -802,7 +820,61 @@ s_j^2 = \frac{\sum_{i=1}^{n_j} (Y_{ij}-\overline{Y_j})^2}{n_j-1} \sim \sigma_j^2
 </div>
 </div>
 </div>
-<p>In our data, we found a signal of 119.264502184505! This is going to lead to a very low p-value.</p>
+<p>This allows us to estimate the p-value using distributional assumptions.</p>
+<details>
+<summary>
+Why do we sometimes talk about sums of squares?
+</summary>
+<p>You should also note this means we can partition the variance for any given observation as its distance from its group mean and its group means distance from the overall. It turns out when we do this, we can <em>decompose</em> the total sums of squares (similar to variance but not divided!) into those attributed to the distance of points from the group mean and the distance of group means from the grand mean (not proven here). These are additive (equal to) to the total sums of squares. . <a href="https://raw.githubusercontent.com/StatProofBook/StatProofBook.github.io/master/P/anova1-pss.md" target="_blank">For a proof (and more links!) see</a> <span class="citation" data-cites="soch2024">Soch et al. (<a href="#ref-soch2024" role="doc-biblioref">2024</a>)</span>; main part reproduced below:</p>
+<p><strong>Theorem:</strong> Given one-way analysis of variance,</p>
+<p><span class="math display">\[
+y_{ij} = \mu_i + \varepsilon_{ij}, \; \varepsilon_{ij} \overset{\mathrm{i.i.d.}}{\sim} \mathcal{N}(0, \sigma^2)
+\]</span></p>
+<p>sums of squares can be partitioned as follows</p>
+<p><span class="math display">\[
+\mathrm{SS}_\mathrm{tot} = \mathrm{SS}_\mathrm{treat} + \mathrm{SS}_\mathrm{res}
+\]</span></p>
+<p>where <span class="math inline">\(\mathrm{SS} _\mathrm{tot}\)</span> is the **total sum of squares<em>](/D/tss)<strong>,</strong></em> <span class="math inline">\(\mathrm{SS} _\mathrm{treat}\)</span> is the treatment sum of squares <strong>(sometimes call <em>explained</em> sum of squares, and</strong> <span class="math inline">\(\mathrm{SS} _\mathrm{res}\)</span> is the residual sum of squares (sometimes called <em>sum squares error</em>).</p>
+<p><strong>Proof:</strong> The total sum of squares for one-way ANOVA is given by</p>
+<p><span class="math display">\[
+\mathrm{SS}_\mathrm{tot} = \sum_{i=1}^{k} \sum_{j=1}^{n_i} (y_{ij} - \bar{y})^2
+\]</span></p>
+<p>where <span class="math inline">\(\bar{y}\)</span> is the mean across all values <span class="math inline">\(y_{ij}\)</span>. This can be rewritten as</p>
+<p><span class="math display">\[
+\begin{split}
+\sum_{i=1}^{k} \sum_{j=1}^{n_i} (y_{ij} - \bar{y})^2 &amp;= \sum_{i=1}^{k} \sum_{j=1}^{n_i} \left[ (y_{ij} - \bar{y}_i) + (\bar{y}_i - \bar{y}) \right]^2 \\
+&amp;= \sum_{i=1}^{k} \sum_{j=1}^{n_i} \left[ (y_{ij} - \bar{y}_i)^2 + (\bar{y}_i - \bar{y})^2 + 2 (y_{ij} - \bar{y}_i) (\bar{y}_i - \bar{y}) \right] \\
+&amp;= \sum_{i=1}^{k} \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_i)^2 + \sum_{i=1}^{k} \sum_{j=1}^{n_i} (\bar{y}_i - \bar{y})^2 + 2 \sum_{i=1}^{k} (\bar{y}_i - \bar{y}) \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_i) \; .
+\end{split}
+\]</span></p>
+<p>Note that the following sum is zero</p>
+<p><span class="math display">\[
+\sum_{j=1}^{n_i} (y_{ij} - \bar{y}_i) = \sum_{j=1}^{n_i} y_{ij} - n_i \cdot \bar{y}_i = \sum_{j=1}^{n_i} y_{ij} - n_i \cdot \frac{1}{n_i} \sum_{j=1}^{n_i} y_{ij} \; ,
+\]</span></p>
+<p>so that the sum in in the original equation reduces to</p>
+<p><span class="math display">\[
+\sum_{i=1}^{k} \sum_{j=1}^{n_i} (y_{ij} - \bar{y})^2 = \sum_{i=1}^{k} \sum_{j=1}^{n_i} (\bar{y}_i - \bar{y})^2 + \sum_{i=1}^{k} \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_i)^2 \; .
+\]</span></p>
+<p>With the treatment sum of square for one-way ANOVA</p>
+<p><span class="math display">\[
+\mathrm{SS}_\mathrm{treat} = \sum_{i=1}^{k} \sum_{j=1}^{n_i} (\bar{y}_i - \bar{y})^2
+\]</span></p>
+<p>and the residual sum of squares for one-way ANOVA</p>
+<p><span class="math display">\[
+\mathrm{SS}_\mathrm{res} = \sum_{i=1}^{k} \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_i)^2 \; ,
+\]</span></p>
+<p>we finally have:</p>
+<p><span class="math display">\[
+  \mathrm{SS}_\mathrm{tot} = \mathrm{SS}_\mathrm{treat} + \mathrm{SS}_\mathrm{res} \;
+\]</span></p>
+<p>This fact, and some clever math tricks, made them easy to work with. Eventually, however, we are focusing on the fact we are estimating the variance in multiple ways.</p>
+</details>
+<details>
+<summary>
+and what is <span class="math inline">\(\chi^2\)</span>
+</summary>
+<p>Remember from the notes on contingency analysis that a <span class="math inline">\(\chi^2\)</span> distribution is a Z variate squared.It’s defined by degrees of freedom equal to the number of free variates it is summed over.</p>
+</details>
 </section>
 <section id="welcome-to-the-linear-model" class="level2">
 <h2 class="anchored" data-anchor-id="welcome-to-the-linear-model">Welcome to the linear model</h2>
@@ -816,11 +888,11 @@ s_j^2 = \frac{\sum_{i=1}^{n_j} (Y_{ij}-\overline{Y_j})^2}{n_j-1} \sim \sigma_j^2
 <p>We can do this in R using the <em>lm</em> function. This approach also lets us use a single set of functions to build many model types. As always, there are many ways to do anything in R, so there are specific ANOVA functions that we will not introduce here.</p>
 <p>For our data, we can build an lm object</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>iris_anova <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>iris_anova <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>then use <em>plot</em> to check the assumptions.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -859,7 +931,7 @@ s_j^2 = \frac{\sum_{i=1}^{n_j} (Y_{ij}-\overline{Y_j})^2}{n_j-1} \sim \sigma_j^2
 </ul>
 <p>If our assumptions are met, we can look at the output. One way to do this is using the <em>summary</em> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(iris_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(iris_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -887,7 +959,7 @@ F-statistic: 119.3 on 2 and 147 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Given these issues, why use the summary command? It does present some other useful information. For example, the R<sup>2</sup> values is a measure of how variation the model explains. It can range from 0 (the model explains nothing) to 1 (all residuals are zero, in this case meaning all members of a given species have the exact same height). The adjusted-R<sup>2</sup> value is similar, but it adjusts the measure to account for the fact more complex models will always explain more variation.</p>
 <p>You can also remove the intercept to get group estimates for all groups</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal.Length<span class="sc">~</span>Species<span class="dv">-1</span>, iris))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal.Length<span class="sc">~</span>Species<span class="dv">-1</span>, iris))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -913,8 +985,8 @@ F-statistic:  6522 on 3 and 147 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Note these match our group means, which is good, but the overall p value is now less useful (it compares our data to a null that assumes everything is equal to 0), and the output is still confusing.</p>
 <p>Since we are doing an omnibus test, what we typically want is a single p value associated with our factor of interest (species in this case). To get that, we’ll use the <em>Anova</em> function from the <strong>car</strong> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(iris_anova, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(iris_anova, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -932,16 +1004,16 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 What does type=“III” mean
 </summary>
 <p>Residuals can be calculated in multiple ways. For simple models (those with one variable) most calculations lead to the same answer. When we start adding multiple factors to a model and/or interactions, however, they differ. In short, Type I residuals consider the order in which factors are added to a model, and type 2 do not consider interactions. We will stick with type III for this class.</p>
-<p>&lt;&gt;</p>
+</details>
 <p>Doing this we see Species has a significant impact on explaining variation in the data (and our very high F value). So we reject the null hypothesis that mean sepal length does not differ among species. Now what?</p>
-</details></section>
+</section>
 <section id="post-hoc-tests" class="level2">
 <h2 class="anchored" data-anchor-id="post-hoc-tests">Post-hoc tests</h2>
 <p>Just like for a multi-population <span class="math inline">\(\chi^2\)</span> tests, we need to do follow-up tests to compare groups while controlling for the FWER. For linear models (and more), we will use the <em>glht</em> function from the <strong>multcomp</strong> package to conduce these tests.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>compare_cont_tukey <span class="ot">&lt;-</span> <span class="fu">glht</span>(iris_anova, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Species =</span> <span class="st">"Tukey"</span>))</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(compare_cont_tukey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>compare_cont_tukey <span class="ot">&lt;-</span> <span class="fu">glht</span>(iris_anova, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Species =</span> <span class="st">"Tukey"</span>))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(compare_cont_tukey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Simultaneous Tests for General Linear Hypotheses
@@ -965,13 +1037,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <p>Using this approach we see that all species differ significantly from all others; the output also provides estimates of the differences, which match up with our model summary output.</p>
 <p>We can also use the methods we previously discussed such as Bonferroni and FDR. These requre us to set up the comparisons, which also means we can limit our number of tests if so desired. For example, we could focus only on differences with <em>I. virginica</em>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>compare_virginica_only <span class="ot">&lt;-</span> <span class="fu">glht</span>(iris_anova, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Species =</span> </span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                                                                <span class="fu">c</span>(<span class="st">"virginica - versicolor = 0"</span>, </span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                                                                  <span class="st">"virginica - setosa = 0"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>compare_virginica_only <span class="ot">&lt;-</span> <span class="fu">glht</span>(iris_anova, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Species =</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                                                                <span class="fu">c</span>(<span class="st">"virginica - versicolor = 0"</span>, </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                                                                  <span class="st">"virginica - setosa = 0"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>After setting up the comparison, we can specify the method to use to correct for FWER,</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(compare_virginica_only, <span class="at">test=</span><span class="fu">adjusted</span>(<span class="st">"holm"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(compare_virginica_only, <span class="at">test=</span><span class="fu">adjusted</span>(<span class="st">"holm"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Simultaneous Tests for General Linear Hypotheses
@@ -989,7 +1061,7 @@ virginica - setosa == 0        1.582      0.103  15.366  &lt; 2e-16 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- holm method)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(compare_virginica_only, <span class="at">test=</span><span class="fu">adjusted</span>(<span class="st">"fdr"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(compare_virginica_only, <span class="at">test=</span><span class="fu">adjusted</span>(<span class="st">"fdr"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Simultaneous Tests for General Linear Hypotheses
@@ -1025,8 +1097,8 @@ Y=X\beta+\epsilon, \textrm{ where }\\
 \]</span></p>
 <p>In our case, <span class="math inline">\(\beta\)</span> is simply a 3x1 matrix where each entry is a species average (or one is an intercept and other two are distances from it - same thing) and X is a matrix with dummy variables (1 or 0) indicating which group each observation belongs too. X is sometimes called a model or design matrix. We can see this using R. First, we can pull the design matrix from our model object</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(<span class="fu">data.frame</span>(<span class="fu">model.matrix</span>(iris_anova)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(<span class="fu">data.frame</span>(<span class="fu">model.matrix</span>(iris_anova)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1037,7 +1109,7 @@ Y=X\beta+\epsilon, \textrm{ where }\\
 </div>
 <p>We can also pull the model coefficients, which form our <span class="math inline">\(\beta\)</span> matrix, and place them in the correct orientation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="fu">as.numeric</span>(iris_anova<span class="sc">$</span>coefficients), <span class="at">ncol=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="fu">as.numeric</span>(iris_anova<span class="sc">$</span>coefficients), <span class="at">ncol=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      [,1]
 [1,] 5.006
@@ -1047,7 +1119,7 @@ Y=X\beta+\epsilon, \textrm{ where }\\
 </div>
 <p>So for our first observation, which is</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>iris[<span class="dv">1</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>iris[<span class="dv">1</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 1          5.1         3.5          1.4         0.2  setosa</code></pre>
@@ -1055,21 +1127,21 @@ Y=X\beta+\epsilon, \textrm{ where }\\
 </div>
 <p>We would multiply (remember, rows get multiplied by columns in matrices)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">*</span><span class="fl">5.006</span> <span class="sc">+</span> <span class="dv">0</span><span class="sc">*</span>.<span class="dv">930</span><span class="sc">+</span><span class="dv">0</span><span class="sc">*</span><span class="fl">1.58</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">*</span><span class="fl">5.006</span> <span class="sc">+</span> <span class="dv">0</span><span class="sc">*</span>.<span class="dv">930</span><span class="sc">+</span><span class="dv">0</span><span class="sc">*</span><span class="fl">1.58</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5.006</code></pre>
 </div>
 </div>
 <p>This explains why all our fitted values are one of three values! We can also see our observation minus prediction</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>iris[<span class="dv">1</span>,<span class="st">"Sepal.Length"</span>]<span class="sc">-</span><span class="dv">1</span><span class="sc">*</span><span class="fl">5.006</span> <span class="sc">+</span> <span class="dv">0</span><span class="sc">*</span>.<span class="dv">930</span><span class="sc">+</span><span class="dv">0</span><span class="sc">*</span><span class="fl">1.58</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>iris[<span class="dv">1</span>,<span class="st">"Sepal.Length"</span>]<span class="sc">-</span><span class="dv">1</span><span class="sc">*</span><span class="fl">5.006</span> <span class="sc">+</span> <span class="dv">0</span><span class="sc">*</span>.<span class="dv">930</span><span class="sc">+</span><span class="dv">0</span><span class="sc">*</span><span class="fl">1.58</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.094</code></pre>
 </div>
 </div>
 <p>matches our first model residual</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>iris_anova<span class="sc">$</span>residuals[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>iris_anova<span class="sc">$</span>residuals[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    1 
 0.094 </code></pre>
@@ -1085,7 +1157,7 @@ Y=X\beta+\epsilon, \textrm{ where }\\
 \]</span></p>
 <p>A group of contrasts are orthogonal if the sum of the multiplied coefficients from each column equals zero. In this case</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">*</span><span class="dv">2</span> <span class="sc">+</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">*</span><span class="dv">1</span> <span class="sc">+</span> <span class="dv">0</span><span class="sc">*</span><span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">*</span><span class="dv">2</span> <span class="sc">+</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">*</span><span class="dv">1</span> <span class="sc">+</span> <span class="dv">0</span><span class="sc">*</span><span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1</code></pre>
 </div>
@@ -1100,9 +1172,9 @@ Y=X\beta+\epsilon, \textrm{ where }\\
 <p>they would be independent. There are other options as well, as we can always find a number of orthogonal contrasts equal to the number of groups being compared minus one.</p>
 <p>Resulting p values would not required correction for FWER. We can specify contrasts like this using <em>glht</em>. Below I do the same matrix, but note I set the maximum entry to 1 so that estimate of mean differences aren’t doubled.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>contr <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="st">"setosa - versicolor - virginica"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span>.<span class="dv">5</span>,<span class="sc">-</span>.<span class="dv">5</span>),</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">"versicolor - virginica"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="sc">-</span><span class="dv">1</span>))</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">glht</span>(iris_anova, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Species =</span> contr)), <span class="at">test=</span><span class="fu">adjusted</span>(<span class="st">"none"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>contr <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="st">"setosa - versicolor - virginica"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span>.<span class="dv">5</span>,<span class="sc">-</span>.<span class="dv">5</span>),</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">"versicolor - virginica"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">glht</span>(iris_anova, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Species =</span> contr)), <span class="at">test=</span><span class="fu">adjusted</span>(<span class="st">"none"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Simultaneous Tests for General Linear Hypotheses
@@ -1126,21 +1198,21 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <h2 class="anchored" data-anchor-id="displaying-output-of-post-hoc-tests">Displaying output of post-hoc tests</h2>
 <p>Output from post-hoc tests is often displayed using compact letter display. Groups that are not significantly differently share the same letter (so in this case they all have different letters).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>cld_output <span class="ot">&lt;-</span> <span class="fu">fortify</span>(<span class="fu">cld</span>(compare_cont_tukey))</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>cld_output<span class="sc">$</span>Species <span class="ot">&lt;-</span> cld_output<span class="sc">$</span>lhs</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>function_output <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(iris, <span class="at">measurevar=</span><span class="st">"Sepal.Length"</span>, <span class="at">groupvars =</span></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">c</span>(<span class="st">"Species"</span>))</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>function_output <span class="ot">&lt;-</span> <span class="fu">merge</span>(function_output, cld_output)</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(function_output, <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>Species, <span class="at">fill=</span>Species)) <span class="sc">+</span></span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Species)) <span class="sc">+</span></span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Sepal.Length<span class="sc">-</span>ci, <span class="at">ymax=</span>Sepal.Length<span class="sc">+</span>ci)) <span class="sc">+</span></span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. species"</span>))),</span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>)<span class="sc">+</span></span>
-<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span>letters,<span class="at">y=</span>Sepal.Length<span class="sc">+</span><span class="dv">3</span><span class="sc">*</span>ci))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>cld_output <span class="ot">&lt;-</span> <span class="fu">fortify</span>(<span class="fu">cld</span>(compare_cont_tukey))</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>cld_output<span class="sc">$</span>Species <span class="ot">&lt;-</span> cld_output<span class="sc">$</span>lhs</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>function_output <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(iris, <span class="at">measurevar=</span><span class="st">"Sepal.Length"</span>, <span class="at">groupvars =</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">c</span>(<span class="st">"Species"</span>))</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>function_output <span class="ot">&lt;-</span> <span class="fu">merge</span>(function_output, cld_output)</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(function_output, <span class="fu">aes</span>(<span class="at">y=</span>Sepal.Length, <span class="at">x=</span>Species, <span class="at">fill=</span>Species)) <span class="sc">+</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Species)) <span class="sc">+</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Sepal.Length<span class="sc">-</span>ci, <span class="at">ymax=</span>Sepal.Length<span class="sc">+</span>ci)) <span class="sc">+</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. species"</span>))),</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>)<span class="sc">+</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span>letters,<span class="at">y=</span>Sepal.Length<span class="sc">+</span><span class="dv">3</span><span class="sc">*</span>ci))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1151,7 +1223,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 </div>
 <p>Other options include plotting the differences in means</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(compare_cont_tukey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(compare_cont_tukey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1173,8 +1245,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <p>2-sample t-tests may also an easier approach to first considering differences among groups since with only 2 populations the difference in means may be considered. However, it can be shown (not here) this is simply a rearrangement of our exploration of variances.</p>
 <p>To demonstrate this, let’s only consider two species. Note</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>two_species_subset <span class="ot">&lt;-</span> iris[iris<span class="sc">$</span>Species<span class="sc">!=</span><span class="st">"setosa"</span>,]</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset, <span class="at">var.equal=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>two_species_subset <span class="ot">&lt;-</span> iris[iris<span class="sc">$</span>Species<span class="sc">!=</span><span class="st">"setosa"</span>,]</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset, <span class="at">var.equal=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Two Sample t-test
@@ -1191,7 +1263,7 @@ mean in group versicolor  mean in group virginica
 </div>
 <p>yields the same p-value as</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset), <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset), <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -1206,7 +1278,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>Also note the t statistic is the square root of the F statistic.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fl">5.6292</span><span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fl">5.6292</span><span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -31.68789</code></pre>
 </div>
@@ -1214,7 +1286,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>Note the t.test function can also use columns holding data from each population as arguments as opposed to the formula interface, but we will not use that approach here.</p>
 <p>The var.equal=T argument, however, is not the default in R, and this assumption is one of the major differences in 2-sample t-tests and F tests. Remember, ANOVAs and t-tests both require estimates for sigma. If we do not assume the variances are equal for each group, then the best way to estimate the variance is to calculate the variance for each group and take a weighted (by sample size mean). This approach is known as the Behren-Fisher or Welsh t-test.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
@@ -1242,7 +1314,7 @@ mean in group versicolor  mean in group virginica
 U_1 = n_1n_2+\frac{n_1(n_1+1)}{2}-r_1
 \]</span> The U statistics is calculated for each group. The larger U value is then taken and used to compute a p value. We can calculate this using the <em>wilcox.test</em> function,</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon rank sum test with continuity correction
@@ -1254,7 +1326,7 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
 <p>This test assumes the two distributions being considered have similar shape (not that the resulting means are normally-distributed). If you remove the default continuity correction (applied as we approximate discrete data with a continuous distribution)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset, <span class="at">correct=</span>F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset, <span class="at">correct=</span>F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon rank sum test
@@ -1266,7 +1338,7 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
 <p>We get the same result as the Kruskal-Wallis test</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kruskal.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kruskal.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Kruskal-Wallis rank sum test
@@ -1277,7 +1349,7 @@ Kruskal-Wallis chi-squared = 24.989, df = 1, p-value = 5.765e-07</code></pre>
 </div>
 <p>which is a rank-based test that can be applied to 3+ populations.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kruskal.test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span> iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kruskal.test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span> iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Kruskal-Wallis rank sum test
@@ -1288,9 +1360,9 @@ Kruskal-Wallis chi-squared = 96.937, df = 2, p-value &lt; 2.2e-16</code></pre>
 </div>
 <p>If we have more than three populations and this omnibus test reveals a significant p-value, we can follow it up with appropriate post-hoc tests.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.wilcox.test</span>(iris<span class="sc">$</span>Sepal.Length, </span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                          iris<span class="sc">$</span>Species, </span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">p.adjust.method=</span><span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.wilcox.test</span>(iris<span class="sc">$</span>Sepal.Length, </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>                          iris<span class="sc">$</span>Species, </span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">p.adjust.method=</span><span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
@@ -1313,17 +1385,17 @@ P value adjustment method: holm </code></pre>
 <h3 class="anchored" data-anchor-id="bootstrapping">Bootstrapping</h3>
 <p>Another option is to extend the bootstrapping option. Although we could again develop a simulation using the <em>boot</em> function again, here we again use the <strong>MKinfer</strong> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MKinfer)</span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.t.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MKinfer)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.t.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Bootstrap Welch Two Sample t-test
 
 data:  Sepal.Length by Species
 bootstrap p-value &lt; 2.2e-16 
-bootstrap difference of means (SE) = -0.6487257 (0.1144229) 
+bootstrap difference of means (SE) = -0.6499522 (0.1144247) 
 95 percent bootstrap percentile confidence interval:
- -0.8760 -0.4239
+ -0.878 -0.420
 
 Results without bootstrap:
 t = -5.6292, df = 94.025, p-value = 1.866e-07
@@ -1337,16 +1409,16 @@ mean in group versicolor  mean in group virginica
 </div>
 <p>note we can also run this test without assuming variances are different.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.t.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset, <span class="at">var.equal=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.t.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset, <span class="at">var.equal=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Bootstrap Two Sample t-test
 
 data:  Sepal.Length by Species
 bootstrap p-value &lt; 2.2e-16 
-bootstrap difference of means (SE) = -0.652117 (0.1316271) 
+bootstrap difference of means (SE) = -0.652301 (0.1316008) 
 95 percent bootstrap percentile confidence interval:
- -0.910 -0.396
+ -0.910 -0.392
 
 Results without bootstrap:
 t = -5.6292, df = 98, p-value = 1.725e-07
@@ -1361,8 +1433,8 @@ mean in group versicolor  mean in group virginica
 <p>Both these approaches also show the corresponding t-test results, but note you should choose which test you plan to use before seeing the results!</p>
 <p>For more than 2 groups, the <em>t1waybt</em> function in the <strong>WRS2</strong> package can allow comparison.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(WRS2)</span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t1waybt</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(WRS2)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t1waybt</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 t1waybt(formula = Sepal.Length ~ Species, data = iris)
@@ -1377,29 +1449,29 @@ Effect size: 0.846 </code></pre>
 </div>
 <p>If needed, the <em>mcppb20</em> package allows for appropriate post-hoc comparisons.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc <span class="ot">&lt;-</span> <span class="fu">mcppb20</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df <span class="ot">&lt;-</span><span class="fu">data.frame</span>(bootstrap_post_hoc<span class="sc">$</span>comp)</span>
-<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>adjusted_p <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(<span class="fu">as.numeric</span>(bootstrap_post_hoc<span class="sc">$</span>comp[,<span class="dv">6</span>]), <span class="st">"holm"</span>)</span>
-<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group <span class="ot">&lt;-</span> <span class="fu">factor</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group)</span>
-<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plyr)</span>
-<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group <span class="ot">&lt;-</span> <span class="fu">revalue</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group,</span>
-<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">setNames</span>(                                      bootstrap_post_hoc<span class="sc">$</span>fnames,<span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(bootstrap_post_hoc<span class="sc">$</span>fnames))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc <span class="ot">&lt;-</span> <span class="fu">mcppb20</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df <span class="ot">&lt;-</span><span class="fu">data.frame</span>(bootstrap_post_hoc<span class="sc">$</span>comp)</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>adjusted_p <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(<span class="fu">as.numeric</span>(bootstrap_post_hoc<span class="sc">$</span>comp[,<span class="dv">6</span>]), <span class="st">"holm"</span>)</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group <span class="ot">&lt;-</span> <span class="fu">factor</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group)</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plyr)</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group <span class="ot">&lt;-</span> <span class="fu">revalue</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group,</span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">setNames</span>(                                      bootstrap_post_hoc<span class="sc">$</span>fnames,<span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(bootstrap_post_hoc<span class="sc">$</span>fnames))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>The following `from` values were not present in `x`: 3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">factor</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span>)</span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">revalue</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span>,</span>
-<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">setNames</span>(                                      bootstrap_post_hoc<span class="sc">$</span>fnames,<span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(bootstrap_post_hoc<span class="sc">$</span>fnames))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">factor</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span>)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">revalue</span>(bootstrap_post_hoc_df<span class="sc">$</span>Group<span class="fl">.1</span>,</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">setNames</span>(                                      bootstrap_post_hoc<span class="sc">$</span>fnames,<span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(bootstrap_post_hoc<span class="sc">$</span>fnames))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>The following `from` values were not present in `x`: 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>       Group    Group.1     psihat  ci.lower   ci.upper p.value adjusted_p
-1     setosa versicolor -0.9100000 -1.143333 -0.7266667       0          0
-2     setosa  virginica -1.5466667 -1.836667 -1.3066667       0          0
-3 versicolor  virginica -0.6366667 -0.930000 -0.3666667       0          0</code></pre>
+<pre><code>       Group    Group.1     psihat   ci.lower   ci.upper p.value adjusted_p
+1     setosa versicolor -0.9100000 -1.1166667 -0.7100000       0          0
+2     setosa  virginica -1.5466667 -1.7800000 -1.3066667       0          0
+3 versicolor  virginica -0.6366667 -0.8933333 -0.3266667       0          0</code></pre>
 </div>
 </div>
 </section>
@@ -1407,8 +1479,8 @@ Effect size: 0.846 </code></pre>
 <h3 class="anchored" data-anchor-id="permutation">Permutation</h3>
 <p>A new option when comparing groups (2 or more) is known as the permutation test. We encountered a similar approach when we learned about the Fisher’s test for binomial data. Using this approach, we can move the measurements between measured populations, calculate test statistics, and consider how unusual our observed statistic was (a p value!). We can do this for 2</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(coin)</span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">independence_test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span>  two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(coin)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">independence_test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span>  two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Asymptotic General Independence Test
@@ -1420,7 +1492,7 @@ alternative hypothesis: two.sided</code></pre>
 </div>
 <p>or 3+ populations</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">independence_test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span>  iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">independence_test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span>  iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Asymptotic General Independence Test
@@ -1432,10 +1504,10 @@ alternative hypothesis: two.sided</code></pre>
 </div>
 <p>Post-hoc test options are available in the <strong>rcompanion</strong> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwisePermutationTest</span>(Sepal.Length <span class="sc">~</span> Species,</span>
-<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">data =</span> iris,</span>
-<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">method=</span><span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwisePermutationTest</span>(Sepal.Length <span class="sc">~</span> Species,</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">data =</span> iris,</span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">method=</span><span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  Comparison   Stat   p.value  p.adjust
 1    setosa - versicolor = 0 -7.246  4.28e-13 8.560e-13
@@ -1450,9 +1522,14 @@ alternative hypothesis: two.sided</code></pre>
 <p>Our following chapters will extend ANOVAs to consider the impact of multiple measured categories. In doing so, we will also explain paired t-tests and sign tests for paired data.</p>
 
 
+
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-soch2024" class="csl-entry" role="listitem">
+Soch, Joram, The Book of Statistical Proofs, Maja, Pietro Monticone, Thomas J. Faulkenberry, Alex Kipnis, Kenneth Petrykowski, et al. 2024. <em>StatProofBook/StatProofBook.github.io: StatProofBook 2023</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.10495684">https://doi.org/10.5281/zenodo.10495684</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

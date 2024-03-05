@@ -749,7 +749,7 @@ H_A: \textrm{Probability of older bird hitting window is dependent of species} \
 </tr>
 </tbody>
 </table>
-<p>In order to carry out a sampling experiment to consider noise from this expected outcome, we have to determine the p parameter to use for our population. This is because under the null hypothesis, there is only one population- any observed difference is just due to chance!</p>
+<p>This provides us expectations under the null, but we need to turn them into a test statistic (to get a signal) and carry out a sampling experiment to consider noise from this expected outcome. To do this, we have to determine the p parameter to use for our population under the null hypothesis. This is because under the null hypothesis, there is only one population- any observed difference is just due to chance!</p>
 <p>However, we have an issue - we don’t know p.&nbsp;In our binomial experiment it was set by our null hypothesis. Now we are comparing <em>p</em> among species, but that doesn’t set a population distribution.</p>
 <p>To fix this, we go back to our normal approximations. We have shown for large sample sizes the binomial distribution follows the central limit theorem, with <span class="math inline">\(Np\)</span> and <span class="math inline">\(p\)</span> both showing a normal distribution.</p>
 <div class="cell">
@@ -788,14 +788,14 @@ H_A: \textrm{Probability of older bird hitting window is dependent of species} \
 </div>
 </div>
 </div>
-<p>So, we can replace the binomial distribution in our sampling experiment with a normal population. To use this approach, we estimate a value for <em>p</em>, <span class="math inline">\(\hat{p}\)</span>, from the data, and let</p>
+<p>So, we can replace the binomial distribution in our sampling experiment with a normal population. To use this approach, we estimate a value for <em>p</em>, <span class="math inline">\(\hat{p}\)</span>, from the data and null hypothesis, and let</p>
 <p><span class="math display">\[
 \begin{split}
 \mu = Np \\
 \sigma_\mu =\sqrt{Np(1-p)}
 \end{split}
 \]</span></p>
-<p>We then draw only 1 draws this distribution. Why only 1? Because we need to keep the sample sizes the same, so the row and column totals are set! Remember this for a moment. After we draw 1 number, we fill in the rest.</p>
+<p>We then draw only 1 cell from this distribution. Why only 1? Because we need to keep the sample sizes the same, so the row and column totals are set! Remember this for a moment. After we draw 1 number, we fill in the rest.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>num_of_simulations <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>simulations <span class="ot">&lt;-</span> <span class="fu">r2dtable</span>(num_of_simulations,<span class="fu">c</span>(<span class="dv">13</span>,<span class="dv">16</span>),<span class="fu">c</span>(<span class="dv">18</span>,<span class="dv">11</span>))</span>
@@ -822,10 +822,11 @@ H_A: \textrm{Probability of older bird hitting window is dependent of species} \
 </div>
 </div>
 </div>
-<p>Once we carry out the sampling experiment, we can Z-transform our cell data(because they are normal now!). The results for a single cell would follow a N(0,1) distribution (the Z). If we wanted, we could square these outcomes (which would then follow a <span class="math inline">\(\chi^2\)</span> distribution, by definition), and, since we have 4 cells, add them. The resulting variate would follow a <span class="math inline">\(\chi^2\)</span> distribution with 1 degree of freedom (since we drew 1 numbers for the free “cell” in our table). Finally, because of all the p’s above, we could actually rewrite all of this as</p>
+<p>Once we carry out the sampling experiment, we can calculate a test statistic. A common approach is to use some algebra (combining n’s and p’s)and math to come up with</p>
 <p><span class="math display">\[
 V=\sum_{i=1}^{n}{\frac{{(Observed-Expected)}^2}{Expected}} \textrm{where n is number of cells}
 \]</span></p>
+<p>This is related to Pearson’s <span class="math inline">\(\chi^2\)</span> test <span class="citation" data-cites="benhamou">Benhamou and Melot (<a href="#ref-benhamou" role="doc-biblioref">n.d.</a>)</span>. In short, the results for each cell are now from a normal distribution. They can be be z-transformed (remember that?) to follow a N(0,1) distribution (the Z). If we wanted, we could square these outcomes (which would then follow a <span class="math inline">\(\chi^2\)</span> distribution, by definition), and, since we have 4 cells, add them. The resulting variate would follow a <span class="math inline">\(\chi^2\)</span> distribution, but with 1 degree of freedom since we drew 1 number for the free “cell” in our table.</p>
 </section>
 <section id="contingency-analysis-using-the-chi2-test" class="level2">
 <h2 class="anchored" data-anchor-id="contingency-analysis-using-the-chi2-test">Contingency analysis using the <span class="math inline">\(\chi^2\)</span> test</h2>
@@ -1413,6 +1414,9 @@ X-squared = 6, df = 1, p-value = 0.01431</code></pre>
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-altman1998" class="csl-entry" role="listitem">
 Altman, Douglas G, Jonathon J Deeks, and David L Sackett. 1998. <span>“Odds Ratios Should Be Avoided When Events Are Common.”</span> <em>BMJ : British Medical Journal</em> 317 (7168): 1318. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1114216/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1114216/</a>.
+</div>
+<div id="ref-benhamou" class="csl-entry" role="listitem">
+Benhamou, Eric, and Valentin Melot. n.d. <span>“Seven Proofs of the Pearson Chi-Squared Independence Test and Its Graphical Interpretation.”</span>
 </div>
 <div id="ref-davies1998" class="csl-entry" role="listitem">
 Davies, H. T. O., I. K. Crombie, and M. Tavakoli. 1998. <span>“When Can Odds Ratios Mislead?”</span> <em>BMJ</em> 316 (7136): 989–91. <a href="https://doi.org/10.1136/bmj.316.7136.989">https://doi.org/10.1136/bmj.316.7136.989</a>.
