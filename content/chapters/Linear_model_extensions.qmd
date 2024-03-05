@@ -890,7 +890,7 @@ and are not getting credit for all your work! This is a good example of
 why you should analyze simulated data before you run an experiment, but
 there are other options.
 
-#####Blocking
+##### Blocking
 
 The blocking approach we've already covered works might seem appropriate
 here.
@@ -901,7 +901,7 @@ Anova(blocking_analysis, type = "III")
 ```
 
 but its not? Why? This error means now our model matrix has collinearity
-issues. WE can actually see where
+issues. We can actually see where
 
 ```{r}
 alias(blocking_analysis)
@@ -911,7 +911,7 @@ though the output is confusing. In general, the issue here is each unit
 only contributes to one level of other traits..so if we know the average
 impact of ambient temperatures, for example, and the impacts in two of
 the treatments that were held at that temperature, we can predict the
-other. If instead each unit contributed to multiple levels, like in
+other. If instead each unit contributed to multiple levels, like in our
 [feather experiment](../chapters/More_ANOVAs.qmd){target="blank"}) this
 isn't an issue.
 
@@ -970,7 +970,7 @@ check_mixed_model(mixed_analysis)
 
 Here we have only 9 levels of units, so the spread is not perfect.
 However, we also know each of these is itself an average,and averages
-should be normally-distributed under the central limith theorem, so we
+should be normally-distributed under the central limit theorem, so we
 can plow ahead.
 
 We can consider the outcome using our *summary* command - note the
@@ -999,6 +999,72 @@ Note this approach suggests we do not have enough data to reject the
 null hypothesis. Ignoring the linkages among data led to *very*
 different results. This issue (pseudopreplication) has been noted in
 ecology and other fields [@hurlbert1984; @heffner1996; @lazic2010].
+
+<details><summary>Is this really new?</summary>
+
+It should be noted that random effects match up to paired t-tests and
+blocking approaches for simple experiments.
+
+```{r, echo=FALSE}
+Input = ("
+ Bird    Feather_type   Color_index
+ A       Typical   -0.255
+ B       Typical   -0.213
+ C       Typical   -0.19
+ D       Typical   -0.185
+ E       Typical   -0.045
+ F       Typical   -0.025
+ G       Typical   -0.015
+ H       Typical    0.003
+ I       Typical    0.015
+ J       Typical    0.02
+ K       Typical    0.023
+ L       Typical    0.04
+ M       Typical    0.04
+ N       Typical    0.05
+ O       Typical    0.055
+ P       Typical    0.058
+ A       Odd       -0.324
+ B       Odd       -0.185
+ C       Odd       -0.299
+ D       Odd       -0.144
+ E       Odd       -0.027
+ F       Odd       -0.039
+ G       Odd       -0.264
+ H       Odd       -0.077
+ I       Odd       -0.017
+ J       Odd       -0.169
+ K       Odd       -0.096
+ L       Odd       -0.33
+ M       Odd       -0.346
+ N       Odd       -0.191
+ O       Odd       -0.128
+ P       Odd       -0.182
+")
+
+feather <-  read.table(textConnection(Input),header=TRUE)
+```
+
+```{r}
+two_way_anova_example <- lm(Color_index ~ Feather_type + Bird, data=feather)
+Anova(two_way_anova_example, type= "III")
+
+```
+
+```{r}
+t.test(Color_index ~ Feather_type, data=feather, paired=TRUE)
+```
+
+```{r}
+two_way_lme_example <- lmer(Color_index ~ Feather_type + (1|Bird), data=feather)
+Anova(two_way_lme_example, type= "III", test="F")
+
+```
+
+All same if we use least-squares approaches (not the default $\chi^2$
+tests that match likelihood-based methods).
+
+</details>
 
 ## Errors are not equal among groups
 
