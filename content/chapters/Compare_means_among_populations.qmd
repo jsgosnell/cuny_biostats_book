@@ -91,16 +91,16 @@ $$
 
 Given that, our overall idea is to consider if the data are better
 explained by an overall group average or by species-specific averages.
-To visualize this, we could use
+To visualize this, we could use this image.
 
 ```{r}
-colors <- c("group means" = "black", "overall average" = "orange")
+library(viridis)
 ggplot(iris, aes(Species,Sepal.Length)) + 
-  geom_jitter(aes(colour=Species), size = 3) +
-  geom_errorbar(aes(ymin=Sepal.Length, ymax=Sepal.Length, color="group means"), 
+  geom_jitter(size = 3) +
+  geom_errorbar(aes(ymin=Sepal.Length, ymax=Sepal.Length, color="group means"), size=1.5, 
                 data = function_output) +
-    geom_hline(aes(yintercept=mean(Sepal.Length),  color = "overall average"))+
-  scale_color_manual(values=colors)+
+    geom_hline(aes(yintercept=mean(Sepal.Length),  color = "overall average"),  size=1.5)+
+  scale_color_manual(values = c("#619CFF","#F8766D"))+
     labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
        y= "Sepal length (cm)",
        x= "Species", 
@@ -126,6 +126,7 @@ null tested factors don't matter). Since we don't know or set sigma, we
 can again estimate it from the data. One such sample might look like
 
 ```{r}
+set.seed(7)
 variance_estimate <- sum((function_output$N -1) * (function_output$sd)^2)/(sum(function_output$N)-length(function_output$N))
 mean_sepal <- mean(iris$Sepal.Length)
 simulated_data <- data.frame(Species=c(rep("setosa", 50), 
@@ -138,19 +139,15 @@ function_output <- summarySE(simulated_data, measurevar="Sepal.Length", groupvar
                                c("Species"))
 
 ggplot(simulated_data, aes(Species,Sepal.Length)) + 
-  geom_jitter(aes(colour=Species), size = 3) +
-  ylab("Sepal Length (cm)")+ggtitle("Sepal Length of various iris species")+
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold")) +
-  geom_errorbar(aes(ymin=Sepal.Length, ymax=Sepal.Length, color="group means"), 
+  geom_jitter(size = 3) +
+  geom_errorbar(aes(ymin=Sepal.Length, ymax=Sepal.Length, color="group means"), size=1.5,
                 data = function_output) +
-    geom_hline(aes(yintercept=mean(Sepal.Length),  color = "overall average"))+
-  scale_color_manual(values=colors)
+    geom_hline(aes(yintercept=mean(Sepal.Length),  color = "overall average"),  size=1.5)+
+  scale_color_manual(values = c("#619CFF","#F8766D"))+
+    labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
+       y= "Sepal length (cm)",
+       x= "Species", 
+       color= "Focus")
 ```
 
 As expected, under the null hypothesis the overall and species-specific
@@ -171,9 +168,10 @@ we can get an overall estimate of variance by
 -   calculating variance for each point around its respective
     group-specific mean
 
-    -   this leads to 3 estimates of variance, which we can multiple by
-        (n-1) to account for differences in sample size and then divide
-        by the number of groups to get an overall estimate of variance
+    -   this leads to 3 estimates of variance, which we can multiply by
+        (n~j~-1) to account for differences in sample size and then
+        divide by the number of samples to get an overall estimate of
+        variance
         -   this is referred to as mean square error
 
     $$
@@ -181,29 +179,27 @@ we can get an overall estimate of variance by
     \textrm{Remember, }s^2 = \frac{\sum_{i=1}^{n} (Y_{i}-\overline{Y})^2}{n-1} \sim \sigma^2\\
     \textrm{So if we have j groups, for each group we can see}\\
      s_j^2 = \frac{\sum_{i=1}^{n_j} (Y_{ij}-\overline{Y_j})^2}{n_j-1} \sim \sigma_j^2\\
-     \textrm{which we can combine to estimate }\sigma_{overall}\\
-     \frac{(n_1-1)s_1^2 + (n_2-1)s_2^2 ...(n_j-1)s_j^2}{n_1+n_2+...n_j-1} = s_{overall}^2\\
+     \textrm{which we can combine to estimate }\sigma^2_{overall}\\
+     \frac{(n_1-1)s_1^2 + (n_2-1)s_2^2 ...(n_j-1)s_j^2}{n_1+n_2+...n_j-j} = s_{overall}^2\\
     \end{split}
     $$
 
 -   calculating variance for each group mean around the overall mean
 
-    -   this is called mean square treatment
+    -   this can be multiplied by $n$ to get $\sigma^2$
+
+    -   this is referred to as mean square treatment
 
 $$
-\begin{split}
-\frac{\sum_{j=1}^{j} (\overline{Y_j}-Y_{overall}{i})^2}{j-1} = \frac{s^2}{n} \\
-\textrm{where j is the number of groups. This can be multiplied by n to get }s^2 \\
-\end{split}
+        \begin{split}
+        \frac{\sum_{j=1}^{j} (\overline{Y_j}-\overline{\overline{Y}})^2}{j-1} = \frac{s^2}{n} \\
+        \textrm{where j is the number of groups and }\ \overline{\overline{Y}}\ \textrm{is the overall mean.}\\
+        \end{split}
 $$
 
 In other words, variance among groups should be equal to variance within
-groups. You should also note this means we can partition the variance
-for any given observation as its distance from its group mean and its
-group means distance from the overall
-
-Under the null hypothesis, the ratio of these estimates should tend
-towards 1. We can see this using a sampling experiment.
+groups. Under the null hypothesis, the ratio of these estimates should
+tend towards 1. We can see this using a sampling experiment.
 
 ```{r}
 #sample
@@ -221,33 +217,130 @@ for(i in 1:10000){
     ratio$ratio[i] <- ratio$msg[i]/ratio$mse[i]
 }
   
-summary(lm(Sepal.Length~Species, iris))$fstatistic[1]
-  
-  
+
 ggplot(ratio, aes(ratio)) +
     geom_histogram(aes(y=..count../sum(..count..)), fill = "orange", bins=15)+
     labs(main = "Ratio under null hypothesis", y= "Probability")
 ```
 
 Using this approach, we could determine how unusual our data were (get a
-p-value!). However, finding a distribution that approximates this shape
-would make future work easier. It turns out all the squared terms above
-lead to this being a rato of $\chi^2$ distributions, where the numerator
-has degrees of freedom j-1 (# of groups - 1) and the numerator had
-degrees of freedom n-j-1; the "lost" degrees of freedom are used to
-estimate group and overall means.
+p-value!). In our example, we found a signal of
+`r round(summary(lm(Sepal.Length~Species, iris))$fstatistic[1],3)`.
+Looking at the x-axis above, it's obvious getting a sample this or more
+extreme is going to be very rare by chance!
+
+However, finding a distribution that approximates this shape would make
+future work easier. It turns out all the squared terms above lead to
+this being a rato of $\chi^2$ distributions, where the numerator has
+degrees of freedom j-1 (# of groups - 1) and the numerator had degrees
+of freedom n-j-1 (the "lost" degrees of freedom are used to estimate
+group and overall means). We call this the F distribution.
 
 ```{r}
 ggplot(ratio, aes(ratio)) +
-    geom_histogram(aes(y=..count../sum(..count..)), fill = "orange", bins = 15) +
+    geom_histogram(aes(y=..count../sum(..count..)), fill = "orange", bins = 12) +
     labs(main = "Ratio under null hypothesis", y= "Probability")+
     stat_function(fun = df, args = list(df1 =2, df2 = 147), color = "green")   
 
 ```
 
-In our data, we found a signal of
-`r as.character(summary(lm(Sepal.Length~Species, iris))$fstatistic[1])`!
-This is going to lead to a very low p-value.
+This allows us to estimate the p-value using distributional assumptions.
+
+<details>
+
+<summary>Why do we sometimes talk about sums of squares?</summary>
+
+You should also note this means we can partition the variance for any
+given observation as its distance from its group mean and its group
+means distance from the overall. It turns out when we do this, we can
+*decompose* the total sums of squares (similar to variance but not
+divided!) into those attributed to the distance of points from the group
+mean and the distance of group means from the grand mean (not proven
+here). These are additive (equal to) to the total sums of squares. .
+[For a proof (and more links!)
+see](https://raw.githubusercontent.com/StatProofBook/StatProofBook.github.io/master/P/anova1-pss.md){target="_blank"}
+@soch2024; main part reproduced below:
+
+**Theorem:** Given one-way analysis of variance,
+
+$$ 
+y_{ij} = \mu_i + \varepsilon_{ij}, \; \varepsilon_{ij} \overset{\mathrm{i.i.d.}}{\sim} \mathcal{N}(0, \sigma^2)
+$$
+
+sums of squares can be partitioned as follows
+
+$$
+\mathrm{SS}_\mathrm{tot} = \mathrm{SS}_\mathrm{treat} + \mathrm{SS}_\mathrm{res}
+$$
+
+where $\mathrm{SS} _\mathrm{tot}$ is the \*\*total sum of
+squares*\](/D/tss)**,*** $\mathrm{SS} _\mathrm{treat}$ is the treatment
+sum of squares **(sometimes call *explained* sum of squares, and**
+$\mathrm{SS} _\mathrm{res}$ is the residual sum of squares (sometimes
+called *sum squares error*).
+
+**Proof:** The total sum of squares for one-way ANOVA is given by
+
+$$ 
+\mathrm{SS}_\mathrm{tot} = \sum_{i=1}^{k} \sum_{j=1}^{n_i} (y_{ij} - \bar{y})^2
+$$
+
+where $\bar{y}$ is the mean across all values $y_{ij}$. This can be
+rewritten as
+
+$$ 
+\begin{split}
+\sum_{i=1}^{k} \sum_{j=1}^{n_i} (y_{ij} - \bar{y})^2 &= \sum_{i=1}^{k} \sum_{j=1}^{n_i} \left[ (y_{ij} - \bar{y}_i) + (\bar{y}_i - \bar{y}) \right]^2 \\
+&= \sum_{i=1}^{k} \sum_{j=1}^{n_i} \left[ (y_{ij} - \bar{y}_i)^2 + (\bar{y}_i - \bar{y})^2 + 2 (y_{ij} - \bar{y}_i) (\bar{y}_i - \bar{y}) \right] \\
+&= \sum_{i=1}^{k} \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_i)^2 + \sum_{i=1}^{k} \sum_{j=1}^{n_i} (\bar{y}_i - \bar{y})^2 + 2 \sum_{i=1}^{k} (\bar{y}_i - \bar{y}) \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_i) \; .
+\end{split}
+$$
+
+Note that the following sum is zero
+
+$$ 
+\sum_{j=1}^{n_i} (y_{ij} - \bar{y}_i) = \sum_{j=1}^{n_i} y_{ij} - n_i \cdot \bar{y}_i = \sum_{j=1}^{n_i} y_{ij} - n_i \cdot \frac{1}{n_i} \sum_{j=1}^{n_i} y_{ij} \; ,
+$$
+
+so that the sum in in the original equation reduces to
+
+$$ 
+\sum_{i=1}^{k} \sum_{j=1}^{n_i} (y_{ij} - \bar{y})^2 = \sum_{i=1}^{k} \sum_{j=1}^{n_i} (\bar{y}_i - \bar{y})^2 + \sum_{i=1}^{k} \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_i)^2 \; .
+$$
+
+With the treatment sum of square for one-way ANOVA
+
+$$ 
+\mathrm{SS}_\mathrm{treat} = \sum_{i=1}^{k} \sum_{j=1}^{n_i} (\bar{y}_i - \bar{y})^2
+$$
+
+and the residual sum of squares for one-way ANOVA
+
+$$ 
+\mathrm{SS}_\mathrm{res} = \sum_{i=1}^{k} \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_i)^2 \; ,
+$$
+
+we finally have:
+
+$$ 
+  \mathrm{SS}_\mathrm{tot} = \mathrm{SS}_\mathrm{treat} + \mathrm{SS}_\mathrm{res} \; 
+$$
+
+This fact, and some clever math tricks, made them easy to work with.
+Eventually, however, we are focusing on the fact we are estimating the
+variance in multiple ways.
+
+</details>
+
+<details>
+
+<summary>and what is $\chi^2$</summary>
+
+Remember from the notes on contingency analysis that a $\chi^2$
+distribution is a Z variate squared.It's defined by degrees of freedom
+equal to the number of free variates it is summed over.
+
+</details>
 
 ## Welcome to the linear model
 
@@ -361,7 +454,7 @@ they differ. In short, Type I residuals consider the order in which
 factors are added to a model, and type 2 do not consider interactions.
 We will stick with type III for this class.
 
-\<\details\>
+</details>
 
 Doing this we see Species has a significant impact on explaining
 variation in the data (and our very high F value). So we reject the null

@@ -124,10 +124,12 @@ Since we have 13/29 birds are old, we should expect
 | *Younger*         | 18 \* 16/29  | 11 \* 16/29 | 16             |
 | **Column Totals** | 18           | 11          | N = 29         |
 
-In order to carry out a sampling experiment to consider noise from this
-expected outcome, we have to determine the p parameter to use for our
-population. This is because under the null hypothesis, there is only one
-population- any observed difference is just due to chance!
+This provides us expectations under the null, but we need to turn them
+into a test statistic (to get a signal) and carry out a sampling
+experiment to consider noise from this expected outcome. To do this, we
+have to determine the p parameter to use for our population under the
+null hypothesis. This is because under the null hypothesis, there is
+only one population- any observed difference is just due to chance!
 
 However, we have an issue - we don't know p. In our binomial experiment
 it was set by our null hypothesis. Now we are comparing *p* among
@@ -163,7 +165,7 @@ ggplot(sampling_experiment_long,aes(x=mean)) +
 
 So, we can replace the binomial distribution in our sampling experiment
 with a normal population. To use this approach, we estimate a value for
-*p*, $\hat{p}$, from the data, and let
+*p*, $\hat{p}$, from the data and null hypothesis, and let
 
 $$
 \begin{split}
@@ -172,9 +174,10 @@ $$
 \end{split}
 $$
 
-We then draw only 1 draws this distribution. Why only 1? Because we need
-to keep the sample sizes the same, so the row and column totals are set!
-Remember this for a moment. After we draw 1 number, we fill in the rest.
+We then draw only 1 cell from this distribution. Why only 1? Because we
+need to keep the sample sizes the same, so the row and column totals are
+set! Remember this for a moment. After we draw 1 number, we fill in the
+rest.
 
 ```{r, warning=F}
 num_of_simulations <- 10000
@@ -193,18 +196,22 @@ sep =""), x=expression(chi^2), color="Source")+guides(fill=F)+
   scale_fill_manual(values=colors)
 ```
 
-Once we carry out the sampling experiment, we can Z-transform our cell
-data(because they are normal now!). The results for a single cell would
-follow a N(0,1) distribution (the Z). If we wanted, we could square
-these outcomes (which would then follow a $\chi^2$ distribution, by
-definition), and, since we have 4 cells, add them. The resulting variate
-would follow a $\chi^2$ distribution with 1 degree of freedom (since we
-drew 1 numbers for the free "cell" in our table). Finally, because of
-all the p's above, we could actually rewrite all of this as
+Once we carry out the sampling experiment, we can calculate a test
+statistic. A common approach is to use some algebra (combining n's and
+p's)and math to come up with
 
 $$
 V=\sum_{i=1}^{n}{\frac{{(Observed-Expected)}^2}{Expected}} \textrm{where n is number of cells}
 $$
+
+This is related to Pearson's $\chi^2$ test @benhamou. In short, the
+results for each cell are now from a normal distribution. They can be be
+z-transformed (remember that?) to follow a N(0,1) distribution (the Z).
+If we wanted, we could square these outcomes (which would then follow a
+$\chi^2$ distribution, by definition), and, since we have 4 cells, add
+them. The resulting variate would follow a $\chi^2$ distribution, but
+with 1 degree of freedom since we drew 1 number for the free "cell" in
+our table.
 
 ## Contingency analysis using the $\chi^2$ test
 
