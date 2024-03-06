@@ -1,0 +1,91 @@
+---
+title: Linear model extensions
+---
+
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+Remember you should
+
+-   add code chunks by clicking the *Insert Chunk* button on the toolbar
+    or by pressing *Ctrl+Alt+I* to answer the questions!
+
+-   **render** your file to produce a markdown version that you can see!
+
+-   save your work often
+
+    -   **commit** it via git!
+    -   **push** updates to github
+
+### 1
+
+In a study considering how the presence of sea stars changed snail
+growth patterns, \~25 snails were grown in containers containing 0,1, or
+2 seastars.\
+Since non-consumptive effects are often threshold based, these
+treatments levels should be considered as groups (not as a continuous
+variable!). The data is available at
+
+https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/snail_modified_for_class.csv
+
+FL is the final length of measured snails, and the treatment (coded 1-3)
+correspond to \[1=Control (no predators). 2=1 predator treatment,3=2
+predator treatment).
+
+What method would you use to analyze this data and why? Carry out your
+test, stating your null hypothesis, test assumptions, p-value, and
+interpretation.\
+Describe any necessary steps and provide graphics and values as needed.
+If needed, can you determine which treatments differ from each other?
+
+### 2
+
+(From OZDasl) The data give the ambient temperature and the number of
+primary O-rings damaged for 23 of the 24 space shuttle launches before
+the launch of the space shuttle Challenger on January 20, 1986.
+(Challenger was the 25th shuttle. One engine was lost at sea and could
+not be examined.) Each space shuttle contains 6 primary O-rings.
+
+Note these are counts. We can analyze this data using a Poisson
+distribution or binomial. Make sure you understand why each one is
+possible, which one is better, and carry out the analysis. Data is
+available \@
+
+http://www.statsci.org/data/general/challenger.txt
+
+### 3
+
+Returning to the whelk length-mass relationship from class, try fitting
+an exponential curve to the data. As a hint, try
+
+```{r eval=F}
+nls(Mass ~ exp(b0 + b1 * Shell.Length), whelk, 
+                   start = list(b0 =1, b1=0), na.action = na.omit)
+```
+
+Compare this model to those that assume a linear and power relationship.
+Data is available \@
+
+https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/whelk.csv
+
+### 4
+
+Going back to the TEAM dataset, remember we found that elevation had no
+impact on carbon storage. But that was a linear fit. Use a gam
+(generalized additive model) to see if elevation can be related to
+carbon storage in an additive model. Note we can use the gamm
+(generalized additive mixed model) function in the mgcv package to
+denote mixed effects. For example (from help file)
+
+```{r eval=F}
+b2 <- gamm(y~s(x0)+s(x1)+s(x2),family=poisson,
+           data=dat,random=list(fac=~1))
+```
+
+Team data is available \@
+
+https://github.com/jsgosnell/CUNY-BioStats/blob/master/datasets/team_data_no_spaces.csv

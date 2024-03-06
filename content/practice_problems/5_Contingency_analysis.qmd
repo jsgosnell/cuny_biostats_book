@@ -1,6 +1,5 @@
 ---
 title: "Compare proportions among groups"
-bibliography: ../references.bib
 ---
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
@@ -12,29 +11,28 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 
 Remember you should
 
-* add code chunks by clicking the *Insert Chunk* button on the toolbar or by
-pressing *Ctrl+Alt+I* to answer the questions!
-* use visual mode or **render** your file to produce a version that you can see!
-* **render** your file to make sure it runs (and that you haven't been working
-out of order)
-* save your work often 
-  * **commit** it via git!
-  * **push** updates to github
-  
+-   add code chunks by clicking the *Insert Chunk* button on the toolbar
+    or by pressing *Ctrl+Alt+I* to answer the questions!
+-   **render** your file to produce a markdown version that you can see!
+-   save your work often
+    -   **commit** it via git!
+    -   **push** updates to github
+
 ## Overview
 
-This practice reviews the [Compare means among groups lecture](../chapters/Compare_proportions_among_populations.qmd){target="_blank"}.
-  
+This practice reviews the [Compare means among groups
+lecture](https://jsgosnell.github.io/cuny_biostats_book/content/chapters/Compare_proportions_among_populations.html).
+
 ## Examples
 
-Issue is we often get data in spreadsheet format (expanded/long or wide/summarized,
-each shown below), but we need to get a vector or matrix for chisq.test and
-related functions.
+Issue is we often get data in spreadsheet format (expanded/long or
+wide/summarized, each shown below), but we need to get a vector or
+matrix for chisq.test and related functions.
 
 ### The data
 
-Following the Everest example from class. Assume data is in a dataframe where 
-each row is a group data point.  
+Following the Everest example from class. Assume data is in a dataframe
+where each row is a group data point.
 
 ```{r}
 everest <- data.frame(Survived = c("Y","N","Y", "N"),
@@ -42,39 +40,40 @@ everest <- data.frame(Survived = c("Y","N","Y", "N"),
                       Number = c(1045, 32, 88, 8))
 ```
 
-
-Assume data is in a dataframe where 
-each row is an individual data point.  
+Assume data is in a dataframe where each row is an individual data
+point.
 
 ```{r}
 library(mirt)
 everest_expand <- expand.table(everest)
 ```
 
-### tests
+### Tests
 
-First, let's ask if the same amount of people used or did not use oxygen. WE can 
-use the table command to summarize. Note the chisq.test, by default, assumes
-each group is equally likely!
+First, let's ask if the same amount of people used or did not use
+oxygen. WE can use the table command to summarize. Note the chisq.test,
+by default, assumes each group is equally likely!
 
 ```{r}
 table(everest_expand$Oxygen)
 chisq.test(table(everest_expand$Oxygen)) 
 ```
+
 Dong this with summarized data is actually harder
 
 ```{r}
 aggregate(Number~Oxygen, everest, sum)$Number
 chisq.test(aggregate(Number~Oxygen, everest, sum)$Number) 
 ```
+
 But this is better!
 
 ```{r}
 binom.test(table(everest_expand$Oxygen))
 ```
 
-What if we wanted to compare to past years where 10% of climbers did not use oxygen? 
-Note *table* function splits into alphabetical order.
+What if we wanted to compare to past years where 10% of climbers did not
+use oxygen? Note *table* function splits into alphabetical order.
 
 ```{r}
 binom.test(table(everest_expand$Oxygen), p=.1)
@@ -94,17 +93,18 @@ chisq.test(x = matrix(c(1045, 88, 32, 8), 2, 2, byrow = T))
 chisq.test(x = matrix(c(1045, 32, 88,  8), 2, 2, byrow = T))
 ```
 
-**Key is first argument  must be all the info**. This is different from (incorrect)
-approach like
+**Key is first argument must be all the info**. This is different from
+(incorrect) approach like
 
 ```{r}
 chisq.test(everest$Survived,everest$Oxygen)
 ```
-This is comparing split among Survived and not to split (expected) using Oxygen!
 
+This is comparing split among Survived and not to split (expected) using
+Oxygen!
 
-So order has minimal input with 2 groups. Other test options necessitated by 
-the warning
+So order has minimal input with 2 groups. Other test options
+necessitated by the warning
 
 ```{r}
 fisher.test(table(everest_expand$Oxygen, everest_expand$Survived))
@@ -134,8 +134,8 @@ Fisher again due to size
 fisher.test(table(everest_enriched_expand$Survived, everest_enriched_expand$Oxygen))
 ```
 
-Now we follow-up, and rows/columns matter. Note default is row and fdr method. I 
-order results for ease of view
+Now we follow-up, and rows/columns matter. Note default is row and fdr
+method. I order results for ease of view
 
 ```{r}
 library(rcompanion)
@@ -144,7 +144,6 @@ everest_expand_correct_fdr[order(everest_expand_correct_fdr$p.adj.Fisher),]
 ```
 
 Not quite what we wanted. How about
-
 
 ```{r}
 everest_expand_correct_fdr <- pairwiseNominalIndependence(table(everest_enriched_expand$Survived, everest_enriched_expand$Oxygen),
@@ -160,6 +159,7 @@ everest_expand_correct_fdr <- pairwiseNominalIndependence(table(everest_enriched
                                                           method = "holm")
 everest_expand_correct_fdr[order(everest_expand_correct_fdr$p.adj.Fisher),]
 ```
+
 To put in manually, we need a few extra things
 
 ```{r}
@@ -169,24 +169,26 @@ colnames(everest_table) = c("Enriched", "None", "Regular")
 everest_table
 ```
 
-
 ## Let's practice
 
-### Heart attacks 
+### Heart attacks
 
 #### 1
 
-Let’s look at some heart attack data.  Read in the data using
+Let’s look at some heart attack data. Read in the data using
+
 ```{r}
 heart_attacks <- read.table("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/heartatk4R.txt",header=T, stringsAsFactors = T)
 ```
-Every entry is a person that has suffered a heart attack. More information on the dataset can be found at
 
-http://statland.org/Software_Help/DataDesk/datafile.htm 
+Every entry is a person that has suffered a heart attack. More
+information on the dataset can be found at
+
+http://statland.org/Software_Help/DataDesk/datafile.htm
 
 We want to again test if heart attacks occur equally across genders.
 
-* What if we know that males actually make up 50.8% of the population?
+-   What if we know that males actually make up 50.8% of the population?
 
 #### 2
 
@@ -194,13 +196,15 @@ Still using the heart attack data, is survival independent of gender?
 
 #### 3
 
-For people that have a heart attack before they turn 30, is survival independent of gender?
+For people that have a heart attack before they turn 30, is survival
+independent of gender?
 
 ### Dolphins
 
 #### 4
 
-Data on dolphin behavior was collected off the coast of Iceland. Data is @
+Data on dolphin behavior was collected off the coast of Iceland. Data is
+\@
 
 http://www.statsci.org/data/general/dolpacti.txt
 
@@ -210,13 +214,13 @@ Since this is a .txt file, not a .csv, you’ll need to use something like
 dolphin <- read.table("http://www.statsci.org/data/general/dolpacti.txt", sep="", header = T, stringsAsFactors = T)
 ```
 
-More info on data @ 
+More info on data \@
 
 http://www.statsci.org/data/general/dolpacti.html
 
-Is travelling independent of time of day?  You’ll need to consider
-traveling vs not traveling due to different number of groups observed
-in each period.  Carry out post-hoc tests if needed.
+Is travelling independent of time of day? You’ll need to consider
+traveling vs not traveling due to different number of groups observed in
+each period. Carry out post-hoc tests if needed.
 
 ### Smoking
 
@@ -226,5 +230,5 @@ Use data on smoking and exercise from
 
 http://www.r-tutor.com/elementary-statistics/goodness-fit/chi-squared-test-independence
 
-to determine if smoking is independent of exercise. You’ll need to input data manually.  Carry out post-hoc tests if needed.
-
+to determine if smoking is independent of exercise. You’ll need to input
+data manually. Carry out post-hoc tests if needed.
