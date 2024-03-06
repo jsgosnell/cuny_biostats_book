@@ -514,7 +514,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section">1</a></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">2</a></li>
+  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">3</a></li>
+  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">4</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/practice_problems/10_Linear_model_extensions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/practice_problems/10_Linear_model_extensions.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -541,40 +550,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
 <p>Remember you should</p>
 <ul>
-<li>add code chunks by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Ctrl+Alt+I</em> to answer the questions!</li>
-<li>use visual mode or <strong>render</strong> your file to produce a version that you can see!</li>
-<li><strong>render</strong> your file to make sure it runs (and that you haven’t been working out of order)</li>
-<li>save your work often
+<li><p>add code chunks by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Ctrl+Alt+I</em> to answer the questions!</p></li>
+<li><p><strong>render</strong> your file to produce a markdown version that you can see!</p></li>
+<li><p>save your work often</p>
 <ul>
 <li><strong>commit</strong> it via git!</li>
 <li><strong>push</strong> updates to github</li>
 </ul></li>
 </ul>
-<ol type="1">
-<li>In a study considering how the presence of sea stars changed snail growth patterns, ~25 snails were grown in containers containing 0,1, or 2 seastars.<br>
-Since non-consumptive effects are often threshold based, these treatments levels should be considered as groups (not as a continuous variable!). The data is available at</li>
-</ol>
+<section id="section" class="level3">
+<h3 class="anchored" data-anchor-id="section">1</h3>
+<p>In a study considering how the presence of sea stars changed snail growth patterns, ~25 snails were grown in containers containing 0,1, or 2 seastars.<br>
+Since non-consumptive effects are often threshold based, these treatments levels should be considered as groups (not as a continuous variable!). The data is available at</p>
 <p>https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/snail_modified_for_class.csv</p>
 <p>FL is the final length of measured snails, and the treatment (coded 1-3) correspond to [1=Control (no predators). 2=1 predator treatment,3=2 predator treatment).</p>
 <p>What method would you use to analyze this data and why? Carry out your test, stating your null hypothesis, test assumptions, p-value, and interpretation.<br>
 Describe any necessary steps and provide graphics and values as needed. If needed, can you determine which treatments differ from each other?</p>
-<ol start="2" type="1">
-<li>(From OZDasl) The data give the ambient temperature and the number of primary O-rings damaged for 23 of the 24 space shuttle launches before the launch of the space shuttle Challenger on January 20, 1986. (Challenger was the 25th shuttle. One engine was lost at sea and could not be examined.) Each space shuttle contains 6 primary O-rings.</li>
-</ol>
+</section>
+<section id="section-1" class="level3">
+<h3 class="anchored" data-anchor-id="section-1">2</h3>
+<p>(From OZDasl) The data give the ambient temperature and the number of primary O-rings damaged for 23 of the 24 space shuttle launches before the launch of the space shuttle Challenger on January 20, 1986. (Challenger was the 25th shuttle. One engine was lost at sea and could not be examined.) Each space shuttle contains 6 primary O-rings.</p>
 <p>Note these are counts. We can analyze this data using a Poisson distribution or binomial. Make sure you understand why each one is possible, which one is better, and carry out the analysis. Data is available @</p>
 <p>http://www.statsci.org/data/general/challenger.txt</p>
-<ol start="3" type="1">
-<li>Returning to the whelk length-mass relationship from class, try fitting an exponential curve to the data. As a hint, try</li>
-</ol>
+</section>
+<section id="section-2" class="level3">
+<h3 class="anchored" data-anchor-id="section-2">3</h3>
+<p>Returning to the whelk length-mass relationship from class, try fitting an exponential curve to the data. As a hint, try</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nls</span>(Mass <span class="sc">~</span> <span class="fu">exp</span>(b0 <span class="sc">+</span> b1 <span class="sc">*</span> Shell.Length), whelk, </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">start =</span> <span class="fu">list</span>(<span class="at">b0 =</span><span class="dv">1</span>, <span class="at">b1=</span><span class="dv">0</span>), <span class="at">na.action =</span> na.omit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Compare this model to those that assume a linear and power relationship. Data is available @</p>
 <p>https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/whelk.csv</p>
-<ol start="4" type="1">
-<li>Going back to the TEAM dataset, remember we found that elevation had no impact on carbon storage. But that was a linear fit. Use a gam (generalized additive model) to see if elevation can be related to carbon storage in an additive model. Note we can use the gamm (generalized additive mixed model) function in the mgcv package to denote mixed effects. For example (from help file)</li>
-</ol>
+</section>
+<section id="section-3" class="level3">
+<h3 class="anchored" data-anchor-id="section-3">4</h3>
+<p>Going back to the TEAM dataset, remember we found that elevation had no impact on carbon storage. But that was a linear fit. Use a gam (generalized additive model) to see if elevation can be related to carbon storage in an additive model. Note we can use the gamm (generalized additive mixed model) function in the mgcv package to denote mixed effects. For example (from help file)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>b2 <span class="ot">&lt;-</span> <span class="fu">gamm</span>(y<span class="sc">~</span><span class="fu">s</span>(x0)<span class="sc">+</span><span class="fu">s</span>(x1)<span class="sc">+</span><span class="fu">s</span>(x2),<span class="at">family=</span>poisson,</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data=</span>dat,<span class="at">random=</span><span class="fu">list</span>(<span class="at">fac=</span><span class="sc">~</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -583,6 +594,7 @@ Describe any necessary steps and provide graphics and values as needed. If neede
 <p>https://github.com/jsgosnell/CUNY-BioStats/blob/master/datasets/team_data_no_spaces.csv</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1136,7 +1148,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
 <p><a href="https://jsgosnell.github.io/cuny_biostats_book/">Course notes</a> &amp; <a href="https://jsgosnell.github.io/cuny_biostats_website/">slides</a></p>
-<div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/practice_problems/10_Linear_model_extensions.Rmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/practice_problems/10_Linear_model_extensions.Rmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/practice_problems/10_Linear_model_extensions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/practice_problems/10_Linear_model_extensions.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

@@ -518,15 +518,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a>
+  <ul class="collapse">
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  </ul></li>
   <li><a href="#lets-practice" id="toc-lets-practice" class="nav-link" data-scroll-target="#lets-practice">Let’s practice!</a>
   <ul class="collapse">
   <li><a href="#recognizing-and-assessing-normality" id="toc-recognizing-and-assessing-normality" class="nav-link" data-scroll-target="#recognizing-and-assessing-normality">Recognizing and assessing normality</a></li>
   <li><a href="#working-with-data-note-some-sample-sizes-may-be-too-small-for-these-to-all-be-good-ideas" id="toc-working-with-data-note-some-sample-sizes-may-be-too-small-for-these-to-all-be-good-ideas" class="nav-link" data-scroll-target="#working-with-data-note-some-sample-sizes-may-be-too-small-for-these-to-all-be-good-ideas">Working with data (note some sample sizes may be too small for these to all be good ideas!)</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/practice_problems/4_Continuous_tests_for_1_population.Rmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/practice_problems/4_Continuous_tests_for_1_population.Rmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/practice_problems/4_Continuous_tests_for_1_population.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/practice_problems/4_Continuous_tests_for_1_population.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -554,8 +556,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Remember you should</p>
 <ul>
 <li>add code chunks by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Ctrl+Alt+I</em> to answer the questions!</li>
-<li>use visual mode or <strong>render</strong> your file to produce a version that you can see!</li>
-<li><strong>render</strong> your file to make sure it runs (and that you haven’t been working out of order)</li>
+<li><strong>render</strong> your file to produce a markdown version that you can see!</li>
 <li>save your work often
 <ul>
 <li><strong>commit</strong> it via git!</li>
@@ -564,10 +565,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>This practice reviews the <a href="../../content/chapters/Tests_for_continuous_data_from_one_sample.html" target="_blank">Tests for continuous data from one sample lecture</a>.</p>
-</section>
-<section id="examples" class="level2">
-<h2 class="anchored" data-anchor-id="examples">Examples</h2>
+<p>This practice reviews the <a href="https://jsgosnell.github.io/cuny_biostats_book/content/chapters/Tests_for_continuous_data_from_one_sample.html">Tests for continuous data from one sample lecture</a>.</p>
+<section id="examples" class="level3">
+<h3 class="anchored" data-anchor-id="examples">Examples</h3>
 <p>From lecture! Consider if average height of males training at the Australian Institute of Sport is different than average of human population.</p>
 <p>These are all one sample tests, but they differ in what we know. If we know the variance of our population, we use a z test (function in BSDA package).</p>
 <div class="cell">
@@ -703,7 +703,7 @@ probability of success
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(boostrap_outcomes<span class="sc">$</span>mean, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-183.9716 186.9417 </code></pre>
+184.0243 187.0366 </code></pre>
 </div>
 </div>
 <p>or using functions in the <em>boot</em> library</p>
@@ -738,9 +738,9 @@ Attaching package: 'boot'</code></pre>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>( results<span class="sc">$</span>t, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-184.0568 186.9882 </code></pre>
+183.9817 186.9268 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(results)       </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(results)     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in boot.ci(results): bootstrap variances needed for studentized
 intervals</code></pre>
@@ -754,14 +754,13 @@ boot.ci(boot.out = results)
 
 Intervals : 
 Level      Normal              Basic         
-95%   (184, 187 )   (184, 187 )  
+95%   (184.0, 187.1 )   (184.1, 187.1 )  
 
 Level     Percentile            BCa          
-95%   (184.1, 187.0 )   (184.1, 187.0 )  
+95%   (184.0, 186.9 )   (184.0, 187.0 )  
 Calculations and Intervals on Original Scale</code></pre>
 </div>
 </div>
-<p>Another option (recommended) is the <em>boot.t.test</em> function in the <strong>MKinfer</strong> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MKinfer)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.t.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">mu =</span> <span class="fl">175.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -771,9 +770,9 @@ Calculations and Intervals on Original Scale</code></pre>
 
 data:  sport[sport$Sex == "male", "Ht"]
 bootstrap p-value &lt; 2.2e-16 
-bootstrap mean of x (SE) = 185.5038 (0.7773536) 
+bootstrap mean of x (SE) = 185.5159 (0.7775818) 
 95 percent bootstrap percentile confidence interval:
- 183.9351 187.0539
+ 183.9744 187.0236
 
 Results without bootstrap:
 t = 12.658, df = 101, p-value &lt; 2.2e-16
@@ -786,6 +785,7 @@ mean of x
 </div>
 </div>
 </section>
+</section>
 <section id="lets-practice" class="level2">
 <h2 class="anchored" data-anchor-id="lets-practice">Let’s practice!</h2>
 <section id="recognizing-and-assessing-normality" class="level3">
@@ -794,9 +794,9 @@ mean of x
 <h4 class="anchored" data-anchor-id="section">1</h4>
 <p>Using the qqplot_example.R code, examine the following distributions and, for the continuous distributions (marked with a “*”), observe how a normal probability plot (qqplot) can be used to visually test for approximate normality.</p>
 <ul>
-<li>*Normal (u= 0; σ<sup>2</sup>= 1, 10, 100)</li>
-<li>*Student’s t (df = 1, 10, 30, &amp; 100)</li>
-<li>*Chi-square (df= 1, 2, 5, 30, 50)</li>
+<li>Normal (u= 0; σ<sup>2</sup>= 1, 10, 100)</li>
+<li>Student’s t (df = 1, 10, 30, &amp; 100)</li>
+<li>Chi-square (df= 1, 2, 5, 30, 50)</li>
 <li>Bernoulli (P=0.1, 0.5, &amp; 0.9)</li>
 <li>Binomial (P=0.05; N= 2, 5, 25, &amp; 50); (P=0.25; N= 2, 5, 25, &amp; 50); (P=0.50; N= 2, 5, 25, &amp; 50); (P=0.75; N= 2, 5, 25, &amp; 50); (P=0.95; N= 2, 5, 25, &amp; 50)</li>
 <li>Poisson ( u= 2, 5, 10, 30, &amp; 50)</li>
@@ -1481,7 +1481,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
 <p><a href="https://jsgosnell.github.io/cuny_biostats_book/">Course notes</a> &amp; <a href="https://jsgosnell.github.io/cuny_biostats_website/">slides</a></p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/practice_problems/4_Continuous_tests_for_1_population.Rmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/practice_problems/4_Continuous_tests_for_1_population.Rmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/practice_problems/4_Continuous_tests_for_1_population.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/practice_problems/4_Continuous_tests_for_1_population.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
