@@ -1015,8 +1015,8 @@
     ]
   },
   {
-    "objectID": "content/appendix/github_classroom_stuff.html",
-    "href": "content/appendix/github_classroom_stuff.html",
+    "objectID": "content/Appendix/github_classroom_stuff.html",
+    "href": "content/Appendix/github_classroom_stuff.html",
     "title": "Github classroom stuff",
     "section": "",
     "text": "Github classroom is a useful tool for learning (for you) and managing (for your instructor) a class. But it sometimes has issues. Here we review some and try to learn from them.",
@@ -1026,8 +1026,8 @@
     ]
   },
   {
-    "objectID": "content/appendix/github_classroom_stuff.html#update",
-    "href": "content/appendix/github_classroom_stuff.html#update",
+    "objectID": "content/Appendix/github_classroom_stuff.html#update",
+    "href": "content/Appendix/github_classroom_stuff.html#update",
     "title": "Github classroom stuff",
     "section": "Update",
     "text": "Update\nGithub classroom updated how assignments work in spring 2024. The move meant student assignments were now forks of repositories and not new copies of a template. This meant\n\ngood\n\nyou could sync changes from the original repository (like assignment updates!) to student forks\n\nbad (maybe)\n\nall commits show\noriginal upstream repository had to be a private repository\n\n\nTo make this work, I had to take public repositories ( like the one for our book and practice problems) and make private copies (that I then have to update, see below) for use in starting assignments.",
@@ -1037,8 +1037,8 @@
     ]
   },
   {
-    "objectID": "content/appendix/github_classroom_stuff.html#syncing-forks",
-    "href": "content/appendix/github_classroom_stuff.html#syncing-forks",
+    "objectID": "content/Appendix/github_classroom_stuff.html#syncing-forks",
+    "href": "content/Appendix/github_classroom_stuff.html#syncing-forks",
     "title": "Github classroom stuff",
     "section": "Syncing forks",
     "text": "Syncing forks\nWhen you have a fork (assignment or in general), you can view the repository on github (look at https://github.com/settings/repositories to find the github page for your repository) and sync up changes (if you are lucky..)\n\n\n\nYou can sync up any changes to the original assignment repository by clicking the sync fork button. Note all repositories will not have this option.\n\n\nbut sometimes you get issues that won’t let you do this automatically.",
@@ -1048,8 +1048,8 @@
     ]
   },
   {
-    "objectID": "content/appendix/github_classroom_stuff.html#merges",
-    "href": "content/appendix/github_classroom_stuff.html#merges",
+    "objectID": "content/Appendix/github_classroom_stuff.html#merges",
+    "href": "content/Appendix/github_classroom_stuff.html#merges",
     "title": "Github classroom stuff",
     "section": "merges",
     "text": "merges\nIf you have merge conflict, tge sync fork button may not appear. This means the upstream (original repository) and your copy have made changes to the same file that git can’t automatically fix. These are typically easy for us (it means I updated a question or added an assignment).\nWe just need to look for and resolve issues. The hard part is seeing them (most of the following is from “Syncing a Fork” (n.d.) and “Configuring a Remote Repository for a Fork” (n.d.)) since we have to do this in R/posit/etc. To add the remote upstream there, go to the git tab (in the lower left window normally for Rstudio/posit Cloud), and enter\ngit remote -v\nThis will show your current origin (what you are syncing to on github, likely the same thing you started the repository with). You need to add the upstream (original) repository. You can find this on github by looking on your repository for the “forked from” button.\n\n\n\nLook for the note “forked from…” to find the original repository\n\n\nFollow that link and use the green code button to find the git address for that repository. Then run\ngit remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git\nfor our example, that would be\ngit remote add upstream https://github.com/jsgosnell/cuny_biostats_practice_problems.git\nThen run\ngit fetch upstream\nThis pulls in the upstream changes to a new branch. Then make sure you are on the main branch\ngit fetch upstream\n(which will likely return “Already on ‘main’”). Then try to merge\ngit merge upstream/main\nIf you did this due to the fact you couldn’t auto sync, you will likely get an error message about conflicts. That’s ok! See what file is mentioned (it often appears in the git window). Open it (you may have to do this once or twice…) and look for lines (you can search (magnifying glass or control-F)) where you see\n    \n&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\nsome text\n=======\nsome text\n&gt;&gt;&gt;&gt;&gt;&gt;&gt; upstream/main\nThis means your branch is conflict with the upstream here. Your branch is the before the line of equal signs; the upstream is after. Make the needed changes manually, removing all the lines starting with &lt;&lt;&lt;… or &gt;&gt;&gt;&gt;…, then commit and push. If all went well, the sync fork button will be back.",
