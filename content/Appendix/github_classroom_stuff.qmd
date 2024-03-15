@@ -1,0 +1,126 @@
+---
+title: Github classroom stuff
+subtitle: Dealing with issues
+bibliography: ../references.bib
+---
+
+Github classroom is a useful tool for learning (for you) and managing
+(for your instructor) a class. But it sometimes has issues. Here we
+review some and try to learn from them.
+
+## Update
+
+Github classroom updated how assignments work in spring 2024. The move
+meant student assignments were now *forks* of repositories and not new
+copies of a template. This meant
+
+-   good
+
+    -   you could sync changes from the original repository (like
+        assignment updates!) to student forks
+
+-   bad (maybe)
+
+    -   all commits show
+
+    -   original upstream repository had to be a private repository
+
+To make this work, I had to take public repositories ( [like the one for
+our
+book](https://github.com/jsgosnell/cuny_biostats_book){target="_blank"}
+and [practice
+problems](https://github.com/jsgosnell/cuny_biostats_practice_problems){target="_blank"})
+and make private copies (that I then have to update, see below) for use
+in starting assignments.
+
+## Syncing forks
+
+When you have a fork (assignment or in general), you can view the
+repository on github ([look at
+https://github.com/settings/repositories](https://github.com/settings/repositories){target="_blank"}
+to find the github page for your repository) and sync up changes (if you
+are lucky..)
+
+![You can sync up any changes to the original assignment repository by
+clicking the sync fork button. Note all repositories will not have this
+option.](/images/sync_fork.png){fig-alt="Image of github repository screen. Since this repository was forked (this time via github classroom) you can press the sync fork button (circled in red) to  sync up any changes to the original assignment repository"}
+
+but sometimes you get issues that won't let you do this automatically.
+
+## merges
+
+If you have merge conflict, tge sync fork button may not appear. This
+means the upstream (original repository) and your copy have made changes
+to the same file that git can't automatically fix. These are typically
+easy for us (it means I updated a question or added an assignment).
+
+We just need to look for and resolve issues. The hard part is seeing
+them (most of the following is from @syncing and @configur) since we
+have to do this in R/posit/etc. To add the remote upstream there, go to
+the git tab (in the lower left window normally for Rstudio/posit Cloud),
+and enter
+
+```         
+git remote -v
+```
+
+This will show your current origin (what you are syncing to on github,
+likely the same thing you started the repository with). You need to add
+the upstream (original) repository. You can find this on github by
+looking on your repository for the "forked from" button.
+
+![Look for the note "forked from..." to find the original
+repository](/images/find_upstream.png)
+
+Follow that link and use the green code button to find the git address
+for that repository. Then run
+
+```         
+git remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git
+```
+
+for our example, that would be
+
+```         
+git remote add upstream https://github.com/jsgosnell/cuny_biostats_practice_problems.git
+```
+
+Then run
+
+```         
+git fetch upstream
+```
+
+This pulls in the upstream changes to a new branch. Then make sure you
+are on the main branch
+
+```         
+git fetch upstream
+```
+
+(which will likely return "Already on 'main'"). Then try to merge
+
+```         
+git merge upstream/main
+```
+
+If you did this due to the fact you couldn't auto sync, you will likely
+get an error message about conflicts. That's ok! See what file is
+mentioned (it often appears in the git window). Open it (you may have to
+do this once or twice...) and look for lines (you can search (magnifying
+glass or control-F)) where you see
+
+```         
+	
+<<<<<<< HEAD
+some text
+=======
+some text
+>>>>>>> upstream/main
+```
+
+This means your branch is conflict with the upstream here. Your branch
+is the before the line of equal signs; the upstream is after. Make the
+needed changes manually, removing all the lines starting with \<\<\<...
+or \>\>\>\>..., then commit and push. If all went well, the sync fork
+button will be back.
