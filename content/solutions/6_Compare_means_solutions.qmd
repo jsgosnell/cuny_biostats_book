@@ -156,7 +156,6 @@ others (all p \<.05) using a Tukey approach to control for family-wise
 error rate. Kruskal-Wallis and bootstrapping approaches led to similar
 conclusions.*
 
-
 ### 2
 
 Data on plant heights (in cm) for plants grown with a new and old
@@ -305,7 +304,6 @@ Coefficients related to the groups (note female is replaced by intercept
 here, and the SexMale coefficient is relative to that) indicates that
 males have a higher FEV on average. Graphs also show this relationship.*
 
-
 ### 5
 
 The following data are human blood clotting times (in minutes) of
@@ -435,8 +433,8 @@ Test the hypothesis that odd and typical feathers did not differ using
 
 Note we will return to this question next week!
 
-
 -   a Student's t test and/or lm
+
 ```{r}
 feather <-  read.csv("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/wiebe_2002_example.csv", stringsAsFactors = T)
 t.test(Color_index ~ Feather, data=feather)
@@ -482,19 +480,31 @@ Anova(lm(Color_index ~ Feather+Bird, data=feather))
 ```
 
 -   a rank test
+-   I could used a rank-based test if I assumed the distribution of
+    means was symmetrical but normal.
+
+```{r}
+wilcox.test(Color_index ~ Feather, data=feather)
+```
+
+which led to W=45.5, p=0.002, thus I reject the null hypothesis.
+However, as noted above, we will see next week we should use a paired
+test.
 
 ```{r}
 wilcox.test(Color_index ~ Feather, data=feather, paired=TRUE)
 ```
 
-*I used a paired rank-based test because feathers were measured on the
-same bird. I did not assume the difference in means was normally
-distributed but did assume it followed a symmetric distribution. The
-test resulted in a statistic of V = 10. This corresponds to a p-value of
-.001. Since the p-value is \<.05, I reject the null hypothesis that
-feather color is the same between odd and typical feathers.*
+-   I used a paired rank-based test because feathers were measured on
+    the same bird. I did not assume the difference in means was normally
+    distributed but did assume it followed a symmetric distribution. The
+    test resulted in a statistic of V = 10. This corresponds to a
+    p-value of .001. Since the p-value is \<.05, I reject the null
+    hypothesis that feather color is the same between odd and typical
+    feathers.\*
 
--   a binary test
+-   a binary test is onl possible for paired data (so not required here,
+    but in case you are interested...)
 
 ```{r}
 library(BSDA)
@@ -512,13 +522,25 @@ SIGN.test(feather[feather$Feather == "Odd", "Color_index"],
 
 -   bootstrapping
 
+-   Could be done using a non-paired approach
+
 ```{r}
 library(MKinfer)
+boot.t.test(Color_index ~ Feather, data=feather)
+```
+
+or a paired approach (next chapter)
+
+```{r}
 boot.t.test(Color_index ~ Feather, data=feather, paired=TRUE)
 ```
 
-*Since feathers were measured on the same bird. I used a bootstrap
-(10,000 samples) focused on the difference in color. This resulted in a
-p-value of \<.001. Since the p-value is \<.05, I reject the null
+*The basic approach yield a p-value of .001, so I reject the null
 hypothesis that feather color is the same between odd and typical
 feathers.*
+
+*Since feathers were measured on the same bird, I also could have used a
+bootstrap (10,000 samples) focused on the difference in color. This
+resulted in a p-value of \<.001. Since the p-value is \<.05, I reject
+the null hypothesis that feather color is the same between odd and
+typical feathers using this approach as well.*
