@@ -702,19 +702,22 @@ probability of success
 <p>We can also bootstrap the data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>number_of_simulations <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>boostrap_data<span class="ot">&lt;-</span> sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>]</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>boostrap_outcomes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mean =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, number_of_simulations), <span class="at">sd =</span> <span class="cn">NA</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>number_of_simulations){</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>iris_bootstrap <span class="ot">&lt;-</span><span class="fu">sample</span>(boostrap_data, <span class="fu">length</span>(boostrap_data), <span class="at">replace =</span> T)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>boostrap_outcomes<span class="sc">$</span>mean[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(iris_bootstrap)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>boostrap_outcomes<span class="sc">$</span>sd[i] <span class="ot">&lt;-</span> <span class="fu">sd</span>(iris_bootstrap)</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(boostrap_outcomes, <span class="fu">aes</span>(<span class="at">x=</span>mean)) <span class="sc">+</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Bootstrapped means"</span>)),</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Mean value"</span>,</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggplot2' was built under R version 4.3.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>boostrap_data<span class="ot">&lt;-</span> sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>]</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>boostrap_outcomes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mean =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, number_of_simulations), <span class="at">sd =</span> <span class="cn">NA</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>number_of_simulations){</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>iris_bootstrap <span class="ot">&lt;-</span><span class="fu">sample</span>(boostrap_data, <span class="fu">length</span>(boostrap_data), <span class="at">replace =</span> T)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>boostrap_outcomes<span class="sc">$</span>mean[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(iris_bootstrap)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>boostrap_outcomes<span class="sc">$</span>sd[i] <span class="ot">&lt;-</span> <span class="fu">sd</span>(iris_bootstrap)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(boostrap_outcomes, <span class="fu">aes</span>(<span class="at">x=</span>mean)) <span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Bootstrapped means"</span>)),</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Mean value"</span>,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -728,15 +731,15 @@ probability of success
 </div>
 <p>and find associated quantile-based 95% confidence intervals:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(boostrap_outcomes<span class="sc">$</span>mean, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(boostrap_outcomes<span class="sc">$</span>mean, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-183.9287 187.0794 </code></pre>
+184.0273 187.0668 </code></pre>
 </div>
 </div>
 <p>or using functions in the <em>boot</em> library</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'boot'</code></pre>
@@ -746,13 +749,13 @@ Attaching package: 'boot'</code></pre>
 
     melanoma</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data=</span>boostrap_data, <span class="at">statistic =</span> <span class="cf">function</span>(x, inds) <span class="fu">mean</span>(x[inds]),</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">R=</span>number_of_simulations)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(results<span class="sc">$</span>t), <span class="fu">aes</span>(<span class="at">x=</span>results.t)) <span class="sc">+</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Bootstrapped means"</span>)),</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Mean value"</span>,</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data=</span>boostrap_data, <span class="at">statistic =</span> <span class="cf">function</span>(x, inds) <span class="fu">mean</span>(x[inds]),</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">R=</span>number_of_simulations)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(results<span class="sc">$</span>t), <span class="fu">aes</span>(<span class="at">x=</span>results.t)) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Bootstrapped means"</span>)),</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Mean value"</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -763,12 +766,12 @@ Attaching package: 'boot'</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>( results<span class="sc">$</span>t, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>( results<span class="sc">$</span>t, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-184.0136 186.9757 </code></pre>
+184.0143 186.9951 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(results)     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(results)     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in boot.ci(results): bootstrap variances needed for studentized
 intervals</code></pre>
@@ -790,17 +793,17 @@ Calculations and Intervals on Original Scale</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MKinfer)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.t.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">mu =</span> <span class="fl">175.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MKinfer)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.t.test</span>(sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Ht"</span>], <span class="at">mu =</span> <span class="fl">175.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Bootstrap One Sample t-test
 
 data:  sport[sport$Sex == "male", "Ht"]
 bootstrap p-value &lt; 2.2e-16 
-bootstrap mean of x (SE) = 185.5031 (0.7768869) 
+bootstrap mean of x (SE) = 185.5214 (0.7777157) 
 95 percent bootstrap percentile confidence interval:
- 183.9823 187.0265
+ 184.0127 187.0500
 
 Results without bootstrap:
 t = 12.658, df = 101, p-value &lt; 2.2e-16
@@ -835,7 +838,7 @@ mean of x
 <h4 class="anchored" data-anchor-id="section-1">2</h4>
 <p>Review the central_limit_theorem.R code (remember</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VGAM)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VGAM)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: stats4</code></pre>
 </div>
@@ -851,7 +854,7 @@ Attaching package: 'VGAM'</code></pre>
 
     logit, simplex</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/central_limit_theorem.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/central_limit_theorem.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -927,13 +930,19 @@ Attaching package: 'VGAM'</code></pre>
 </ul>
 <p>Note there are several ways to load the data! You can make a list (since the list is short):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>flies <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">183.2</span>, <span class="fl">149.0</span>, <span class="fl">154.0</span>, <span class="fl">167.2</span>, <span class="fl">187.2</span>, <span class="fl">158.0</span>, <span class="fl">143.0</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>flies <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">183.2</span>, <span class="fl">149.0</span>, <span class="fl">154.0</span>, <span class="fl">167.2</span>, <span class="fl">187.2</span>, <span class="fl">158.0</span>, <span class="fl">143.0</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>or make a dataframe in a spreadsheet software (eg, Excel, Google Sheets) and then upload using a read.csv command. We did this in your introduction to R!</p>
 </section>
 <section id="section-3" class="level4">
 <h4 class="anchored" data-anchor-id="section-3">4</h4>
-<p>Yields of 10 strawberry plants in a uniformity trial are given by Baker and Baker (1953) as 239, 176, 235, 217, 234, 216, 318, 190, 181, and 225 g. Test the hypothesis that µ = 205 * Assuming variance = 1500 * Estimating the variance from the data * Using rank transform analysis * Using binary transform analysis</p>
+<p>Yields of 10 strawberry plants in a uniformity trial are given by Baker and Baker (1953) as 239, 176, 235, 217, 234, 216, 318, 190, 181, and 225 g. Test the hypothesis that µ = 205</p>
+<ul>
+<li>Assuming variance = 1500</li>
+<li>Estimating the variance from the data</li>
+<li>Using rank transform analysis</li>
+<li>Using binary transform analysis</li>
+</ul>
 </section>
 <section id="section-4" class="level4">
 <h4 class="anchored" data-anchor-id="section-4">5</h4>
@@ -948,8 +957,8 @@ Attaching package: 'VGAM'</code></pre>
 <h4 class="anchored" data-anchor-id="section-6">7</h4>
 <p>Using data from Australian athletes (http://www.statsci.org/data/oz/ais.html for details), determine if the average male training at the Australian Institute of Sport differs in weight from the average Australian male (85.9 kg) using bootstrapping techniques. Data at</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/oz/ais.txt"</span>, <span class="at">header =</span> T, </span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/oz/ais.txt"</span>, <span class="at">header =</span> T, </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
