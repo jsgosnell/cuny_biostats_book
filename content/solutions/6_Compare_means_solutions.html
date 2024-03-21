@@ -1194,31 +1194,31 @@ Effective number of bootstrap samples was 599.
 
 Test statistic: 16.5244 
 p-value: 0 
-Variance explained: 0.032 
-Effect size: 0.178 </code></pre>
+Variance explained: 0.031 
+Effect size: 0.176 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcppb20</span>(Tonn.Hect <span class="sc">~</span> DistrictPosition, cane)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 mcppb20(formula = Tonn.Hect ~ DistrictPosition, data = cane)
 
-           psihat   ci.lower  ci.upper p-value
-S vs. N -56.10126 -104.48965 -14.34951 0.00000
-S vs. E -12.51609  -47.16217  26.74452 0.39399
-S vs. W  39.25821    8.83690  73.26284 0.00334
-S vs. C  -0.97532  -35.85192  32.44413 0.95826
-N vs. E  43.58517   -5.51658  88.47563 0.01002
-N vs. W  95.35948   58.07145 126.26085 0.00000
-N vs. C  55.12595   19.38409  89.69260 0.00000
-E vs. W  51.77430   17.97637  81.93963 0.00000
-E vs. C  11.54077  -18.83333  43.06281 0.29382
-W vs. C -40.23353  -66.02907 -16.42202 0.00000</code></pre>
+           psihat  ci.lower  ci.upper p-value
+S vs. N -56.10126 -92.73065 -12.99026 0.00000
+S vs. E -12.51609 -48.92077  25.12640 0.39065
+S vs. W  39.25821  10.91649  72.24963 0.00000
+S vs. C  -0.97532 -23.96533  30.00594 0.96160
+N vs. E  43.58517  -5.45088  81.28064 0.00668
+N vs. W  95.35948  62.71602 129.53619 0.00000
+N vs. C  55.12595  27.36524  86.02697 0.00000
+E vs. W  51.77430  21.61991  86.36511 0.00000
+E vs. C  11.54077 -15.36352  45.87602 0.25376
+W vs. C -40.23353 -60.76931 -17.39621 0.00000</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">mcppb20</span>(Tonn.Hect <span class="sc">~</span> DistrictPosition, cane)</span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(<span class="fu">as.numeric</span>(p<span class="sc">$</span>comp[,<span class="dv">6</span>]), <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.00000000 0.85141903 0.00000000 0.98163606 0.02671119 0.00000000
- [7] 0.00000000 0.00000000 0.85141903 0.00000000</code></pre>
+<pre><code> [1] 0.0000000 0.8614357 0.0000000 0.9081803 0.0000000 0.0000000 0.0000000
+ [8] 0.0000000 0.8614357 0.0000000</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co">#compare to lm apporach</span></span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(car)</span>
@@ -1248,16 +1248,16 @@ Fit: lm(formula = Tonn.Hect ~ DistrictPosition, data = cane)
 
 Linear Hypotheses:
            Estimate Std. Error t value Pr(&gt;|t|)    
-E - C == 0   39.360     14.249   2.762  0.04404 *  
-N - C == 0   20.252     14.487   1.398  0.62079    
-S - C == 0  -42.955     13.777  -3.118  0.01520 *  
+E - C == 0   39.360     14.249   2.762  0.04407 *  
+N - C == 0   20.252     14.487   1.398  0.62078    
+S - C == 0  -42.955     13.777  -3.118  0.01525 *  
 W - C == 0   -7.317     11.298  -0.648  0.96582    
 N - E == 0  -19.108     14.601  -1.309  0.67820    
 S - E == 0  -82.315     13.896  -5.924  &lt; 0.001 ***
 W - E == 0  -46.677     11.444  -4.079  &lt; 0.001 ***
 S - N == 0  -63.207     14.141  -4.470  &lt; 0.001 ***
-W - N == 0  -27.569     11.739  -2.348  0.12593    
-W - S == 0   35.638     10.850   3.285  0.00879 ** 
+W - N == 0  -27.569     11.739  -2.348  0.12596    
+W - S == 0   35.638     10.850   3.285  0.00881 ** 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)</code></pre>
@@ -1583,10 +1583,10 @@ alternative hypothesis: two.sided</code></pre>
     Bootstrap Welch Two Sample t-test
 
 data:  drug_b and drug_g
-bootstrap p-value = 0.0204 
-bootstrap difference of means (SE) = -0.990189 (0.353187) 
+bootstrap p-value = 0.018 
+bootstrap difference of means (SE) = -0.9872806 (0.3530211) 
 95 percent bootstrap percentile confidence interval:
- -1.7190476 -0.3117857
+ -1.6952381 -0.3142857
 
 Results without bootstrap:
 t = -2.5454, df = 10.701, p-value = 0.02774
@@ -1737,7 +1737,7 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
 <ul>
 <li><p>I used a paired rank-based test because feathers were measured on the same bird. I did not assume the difference in means was normally distributed but did assume it followed a symmetric distribution. The test resulted in a statistic of V = 10. This corresponds to a p-value of .001. Since the p-value is &lt;.05, I reject the null hypothesis that feather color is the same between odd and typical feathers.*</p></li>
-<li><p>a binary test is onl possible for paired data (so not required here, but in case you are interested…)</p></li>
+<li><p>a binary test is only possible for paired data (so not required here, but in case you are interested…)</p></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BSDA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1791,10 +1791,10 @@ Upper Achieved CI     0.9787 -0.2410 -0.0140</code></pre>
     Bootstrap Welch Two Sample t-test
 
 data:  Color_index by Feather
-bootstrap p-value = 0.0022 
-bootstrap difference of means (SE) = -0.1369353 (0.03711809) 
+bootstrap p-value = 0.0034 
+bootstrap difference of means (SE) = -0.1367875 (0.03714119) 
 95 percent bootstrap percentile confidence interval:
- -0.20925000 -0.06292813
+ -0.20775000 -0.06274688
 
 Results without bootstrap:
 t = -3.56, df = 29.971, p-value = 0.00126
@@ -1814,10 +1814,10 @@ sample estimates:
     Bootstrap Paired t-test
 
 data:  Color_index by Feather
-bootstrap p-value = 0.0008001 
-bootstrap mean of the differences (SE) = -0.1373751 (0.03236765) 
+bootstrap p-value = 4e-04 
+bootstrap mean of the differences (SE) = -0.1371081 (0.0323293) 
 95 percent bootstrap percentile confidence interval:
- -0.2028781 -0.0756250
+ -0.20137812 -0.07643438
 
 Results without bootstrap:
 t = -4.0647, df = 15, p-value = 0.001017
