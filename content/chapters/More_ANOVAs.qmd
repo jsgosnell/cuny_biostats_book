@@ -808,6 +808,10 @@ If interactions are not significant, they can be handled in 2 ways.
         an average approach (usually using the *sum* contrasts as shown
         above)
 
+    ```{r}
+        Anova(lm(below.biomass.g.meter.sq..m2..~Snail.Level + Nitrogen.level + Snail.Level:Nitrogen.level, valdez_2023[valdez_2023$Snail.Level != "uncaged",], contrasts = list(Snail.Level = "contr.sum", Nitrogen.level = "contr.sum")), type = "III")
+    ```
+
 2.  We can remove the interaction from the model, re-run it, and
     interpret main effects of the factors.
 
@@ -823,17 +827,55 @@ Which is the same as...
 Anova(bgb_model_cont_removed_int_removed, type="II")
 ```
 
-When we do this, the contrasts methods matter less, but you shouldn't
-report main effects from the model with the interaction.
+When we do this, the contrasts methods matter less,
+
+```{r}
+bgb_model_cont_removed_int_removed <- update(bgb_model_cont_removed, .~.-Snail.Level:Nitrogen.level, contrasts = list(Snail.Level = "contr.sum", Nitrogen.level = "contr.sum"))
+Anova(bgb_model_cont_removed_int_removed, type="III")
+```
+
+but you shouldn't report main effects from the model with the
+interaction.
+
+Compare to these to what we actually see (always a good idea!)
+
+#### Plotting outcomes
+
+Results from two-way ANOVAs are often plotted similarly to one-way
+ANOVAs, but with colors or other aesthetics representing the additional
+group.
+
+```{r}
+sdm_summary <- summarySE(valdez_2023[valdez_2023$Snail.Level != "uncaged",], measurevar = "below.biomass.g.meter.sq..m2..", groupvars = c("Snail.Level", "Nitrogen.level")) 
+```
+
+```{r}
+sdm_summary$Snail.Level <- relevel(sdm_summary$Snail.Level, "removal")  
+sdm_summary$Nitrogen.level <- revalue(sdm_summary$Nitrogen.level, c("Fertilized" = "Yes",                                                                     "without"= "No")) 
+ggplot(sdm_summary, aes(x=Snail.Level,                            
+                        y=below.biomass.g.meter.sq..m2..,  
+                        fill=Nitrogen.level)) +   
+  geom_col(color="black", position=position_dodge()) +   
+  geom_errorbar(aes(ymin=below.biomass.g.meter.sq..m2.., ymax=below.biomass.g.meter.sq..m2..+ci), 
+                position = position_dodge()) +   
+  labs(title="Grazing impacts depend on nitrogen levels",        
+       x= "Grazing level",        
+       y= expression(paste("Standing dry mass (" , g^{-1}, m^{-2}, ")")),        
+       fill = "Fertilized?")
+```
+
+In general, an interaction is not apparent, fertilized plots tend to do
+better than unfertilized, and there *might* be less dry mass as snails
+increase.
 
 Regardless, we can interpret main effects (though with possibly
-different outcomes). The benefit of approach 2 is we "increase" the
-degrees of freedom associated with the residuals, which ends up reducing
-the the MST. This is because in 2-way ANOVAs we allocate degrees of
-freedom to calculating main effects and interactions. This approach was
-likely used in the original manuscript.
+different outcomes). The benefit of approach 2 (removing the
+interaction) is we "increase" the degrees of freedom associated with the
+residuals, which ends up reducing the the MST. This is because in 2-way
+ANOVAs we allocate degrees of freedom to calculating main effects and
+interactions. This approach was likely used in the original manuscript.
 
-Simply using the the provided output (approach 1) and not perform
+Simply using the the provided output (approach 1) and not performing
 another series of tests, however, reduces the chances for a Type 1
 error. We will return to this discussion when we get to model selection.
 
