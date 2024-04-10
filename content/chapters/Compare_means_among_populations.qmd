@@ -413,12 +413,13 @@ bottom right is for the entire model - that works for now, but soon
 won't. We also see individual p values for 2 levels of species, plus an
 odd intercept term.
 
-These are model artifacts and may be confusing. R lets the first factor
-level (typically alphabetical) be an intercept for the linear model, and
-then considers the other factor levels as deviations from that. It also
-shows if all the resulting *Estimates* are significantly different from
-0. Note this means a significant intercept term does not mean your
-groups actually differ.
+These are model artifacts and may be confusing. By default (based on
+contrasts method), R lets the first factor level (typically
+alphabetical) be an intercept for the linear model, and then considers
+the other factor levels as deviations from that. It also shows if all
+the resulting *Estimates* are significantly different from 0. Note this
+means a significant intercept term does not mean your groups actually
+differ. Other approaches to these will be noted later.
 
 Given these issues, why use the summary command? It does present some
 other useful information. For example, the R^2^ values is a measure of
@@ -451,12 +452,102 @@ Anova(iris_anova, type="III")
 
 <summary>What does type="III" mean</summary>
 
-Residuals can be calculated in multiple ways. For simple models (those
-with one variable) most calculations lead to the same answer. When we
-start adding multiple factors to a model and/or interactions, however,
-they differ. In short, Type I residuals consider the order in which
-factors are added to a model, and type 2 do not consider interactions.
-We will stick with type III for this class.
+Here, the *type* argument is noting how residuals, and thus sums of
+squares, should be calculated. Residuals can be calculated in multiple
+ways. For simple models (those with one variable, which we have now) and
+those with balanced designs (the same number of observations for each
+grouping, coming back to this next chapter), these approaches will lead
+to the same answer. However, we'll introduce these ideas here and return
+to them later.
+
+Let's show that here and briefly look at the approaches.
+
+-   Type I sums of squares calculate residuals (and thus sums of
+    squares) based on the order in which factors are added to a model.
+    This is why they are also known as sequential sums of squares. Since
+    we only have one factor now, this distinction isn't important, but
+    we'll come back to it. The **Anova** function won't calculate these,
+    but we can use another approach (don't use this otherwise!)
+
+    ```{r}
+    summary(aov(iris_anova))
+    ```
+
+-   Type 2 sums of squares do not consider interactions (which we
+    haven't either yet, so again, we'll come back to it).
+
+    ```{r}
+    Anova(iris_anova, type="II")
+    ```
+
+So for our simple design, these all look the same. However, if we have
+an unbalanced design, things change a little:
+
+```{r}
+#from https://jennybc.github.io/purrr-tutorial/ls12_different-sized-samples.html
+library(purrr)
+library(tidyr)
+set.seed(19)
+iris_unbalanced <- iris %>%
+  group_by(Species) %>% 
+  nest() %>%            
+  ungroup() %>% 
+  mutate(n = c(50, 30, 20)) %>% 
+  mutate(samp = map2(data, n, sample_n)) %>% 
+  dplyr::select(-data) %>%
+  unnest(samp)
+
+iris_unbalanced_anova <- lm(Sepal.Length~Species, iris_unbalanced)
+```
+
+Now's lets compare our different sums of squares.
+
+```{r}
+summary(aov(iris_unbalanced_anova))
+```
+
+```{r}
+Anova(iris_unbalanced_anova, type="II")
+```
+
+```{r}
+Anova(iris_unbalanced_anova, type="III")
+```
+
+Wait..they are the same. Let's try even more unbalanced data
+
+```{r}
+set.seed(19)
+iris_really_unbalanced <- iris %>%
+  group_by(Species) %>% 
+  nest() %>%            
+  ungroup() %>% 
+  mutate(n = c(50, 4, 2)) %>% 
+  mutate(samp = map2(data, n, sample_n)) %>% 
+  dplyr::select(-data) %>%
+  unnest(samp)
+
+iris_really_unbalanced_anova <- lm(Sepal.Length~Species, iris_really_unbalanced)
+```
+
+```{r}
+summary(aov(iris_really_unbalanced_anova))
+```
+
+```{r}
+Anova(iris_really_unbalanced_anova, type="II")
+```
+
+```{r}
+Anova(iris_really_unbalanced_anova, type="III")
+```
+
+That's because R is assuming variance is the same for each of the
+groups, which means unequal sample sizes isn't an issue. However, we
+didn't test this assumption, and it would be really hard to given the
+small sizes of some groups. In the next chapter, we'll discuss these
+issues more. For now, we'll get in the habit of using *type="III*" for
+this class.
 
 </details>
 

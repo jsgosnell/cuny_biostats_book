@@ -50,6 +50,8 @@ checkPackage(rnaturalearthdata)
 checkPackage(raster)
 checkPackage(rgbif)
 checkPackage(geodata)
+checkPackage(purrr)
+checkPackage(tidyr)
 
 
 
