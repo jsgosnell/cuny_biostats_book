@@ -793,7 +793,7 @@ H_A: \beta_\textrm{(coefficient between sepal and petal length)} \neq 0\\
 <p>Note our coefficient will also change based on measurement units, but this should not impact the resulting p-value.</p>
 <p>The other approach, correlation, is more simply measuring association between the variables. It’s not specifying which, if either, is the driver - both variables could be responding to an un-measured variable. For example, since we simply observed flower traits, we could easily reverse everything above (plot shown here).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x=</span>Petal.Length, <span class="at">y=</span>Sepal.Length)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length, <span class="at">y=</span>Petal.Length)) <span class="sc">+</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Petal length increases with sepal length"</span>,</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
@@ -886,16 +886,16 @@ alternative hypothesis: two.sided</code></pre>
 <pre><code>
 Number of bootstrap replications R = 999 
              original    bootBias   bootSE bootMed
-(Intercept)   4.30660 -0.00169310 0.072903 4.30130
-Petal.Length  0.40892  0.00050629 0.019520 0.41004</code></pre>
+(Intercept)   4.30660 -0.00084552 0.073155 4.30656
+Petal.Length  0.40892 -0.00040390 0.019208 0.40873</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Confint</span>(bootstrap_iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Bootstrap bca confidence intervals
 
               Estimate     2.5 %    97.5 %
-(Intercept)  4.3066034 4.1775836 4.4599032
-Petal.Length 0.4089223 0.3685134 0.4468301</code></pre>
+(Intercept)  4.3066034 4.1617886 4.4576314
+Petal.Length 0.4089223 0.3710466 0.4446987</code></pre>
 </div>
 </div>
 </section>
@@ -998,14 +998,18 @@ Petal.Length 0.4089223 0.3685134 0.4468301</code></pre>
 <span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>) <span class="sc">+</span></span>
 <span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>( <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">fullrange=</span>T, <span class="at">se=</span>T)<span class="sc">+</span></span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="fu">mean</span>(iris_merged<span class="sc">$</span>Sepal.Length), <span class="at">y=</span><span class="fu">mean</span>(iris_merged<span class="sc">$</span>Petal.Length)), <span class="at">color=</span><span class="st">"purple"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="fu">mean</span>(iris_merged<span class="sc">$</span>Petal.Length), <span class="at">y=</span><span class="fu">mean</span>(iris_merged<span class="sc">$</span>Sepal.Length)), <span class="at">color=</span><span class="st">"purple"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Use of `iris_merged$Petal.Length` is discouraged.
+ℹ Use `Petal.Length` instead.</code></pre>
+</div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Use of `iris_merged$Sepal.Length` is discouraged.
 ℹ Use `Sepal.Length` instead.</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Use of `iris_merged$Petal.Length` is discouraged.
-ℹ Use `Petal.Length` instead.</code></pre>
+<pre><code>Warning in geom_point(aes(x = mean(iris_merged$Petal.Length), y = mean(iris_merged$Sepal.Length)), : All aesthetics have length 1, but the data has 153 rows.
+ℹ Did you mean to use `annotate()`?</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
