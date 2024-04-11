@@ -25,7 +25,9 @@ lecuture](https://jsgosnell.github.io/cuny_biostats_book/content/chapters/Relati
 
 ## Example
 
-Following the iris dataset from class
+Following the iris dataset from class, let's investigate the
+relationships between sepal and petal length. First, we can plot the
+data.
 
 ```{r}
 library(ggplot2)
@@ -42,26 +44,60 @@ ggplot(iris, aes(x=Petal.Length, y=Sepal.Length)) +
   xlab("Petal length (cm)") +
   ylab("Sepal length (cm)")
 
+```
 
+A linear relationship appears logical here. We can build the model and
+check assumptions.
+
+```{r}
 iris_regression <- lm(Sepal.Length ~ Petal.Length, iris)
-par(mfrow = c(2,2))
 plot(iris_regression)
+
+```
+
+Visual checks of assumptions appear to be met, so we can determine if
+the slope differs from 0.
+
+```{r}
 library(car)
 Anova(iris_regression, type = "III")
 summary(iris_regression)
 ```
 
+We find that F~1,148~=468.5, p \< 0.01, so we reject the null hypothesis
+that the slope is equal to 0. The estimate indicates a slope of 0.408,
+so sepal length increases with petal length. An R^2^ value of 0.76
+indicates petal length explains about 75% of the variation in sepal
+length.
+
+Alternatively, we could consider if the association between the two
+variables is equal to 0 (or not).
+
 ```{r}
 cor.test(~ Sepal.Length + Petal.Length, data = iris)
-cor.test(~ Sepal.Length + Petal.Length, data = iris,
-         method="spearman")
 
 ```
+
+We find the same p-value (using a t-distribution), and see that the
+estimated linear correlation coefficient, .87, is the square of our R^2^
+value.
+
+If we prefer a rank-based test, we can update the code:
+
+```{r}
+cor.test(~ Sepal.Length + Petal.Length, data = iris,
+         method="spearman")
+```
+
+Which again leads us to reject the null hypothesis. Finally, a bootstrap
+options can be produced
 
 ```{r}
 bootstrap_iris <- Boot(iris_regression)
 Confint(bootstrap_iris)
 ```
+
+where estimates indicated the slope does not contain 0.
 
 ## Practice
 
@@ -109,7 +145,7 @@ More information on the data can be found at:
 
 http://www.statsci.org/data/oz/medals.html
 
-Is there any relationship between a country’s population and the total
+Is there any relationship between a country's population and the total
 number of medals they win?
 
 ### 4
