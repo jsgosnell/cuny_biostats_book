@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.3.433">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -58,7 +58,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -103,13 +102,7 @@ div.csl-indent {
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
+  "limit": 20,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -118,44 +111,17 @@ div.csl-indent {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
+
 <link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -165,12 +131,12 @@ window.Quarto = {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/Compare_means_among_populations.html">Compare means among groups</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/Compare_means_among_populations.html">Compare means among groups</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -180,16 +146,16 @@ window.Quarto = {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header sidebar-header-stacked">
       <a href="../../index.html" class="sidebar-logo-link">
       <img src="../../images/image-from-rawpixel-id-547642-jpeg.jpg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">An introduction to statistics and modern tools</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://www.gosnelllab.com/" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
-    <a href="https://github.com/jsgosnell" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
+    <a href="https://www.gosnelllab.com/" rel="" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
+    <a href="https://github.com/jsgosnell" rel="" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -579,7 +545,7 @@ window.Quarto = {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -605,12 +571,12 @@ window.Quarto = {
   </ul></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Compare_means_among_populations.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Compare_means_among_populations.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Compare_means_among_populations.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Compare_means_among_populations.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/Compare_means_among_populations.html">Compare means among groups</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Comparing means among groups</h1>
 <p class="subtitle lead">More multiple populations!</p>
@@ -626,9 +592,7 @@ window.Quarto = {
   </div>
   
 
-
 </header>
-
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
 <p>In the last chapter we introduced the idea of comparing parameters among populations. Now we will extend those ideas to instances when continuous data is collected.</p>
@@ -648,11 +612,7 @@ window.Quarto = {
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>and tested if it was equal to a given value (7.0 cm)</p>
@@ -666,11 +626,7 @@ H_A: \mu_{sepal \ length} \neq 7 \ cm
 <p>However, as we noted in the last chapter, we often instead have data from multiple populations. For example, we may have data from 3 species of flowers. We commonly see this data plotted as a bar chart with error bars</p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>What do we test now and how?</p>
@@ -685,11 +641,7 @@ H_A: \mu_{sepal \ length} \neq 7 \ cm
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>So we typically focus on a parameter that describes the distribution of a focal trait, such as the mean. Just like binomial data, our hypotheses can then be written several ways:</p>
@@ -721,11 +673,7 @@ H_A: \textrm{all means are not equal to each other;}\\
 ℹ Please use `linewidth` instead.</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Like our earlier considerations of variance and SSE, the data will obviously be fit better by species-specific averages. Its impossible for them to do worse than the overall average, and at worst they all <em>are</em> the group average. However, we should also remember that these are samples, so we know sampling error is an issue. Therefore, we have to consider if the species-specific averages do enough of a better job explaining the data to warrant using them. To put this in our SSE and hypothesis framework, we need to consider if a more complicated view of the world is worth it.</p>
@@ -754,11 +702,7 @@ H_A: \textrm{all means are not equal to each other;}\\
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>, </span>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span> <span class="st">"Focus"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>As expected, under the null hypothesis the overall and species-specific averages are closer. Now that we have the data, however, we are stuck with a new question: What is our test statistic?</p>
@@ -819,11 +763,7 @@ s_j^2 = \frac{\sum_{i=1}^{n_j} (Y_{ij}-\overline{Y_j})^2}{n_j-1} \sim \sigma_j^2
 ℹ Please use `after_stat(count)` instead.</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Using this approach, we could determine how unusual our data were (get a p-value!). In our example, we found a signal of 119.265. Looking at the x-axis above, it’s obvious getting a sample this or more extreme is going to be very rare by chance!</p>
@@ -834,11 +774,7 @@ s_j^2 = \frac{\sum_{i=1}^{n_j} (Y_{ij}-\overline{Y_j})^2}{n_j-1} \sim \sigma_j^2
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">main =</span> <span class="st">"Ratio under null hypothesis"</span>, <span class="at">y=</span> <span class="st">"Probability"</span>)<span class="sc">+</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_function</span>(<span class="at">fun =</span> df, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df1 =</span><span class="dv">2</span>, <span class="at">df2 =</span> <span class="dv">147</span>), <span class="at">color =</span> <span class="st">"green"</span>)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>This allows us to estimate the p-value using distributional assumptions.</p>
@@ -915,32 +851,16 @@ and what is <span class="math inline">\(\chi^2\)</span>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-9-4.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-9-4.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>These 4 plots focus on the residuals (not the data).</p>
@@ -1256,6 +1176,7 @@ Y=X\beta+\epsilon, \textrm{ where }\\
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(<span class="fu">data.frame</span>(<span class="fu">model.matrix</span>(iris_anova)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
+
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["X.Intercept."],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Speciesversicolor"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Speciesvirginica"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"0","3":"0","_rn_":"1"},{"1":"1","2":"0","3":"0","_rn_":"2"},{"1":"1","2":"0","3":"0","_rn_":"3"},{"1":"1","2":"0","3":"0","_rn_":"4"},{"1":"1","2":"0","3":"0","_rn_":"5"},{"1":"1","2":"0","3":"0","_rn_":"6"},{"1":"1","2":"0","3":"0","_rn_":"7"},{"1":"1","2":"0","3":"0","_rn_":"8"},{"1":"1","2":"0","3":"0","_rn_":"9"},{"1":"1","2":"0","3":"0","_rn_":"10"},{"1":"1","2":"0","3":"0","_rn_":"11"},{"1":"1","2":"0","3":"0","_rn_":"12"},{"1":"1","2":"0","3":"0","_rn_":"13"},{"1":"1","2":"0","3":"0","_rn_":"14"},{"1":"1","2":"0","3":"0","_rn_":"15"},{"1":"1","2":"0","3":"0","_rn_":"16"},{"1":"1","2":"0","3":"0","_rn_":"17"},{"1":"1","2":"0","3":"0","_rn_":"18"},{"1":"1","2":"0","3":"0","_rn_":"19"},{"1":"1","2":"0","3":"0","_rn_":"20"},{"1":"1","2":"0","3":"0","_rn_":"21"},{"1":"1","2":"0","3":"0","_rn_":"22"},{"1":"1","2":"0","3":"0","_rn_":"23"},{"1":"1","2":"0","3":"0","_rn_":"24"},{"1":"1","2":"0","3":"0","_rn_":"25"},{"1":"1","2":"0","3":"0","_rn_":"26"},{"1":"1","2":"0","3":"0","_rn_":"27"},{"1":"1","2":"0","3":"0","_rn_":"28"},{"1":"1","2":"0","3":"0","_rn_":"29"},{"1":"1","2":"0","3":"0","_rn_":"30"},{"1":"1","2":"0","3":"0","_rn_":"31"},{"1":"1","2":"0","3":"0","_rn_":"32"},{"1":"1","2":"0","3":"0","_rn_":"33"},{"1":"1","2":"0","3":"0","_rn_":"34"},{"1":"1","2":"0","3":"0","_rn_":"35"},{"1":"1","2":"0","3":"0","_rn_":"36"},{"1":"1","2":"0","3":"0","_rn_":"37"},{"1":"1","2":"0","3":"0","_rn_":"38"},{"1":"1","2":"0","3":"0","_rn_":"39"},{"1":"1","2":"0","3":"0","_rn_":"40"},{"1":"1","2":"0","3":"0","_rn_":"41"},{"1":"1","2":"0","3":"0","_rn_":"42"},{"1":"1","2":"0","3":"0","_rn_":"43"},{"1":"1","2":"0","3":"0","_rn_":"44"},{"1":"1","2":"0","3":"0","_rn_":"45"},{"1":"1","2":"0","3":"0","_rn_":"46"},{"1":"1","2":"0","3":"0","_rn_":"47"},{"1":"1","2":"0","3":"0","_rn_":"48"},{"1":"1","2":"0","3":"0","_rn_":"49"},{"1":"1","2":"0","3":"0","_rn_":"50"},{"1":"1","2":"1","3":"0","_rn_":"51"},{"1":"1","2":"1","3":"0","_rn_":"52"},{"1":"1","2":"1","3":"0","_rn_":"53"},{"1":"1","2":"1","3":"0","_rn_":"54"},{"1":"1","2":"1","3":"0","_rn_":"55"},{"1":"1","2":"1","3":"0","_rn_":"56"},{"1":"1","2":"1","3":"0","_rn_":"57"},{"1":"1","2":"1","3":"0","_rn_":"58"},{"1":"1","2":"1","3":"0","_rn_":"59"},{"1":"1","2":"1","3":"0","_rn_":"60"},{"1":"1","2":"1","3":"0","_rn_":"61"},{"1":"1","2":"1","3":"0","_rn_":"62"},{"1":"1","2":"1","3":"0","_rn_":"63"},{"1":"1","2":"1","3":"0","_rn_":"64"},{"1":"1","2":"1","3":"0","_rn_":"65"},{"1":"1","2":"1","3":"0","_rn_":"66"},{"1":"1","2":"1","3":"0","_rn_":"67"},{"1":"1","2":"1","3":"0","_rn_":"68"},{"1":"1","2":"1","3":"0","_rn_":"69"},{"1":"1","2":"1","3":"0","_rn_":"70"},{"1":"1","2":"1","3":"0","_rn_":"71"},{"1":"1","2":"1","3":"0","_rn_":"72"},{"1":"1","2":"1","3":"0","_rn_":"73"},{"1":"1","2":"1","3":"0","_rn_":"74"},{"1":"1","2":"1","3":"0","_rn_":"75"},{"1":"1","2":"1","3":"0","_rn_":"76"},{"1":"1","2":"1","3":"0","_rn_":"77"},{"1":"1","2":"1","3":"0","_rn_":"78"},{"1":"1","2":"1","3":"0","_rn_":"79"},{"1":"1","2":"1","3":"0","_rn_":"80"},{"1":"1","2":"1","3":"0","_rn_":"81"},{"1":"1","2":"1","3":"0","_rn_":"82"},{"1":"1","2":"1","3":"0","_rn_":"83"},{"1":"1","2":"1","3":"0","_rn_":"84"},{"1":"1","2":"1","3":"0","_rn_":"85"},{"1":"1","2":"1","3":"0","_rn_":"86"},{"1":"1","2":"1","3":"0","_rn_":"87"},{"1":"1","2":"1","3":"0","_rn_":"88"},{"1":"1","2":"1","3":"0","_rn_":"89"},{"1":"1","2":"1","3":"0","_rn_":"90"},{"1":"1","2":"1","3":"0","_rn_":"91"},{"1":"1","2":"1","3":"0","_rn_":"92"},{"1":"1","2":"1","3":"0","_rn_":"93"},{"1":"1","2":"1","3":"0","_rn_":"94"},{"1":"1","2":"1","3":"0","_rn_":"95"},{"1":"1","2":"1","3":"0","_rn_":"96"},{"1":"1","2":"1","3":"0","_rn_":"97"},{"1":"1","2":"1","3":"0","_rn_":"98"},{"1":"1","2":"1","3":"0","_rn_":"99"},{"1":"1","2":"1","3":"0","_rn_":"100"},{"1":"1","2":"0","3":"1","_rn_":"101"},{"1":"1","2":"0","3":"1","_rn_":"102"},{"1":"1","2":"0","3":"1","_rn_":"103"},{"1":"1","2":"0","3":"1","_rn_":"104"},{"1":"1","2":"0","3":"1","_rn_":"105"},{"1":"1","2":"0","3":"1","_rn_":"106"},{"1":"1","2":"0","3":"1","_rn_":"107"},{"1":"1","2":"0","3":"1","_rn_":"108"},{"1":"1","2":"0","3":"1","_rn_":"109"},{"1":"1","2":"0","3":"1","_rn_":"110"},{"1":"1","2":"0","3":"1","_rn_":"111"},{"1":"1","2":"0","3":"1","_rn_":"112"},{"1":"1","2":"0","3":"1","_rn_":"113"},{"1":"1","2":"0","3":"1","_rn_":"114"},{"1":"1","2":"0","3":"1","_rn_":"115"},{"1":"1","2":"0","3":"1","_rn_":"116"},{"1":"1","2":"0","3":"1","_rn_":"117"},{"1":"1","2":"0","3":"1","_rn_":"118"},{"1":"1","2":"0","3":"1","_rn_":"119"},{"1":"1","2":"0","3":"1","_rn_":"120"},{"1":"1","2":"0","3":"1","_rn_":"121"},{"1":"1","2":"0","3":"1","_rn_":"122"},{"1":"1","2":"0","3":"1","_rn_":"123"},{"1":"1","2":"0","3":"1","_rn_":"124"},{"1":"1","2":"0","3":"1","_rn_":"125"},{"1":"1","2":"0","3":"1","_rn_":"126"},{"1":"1","2":"0","3":"1","_rn_":"127"},{"1":"1","2":"0","3":"1","_rn_":"128"},{"1":"1","2":"0","3":"1","_rn_":"129"},{"1":"1","2":"0","3":"1","_rn_":"130"},{"1":"1","2":"0","3":"1","_rn_":"131"},{"1":"1","2":"0","3":"1","_rn_":"132"},{"1":"1","2":"0","3":"1","_rn_":"133"},{"1":"1","2":"0","3":"1","_rn_":"134"},{"1":"1","2":"0","3":"1","_rn_":"135"},{"1":"1","2":"0","3":"1","_rn_":"136"},{"1":"1","2":"0","3":"1","_rn_":"137"},{"1":"1","2":"0","3":"1","_rn_":"138"},{"1":"1","2":"0","3":"1","_rn_":"139"},{"1":"1","2":"0","3":"1","_rn_":"140"},{"1":"1","2":"0","3":"1","_rn_":"141"},{"1":"1","2":"0","3":"1","_rn_":"142"},{"1":"1","2":"0","3":"1","_rn_":"143"},{"1":"1","2":"0","3":"1","_rn_":"144"},{"1":"1","2":"0","3":"1","_rn_":"145"},{"1":"1","2":"0","3":"1","_rn_":"146"},{"1":"1","2":"0","3":"1","_rn_":"147"},{"1":"1","2":"0","3":"1","_rn_":"148"},{"1":"1","2":"0","3":"1","_rn_":"149"},{"1":"1","2":"0","3":"1","_rn_":"150"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -1370,22 +1291,14 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>)<span class="sc">+</span></span>
 <span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span>letters,<span class="at">y=</span>Sepal.Length<span class="sc">+</span><span class="dv">3</span><span class="sc">*</span>ci))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Other options include plotting the differences in means</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(compare_cont_tukey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="Compare_means_among_populations_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <section id="emmeans-another-option" class="level3">
@@ -1681,7 +1594,7 @@ alternative hypothesis: two.sided</code></pre>
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-soch2024" class="csl-entry" role="listitem">
 Soch, Joram, The Book of Statistical Proofs, Maja, Pietro Monticone, Thomas J. Faulkenberry, Alex Kipnis, Kenneth Petrykowski, et al. 2024. <em>StatProofBook/StatProofBook.github.io: StatProofBook 2023</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.10495684">https://doi.org/10.5281/zenodo.10495684</a>.
 </div>
@@ -1727,33 +1640,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
-    }
-  }
-  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
-    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
-    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
-    let newTheme = '';
-    if(darkModeDefault) {
-      newTheme = isAlternate ? baseTheme : alternateTheme;
-    } else {
-      newTheme = isAlternate ? alternateTheme : baseTheme;
-    }
-    const changeGiscusTheme = () => {
-      // From: https://github.com/giscus/giscus/issues/336
-      const sendMessage = (message) => {
-        const iframe = document.querySelector('iframe.giscus-frame');
-        if (!iframe) return;
-        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
-      }
-      sendMessage({
-        setConfig: {
-          theme: newTheme
-        }
-      });
-    }
-    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
-    if (isGiscussLoaded) {
-      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -1822,15 +1708,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  const darkModeDefault = false;
-  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  let localAlternateSentinel = 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
-    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1909,9 +1793,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+  function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
+      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1921,17 +1806,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start',
+      placement: 'bottom-start'
     };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1944,125 +1820,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
-          }
-        }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
-        }
-        return container.innerHTML
-      } else {
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
-        }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
-      }
-    }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
-          }
-        } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
-            if (note !== null) {
-              const html = processXRef(id, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
-        }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -2106,7 +1863,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
-            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -2132,32 +1888,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -2219,12 +1949,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/chapters/Compare_proportions_among_populations.html" class="pagination-link  aria-label=" compare="" proportions="" among="" groups"="">
+      <a href="../../content/chapters/Compare_proportions_among_populations.html" class="pagination-link">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Compare proportions among groups</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/chapters/More_ANOVAs.html" class="pagination-link" aria-label="More ANOVAs">
+      <a href="../../content/chapters/More_ANOVAs.html" class="pagination-link">
         <span class="nav-page-text">More ANOVAs</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -2232,18 +1962,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">© CC BY-NC-SA 4.0</a></p>
-</div>   
-    <div class="nav-footer-center">
-<p><a href="https://jsgosnell.github.io/cuny_biostats_book/">Course notes</a> &amp; <a href="https://jsgosnell.github.io/cuny_biostats_website/">slides</a></p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Compare_means_among_populations.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Compare_means_among_populations.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
-    <div class="nav-footer-right">
-<p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
-</div>
+    <div class="nav-footer-left"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">© CC BY-NC-SA 4.0</a></div>   
+    <div class="nav-footer-center"><a href="https://jsgosnell.github.io/cuny_biostats_book/">Course notes</a> &amp; <a href="https://jsgosnell.github.io/cuny_biostats_website/">slides</a></div>
+    <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a>.</div>
   </div>
 </footer>
-
 
 
 
