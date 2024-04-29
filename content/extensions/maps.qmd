@@ -43,7 +43,7 @@ You can ask for country level data. Note that the data contains info on how to
 country, but can also hold other data.
 
 ```{r}
-base_map <- ne_countries(type = 'countries', scale = 'small')
+base_map <- ne_countries(type = 'countries', scale = 'small', returnclass = "sf")
 paged_table(data.frame(base_map))
 ```
 
@@ -56,7 +56,7 @@ plot(base_map$geometry)
 Other commands only focus on coastlines
 
 ```{r}
- coast <- ne_coastline()
+ coast <- ne_coastline(returnclass = "sf")
   plot(coast$geometry)
 ```
 
@@ -81,7 +81,7 @@ ggplot(base_map) +
   xlab("Longitude")+
   ylab("Latitude")  +
   geom_point(data = sites, 
-             aes_string(x="Longitude",y="Latitude", group = NA), size = 10)
+             aes(x=Longitude,y=Latitude, group = NA), size = 10)
 ```
 
 
@@ -210,7 +210,7 @@ source("content/extensions/private_info.R")
 ```
 
 ```{r}
-register_google(key = key)
+register_google(key = google_api)
 map <- get_map(location =c(lon = mean(sites$Longitude), lat = mean(sites$Latitude)),
                zoom = 12, maptype = "satellite")
 #toner is another option
