@@ -1,6 +1,6 @@
 ---
 title: Linear model extensions
-subtitle: How to fix it when it's broken
+subtitle: When to trust it, and how to fix it when it's broken
 bibliography: ../references.bib
 ---
 
@@ -187,7 +187,7 @@ is happening.
 
 A central (and often overlooked assumption) of linear models is that the
 relationship between the predictors and the outcome variable is linear
-and addtive. When the relationship is not linear, the resulting
+and additive. When the relationship is not linear, the resulting
 residuals are often not appropriately distributed as well.
 
 <details>
@@ -255,7 +255,7 @@ Anova(lm(Growth~Population, example_skewed), type="III")
                              
 ```
 
--   Similary (and already noted!). non-normal data may lead to models
+-   Similarly (and already noted!). non-normal data may lead to models
     with normal residuals. However, normal data (or data transformed to
     be *more* normal) does typically lead to normal residuals, so if
     residuals are not normal transformations may help.
@@ -526,7 +526,7 @@ test/statistic). F test reappear for distributions where we estimate the
 dispersion parameter (like the normal), but otherwise we can use the
 dispersion parameter to check that the right approach was taken.
 
-It should be noted that solving for coefficents also requires iterative
+It should be noted that solving for coefficients also requires iterative
 approaches due to non-linearity; common methods (not described here)
 include the Newton-Raphson or Fisher scoring methods. The key point here
 for practice is any noted issues with optimization are due to this
@@ -546,12 +546,12 @@ immediate extensions.
 
 #### Logistic regression: Bernoulli and binomial outcomes
 
-Logistic regression focuses on modelling yes/no or success/failure
-outcomes (Bernoulli or binomial data) using the *logit* link (thus
-logistic regression). The easy-to-understand issue here is that we want
-to focus on probability ($\pi$), but that can only vary from 0 to 1.
-Linear models are thus inappropriate, but the logit link can be used
-where the systematic component of the model predicts
+Logistic regression [@warton2010] focuses on modelling yes/no or
+success/failure outcomes (Bernoulli or binomial data) using the *logit*
+link (thus logistic regression). The easy-to-understand issue here is
+that we want to focus on probability ($\pi$), but that can only vary
+from 0 to 1. Linear models are thus inappropriate, but the logit link
+can be used where the systematic component of the model predicts
 
 $$
 logit(\pi) = \ln(\frac{\pi}{1-\pi}), \text{where } \pi \text{ is the probability for a given set of outcomes}
@@ -585,7 +585,7 @@ behavior in garter snakes (*Thamnophis cyrtopsis*).
 \<https://creativecommons.org/licenses/by-sa/4.0\>, via Wikimedia
 Commons](/images/Thamnophis_cyrtopsis_(Natricidae).jpg){fig-alt="Thamnophis cyrtopsis (Family: Natricidae). Common name: blackneck garter snake."}](https://https://commons.wikimedia.org/wiki/File:Thamnophis_cyrtopsis_(Natricidae).jpg)
 
-One of their analyses considered how snake movement(labelled 0 for no
+One of their analyses considered how snake movement (labelled 0 for no
 movement, 1 for movement) differed among age classes (adults and
 juveniles).
 
@@ -638,8 +638,8 @@ summary(as_glm)
 ```
 
 For Bernoulli data like this, however, over-dispersion is not an issue
-[@molenberghs2012]. Forbinomial and Poisson data, this should be
-approximately. We can note the impact of given factors using *Anova*
+[@molenberghs2012]. For binomial and Poisson data, this should be
+approximately one. We can note the impact of given factors using *Anova*
 
 ```{r}
 Anova(as_glm, type="III")
@@ -744,37 +744,61 @@ interactions, which are significant here!).
 
 ```{r}
 summary(juvenile_fit_glm)
+
+```
+
+We can also use our *Anova* function to investigate outcomes.
+
+```{r}
 Anova(juvenile_fit_glm, type="III")
 ```
 
 We see that there is a significant interaction between the presence of
 adults and source habitat on the proportion of amphipods that move to
-colonize algae.
+colonize algae. Given this, we can follow our typical approach to
+significant interactions - break the data into subsets.
 
-ADD RESULTS...break up one way anova, etc.
-
-However, we also note that our dispersion estimate is 97.393/30 \~ 3;
-this should be closer to 1! What should we do? One option is to use an
-approach that estimates the dispersion parameter. Though not fully
-developed here, this approach uses a "quasi-binomial" family.
+However, we should first note that our dispersion estimate is 97.393/30
+\~ 3; this should be closer to 1! What should we do? One option is to
+use an approach that estimates the dispersion parameter. Though not
+fully developed here, this approach uses a "quasi-binomial" family.
 
 ```{r}
 juvenile_fit_glm_quasi <- glm(cbind(Colonized, Not_colonized) ~ adults*source.habitat, 
     juvenile, family = "quasibinomial")
+```
+
+We can investigate this model using our established protocols
+
+```{r}
 summary(juvenile_fit_glm_quasi)
 Anova(juvenile_fit_glm_quasi, type="III")
 ```
 
-dd in McFadden's R\^2.rcompanion:compareglm
+Since we estimated our dispersion parameter, we can also use F tests
+here
+
+```{r}
+Anova(juvenile_fit_glm_quasi, type="III", test = "F")
+```
+
+Another option for proportion data when the outcome is bounded (does not
+include) between 0 and 1 is beta regression.
 
 #### Beta regression
 
-Beta regression focuses on true proportion data where the outcome is
-between 0 and 1.
+Beta regression [@geissinger2022] is similar to logistic regression, but
+it focuses on true proportion data where the outcome is between 0 and 1
+(e.g. % cover, % nitrogen).
 
 #### Poisson regression
 
 Poisson regression focuses on count-based data.
+
+#### Negative binomial regression
+
+Similar to poisson, but an additional parameter allows the mean to not
+be equal to the variance.
 
 #### Non-linear options
 
@@ -1130,10 +1154,10 @@ datasets may lead to bad estimates and outcomes.
 ## Residuals are not normally distributed
 
 A very common concern regarding linear models is normality. I list it
-first here due to how often I see it noted, but in fact this assumption
-is one of the least important (and the assumption is based on residuals,
-not data!). However, non-normal residuals are often (not always)
-connected to other issues, namely linearity, as noted above.
+last here because this assumption is one of the least important (and the
+assumption is based on residuals, not data!). However, non-normal
+residuals are often (not always) connected to other issues, namely
+linearity, as noted above.
 
 ## Combinining these
 
