@@ -1031,7 +1031,7 @@ ecology and other fields [@hurlbert1984; @heffner1996; @lazic2010].
 <summary>Is this really new?</summary>
 
 It should be noted that random effects match up to paired t-tests and
-blocking approaches for simple experiments.
+blocking approaches for simple experiments.Remember our feather experiment (example and data provided by @mcdonald2014)?
 
 ```{r, echo=FALSE}
 Input = ("
@@ -1076,11 +1076,23 @@ feather <-  read.table(textConnection(Input),header=TRUE)
 ```{r}
 two_way_anova_example <- lm(Color_index ~ Feather_type + Bird, data=feather)
 Anova(two_way_anova_example, type= "III")
-
 ```
 
+Note we can get the same results using a paired t-test,  but (as of early 2024) we need to use a wide
+dataset.
+
+<!-- t.test no longer allowing paired in formula method as of early 2024  -->
+
 ```{r}
-t.test(Color_index ~ Feather_type, data=feather, paired=TRUE)
+library(reshape2) 
+feather_wide <- dcast(feather, Bird~Feather_type, value.var="Color_index")
+paged_table(feather_wide)
+```
+
+Now we have wide data...
+
+```{r}
+t.test(feather_wide$Odd, feather_wide$Typical, data=feather, paired=TRUE)
 ```
 
 ```{r}

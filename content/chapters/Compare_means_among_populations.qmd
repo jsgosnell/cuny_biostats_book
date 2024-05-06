@@ -64,6 +64,24 @@ ggplot(function_output, aes(y=Sepal.Length, x=Species, fill=Species)) +
 
 What do we test now and how?
 
+<details>
+
+<summary>More on wide vs long</summary>
+
+Notice the iris dataset is in long format (each row is one flower).
+
+```{r}
+library(rmarkdown)
+paged_table(iris)
+```
+
+It contains multiple pieces of information about that flower (e.g.,
+sepal length, petal length) but only from that one flower. This is why
+long format is more useful - when we start using multiple variables wide
+format does not work very well.
+
+</details>
+
 ## Welcome to ANOVAs
 
 As previously noted, we can't compare heights among group. Height is a
@@ -635,7 +653,6 @@ called a model or design matrix. We can see this using R. First, we can
 pull the design matrix from our model object
 
 ```{r}
-library(rmarkdown)
 paged_table(data.frame(model.matrix(iris_anova)))
 ```
 

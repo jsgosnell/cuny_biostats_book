@@ -284,10 +284,21 @@ focusing on the difference in means (like a 2-sample t-test), the test
 focuses on the mean difference between paired measurements (which would
 be 0 under the null hypothesis!). In this way, it is effectively a
 one-sample test that is pairing the data to reduce variation (blocking).
-We can do carry out the test:
+We can carry out the test, but (as of early 2024) we need to use a wide
+dataset.
+
+<!-- t.test no longer allowing paired in formula method as of early 2024  -->
 
 ```{r}
-t.test(Color_index ~ Feather_type, data=feather, paired=TRUE)
+library(reshape2) 
+feather_wide <- dcast(feather, Bird~Feather_type, value.var="Color_index")
+paged_table(feather_wide)
+```
+
+Now we have wide data...
+
+```{r}
+t.test(feather_wide$Odd, feather_wide$Typical, data=feather, paired=TRUE)
 ```
 
 and get the same results as above (note we don't even have to consider
