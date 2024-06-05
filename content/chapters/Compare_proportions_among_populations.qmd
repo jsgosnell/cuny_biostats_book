@@ -637,14 +637,12 @@ options exist, and we will explore two here.
 The sequential Bonferroni, or Holm's, method, allocates your $\alpha$ to
 accept as many tests as significant as possible while still controlling
 for the FWER. To do this, it orders the post-hoc tests by p-value,
-smallest to largest. It then rejects the null hypothesis attached to the
-smallest p-value and subtracts that p-value from $\alpha$. It continues
-to do this until $\alpha$ is too small to reject the next smallest
-p-value. I think of it as buying p-values with $\alpha$.
-
-Alternatively, you can consider summing up the smallest p-values
-associated with the pairs of tests until the cumulative sum is as close
-as you can get to $\alpha$.
+smallest to largest. It then compares the smallest p-value to $\alpha$
+divided the number of tests we intend to run. If the p-value is smaller
+than the resulting employed $\alpha$ , the next smallest p-value is
+compared to $\alpha$ divided the number of tests we intend to run
+*minus* 1 (since we've already run one test). This process continues
+until a p value is larger than the employed $\alpha$.
 
 We can use this approach by simply changing the method. Let's also order
 our results again for viewing.
@@ -661,10 +659,13 @@ to the "holm" approach.
 A final approach we will demonstrate is called the False Discovery Rate,
 or FDR, approach. It's similar to the Holm's approach in that it starts
 by ordering the post-hoc tests by p-value, smallest to largest. However,
-it then rejects the null hypothesis attached to the largest p-value that
-is \< $\alpha$ and subsequently rejects all null hypotheses attached to
-smaller p-values. It is thus less conservative but basically attempts to
-maximize the number of hypotheses you reject given a set $\alpha$.
+it then calculates a q-value for each test (as
+$q=\frac{\textrm{number of tests where } H_O {\textrm{ is assumed to be true}}}{\textrm{rank of p-value}}\ p-value$
+) and finds the largest q-value that is smaller than $\alpha$; all tests
+with smaller q-values are then rejected (alternatively, all tests with
+q-values \< $\alpha$ are rejected).It is thus less conservative but
+basically attempts to maximize the number of hypotheses you reject given
+a set $\alpha$.
 
 ```{r}
 fdr_correct <- pairwiseNominalIndependence(bird_ratio_table, compare="col", method = "fdr")
