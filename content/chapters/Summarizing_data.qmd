@@ -13,11 +13,11 @@ source("../globals.R")
 
 ```
 
-![XKCD: Data Trap. It's important to make sure your analysis destroys as
-much information as it
-produces.](https://imgs.xkcd.com/comics/data_trap_2x.png){#fig-XKDC2582
+[![XKCD: Data Trap. It\'s important to make sure your analysis destroys
+as much information as it produces. https://xkcd.com/2582/, CC BY-NC 2.5
+https://creativecommons.org/licenses/by-nc/2.5/.](https://imgs.xkcd.com/comics/data_trap_2x.png){#fig-XKDC2582
 fig-alt="Two stick figures in single panel. One sitting at desk states \"Hey, look, we have a bunch of data! I'm gonna analyze it\".  The other responds, \"No, you fool! That will only create more data!\""
-fig-align="center"}
+fig-align="center"}](https://xkcd.com/2582/)
 
 Once we have some data, the next step is often to summarize it. In fact,
 we've already done that in some ways. Some statistics like the mean may
@@ -38,47 +38,24 @@ iris
 ```
 
 Overwhelming, isn't it? And this isn't a huge dataset! There are only
-150 rows, yet some datasets have tens of thousands!
-
-Let's just look at the first few rows of the data
-
-```{r}
-head(iris)
-```
-
-It's really hard (or impossible) to just look at these numbers and infer
-anything about the population. Summary statistics help us get a better
-mental image of the distribution of the sample data.
-
-<details>
-
-<summary>What's the data showing? Click on the grey triangle</summary>
-
-We'll use many datasets in class to illustrate points. I don't expect
-you to become an expert on any of them, but I will provide some
-background along the way. For example, this isn't a botany class, but in
-case you are interested, here's some flower morphology.
-
-[![Flower morphology. Pearson Scott Foresman, Public domain, via
-Wikimedia
-Commons](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Sepal2_%28PSF%29.png/1079px-Sepal2_%28PSF%29.png?20100516143615){#fig-flower_morphology
-fig-align="center"}](https://commons.wikimedia.org/wiki/File:Sepal2_(PSF).png)
-
-</details>
-
-It's really hard (or impossible) to just look at these numbers and infer
-anything about the population. Summary statistics help us get a better
-mental image of the distribution of the sample data.
+150 rows, yet some datasets have tens of thousands! It's really hard (or
+impossible) to just look at these numbers and infer anything about the
+population. Summary statistics help us get a better mental image of the
+distribution of the sample data.
 
 > **Aside**: While summaries can help make sense of data, and eventually
 > we'll add p-values to think about things like significance, in best
 > case scenarios we don't need this! We are going to focus on graphing
 > (visual summaries) and numerical summaries in this section, but
-> sometimes the data speaks for itself.
+> sometimes the data speaks for itself (or through an easy graph like
+> this one!).
 >
-> [![XKCD:
-> Statistics](https://imgs.xkcd.com/comics/statistics_2x.png){#fig-XKCD2400
-> fig-align="center"}](https://xkcd.com/2400)
+> [![XKCD: Statistics. Note this not real data (its a comic strip).
+> https://xkcd.com/2400/, CC BY-NC 2.5
+> https://creativecommons.org/licenses/by-nc/2.5/.](https://imgs.xkcd.com/comics/statistics_2x.png){#fig-XKCD2400
+> alt="XKCD: Statistics"
+> fig-alt="Graph showing a clear difference over time (x-axis) between number of Covid cases (y) in placebo and vaccinated group. Note this not real data (its a comic strip)."
+> fig-align="center"}](https://xkcd.com/2400/)
 >
 > Don't let complicated approaches confuse you! If your findings
 > disagree with your (mental or actual) visualization of the data,
@@ -92,37 +69,63 @@ summarize the data also depends on the type of data. Note, the trait we
 are collecting data on may also be called a *variable* (since it varies
 across the population and thus sample).
 
+Let's just look at the first few rows of the iris dataset.
+
+```{r}
+head(iris)
+```
+
+<details>
+
+<summary>What's the data showing? Click on the grey triangle</summary>
+
+We'll use many datasets in class to illustrate points. I don't expect
+you to become an expert on any of them, but I will provide some
+background along the way. For example, this isn't a botany class, but in
+case you are interested, here's some flower morphology.
+
+[![Flower morphology. Pearson Scott Foresman, Public domain, via
+Wikimedia
+Commons](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Sepal2_%28PSF%29.png/1079px-Sepal2_%28PSF%29.png?20100516143615){#fig-flower_morphology
+fig-alt="Black and white drawing of flower.  Notes that petals are the inner parts of the bloom (what we often think of as the flower), while sepals are the outermost parts (we often seen them as the green \"stuff\" around a \"flower\" before it blooms)."
+fig-align="center"}](https://commons.wikimedia.org/wiki/File:Sepal2_(PSF).png)
+
+</details>
+
+This dataset includes a few different types of variables.
+
 ### Categorical variables
 
-Variables can be categorical (e.g., eye color). If categorical variables
-have no clear hierarchical relationship (again, like eye color - one
-isn't better than the other), then they are nominal variables. If the
-categories imply a rank or order (e.g., freshmen, sophomore, junior,
-senior; egg, larvae, pupae, adult) then they are ordinal variables).
+Variables can be categorical (e.g., eye color, or *species* in the iris
+dataset). If categorical variables have no clear hierarchical
+relationship (again, like eye color and species- one isn't better than
+the other), then they are nominal variables. If the categories imply a
+rank or order (e.g., freshmen, sophomore, junior, senior; egg, larvae,
+pupae, adult) then they are ordinal variables).
 
 ### Numeric variables
 
 If data values are based on numbers instead of categories, they are
 numeric variables. These can be divided into those are count-based (no
 fractions) - we call these discrete data- and those that can take on any
-values in a given range - like height. We call these continuous
-variables.
+values in a given range - like height or *sepal length* in the iris
+dataset- we call these continuous variables.
 
 ## Graphical summaries
 
 Visual interpretations or displays of your data are an excellent way to
-let patterns, trends, and distributions easier to see. In this section
-we'll go over a number of graphs. Consider this is a resource. I don't
-expect you to know how to make each of these on your own immediately. We
-will actually introduce the software we are using to make these in later
-sections. Instead, you can return here later when you are actually
-making a graph for ideas (and code!). **For your first read, focus on
-the images (not the code!)**
+make patterns, trends, and distributions easier to see (like the comic
+above shows). In this section we'll go over a number of graphs. Consider
+this is a resource. I don't expect you to know how to make each of these
+on your own immediately. We will actually introduce the software we are
+using to make these in later sections. Instead, you can return here
+later when you are actually making a graph for ideas (and code!). **For
+your first read, focus on the images (not the code!)**
 
 While the type of graph you should use will depend on the data (and you
 may have several options!) all graphs should have
 
--   Descriptive title
+-   A descriptive title
 
     -   Move beyond *Y vs. X*. State any patterns you see in the title
         to help the viewer know what they are looking for! Honest
@@ -131,17 +134,19 @@ may have several options!) all graphs should have
 
 -   Labeled axes (measure and unit)
 
-    -   What did you measure, and using what (e.g. Sepal length (cm)
+    -   What did you measure, and using what (e.g. Sepal length (cm)).
 
 -   Data points
 
-Other parts should only be included when needed.
+    -   You have to actually graph something!
 
--   Legends
+Other parts should only be included when needed, like
+
+-   A legend
 
     -   Only needed for graphs with multiple datasets where color,
         shape, or some other visual cue indicates something to the
-        viewer.
+        viewer that would be unclear without added information.
 
 -   Trendlines
 
@@ -173,11 +178,12 @@ hist(iris[iris$Species == "virginica", "Sepal.Length"],
 ```
 
 The above plot is produced using functions available in all R installs.
-Many plots now use *ggplot2*, a package you have to install (don't worry
-we'll get there!). However, since you may come back to this later, I'll
-also show how to make each of these graphs using ggplot2.
+Many plots now use *ggplot2*, a package you have to install (don't
+worry, we'll get there!). However, since you may come back to this
+later, I'll also show how this graph using ggplot2, and we'll use that
+approach for most of the other graphs in this course.
 
-```{r}
+```{r, message=F}
 #| label: fig-normal_virginica_ggplot
 #| fig-cap: "Example of approximately normal data"
 
@@ -191,7 +197,7 @@ ggplot(iris[iris$Species == "virginica",],
 ```
 
 Histograms put the data in bins (usually automatically set by software,
-but you can update!) and then show the number of samples that fell into
+but you can update!) and then show the number of samples that fall into
 each bin. This allows a quick estimate (look at the y, or vertical,
 axis) of how many samples were taken. The above images also allows us to
 begin to consider the bounds/range of the data (\~4.5-8 cm), which gives
@@ -203,23 +209,55 @@ around 6-7 cm are most common.
 <summary>Why do these graphs look slightly different? (Click the grey
 triangle to see the answer)</summary>
 
-Most programs, including R, have autobreak functions to separate the
-data into bins. Notice ggplot2 uses a different algorithm to bin the
-data. That also impacts what you see! Users, however, can override
-these, so it's worth noting that differences in bin size can influence
-what distributions look like.
+Most programs, including R, have autobreak functions that separate the
+data into bins for histograms. Notice ggplot2 uses a different algorithm
+to bin the data. That also impacts what you see! Users, however, can
+override these, so it's worth noting that differences in bin size can
+influence what distributions look like.
 
 ```{r}
 #| label: fig-charts
-#| fig-cap: "Charts"
+#| fig-cap: "The number of bins changes how histograms look ."
 #| fig-subcap: 
-#|   - "Auto breaks with R"
-#|   - "10 breaks"
+#|   - "Auto breaks with ggplot2"
 #|   - "3 breaks"
+#|   - "10 breaks"
 #| layout-ncol: 3
 hist(iris[iris$Species == "virginica", "Sepal.Length"],       main = expression(paste("Sepal lengths of ",italic("I. virginica"))),       xlab = "Sepal Length (cm)",       cex.lab=label_size, cex.axis=label_size, cex.main=title_size,       cex.sub=label_size, col = "blue") 
 hist(iris[iris$Species == "virginica", "Sepal.Length"],        breaks=3, main = "Sepal length histogram, 3 breaks", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue")  
 hist(iris[iris$Species == "virginica", "Sepal.Length"],        breaks=10, main = "Sepal length histogram, 10 breaks", xlab = "Sepal Length (cm)", cex.lab=label_size, cex.axis=label_size, cex.main=title_size, cex.sub=label_size, col = "blue")
+```
+
+or, in ggplot2,
+
+```{r, message=F}
+#| label: fig-charts-ggplot2
+#| fig-cap: "The number of bins changes how histograms look (now in ggplot2)."
+#| fig-subcap: 
+#|   - "Auto breaks with ggplot2"
+#|   - "3 breaks"
+#|   - "10 breaks"
+#| layout-ncol: 3
+ggplot(iris[iris$Species == "virginica",],
+              aes(x=Sepal.Length)) +
+  geom_histogram( fill="blue", color="black") +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"))),
+       x= "Sepal length (cm)",
+       y= "Frequency")
+ggplot(iris[iris$Species == "virginica",],
+              aes(x=Sepal.Length)) +
+  geom_histogram( fill="blue", color="black", bins = 4) +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"), ", 3 breaks")),
+       x= "Sepal length (cm)",
+       y= "Frequency")
+ggplot(iris[iris$Species == "virginica",],
+              aes(x=Sepal.Length)) +
+  geom_histogram( fill="blue", color="black", bins = 11) +
+  labs(title=expression(paste("Sepal lengths of ",italic("I. virginica"), ", 10 breaks")),
+       x= "Sepal length (cm)",
+       y= "Frequency")
+
+
 ```
 
 A similar issue exists for qualitative data in regards to the categories
@@ -227,27 +265,20 @@ that are combined/used.
 
 </details>
 
-This distribution of this data is approximately normal. We will define
-normality more later (equations!), but for now note the distribution is
-roughly symmetric, with tails on either side. Values near the middle of
-the range are more common, with the chance of getting smaller or larger
-values declining at an increasing rate...
+This distribution of this data is (very) approximately normal. We will
+define normality more later (equations!), but for now note the
+distribution is roughly symmetric, with tails on either side. Values
+near the middle of the range are more common, with the chance of getting
+smaller or larger values declining at an increasing rate...
 
 Comparing the above graph to other distributions may be an easier
-approach. Consider these graphs.
+approach to understanding normality. Consider these graphs.
 
-```{r}
-#| label: fig-cardinals_plot
-#| fig-cap: "Example of left-skewed data (plot)"
+```{r, message=F}
+#| label: fig-cardinals_ggplot2
+#| fig-cap: "Example of left-skewed data (ggplot2). Note this is not actual data, only simulated for use in example."
 set.seed(19)
 cardinals <- round(rbeta(10000,10,2)*50+runif(10000,5,10),3)
-hist(cardinals, main="Weight of Westchester cardinals", xlab = "\n Weight (g)", ylab = "Frequency (#)\n", col = "red", cex.lab=label_size, cex.axis=1.25, cex.main=title_size, cex.sub=label_size)
-
-```
-
-```{r}
-#| label: fig-cardinals_ggplot2
-#| fig-cap: "Example of left-skewed data (ggplot2)"
 ggplot(data.frame(cardinals), 
        aes(x=cardinals)) +
   geom_histogram( fill="red", color="black") +
@@ -256,9 +287,9 @@ ggplot(data.frame(cardinals),
        y= "Frequency")
 ```
 
-```{r}
+```{r, message=F}
 #| label: fig-parrots
-#| fig-cap: "Example of normal data"
+#| fig-cap: "Example of normal data.  Note this is not actual data, only simulated for use in example."
 set.seed(19)
 parrots<- round(c(rnorm(1000,400,10)),3)
 ggplot(data.frame(parrots), 
@@ -269,9 +300,9 @@ ggplot(data.frame(parrots),
        y= "Frequency")
 ```
 
-```{r}
+```{r, message=F}
 #| label: fig-blue_jays
-#| fig-cap: "Example of right-skewed data"
+#| fig-cap: "Example of right-skewed data.  Note this is not actual data, only simulated for use in example."
 set.seed(19)
 blue_jays <- round(rbeta(10000,2,8)*100+runif(10000,60,80),3)
 ggplot(data.frame(blue_jays), 
@@ -283,19 +314,20 @@ ggplot(data.frame(blue_jays),
 
 ```
 
-The cardinal @fig-cardinals_ggplot2 data has a longer left tail and is
+The cardinal (@fig-cardinals_ggplot2) data has a longer left tail and is
 not symmetric. We call this left- or negatively-skewed data (since it's
-going lower on the x-axis). Compare that to the blue jay @fig-blue_jays
-data; it has a longer right-tail and is positively- or right-skewed.
-Again, note this is all relative to symmetric data like you see with the
-parrots @fig-parrots, which is normally-distributed data.
+going lower on the x-axis). Compare that to the blue jay
+(@fig-blue_jays) data; it has a longer right-tail and is positively- or
+right-skewed. Again, note this is all relative to symmetric data like
+you see with the parrots (@fig-parrots), which is normally-distributed
+data.
 
 All symmetric data is not normal, however. Look at the data on robin and
 woodpecker weights.
 
-```{r}
+```{r, message=F}
 #| label: fig-robins
-#| fig-cap: "Example of uniform data"
+#| fig-cap: "Example of uniform data.  Note this is not actual data, only simulated for use in example."
 set.seed(19)
 rochester <- round(c(runif(1000,75,85)),3)
 ggplot(data.frame(rochester), 
@@ -307,9 +339,9 @@ ggplot(data.frame(rochester),
 
 ```
 
-```{r}
+```{r, message=F}
 #| label: fig-woodpeckers
-#| fig-cap: "Example of bimodal data"
+#| fig-cap: "Example of bimodal data.  Note this is not actual data, only simulated for use in example."
 set.seed(19)
 woodpeckers <- round(c(rnorm(100,60,4),rnorm(100,80,4)),3)
 ggplot(data.frame(woodpeckers), 
@@ -322,13 +354,13 @@ ggplot(data.frame(woodpeckers),
 
 Both these are roughly symmetric but clearly different from
 normally-distributed data (we will return to the woodpecker data!). The
-robin data is what we call *uniformly* distributed. There are really no
-tails, as it appears you are just as likely to see any number within the
-bounds as any other. *Kurtosis* is the statistical term for what
-proportion of the data points are in the tails. High kurtosis
-distributions have heavy tails with multiple outliers. The uniform
-distibution is an example of a low kurtosis distribution (it has no
-tails!).
+robin data (\@fig-robins) is what we call *uniformly* distributed. There
+are really no tails, as it appears you are just as likely to see any
+number within the bounds as any other. *Kurtosis* is the statistical
+term for what proportion of the data points are in the tails. High
+kurtosis distributions have heavy tails with multiple outliers. The
+uniform distribution is an example of a low kurtosis distribution (it
+has no tails!).
 
 This figure may also help.
 
@@ -338,26 +370,27 @@ Laplace (D)ouble exponential distribution; orange, kurtosis 2,
 hyperbolic (S)ecant distribution; green, kurtosis 1.2, (L)ogistic
 distribution; black, kurtosis 0, (N)ormal distribution; cyan, kurtosis
 −0.593762..., raised (C)osine distribution; blue, kurtosis −1, (W)igner
-semicircle distribution; magenta, kurtosis −1.2, (U)niform
-distribution.](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Standard_symmetric_pdfs.png/1200px-Standard_symmetric_pdfs.png?20061206071924){#fig-comparison
+semicircle distribution; magenta, kurtosis −1.2, (U)niform distribution.
+Public
+domain.](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Standard_symmetric_pdfs.png/1200px-Standard_symmetric_pdfs.png?20061206071924){#fig-comparison
+fig-alt="Image compares the shape of various distributions."
 fig-align="center"}](https://commons.wikimedia.org/wiki/File:Standard_symmetric_pdfs.png)
 
 If we consider the normal distribution (shown in black) to have 0
 kurtosis, the uniform (pink) has less, and the double-exponential (red)
-has more.
+has more [@fig-comparison].
 
-@fig-comparison
-
-Finally, the woodpecker data is what we call bimodal. It is symmetric in
-this case (not always true!), but it has a two clear peaks instead of a
-single central or skewed high point in the distribution.
+Finally, the woodpecker data (@fig-woodpeckers) is what we call bimodal.
+It is symmetric in this case (not always true!), but it has a two clear
+peaks instead of a single central or skewed high point in the
+distribution.
 
 These distributions helps us think about what we would expect to find in
-future samples (remember, we assume we have good samples!). To think
-about future sampling, we can change our y-axis from what we saw
+future samples (remember, we are assuming we have good samples!). To
+think about future sampling, we can change our y-axis from what we saw
 (frequency) to a probability density.
 
-```{r}
+```{r, message=F}
 #| label: fig-normal_virginica_overlay
 #| fig-cap: "Probability density distribution"
 ggplot(iris[iris$Species == "virginica",],
@@ -370,20 +403,20 @@ ggplot(iris[iris$Species == "virginica",],
 
 ```
 
-These probability density distributions can be calculated from data (as
-seen above), but they can also be developed from equations. The benefits
-of using a distribution derived from an equation is that it is
-consistent and easy to describe (standardized). This is why many common
-tests we will learn rely upon the data (or some derivative of it)
-following a known distribution. For example, many parametric tests will
-rely upon the data (or means of the data, or errors...we'll get there)
-following a normal distribution. We can see our parrot data (which came
-from a normal distribution!) is very close to a "perfect" normal
-distribution as define by an equation.
+These probability density distributions can be calculated directly from
+data (as seen above), but we can also generate these shapes using
+equations and values from the data. The benefits of using a distribution
+derived from an equation is that it is consistent and easy to describe
+(standardized). This is why many common tests we will learn rely upon
+the data (or some derivative of it) following a known distribution. For
+example, many parametric tests will rely upon the data (or means of the
+data, or errors...we'll get there) following a normal distribution. We
+can see our parrot data (which came from a normal distribution!) is very
+close to a "perfect" normal distribution as defined by an equation.
 
-```{r}
+```{r, message=F}
 #| label: fig-parrots_with_overlay
-#| fig-cap: "Comparing the distribution of the data to a perfect normal distribution"
+#| fig-cap: "Comparing the distribution of the data to a perfect normal distribution.  Note this is not actual data, only simulated for use in example."
 parrots_df <- data.frame(parrots)
 colors <- c("PDF from data" = "black", "normal curve" = "red")
 ggplot(parrots_df, 
@@ -629,7 +662,7 @@ ggplot(iris, aes(y=Sepal.Length, x=Species, fill=Species)) +
 
 or the distribution using stacked histograms...
 
-```{r}
+```{r, message=F}
 #| label: fig-stacked_histograms_all species 
 #| #| fig-cap: "Individual bars use colors to denote how many of each group fall in a given bin"  
 ggplot(iris, aes(x=Sepal.Length)) +     geom_histogram(aes(fill=Species))+    labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),        y= "Sepal length (cm)",        x= "Species")
@@ -664,7 +697,7 @@ to instead *facet* these graphs. Faceting means we produce different
 graphs for each group, treatment, etc, but they (typically) share axes.
 This makes it easier to compare the groups.
 
-```{r}
+```{r, message=F}
 #| label: fig-faceted_histograms_all species
 #| fig-cap: "Note how common axes allow comparison."
  ggplot(iris, aes(x=Sepal.Length)) + 
@@ -968,7 +1001,7 @@ important changes seem insignificant! Consider
 
 ```{r}
 #| label: fig-compare_zero_points
-#| fig-cap: "The decision of where to start the y-axis can have major impacts on interpretation"
+#| fig-cap: "The decision of where to start the y-axis can have major impacts on interpretation. A is bar charts for the data, with 0 included on the y-axis.  B is the same dataset using scatter plots and y-axis set (by default) to not include 0"
 small_difference <- data.frame(Treatment = c("a","b"), mean=c(37,40))
 library(ggpubr)
 bp <- ggplot(small_difference, aes(x=Treatment, y=mean, fill=Treatment))+
@@ -992,7 +1025,7 @@ Similarly, imagine we collected this data
 
 ```{r}
 #| label: fig-outliers
-#| fig-cap: "This would likely indicate"
+#| fig-cap: "Same data graphed 3 ways. A is raw data, B is raw data with smooth (averaged) curve added, and C is curve only (which also rescales by default."
 
 good_fit_x <- runif(100, 1, 50) 
 good_fit_y <- rnorm(100,25,2) 
@@ -1059,7 +1092,7 @@ if all data were placed in ascending order (remember box plots!)).
 Why do we need more than one measure of central tendency? Consider our
 cardinal data:
 
-```{r}
+```{r, message=F}
 #| label: fig-cardinals_ggplot2_ct
 #| fig-cap: "Skew impacts value of and relationships among various measures of central tendency"
 # function to calculate mode
@@ -1082,9 +1115,9 @@ Note the data is left-skewed. so the mean is pulled towards these
 outliers. The median may offer a better summary of the actual center. We
 see similar outcomes with right-skewed data.
 
-```{r}
+```{r, message=F}
 #| label: fig-blue_jays_ggplot2_ct
-#| fig-cap: "Skew impacts value of and relationships among various measures of central tendency"
+#| fig-cap: "Skew impacts value of and relationships among various measures of central tendency. . Note this is not actual data, only simulated for use in example."
 ggplot(data.frame(blue_jays), 
        aes(x=blue_jays)) +
   geom_histogram(color="black") +
@@ -1101,9 +1134,9 @@ ggplot(data.frame(blue_jays),
 But with symmetric data, we see the measures of central tendency align
 more
 
-```{r}
+```{r, message=F}
 #| label: fig-parrots_ggplot2_ct
-#| fig-cap: "For symmetric data, measures of central tendency are more aligned."
+#| fig-cap: "For symmetric data, measures of central tendency are more aligned. . Note this is not actual data, only simulated for use in example."
 ggplot(data.frame(parrots), 
        aes(x=parrots)) +
   geom_histogram(color="black") +
@@ -1136,9 +1169,9 @@ describe a distribution is known as *bimodal* data. In this case, the
 distribution shows two, not one, clear peak. Remember the woodpecker
 @fig-woodpeckers data?
 
-```{r}
+```{r, message=F}
 #| label: fig-woodpeckers-measures
-#| fig-cap: "Example of bimodal data with various measures"
+#| fig-cap: "Example of bimodal data with various measures. Note this is not actual data, only simulated for use in example."
 ggplot(data.frame(woodpeckers), 
        aes(x=woodpeckers)) +
   geom_histogram(aes(y=..density..), color="black") +
@@ -1165,7 +1198,7 @@ focus on the spread of the data. In some ways these focus on how much of
 the data is in the tail (or how *heavy* the tail is). To illustrate
 this, consider the @fig-normal_virginica_ggplot data.
 
-```{r}
+```{r, message=F}
 #| label: fig-normal_virginica_ggplot_2
 #| fig-cap: "Remember this example of approximately normal data?"
 
@@ -1252,7 +1285,7 @@ ggplot(iris[iris$Species == "virginica",],
        x= "Collection #")+
   geom_hline(aes(yintercept=mean(iris[iris$Species == "virginica", "Sepal.Length"])), color = "blue")+
   annotate("text", label = "mean", x = 135, y = mean(iris[iris$Species == "virginica", "Sepal.Length"])+.13, color = "blue") +
-  annotate("text", label = "square each red line \n and find average!", x = 145, y = 7.5 , color = "red") + geom_segment(data = segment_data, aes(x = x, y = y, xend = xend, yend = yend), color= "red", size = 1.1) 
+  annotate("text", label = "square each blue line \n and find average!", x = 145, y = 7.5 , color = "blue") + geom_segment(data = segment_data, aes(x = x, y = y, xend = xend, yend = yend), color= "blue", size = 1.1, linetype="dotted") 
   
 ```
 
@@ -1296,7 +1329,7 @@ As noted above in the discussion of five-number summaries, we can also
 find the assorted quartiles, minimum, and maximum of a dataset. This can
 be especially helpful when the mean isn't a useful measure of central
 tendency (since variance and $CV$ rely on the estimate of the mean!).
-For examples, see @fig-cardinals_plot. The original five number summary
+For examples, see @fig-cardinals_ggplot2. The original five number summary
 is
 
 ```{r}
@@ -1304,21 +1337,47 @@ summary(cardinals)
 ```
 
 Note that if we shifted the bottom 10% of the values even *further* left
-(increasing the skew), the median stays the same, as does the IQR.
+(increasing the skew), the median stays the same, as does the first
+quartile (and thus the IQR), even though the mean and minimum move.
 
-```{r}
+```{r, message=F}
 #| label: fig-cardinals_ggplot2_shifted
-#| fig-cap: "Shifted cardinal data"
-cardinals_new <- cardinals
-cardinals_new[cardinals_new < quantile(cardinals_new, probs= .1)] <- cardinals_new[cardinals_new < quantile(cardinals_new, probs= .1)]-.4
+#| fig-cap: "Shifted cardinal data. Note this is not actual data, only simulated for use in example."
 
-ggplot(data.frame(cardinals_new), 
-       aes(x=cardinals_new)) +
-  geom_histogram( fill="red", color="black") +
-  labs(title="Weight of Westchester cardinals (shifted)",
-       x= "Weight (g)",
-       y= "Frequency")
+
+cardinals_new <- cardinals
+cardinals_new[cardinals_new < quantile(cardinals_new, probs= .1)] <- pmax(cardinals_new[cardinals_new < quantile(cardinals_new, probs= .1)]-30,0)
+
 summary(cardinals_new)
+
+original_cardinal <- ggplot(data.frame(cardinals), 
+       aes(x=cardinals)) +
+  geom_histogram(color="black") +
+  labs(title="Weight of Westchester cardinals",
+       x= "Weight (g)",
+       y= "Frequency")+
+  geom_vline(aes(xintercept=mean(cardinals), color="mean"))+
+  geom_vline(aes(xintercept=median(cardinals), color= "median"))+
+  geom_vline(aes(xintercept=fun.mode(cardinals), color = "mode")) +
+  theme_bw()+theme(legend.position="bottom")+
+    guides(color = guide_legend(title = "Measure"))
+
+new_cardinal <- ggplot(data.frame(cardinals_new), 
+       aes(x=cardinals_new)) +
+  geom_histogram(color="black") +
+  labs(title="Weight of Westchester cardinals",
+       x= "Weight (g)",
+       y= "Frequency")+
+  geom_vline(aes(xintercept=mean(cardinals_new), color="mean"))+
+  geom_vline(aes(xintercept=median(cardinals_new), color= "median"))+
+  geom_vline(aes(xintercept=fun.mode(cardinals_new), color = "mode")) +
+  theme_bw()+theme(legend.position="bottom")+
+    guides(color = guide_legend(title = "Measure"))
+
+compare <- ggarrange(original_cardinal, new_cardinal, labels = c("A", "B"),
+          ncol = 2, nrow = 1,common.legend = TRUE, legend="bottom")
+annotate_figure(compare,
+                top = text_grob("Impacts of shifting data on 5-number summary", color = "red", face = "bold", size = 14))
 ```
 
 ### Proportions for categorical data

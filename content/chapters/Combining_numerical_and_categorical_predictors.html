@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -58,6 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -102,7 +103,13 @@ div.csl-indent {
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -111,17 +118,44 @@ div.csl-indent {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
-
 <link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -131,12 +165,12 @@ div.csl-indent {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/Combining_numerical_and_categorical_predictors.html">Combining numerical and categorical predictors</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/Combining_numerical_and_categorical_predictors.html">Combining numerical and categorical predictors</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -146,16 +180,16 @@ div.csl-indent {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
-    <div class="pt-lg-2 mt-2 text-center sidebar-header sidebar-header-stacked">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="../../index.html" class="sidebar-logo-link">
       <img src="../../images/image-from-rawpixel-id-547642-jpeg.jpg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">An introduction to statistics and modern tools</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://www.gosnelllab.com/" rel="" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
-    <a href="https://github.com/jsgosnell" rel="" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
+    <a href="https://www.gosnelllab.com/" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
+    <a href="https://github.com/jsgosnell" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -551,7 +585,7 @@ div.csl-indent {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -582,12 +616,12 @@ div.csl-indent {
   <li><a href="#important-differences" id="toc-important-differences" class="nav-link" data-scroll-target="#important-differences">Important differences</a></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Combining_numerical_and_categorical_predictors.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Combining_numerical_and_categorical_predictors.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Combining_numerical_and_categorical_predictors.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Combining_numerical_and_categorical_predictors.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/Combining_numerical_and_categorical_predictors.html">Combining numerical and categorical predictors</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Combining (lots of) numerical and categorical predictors</h1>
 <p class="subtitle lead">ANCOVAs and beyond</p>
@@ -603,7 +637,9 @@ div.csl-indent {
   </div>
   
 
+
 </header>
+
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
 <p>So far we’ve used linear models to consider how categorical predictors and continuous numerical predictors can predict continuous outcomes. We’ve already considered having multiple categorical predictors (remember factorial ANOVAs). Now we’ll extend those ideas to models where we have numerous categorical and/or continuous numerical predictors in the same model. In doing so we’ll introduce (and connect) ANCOVAs, multiple regression, and model selection.</p>
@@ -623,23 +659,43 @@ div.csl-indent {
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>iris_anova <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-2-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-2-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(iris_anova, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -688,23 +744,43 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>iris_regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Petal.Length, iris)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris_regression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-4-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-4-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(iris_regression, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -761,16 +837,32 @@ among species}\\
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris_ancova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-6-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-6-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>If assumptions appear to be met (as they do here), we can consider impacts of factors. Given the presence of categorical predictors, an Anova table may be informative</p>
@@ -812,9 +904,9 @@ Fit: lm(formula = Sepal.Length ~ Species * Petal.Length, data = iris)
 
 Linear Hypotheses:
                             Estimate Std. Error t value Pr(&gt;|t|)    
-versicolor - setosa == 0     -1.8056     0.5984  -3.017  0.00836 ** 
-virginica - setosa == 0      -3.1535     0.6341  -4.973  &lt; 1e-04 ***
-virginica - versicolor == 0  -1.3479     0.6544  -2.060  0.10175    
+versicolor - setosa == 0     -1.8056     0.5984  -3.017  0.00843 ** 
+virginica - setosa == 0      -3.1535     0.6341  -4.973  &lt; 0.001 ***
+virginica - versicolor == 0  -1.3479     0.6544  -2.060  0.10178    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)</code></pre>
@@ -863,16 +955,32 @@ P value adjustment: tukey method for comparing a family of 3 estimates </code></
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>iris_ancova_updated <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length<span class="sc">~</span>Species<span class="sc">+</span>Petal.Length, iris)</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris_ancova_updated)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(iris_ancova_updated, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -894,16 +1002,32 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>petal_anova <span class="ot">&lt;-</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(petal_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-12-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-12-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(petal_anova, <span class="at">type =</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1016,7 +1140,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Analysis would indicate (assumption plots not shown here to allow focus on interpreting interactions)</p>
@@ -1070,7 +1198,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Analysis would indicate (assumption plots not shown here to allow focus on interpreting interactions)</p>
@@ -1150,7 +1282,11 @@ F-statistic: 27.51 on 3 and 71 DF,  p-value: 6.509e-12</code></pre>
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Analysis would indicate (assumption plots not shown here to allow focus on interpreting interactions)</p>
@@ -1227,7 +1363,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Analysis would indicate (assumption plots not shown here to allow focus on interpreting interactions)</p>
@@ -1305,7 +1445,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Analysis would indicate (assumption plots not shown here to allow focus on interpreting interactions)</p>
@@ -1461,16 +1605,32 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>fev_age <span class="ot">&lt;-</span> <span class="fu">lm</span>(FEV <span class="sc">~</span> Age, fev)</span>
 <span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fev_age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-39-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-39-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-39-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-39-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-39-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-39-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(fev_age, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1516,7 +1676,11 @@ F-statistic: 872.2 on 1 and 652 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-39-5.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-39-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>height,</p>
@@ -1524,16 +1688,32 @@ F-statistic: 872.2 on 1 and 652 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>fev_height <span class="ot">&lt;-</span> <span class="fu">lm</span>(FEV <span class="sc">~</span> Height, fev)</span>
 <span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fev_height)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-40-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-40-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-40-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-40-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-40-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-40-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(fev_height, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1579,7 +1759,11 @@ F-statistic:  1995 on 1 and 652 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-40-5.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-40-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>and gender</p>
@@ -1587,16 +1771,32 @@ F-statistic:  1995 on 1 and 652 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>fev_gender <span class="ot">&lt;-</span> <span class="fu">lm</span>(FEV <span class="sc">~</span> Sex, fev)</span>
 <span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fev_gender) <span class="co">#anova is fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-41-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-41-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-41-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-41-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-41-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-41-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(fev_gender, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1647,7 +1847,11 @@ F-statistic: 29.61 on 1 and 652 DF,  p-value: 7.496e-08</code></pre>
 ℹ Please use `linewidth` instead.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-41-5.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-41-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>on outcomes and found all were significant predictors. However, these variables are correlated. For example, there is a relationship between height and gender</p>
@@ -1655,16 +1859,32 @@ F-statistic: 29.61 on 1 and 652 DF,  p-value: 7.496e-08</code></pre>
 <div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>height_gender <span class="ot">&lt;-</span> <span class="fu">lm</span>(Height <span class="sc">~</span> Sex, fev)</span>
 <span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(height_gender) <span class="co">#anova is fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-42-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-42-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-42-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-42-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-42-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-42-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(height_gender, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1710,7 +1930,11 @@ F-statistic: 16.92 on 1 and 652 DF,  p-value: 4.405e-05</code></pre>
 <span id="cb114-9"><a href="#cb114-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Height"</span>) <span class="sc">+</span></span>
 <span id="cb114-10"><a href="#cb114-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>Height<span class="sc">-</span>ci, <span class="at">ymax=</span>Height<span class="sc">+</span>ci)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-42-5.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-42-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>So we may want to know if we can do better with a larger model.</p>
@@ -1719,7 +1943,11 @@ F-statistic: 16.92 on 1 and 652 DF,  p-value: 4.405e-05</code></pre>
 <div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
 <span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs.panels</span>(fev, <span class="at">stars=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Note we significant relationships among FEV and several variagles (e.g., age), but also among several predictor variables (e.gl, height and age). This makes sense (people tend to grow for first 20ish years!), but the r<sup>2</sup> between height and age is only 64%.</p>
@@ -1751,16 +1979,32 @@ sample estimates:
 <div class="cell">
 <div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fev_full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-46-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-46-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-46-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-46-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-46-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-46-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>and interpret outcomes if assumptions are met.</p>
@@ -1919,7 +2163,11 @@ Remember that? from <a href="../../content/chapters/Compare_proportions_among_po
 <p>For an easy example of likelihood, let’s go back to a one-sample example of comparing a proportion to a sample and focus on finch data. We have 9 old and 9 young birds, so we have a signal of .5 for <em>p</em>. We can use likelihood to calculate how likely our data was under multiple values of p (ranging from 0 - 1, the only options here) and compare the <em>likelihood</em> of those outcomes <span class="citation" data-cites="white">White (<a href="#ref-white" role="doc-biblioref">n.d.</a>)</span>.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Combining_numerical_and_categorical_predictors_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Similar to calculating sum square errors from models, what is most likely is what we saw, but we know there is always noise in the data. Thankfully, it turns out the ratio of likelihood values follow a <span class="math inline">\(\chi^2\)</span> distribution and can thus provide a p-value to compare possible models. We will return to likelihood-based approaches later, in fact, as they can be used for any dataset we can generate a model for and can be used to compare multiple models.</p>
@@ -1985,10 +2233,9 @@ Coefficients:
 <div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
 <span id="cb142-2"><a href="#cb142-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(auto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["(Intercept)"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Age"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Height"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Sex"],"name":[4],"type":["fct"],"align":["left"]},{"label":["Smoker"],"name":[5],"type":["fct"],"align":["left"]},{"label":["Age:Height"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Age:Sex"],"name":[7],"type":["fct"],"align":["left"]},{"label":["Age:Smoker"],"name":[8],"type":["fct"],"align":["left"]},{"label":["Height:Sex"],"name":[9],"type":["fct"],"align":["left"]},{"label":["Height:Smoker"],"name":[10],"type":["fct"],"align":["left"]},{"label":["Sex:Smoker"],"name":[11],"type":["fct"],"align":["left"]},{"label":["Age:Height:Sex"],"name":[12],"type":["fct"],"align":["left"]},{"label":["Age:Height:Smoker"],"name":[13],"type":["fct"],"align":["left"]},{"label":["Age:Sex:Smoker"],"name":[14],"type":["fct"],"align":["left"]},{"label":["Height:Sex:Smoker"],"name":[15],"type":["fct"],"align":["left"]},{"label":["Age:Height:Sex:Smoker"],"name":[16],"type":["fct"],"align":["left"]},{"label":["df"],"name":[17],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["AICc"],"name":[19],"type":["dbl"],"align":["right"]},{"label":["delta"],"name":[20],"type":["dbl"],"align":["right"]},{"label":["weight"],"name":[21],"type":["mdl.wght"],"align":["right"]}],"data":[{"1":"1.55931098","2":"-0.1194265894","3":"0.022225242","4":"+","5":"+","6":"1.818329e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"NA","14":"NA","15":"+","16":"NA","17":"14","18":"-293.5932","19":"615.8436","20":"0.000000","21":"3.369479e-01","_rn_":"10240"},{"1":"6.42327198","2":"-0.4866890053","3":"-0.051680017","4":"+","5":"+","6":"7.401800e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"+","14":"NA","15":"+","16":"NA","17":"15","18":"-293.3109","19":"617.3741","20":"1.530466","21":"1.567567e-01","_rn_":"12288"},{"1":"1.64499717","2":"-0.1245993028","3":"0.021510331","4":"+","5":"+","6":"1.852277e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"NA","14":"+","15":"+","16":"NA","17":"15","18":"-293.5757","19":"617.9038","20":"2.060173","21":"1.202824e-01","_rn_":"14336"},{"1":"25.71050916","2":"-1.9540630581","3":"-0.349742310","4":"+","5":"+","6":"3.009111e-02","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"+","14":"+","15":"+","16":"+","17":"17","18":"-291.8010","19":"618.5642","20":"2.720573","21":"8.645651e-02","_rn_":"32768"},{"1":"-2.17341313","2":"-0.0368433137","3":"0.076764668","4":"+","5":"+","6":"7.755466e-04","7":"+","8":"+","9":"+","10":"NA","11":"NA","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-298.1596","19":"618.7303","20":"2.886693","21":"7.956561e-02","_rn_":"1280"},{"1":"6.94328044","2":"-0.5273755748","3":"-0.060224961","4":"+","5":"+","6":"8.069362e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"+","14":"+","15":"+","16":"NA","17":"16","18":"-293.2944","19":"619.4428","20":"3.599119","21":"5.572163e-02","_rn_":"16384"},{"1":"-2.83842090","2":"-0.0309606069","3":"0.087162340","4":"+","5":"+","6":"6.651984e-04","7":"+","8":"+","9":"+","10":"+","11":"NA","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"12","18":"-297.9581","19":"620.4029","20":"4.559240","21":"3.447754e-02","_rn_":"1536"},{"1":"-2.20254445","2":"-0.0320496203","3":"0.077374260","4":"+","5":"+","6":"7.000806e-04","7":"+","8":"+","9":"+","10":"NA","11":"+","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"12","18":"-298.1196","19":"620.7260","20":"4.882378","21":"2.933377e-02","_rn_":"1792"},{"1":"-3.32616120","2":"-0.0140127020","3":"0.095217582","4":"+","5":"+","6":"3.875458e-04","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"13","18":"-297.7235","19":"622.0158","20":"6.172128","21":"1.539225e-02","_rn_":"2048"},{"1":"-1.84907001","2":"-0.0556455334","3":"0.074809008","4":"+","5":"+","6":"8.461338e-04","7":"+","8":"+","9":"+","10":"NA","11":"+","12":"+","13":"NA","14":"+","15":"NA","16":"NA","17":"13","18":"-297.7595","19":"622.0877","20":"6.244043","21":"1.484862e-02","_rn_":"5888"},{"1":"-4.08955521","2":"0.0657582841","3":"0.106266922","4":"+","5":"+","6":"-8.104191e-04","7":"+","8":"+","9":"+","10":"+","11":"NA","12":"+","13":"+","14":"NA","15":"NA","16":"NA","17":"13","18":"-297.9346","19":"622.4379","20":"6.594292","21":"1.246322e-02","_rn_":"3584"},{"1":"-3.29757674","2":"0.0345051786","3":"0.084406711","4":"+","5":"+","6":"3.932942e-04","7":"+","8":"NA","9":"+","10":"NA","11":"NA","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-301.4160","19":"623.1741","20":"7.330431","21":"8.625412e-03","_rn_":"1216"},{"1":"-0.10965863","2":"-0.0186740568","3":"0.036150054","4":"+","5":"+","6":"1.157110e-03","7":"+","8":"NA","9":"+","10":"+","11":"+","12":"+","13":"NA","14":"NA","15":"+","16":"NA","17":"13","18":"-298.4489","19":"623.4665","20":"7.622831","21":"7.452226e-03","_rn_":"10176"},{"1":"-2.84240655","2":"-0.0360425048","3":"0.089961414","4":"+","5":"+","6":"5.600951e-04","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"NA","14":"+","15":"NA","16":"NA","17":"14","18":"-297.5080","19":"623.6733","20":"7.829605","21":"6.720251e-03","_rn_":"6144"},{"1":"-3.14402163","2":"-0.0284515842","3":"0.092446842","4":"+","5":"+","6":"6.075068e-04","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"+","14":"NA","15":"NA","16":"NA","17":"14","18":"-297.7230","19":"624.1034","20":"8.259704","21":"5.419893e-03","_rn_":"4096"},{"1":"5.59236169","2":"-0.4317205261","3":"-0.042571556","4":"+","5":"+","6":"6.833857e-03","7":"NA","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"12","18":"-299.8476","19":"624.1819","20":"8.338244","21":"5.211179e-03","_rn_":"9184"},{"1":"-3.38043367","2":"0.0612568518","3":"0.087973781","4":"+","5":"NA","6":"-1.133814e-04","7":"+","8":"NA","9":"+","10":"NA","11":"NA","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-303.0483","19":"624.3761","20":"8.532408","21":"4.729049e-03","_rn_":"1208"},{"1":"-3.32312511","2":"0.0427538753","3":"0.085506593","4":"+","5":"+","6":"2.370642e-04","7":"+","8":"NA","9":"+","10":"NA","11":"+","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-301.2116","19":"624.8345","20":"8.990833","21":"3.760349e-03","_rn_":"1728"},{"1":"12.52263828","2":"-0.9541978704","3":"-0.147508573","4":"+","5":"+","6":"1.474928e-02","7":"NA","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"+","14":"NA","15":"+","16":"NA","17":"13","18":"-299.2469","19":"625.0625","20":"9.218889","21":"3.355106e-03","_rn_":"11232"},{"1":"-3.34989048","2":"0.0352186792","3":"0.085184092","4":"+","5":"+","6":"3.838144e-04","7":"+","8":"NA","9":"+","10":"+","11":"NA","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-301.4149","19":"625.2410","20":"9.397338","21":"3.068717e-03","_rn_":"1472"},{"1":"-4.40836073","2":"0.0908920113","3":"0.114143208","4":"+","5":"+","6":"-1.401548e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"+","14":"+","15":"NA","16":"NA","17":"15","18":"-297.4754","19":"625.7031","20":"9.859419","21":"2.435662e-03","_rn_":"8192"},{"1":"5.59928229","2":"-0.4298226677","3":"-0.041581344","4":"+","5":"+","6":"6.721611e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"13","18":"-299.5794","19":"625.7275","20":"9.883829","21":"2.406115e-03","_rn_":"9216"},{"1":"-3.89526825","2":"0.0536908400","3":"0.094294301","4":"+","5":"+","6":"7.325422e-05","7":"+","8":"NA","9":"+","10":"+","11":"+","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"12","18":"-301.1189","19":"626.7246","20":"10.880942","21":"1.461491e-03","_rn_":"1984"},{"1":"11.87041705","2":"-0.9032349390","3":"-0.136821953","4":"+","5":"+","6":"1.391538e-02","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"+","14":"NA","15":"+","16":"NA","17":"14","18":"-299.1050","19":"626.8673","20":"11.023643","21":"1.360846e-03","_rn_":"11264"},{"1":"5.79281320","2":"-0.4399168866","3":"-0.042476990","4":"+","5":"+","6":"6.719387e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"+","15":"+","16":"NA","17":"14","18":"-299.3796","19":"627.4165","20":"11.572835","21":"1.034079e-03","_rn_":"13312"},{"1":"11.25752012","2":"-0.8553447087","3":"-0.126779659","4":"+","5":"+","6":"1.313176e-02","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"+","14":"+","15":"+","16":"NA","17":"15","18":"-299.0848","19":"628.9220","20":"13.078337","21":"4.871222e-04","_rn_":"15360"},{"1":"4.01893296","2":"-0.3414859512","3":"-0.031593658","4":"+","5":"+","6":"6.446376e-03","7":"NA","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"11","18":"-305.4792","19":"633.3697","20":"17.526018","21":"5.270312e-05","_rn_":"9120"},{"1":"0.44742794","2":"-0.3934826440","3":"0.033239750","4":"+","5":"+","6":"6.561205e-03","7":"NA","8":"+","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-308.1015","19":"634.4825","20":"18.638813","21":"3.021314e-05","_rn_":"224"},{"1":"4.05280632","2":"-0.3405290723","3":"-0.030517823","4":"+","5":"+","6":"6.310739e-03","7":"+","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"12","18":"-305.0568","19":"634.6004","20":"18.756709","21":"2.848361e-05","_rn_":"9152"},{"1":"-0.34016829","2":"-0.3858832153","3":"0.045725833","4":"+","5":"+","6":"6.406739e-03","7":"NA","8":"+","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-307.8408","19":"636.0237","20":"20.180077","21":"1.398024e-05","_rn_":"480"},{"1":"0.40389601","2":"-0.3940221854","3":"0.033880504","4":"+","5":"+","6":"6.545806e-03","7":"NA","8":"+","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-307.8977","19":"636.1376","20":"20.293987","21":"1.320625e-05","_rn_":"736"},{"1":"0.35092156","2":"-0.3917732342","3":"0.035304660","4":"+","5":"+","6":"6.486576e-03","7":"+","8":"+","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-308.0102","19":"636.3626","20":"20.518962","21":"1.180121e-05","_rn_":"256"},{"1":"-0.02440019","2":"-0.4095124312","3":"0.042733817","4":"+","5":"+","6":"6.637002e-03","7":"+","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-309.2622","19":"636.8038","20":"20.960171","21":"9.464972e-06","_rn_":"128"},{"1":"0.84361189","2":"-0.4154617745","3":"0.032793732","4":"+","5":"+","6":"6.446010e-03","7":"+","8":"+","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"12","18":"-306.7121","19":"637.9109","20":"22.067247","21":"5.441528e-06","_rn_":"4864"},{"1":"-0.16201737","2":"-0.3881510593","3":"0.042873291","4":"+","5":"+","6":"6.437753e-03","7":"NA","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-307.7914","19":"637.9941","20":"22.150420","21":"5.219874e-06","_rn_":"992"},{"1":"-0.34912092","2":"-0.3852376169","3":"0.046252168","4":"+","5":"+","6":"6.364957e-03","7":"+","8":"+","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-307.7952","19":"638.0016","20":"22.157914","21":"5.200353e-06","_rn_":"512"},{"1":"0.61238083","2":"-0.4591139331","3":"0.031251317","4":"+","5":"+","6":"7.518060e-03","7":"NA","8":"+","9":"+","10":"+","11":"NA","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"11","18":"-307.8261","19":"638.0634","20":"22.219766","21":"5.041988e-06","_rn_":"2528"},{"1":"0.34953131","2":"-0.3929016171","3":"0.035078681","4":"+","5":"+","6":"6.501569e-03","7":"+","8":"+","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-307.8659","19":"638.1430","20":"22.299311","21":"4.845392e-06","_rn_":"768"},{"1":"-0.03033248","2":"-0.4107208800","3":"0.042629854","4":"+","5":"+","6":"6.651986e-03","7":"+","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-309.1523","19":"638.6467","20":"22.803064","21":"3.766520e-06","_rn_":"640"},{"1":"-0.51398839","2":"-0.4057062911","3":"0.050446312","4":"+","5":"+","6":"6.559707e-03","7":"+","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-309.1615","19":"638.6651","20":"22.821443","21":"3.732065e-06","_rn_":"384"},{"1":"-0.66324417","2":"-0.3218411656","3":"0.040497508","4":"+","5":"+","6":"6.188680e-03","7":"NA","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-311.2890","19":"638.8012","20":"22.957511","21":"3.486603e-06","_rn_":"160"},{"1":"0.19172271","2":"-0.4272867784","3":"0.042661927","4":"+","5":"+","6":"6.646700e-03","7":"+","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"11","18":"-308.7098","19":"639.8309","20":"23.987211","21":"2.083560e-06","_rn_":"4736"},{"1":"0.68019233","2":"-0.4134600247","3":"0.035282789","4":"+","5":"+","6":"6.418196e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"13","18":"-306.7044","19":"639.9776","20":"24.133939","21":"1.936174e-06","_rn_":"5120"},{"1":"-0.20137874","2":"-0.3872249088","3":"0.043809772","4":"+","5":"+","6":"6.398739e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"12","18":"-307.7639","19":"640.0145","20":"24.170837","21":"1.900782e-06","_rn_":"1024"},{"1":"0.11700416","2":"-0.4103760366","3":"0.038643255","4":"+","5":"+","6":"6.775262e-03","7":"NA","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"12","18":"-307.7903","19":"640.0673","20":"24.223654","21":"1.851242e-06","_rn_":"3040"},{"1":"0.16570291","2":"-0.4248128504","3":"0.038394904","4":"+","5":"+","6":"6.968341e-03","7":"+","8":"+","9":"+","10":"+","11":"NA","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"12","18":"-307.7912","19":"640.0692","20":"24.225583","21":"1.849457e-06","_rn_":"2560"},{"1":"-1.07560235","2":"-0.3388617603","3":"0.049457045","4":"+","5":"+","6":"6.250328e-03","7":"+","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-312.1759","19":"640.5751","20":"24.731414","21":"1.436165e-06","_rn_":"64"},{"1":"-0.77246184","2":"-0.3203085718","3":"0.042962077","4":"+","5":"+","6":"6.100460e-03","7":"+","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-311.1541","19":"640.5877","20":"24.744048","21":"1.427122e-06","_rn_":"192"},{"1":"-0.34384440","2":"-0.4079069254","3":"0.047627885","4":"+","5":"+","6":"6.597710e-03","7":"+","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-309.1204","19":"640.6521","20":"24.808411","21":"1.381926e-06","_rn_":"896"},{"1":"-1.90747745","2":"-0.2975975864","3":"0.071663719","4":"+","5":"+","6":"4.914929e-03","7":"+","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"11","18":"-309.1314","19":"640.6740","20":"24.830364","21":"1.366840e-06","_rn_":"2432"},{"1":"-0.70240070","2":"-0.3209897123","3":"0.040931580","4":"+","5":"+","6":"6.175148e-03","7":"NA","8":"NA","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-311.2377","19":"640.7549","20":"24.911286","21":"1.312640e-06","_rn_":"672"},{"1":"0.15299379","2":"-0.4564288518","3":"0.037858584","4":"+","5":"+","6":"7.565157e-03","7":"NA","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-312.2927","19":"640.8086","20":"24.964963","21":"1.277879e-06","_rn_":"96"},{"1":"-0.85317811","2":"-0.3191651212","3":"0.043365329","4":"+","5":"+","6":"6.149288e-03","7":"NA","8":"NA","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-311.2757","19":"640.8308","20":"24.987190","21":"1.263757e-06","_rn_":"416"},{"1":"0.09899151","2":"-0.4496869069","3":"0.038617832","4":"+","5":"+","6":"7.407557e-03","7":"NA","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-311.3514","19":"640.9823","20":"25.138665","21":"1.171577e-06","_rn_":"608"},{"1":"-0.63522028","2":"-0.3047091978","3":"0.042660272","4":"+","5":"NA","6":"5.829178e-03","7":"NA","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-313.6977","19":"641.5689","20":"25.725219","21":"8.737804e-07","_rn_":"152"},{"1":"-3.25926613","2":"-0.0929284265","3":"0.096120428","4":"+","5":"+","6":"1.464374e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"+","14":"+","15":"NA","16":"NA","17":"14","18":"-306.5067","19":"641.6707","20":"25.827047","21":"8.304064e-07","_rn_":"7168"},{"1":"0.15950034","2":"-0.4269039512","3":"0.043152672","4":"+","5":"+","6":"6.641402e-03","7":"+","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"12","18":"-308.7095","19":"641.9058","20":"26.062156","21":"7.383076e-07","_rn_":"4992"},{"1":"-0.21718313","2":"-0.3859714849","3":"0.044050208","4":"+","5":"+","6":"6.379643e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"13","18":"-307.7639","19":"642.0965","20":"26.252840","21":"6.711675e-07","_rn_":"3072"},{"1":"-0.68308183","2":"-0.4480878393","3":"0.051113435","4":"+","5":"+","6":"7.396764e-03","7":"NA","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-312.0017","19":"642.2829","20":"26.439280","21":"6.114290e-07","_rn_":"352"},{"1":"-2.50603311","2":"-0.2348226649","3":"0.080439024","4":"+","5":"+","6":"3.966583e-03","7":"+","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"12","18":"-309.0520","19":"642.5908","20":"26.747169","21":"5.241901e-07","_rn_":"2944"},{"1":"-1.08513701","2":"-0.3386694372","3":"0.049478427","4":"+","5":"+","6":"6.251612e-03","7":"+","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-312.1673","19":"642.6140","20":"26.770377","21":"5.181426e-07","_rn_":"576"},{"1":"-0.78422150","2":"-0.3199663686","3":"0.042963695","4":"+","5":"+","6":"6.101578e-03","7":"+","8":"NA","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-311.1379","19":"642.6179","20":"26.774247","21":"5.171409e-07","_rn_":"704"},{"1":"-0.97998305","2":"-0.3400636213","3":"0.048022937","4":"+","5":"+","6":"6.267044e-03","7":"+","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-312.1725","19":"642.6246","20":"26.780916","21":"5.154194e-07","_rn_":"320"},{"1":"-0.86053324","2":"-0.3190675470","3":"0.044271303","4":"+","5":"+","6":"6.083848e-03","7":"+","8":"NA","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-311.1511","19":"642.6444","20":"26.800785","21":"5.103243e-07","_rn_":"448"},{"1":"-0.69690781","2":"-0.3210646727","3":"0.040847369","4":"+","5":"+","6":"6.176243e-03","7":"NA","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-311.2377","19":"642.8176","20":"26.973911","21":"4.680069e-07","_rn_":"928"},{"1":"-0.01911049","2":"-0.4487547920","3":"0.040494024","4":"+","5":"+","6":"7.389592e-03","7":"NA","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-311.3469","19":"643.0359","20":"27.192210","21":"4.196134e-07","_rn_":"864"},{"1":"-0.76302306","2":"-0.3031088488","3":"0.045513437","4":"+","5":"NA","6":"5.730155e-03","7":"+","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-313.5150","19":"643.2533","20":"27.409659","21":"3.763837e-07","_rn_":"184"},{"1":"-5.10250284","2":"0.0038776882","3":"0.124422671","4":"+","5":"+","6":"-1.706578e-05","7":"+","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"+","14":"+","15":"NA","16":"NA","17":"13","18":"-308.3511","19":"643.2709","20":"27.427274","21":"3.730834e-07","_rn_":"7040"},{"1":"-1.09438390","2":"-0.3226777450","3":"0.052730905","4":"+","5":"NA","6":"5.878325e-03","7":"+","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-314.7255","19":"643.6243","20":"27.780639","21":"3.126609e-07","_rn_":"56"},{"1":"0.78280079","2":"-0.5605252219","3":"0.028838014","4":"+","5":"+","6":"9.102937e-03","7":"NA","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"10","18":"-311.9674","19":"644.2769","20":"28.433246","21":"2.256118e-07","_rn_":"2400"},{"1":"-0.88849008","2":"-0.3860603214","3":"0.044559317","4":"+","5":"+","6":"7.172910e-03","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-315.1162","19":"644.4059","20":"28.562206","21":"2.115235e-07","_rn_":"32"},{"1":"-0.86244370","2":"-0.3414140267","3":"0.046047007","4":"+","5":"+","6":"6.292760e-03","7":"+","8":"NA","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-312.1527","19":"644.6475","20":"28.803807","21":"1.874544e-07","_rn_":"832"},{"1":"-0.76453775","2":"-0.3202350677","3":"0.042662581","4":"+","5":"+","6":"6.105455e-03","7":"+","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-311.1378","19":"644.6867","20":"28.843081","21":"1.838092e-07","_rn_":"960"},{"1":"-1.24671514","2":"-0.3505951080","3":"0.059106445","4":"+","5":"+","6":"5.898698e-03","7":"NA","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"11","18":"-311.3248","19":"645.0607","20":"29.217075","21":"1.524599e-07","_rn_":"2912"},{"1":"-0.98940837","2":"-0.3769001230","3":"0.045520345","4":"+","5":"+","6":"7.030994e-03","7":"NA","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-314.5725","19":"645.3682","20":"29.524518","21":"1.307359e-07","_rn_":"544"},{"1":"-1.16020015","2":"-0.3820874598","3":"0.048660460","4":"+","5":"+","6":"7.114345e-03","7":"NA","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-315.0893","19":"646.4018","20":"30.558120","21":"7.797428e-08","_rn_":"288"},{"1":"-0.53976599","2":"-0.3819707552","3":"0.038623496","4":"+","5":"+","6":"7.104395e-03","7":"NA","8":"NA","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-314.5126","19":"647.3048","20":"31.461120","21":"4.964407e-08","_rn_":"800"},{"1":"-0.88413994","2":"-0.3738982981","3":"0.047668356","4":"+","5":"NA","6":"6.870708e-03","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-318.4460","19":"649.0218","20":"33.178170","21":"2.103849e-08","_rn_":"24"},{"1":"0.28318510","2":"-0.4945543289","3":"0.036185140","4":"NA","5":"+","6":"8.166727e-03","7":"NA","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-317.4492","19":"649.0717","20":"33.228057","21":"2.052021e-08","_rn_":"92"},{"1":"-0.73511264","2":"-0.4838470519","3":"0.052323061","4":"NA","5":"+","6":"7.953066e-03","7":"NA","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-317.0247","19":"650.2726","20":"34.428997","21":"1.125644e-08","_rn_":"348"},{"1":"-0.68921230","2":"-0.4277570367","3":"0.042472634","4":"NA","5":"+","6":"7.779840e-03","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-319.8423","19":"651.8144","20":"35.970781","21":"5.207232e-09","_rn_":"28"},{"1":"2.24804331","2":"-0.7120877326","3":"0.006985221","4":"NA","5":"+","6":"1.141629e-02","7":"NA","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"9","18":"-316.8837","19":"652.0468","20":"36.203161","21":"4.636028e-09","_rn_":"2396"},{"1":"-1.18578661","2":"-0.4201646060","3":"0.049959960","4":"NA","5":"+","6":"7.667984e-03","7":"NA","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-319.7537","19":"653.6808","20":"37.837170","21":"2.047979e-09","_rn_":"284"},{"1":"-0.66360684","2":"-0.4181822851","3":"0.045808000","4":"NA","5":"NA","6":"7.497486e-03","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-324.0689","19":"658.2304","20":"42.386760","21":"2.105692e-10","_rn_":"20"},{"1":"-0.13635635","2":"0.0060267548","3":"0.046821873","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"12","18":"-321.6391","19":"667.7649","20":"51.921263","21":"1.790621e-12","_rn_":"9200"},{"1":"-0.39095941","2":"0.0193653254","3":"0.048026830","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"11","18":"-323.1405","19":"668.6923","20":"52.848654","21":"1.126220e-12","_rn_":"9168"},{"1":"0.06646218","2":"-0.0045988411","3":"0.045861996","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"+","15":"+","16":"NA","17":"13","18":"-321.4380","19":"669.4447","20":"53.601035","21":"7.731182e-13","_rn_":"13296"},{"1":"-1.04422940","2":"0.0535899250","3":"0.051118552","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"11","18":"-324.5559","19":"671.5230","20":"55.679348","21":"2.734928e-13","_rn_":"9136"},{"1":"-1.34069428","2":"0.0691216219","3":"0.052521628","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"10","18":"-326.2158","19":"672.7737","20":"56.930056","21":"1.463384e-13","_rn_":"9104"},{"1":"-4.73648285","2":"0.0336520382","3":"0.112253656","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-328.3138","19":"674.9072","20":"59.063505","21":"5.035998e-14","_rn_":"464"},{"1":"-4.65873413","2":"0.0254094957","3":"0.112618282","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-327.6339","19":"675.6099","20":"59.766233","21":"3.543970e-14","_rn_":"496"},{"1":"-3.32964838","2":"0.0541871099","3":"0.087149928","4":"+","5":"NA","6":"NA","7":"+","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-330.8948","19":"675.9630","20":"60.119372","21":"2.970346e-14","_rn_":"168"},{"1":"-3.09862409","2":"0.0668503842","3":"0.081243028","4":"+","5":"NA","6":"NA","7":"NA","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-332.1819","19":"676.4936","20":"60.649916","21":"2.278247e-14","_rn_":"136"},{"1":"-4.99266240","2":"0.0716275483","3":"0.108419591","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-330.1715","19":"676.5663","20":"60.722618","21":"2.196917e-14","_rn_":"400"},{"1":"-4.90299509","2":"0.0339034850","3":"0.114939705","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-328.2611","19":"676.8643","20":"61.020613","21":"1.892801e-14","_rn_":"976"},{"1":"-2.85636557","2":"0.0292344701","3":"0.084374840","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-329.2936","19":"676.8667","20":"61.023097","21":"1.890451e-14","_rn_":"240"},{"1":"-3.41624637","2":"0.0570967639","3":"0.087218766","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-330.3328","19":"676.8888","20":"61.045122","21":"1.869747e-14","_rn_":"176"},{"1":"-4.89664587","2":"0.0610015158","3":"0.108978642","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-329.3518","19":"676.9831","20":"61.139439","21":"1.783620e-14","_rn_":"432"},{"1":"-2.62409581","2":"0.0414481705","3":"0.078528355","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-330.5482","19":"677.3197","20":"61.476040","21":"1.507337e-14","_rn_":"208"},{"1":"-4.96137025","2":"0.0249435878","3":"0.117684054","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-327.4576","19":"677.3264","20":"61.482775","21":"1.502269e-14","_rn_":"1008"},{"1":"-3.18794379","2":"0.0697209293","3":"0.081350612","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-331.6057","19":"677.3848","20":"61.541187","21":"1.459028e-14","_rn_":"144"},{"1":"-4.14501451","2":"0.0014236471","3":"0.109867543","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"12","18":"-326.5735","19":"677.6337","20":"61.790064","21":"1.288311e-14","_rn_":"5104"},{"1":"-2.25593066","2":"-0.0012777771","3":"0.081157460","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"11","18":"-327.7742","19":"677.9597","20":"62.116067","21":"1.094536e-14","_rn_":"4848"},{"1":"-3.88421634","2":"0.0397836322","3":"0.098714709","4":"+","5":"NA","6":"NA","7":"+","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-333.1010","19":"678.3318","20":"62.488142","21":"9.087303e-15","_rn_":"40"},{"1":"-5.16313638","2":"0.0718577835","3":"0.111175311","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-330.1164","19":"678.5123","20":"62.668634","21":"8.303129e-15","_rn_":"912"},{"1":"-5.21490014","2":"0.0602908991","3":"0.114352616","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-329.1560","19":"678.6542","20":"62.810567","21":"7.734308e-15","_rn_":"944"},{"1":"-2.67011542","2":"0.0394713205","3":"0.079205493","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-330.2426","19":"678.7648","20":"62.921143","21":"7.318298e-15","_rn_":"720"},{"1":"-2.86206398","2":"0.0291339597","3":"0.084301981","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-329.2369","19":"678.8160","20":"62.972317","21":"7.133421e-15","_rn_":"752"},{"1":"-3.42575650","2":"0.0574163003","3":"0.087226326","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-330.3235","19":"678.9266","20":"63.082912","21":"6.749668e-15","_rn_":"688"},{"1":"-3.96526105","2":"0.0432530733","3":"0.098527818","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-332.4479","19":"679.0692","20":"63.225557","21":"6.285033e-15","_rn_":"48"},{"1":"-5.09722172","2":"0.0137294318","3":"0.121816830","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-330.3966","19":"679.0728","20":"63.229147","21":"6.273760e-15","_rn_":"368"},{"1":"-3.25154774","2":"0.0697119280","3":"0.082002501","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-331.4332","19":"679.0896","20":"63.245992","21":"6.221140e-15","_rn_":"656"},{"1":"-3.49492498","2":"0.0179089200","3":"0.096539866","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-331.6326","19":"679.4885","20":"63.644876","21":"5.096282e-15","_rn_":"112"},{"1":"-5.27670246","2":"0.0459379357","3":"0.117968245","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-331.7100","19":"679.6432","20":"63.799593","21":"4.716906e-15","_rn_":"304"},{"1":"-5.39295946","2":"0.0132571084","3":"0.126770007","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-330.2305","19":"680.8032","20":"64.959506","21":"2.641102e-15","_rn_":"880"},{"1":"-3.97035606","2":"0.0433892942","3":"0.098543643","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-332.4459","19":"681.1150","20":"65.271326","21":"2.259823e-15","_rn_":"560"},{"1":"-5.58678062","2":"0.0452132043","3":"0.123210017","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-331.5265","19":"681.3325","20":"65.488892","21":"2.026891e-15","_rn_":"816"},{"1":"-3.50213375","2":"0.0177814580","3":"0.096549038","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-331.6045","19":"681.4885","20":"65.644809","21":"1.874881e-15","_rn_":"624"},{"1":"-5.08901622","2":"0.0027735867","3":"0.124214375","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"11","18":"-330.0690","19":"682.5493","20":"66.705634","21":"1.103109e-15","_rn_":"4976"},{"1":"-3.26793651","2":"0.0001694096","3":"0.096537811","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"10","18":"-331.1562","19":"682.6545","20":"66.810808","21":"1.046598e-15","_rn_":"4720"},{"1":"-6.80498191","2":"0.0389648547","3":"0.143956980","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-342.1798","19":"700.5828","20":"84.739174","21":"1.338705e-19","_rn_":"336"},{"1":"-6.95589939","2":"0.0683601706","3":"0.140237684","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-343.2496","19":"700.6725","20":"84.828880","21":"1.279987e-19","_rn_":"272"},{"1":"-6.10371576","2":"0.0377723083","3":"0.132746229","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-341.5254","19":"701.3303","20":"85.486686","21":"9.212229e-20","_rn_":"848"},{"1":"-4.60499863","2":"0.0659896402","3":"0.103733983","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-343.6019","19":"701.3771","20":"85.533496","21":"8.999120e-20","_rn_":"528"},{"1":"-6.28255678","2":"0.0678103362","3":"0.129348072","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-342.6423","19":"701.5079","20":"85.664274","21":"8.429502e-20","_rn_":"784"},{"1":"-4.17576411","2":"0.0424512909","3":"0.101918365","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-342.9078","19":"702.0389","20":"86.195293","21":"6.463871e-20","_rn_":"592"},{"1":"-4.54422029","2":"0.0655093227","3":"0.104199428","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-345.8968","19":"703.9234","20":"88.079703","21":"2.519406e-20","_rn_":"16"},{"1":"-4.44855957","2":"0.0613638045","3":"0.104559639","4":"+","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-346.9873","19":"704.0672","20":"88.223565","21":"2.344547e-20","_rn_":"8"},{"1":"-4.24137943","2":"0.0490732376","3":"0.102961777","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-345.5539","19":"705.2811","20":"89.437433","21":"1.277824e-20","_rn_":"80"},{"1":"-7.69261523","2":"0.0636869686","3":"0.153262222","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-353.0106","19":"718.1511","20":"102.307468","21":"2.050116e-23","_rn_":"268"},{"1":"-7.58573290","2":"0.0402925701","3":"0.156438411","4":"NA","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-352.3550","19":"718.8835","20":"103.039812","21":"1.421516e-23","_rn_":"332"},{"1":"-0.02131926","2":"NA","3":"0.046277438","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"9","18":"-352.4660","19":"723.2114","20":"107.367759","21":"1.632864e-24","_rn_":"9103"},{"1":"-4.72623888","2":"0.0597410477","3":"0.109094739","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-356.9841","19":"724.0608","20":"108.217148","21":"1.067844e-24","_rn_":"12"},{"1":"-4.61046617","2":"0.0542806767","3":"0.109711835","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"4","18":"-358.6768","19":"725.4152","20":"109.571507","21":"5.425157e-25","_rn_":"4"},{"1":"-4.59304350","2":"0.0523955970","3":"0.108581315","4":"NA","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-356.9181","19":"725.9660","20":"110.122365","21":"4.119031e-25","_rn_":"76"},{"1":"-4.31821884","2":"NA","3":"0.112426000","4":"+","5":"NA","6":"NA","7":"NA","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-359.2683","19":"728.6291","20":"112.785468","21":"1.087701e-25","_rn_":"135"},{"1":"-4.17443370","2":"NA","3":"0.110958022","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-358.6727","19":"729.4752","20":"113.631576","21":"7.124911e-26","_rn_":"143"},{"1":"-5.00616167","2":"NA","3":"0.123617026","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-358.3969","19":"730.9673","20":"115.123623","21":"3.378980e-26","_rn_":"399"},{"1":"-4.23925078","2":"NA","3":"0.111619774","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-358.5071","19":"731.1875","20":"115.343902","21":"3.026584e-26","_rn_":"655"},{"1":"-4.88416923","2":"NA","3":"0.121610566","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-358.3709","19":"732.9651","20":"117.121466","21":"1.244398e-26","_rn_":"911"},{"1":"-5.39026319","2":"NA","3":"0.130230511","4":"+","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"4","18":"-369.2430","19":"746.5477","20":"130.704057","21":"1.398097e-29","_rn_":"7"},{"1":"-5.38930760","2":"NA","3":"0.129435947","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-367.2533","19":"746.6364","20":"130.792758","21":"1.337446e-29","_rn_":"527"},{"1":"-5.32794013","2":"NA","3":"0.129692881","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-369.0722","19":"748.2371","20":"132.393420","21":"6.007541e-30","_rn_":"15"},{"1":"-6.77913777","2":"NA","3":"0.151734323","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-368.1914","19":"748.5127","20":"132.669058","21":"5.234109e-30","_rn_":"271"},{"1":"-5.87882622","2":"NA","3":"0.137019353","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-367.1779","19":"748.5291","20":"132.685457","21":"5.191367e-30","_rn_":"783"},{"1":"-5.43267880","2":"NA","3":"0.131975571","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"3","18":"-376.0547","19":"758.1464","20":"142.302759","21":"4.235564e-32","_rn_":"3"},{"1":"-7.40164764","2":"NA","3":"0.161908816","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-374.3996","19":"758.8917","20":"143.048063","21":"2.917901e-32","_rn_":"267"},{"1":"-5.42130023","2":"NA","3":"0.131882555","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"4","18":"-376.0489","19":"760.1595","20":"144.315821","21":"1.548034e-32","_rn_":"11"},{"1":"2.84187138","2":"0.0095937432","3":"NA","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-478.6986","19":"971.5706","20":"355.726934","21":"1.916198e-78","_rn_":"110"},{"1":"2.83940485","2":"0.0095458621","3":"NA","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-478.6961","19":"973.6155","20":"357.771809","21":"6.892892e-79","_rn_":"622"},{"1":"3.08411827","2":"-0.0089141441","3":"NA","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"9","18":"-478.3820","19":"975.0435","20":"359.199898","21":"3.375172e-79","_rn_":"4718"},{"1":"0.70368808","2":"0.1679711664","3":"NA","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-496.8082","19":"1005.7463","20":"389.902673","21":"7.265625e-86","_rn_":"46"},{"1":"0.84946714","2":"0.1627288975","3":"NA","4":"+","5":"NA","6":"NA","7":"+","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-497.8452","19":"1005.7830","20":"389.939359","21":"7.133568e-86","_rn_":"38"},{"1":"0.77165351","2":"0.1655271043","3":"NA","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-496.5030","19":"1007.1794","20":"391.335742","21":"3.548837e-86","_rn_":"558"},{"1":"2.19813443","2":"0.0579202271","3":"NA","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-505.3926","19":"1024.9585","20":"409.114882","21":"4.890969e-90","_rn_":"590"},{"1":"2.19747503","2":"0.0703022261","3":"NA","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-510.6951","19":"1033.5201","20":"417.676469","21":"6.765031e-92","_rn_":"78"},{"1":"-0.03585243","2":"0.2264414794","3":"NA","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-523.9875","19":"1060.1048","20":"444.261145","21":"1.141513e-97","_rn_":"526"},{"1":"0.08379669","2":"0.2267942091","3":"NA","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-526.8434","19":"1063.7795","20":"447.935840","21":"1.817736e-98","_rn_":"14"},{"1":"0.28137791","2":"0.2204453116","3":"NA","4":"+","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"4","18":"-528.7991","19":"1065.6599","20":"449.816281","21":"7.099021e-99","_rn_":"6"},{"1":"2.19696626","2":"0.0798557371","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-539.3666","19":"1088.8259","20":"472.982237","21":"6.618735e-104","_rn_":"74"},{"1":"0.15837816","2":"0.2306045731","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"4","18":"-553.1670","19":"1114.3956","20":"498.551933","21":"1.855180e-109","_rn_":"10"},{"1":"0.43164811","2":"0.2220409760","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"3","18":"-556.5149","19":"1119.0668","20":"503.223108","21":"1.794954e-110","_rn_":"2"},{"1":"2.96594872","2":"NA","3":"NA","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-793.4442","19":"1596.9809","20":"981.137293","21":"2.994377e-214","_rn_":"525"},{"1":"3.11857896","2":"NA","3":"NA","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"4","18":"-795.3345","19":"1598.7306","20":"982.886971","21":"1.248443e-214","_rn_":"13"},{"1":"3.27686154","2":"NA","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"3","18":"-813.8791","19":"1633.7952","20":"1017.951549","21":"3.035236e-222","_rn_":"9"},{"1":"2.45116981","2":"NA","3":"NA","4":"+","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"3","18":"-819.6720","19":"1645.3809","20":"1029.537242","21":"9.255312e-225","_rn_":"5"},{"1":"2.63677982","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"2","18":"-834.1935","19":"1672.4055","20":"1056.561855","21":"1.253346e-230","_rn_":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["(Intercept)"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Age"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Height"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Sex"],"name":[4],"type":["fct"],"align":["left"]},{"label":["Smoker"],"name":[5],"type":["fct"],"align":["left"]},{"label":["Age:Height"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Age:Sex"],"name":[7],"type":["fct"],"align":["left"]},{"label":["Age:Smoker"],"name":[8],"type":["fct"],"align":["left"]},{"label":["Height:Sex"],"name":[9],"type":["fct"],"align":["left"]},{"label":["Height:Smoker"],"name":[10],"type":["fct"],"align":["left"]},{"label":["Sex:Smoker"],"name":[11],"type":["fct"],"align":["left"]},{"label":["Age:Height:Sex"],"name":[12],"type":["fct"],"align":["left"]},{"label":["Age:Height:Smoker"],"name":[13],"type":["fct"],"align":["left"]},{"label":["Age:Sex:Smoker"],"name":[14],"type":["fct"],"align":["left"]},{"label":["Height:Sex:Smoker"],"name":[15],"type":["fct"],"align":["left"]},{"label":["Age:Height:Sex:Smoker"],"name":[16],"type":["fct"],"align":["left"]},{"label":["df"],"name":[17],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["AICc"],"name":[19],"type":["dbl"],"align":["right"]},{"label":["delta"],"name":[20],"type":["dbl"],"align":["right"]},{"label":["weight"],"name":[21],"type":["mdl.wght"],"align":["right"]}],"data":[{"1":"1.55931098","2":"-0.1194265894","3":"0.022225242","4":"+","5":"+","6":"1.818329e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"NA","14":"NA","15":"+","16":"NA","17":"14","18":"-293.5932","19":"615.8436","20":"0.000000","21":"3.369479e-01","_rn_":"10240"},{"1":"6.42327198","2":"-0.4866890053","3":"-0.051680017","4":"+","5":"+","6":"7.401800e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"+","14":"NA","15":"+","16":"NA","17":"15","18":"-293.3109","19":"617.3741","20":"1.530466","21":"1.567567e-01","_rn_":"12288"},{"1":"1.64499717","2":"-0.1245993027","3":"0.021510331","4":"+","5":"+","6":"1.852277e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"NA","14":"+","15":"+","16":"NA","17":"15","18":"-293.5757","19":"617.9038","20":"2.060173","21":"1.202824e-01","_rn_":"14336"},{"1":"25.71050916","2":"-1.9540630581","3":"-0.349742310","4":"+","5":"+","6":"3.009111e-02","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"+","14":"+","15":"+","16":"+","17":"17","18":"-291.8010","19":"618.5642","20":"2.720573","21":"8.645651e-02","_rn_":"32768"},{"1":"-2.17341313","2":"-0.0368433137","3":"0.076764668","4":"+","5":"+","6":"7.755466e-04","7":"+","8":"+","9":"+","10":"NA","11":"NA","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-298.1596","19":"618.7303","20":"2.886693","21":"7.956561e-02","_rn_":"1280"},{"1":"6.94328044","2":"-0.5273755748","3":"-0.060224961","4":"+","5":"+","6":"8.069362e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"+","14":"+","15":"+","16":"NA","17":"16","18":"-293.2944","19":"619.4428","20":"3.599119","21":"5.572163e-02","_rn_":"16384"},{"1":"-2.83842090","2":"-0.0309606069","3":"0.087162340","4":"+","5":"+","6":"6.651984e-04","7":"+","8":"+","9":"+","10":"+","11":"NA","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"12","18":"-297.9581","19":"620.4029","20":"4.559240","21":"3.447754e-02","_rn_":"1536"},{"1":"-2.20254445","2":"-0.0320496203","3":"0.077374260","4":"+","5":"+","6":"7.000806e-04","7":"+","8":"+","9":"+","10":"NA","11":"+","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"12","18":"-298.1196","19":"620.7260","20":"4.882378","21":"2.933377e-02","_rn_":"1792"},{"1":"-3.32616120","2":"-0.0140127020","3":"0.095217582","4":"+","5":"+","6":"3.875458e-04","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"13","18":"-297.7235","19":"622.0158","20":"6.172128","21":"1.539225e-02","_rn_":"2048"},{"1":"-1.84907001","2":"-0.0556455334","3":"0.074809008","4":"+","5":"+","6":"8.461338e-04","7":"+","8":"+","9":"+","10":"NA","11":"+","12":"+","13":"NA","14":"+","15":"NA","16":"NA","17":"13","18":"-297.7595","19":"622.0877","20":"6.244043","21":"1.484862e-02","_rn_":"5888"},{"1":"-4.08955521","2":"0.0657582841","3":"0.106266922","4":"+","5":"+","6":"-8.104191e-04","7":"+","8":"+","9":"+","10":"+","11":"NA","12":"+","13":"+","14":"NA","15":"NA","16":"NA","17":"13","18":"-297.9346","19":"622.4379","20":"6.594292","21":"1.246322e-02","_rn_":"3584"},{"1":"-3.29757674","2":"0.0345051786","3":"0.084406711","4":"+","5":"+","6":"3.932942e-04","7":"+","8":"NA","9":"+","10":"NA","11":"NA","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-301.4160","19":"623.1741","20":"7.330431","21":"8.625412e-03","_rn_":"1216"},{"1":"-0.10965863","2":"-0.0186740568","3":"0.036150054","4":"+","5":"+","6":"1.157110e-03","7":"+","8":"NA","9":"+","10":"+","11":"+","12":"+","13":"NA","14":"NA","15":"+","16":"NA","17":"13","18":"-298.4489","19":"623.4665","20":"7.622831","21":"7.452226e-03","_rn_":"10176"},{"1":"-2.84240655","2":"-0.0360425048","3":"0.089961414","4":"+","5":"+","6":"5.600951e-04","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"NA","14":"+","15":"NA","16":"NA","17":"14","18":"-297.5080","19":"623.6733","20":"7.829605","21":"6.720251e-03","_rn_":"6144"},{"1":"-3.14402163","2":"-0.0284515842","3":"0.092446842","4":"+","5":"+","6":"6.075068e-04","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"+","14":"NA","15":"NA","16":"NA","17":"14","18":"-297.7230","19":"624.1034","20":"8.259704","21":"5.419893e-03","_rn_":"4096"},{"1":"5.59236169","2":"-0.4317205261","3":"-0.042571556","4":"+","5":"+","6":"6.833857e-03","7":"NA","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"12","18":"-299.8476","19":"624.1819","20":"8.338244","21":"5.211179e-03","_rn_":"9184"},{"1":"-3.38043367","2":"0.0612568518","3":"0.087973781","4":"+","5":"NA","6":"-1.133814e-04","7":"+","8":"NA","9":"+","10":"NA","11":"NA","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-303.0483","19":"624.3761","20":"8.532408","21":"4.729049e-03","_rn_":"1208"},{"1":"-3.32312511","2":"0.0427538753","3":"0.085506593","4":"+","5":"+","6":"2.370642e-04","7":"+","8":"NA","9":"+","10":"NA","11":"+","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-301.2116","19":"624.8345","20":"8.990833","21":"3.760349e-03","_rn_":"1728"},{"1":"12.52263828","2":"-0.9541978704","3":"-0.147508573","4":"+","5":"+","6":"1.474928e-02","7":"NA","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"+","14":"NA","15":"+","16":"NA","17":"13","18":"-299.2469","19":"625.0625","20":"9.218889","21":"3.355106e-03","_rn_":"11232"},{"1":"-3.34989048","2":"0.0352186792","3":"0.085184092","4":"+","5":"+","6":"3.838144e-04","7":"+","8":"NA","9":"+","10":"+","11":"NA","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-301.4149","19":"625.2410","20":"9.397338","21":"3.068717e-03","_rn_":"1472"},{"1":"-4.40836073","2":"0.0908920113","3":"0.114143208","4":"+","5":"+","6":"-1.401548e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"+","13":"+","14":"+","15":"NA","16":"NA","17":"15","18":"-297.4754","19":"625.7031","20":"9.859419","21":"2.435662e-03","_rn_":"8192"},{"1":"5.59928229","2":"-0.4298226677","3":"-0.041581344","4":"+","5":"+","6":"6.721611e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"13","18":"-299.5794","19":"625.7275","20":"9.883829","21":"2.406115e-03","_rn_":"9216"},{"1":"-3.89526825","2":"0.0536908400","3":"0.094294301","4":"+","5":"+","6":"7.325422e-05","7":"+","8":"NA","9":"+","10":"+","11":"+","12":"+","13":"NA","14":"NA","15":"NA","16":"NA","17":"12","18":"-301.1189","19":"626.7246","20":"10.880942","21":"1.461491e-03","_rn_":"1984"},{"1":"11.87041705","2":"-0.9032349390","3":"-0.136821953","4":"+","5":"+","6":"1.391538e-02","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"+","14":"NA","15":"+","16":"NA","17":"14","18":"-299.1050","19":"626.8673","20":"11.023643","21":"1.360846e-03","_rn_":"11264"},{"1":"5.79281320","2":"-0.4399168866","3":"-0.042476990","4":"+","5":"+","6":"6.719387e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"+","15":"+","16":"NA","17":"14","18":"-299.3796","19":"627.4165","20":"11.572835","21":"1.034079e-03","_rn_":"13312"},{"1":"11.25752012","2":"-0.8553447087","3":"-0.126779659","4":"+","5":"+","6":"1.313176e-02","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"+","14":"+","15":"+","16":"NA","17":"15","18":"-299.0848","19":"628.9220","20":"13.078337","21":"4.871222e-04","_rn_":"15360"},{"1":"4.01893296","2":"-0.3414859512","3":"-0.031593658","4":"+","5":"+","6":"6.446376e-03","7":"NA","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"11","18":"-305.4792","19":"633.3697","20":"17.526018","21":"5.270312e-05","_rn_":"9120"},{"1":"0.44742794","2":"-0.3934826440","3":"0.033239750","4":"+","5":"+","6":"6.561205e-03","7":"NA","8":"+","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-308.1015","19":"634.4825","20":"18.638813","21":"3.021314e-05","_rn_":"224"},{"1":"4.05280632","2":"-0.3405290723","3":"-0.030517823","4":"+","5":"+","6":"6.310739e-03","7":"+","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"12","18":"-305.0568","19":"634.6004","20":"18.756709","21":"2.848361e-05","_rn_":"9152"},{"1":"-0.34016829","2":"-0.3858832153","3":"0.045725833","4":"+","5":"+","6":"6.406739e-03","7":"NA","8":"+","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-307.8408","19":"636.0237","20":"20.180077","21":"1.398024e-05","_rn_":"480"},{"1":"0.40389601","2":"-0.3940221854","3":"0.033880504","4":"+","5":"+","6":"6.545806e-03","7":"NA","8":"+","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-307.8977","19":"636.1376","20":"20.293987","21":"1.320625e-05","_rn_":"736"},{"1":"0.35092156","2":"-0.3917732342","3":"0.035304660","4":"+","5":"+","6":"6.486576e-03","7":"+","8":"+","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-308.0102","19":"636.3626","20":"20.518962","21":"1.180121e-05","_rn_":"256"},{"1":"-0.02440019","2":"-0.4095124312","3":"0.042733817","4":"+","5":"+","6":"6.637002e-03","7":"+","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-309.2622","19":"636.8038","20":"20.960171","21":"9.464972e-06","_rn_":"128"},{"1":"0.84361189","2":"-0.4154617745","3":"0.032793732","4":"+","5":"+","6":"6.446010e-03","7":"+","8":"+","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"12","18":"-306.7121","19":"637.9109","20":"22.067247","21":"5.441528e-06","_rn_":"4864"},{"1":"-0.16201737","2":"-0.3881510593","3":"0.042873291","4":"+","5":"+","6":"6.437753e-03","7":"NA","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-307.7914","19":"637.9941","20":"22.150420","21":"5.219874e-06","_rn_":"992"},{"1":"-0.34912092","2":"-0.3852376169","3":"0.046252168","4":"+","5":"+","6":"6.364957e-03","7":"+","8":"+","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-307.7952","19":"638.0016","20":"22.157914","21":"5.200353e-06","_rn_":"512"},{"1":"0.61238083","2":"-0.4591139331","3":"0.031251317","4":"+","5":"+","6":"7.518060e-03","7":"NA","8":"+","9":"+","10":"+","11":"NA","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"11","18":"-307.8261","19":"638.0634","20":"22.219766","21":"5.041988e-06","_rn_":"2528"},{"1":"0.34953131","2":"-0.3929016171","3":"0.035078681","4":"+","5":"+","6":"6.501569e-03","7":"+","8":"+","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-307.8659","19":"638.1430","20":"22.299311","21":"4.845392e-06","_rn_":"768"},{"1":"-0.03033248","2":"-0.4107208800","3":"0.042629854","4":"+","5":"+","6":"6.651986e-03","7":"+","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-309.1523","19":"638.6467","20":"22.803064","21":"3.766520e-06","_rn_":"640"},{"1":"-0.51398839","2":"-0.4057062911","3":"0.050446312","4":"+","5":"+","6":"6.559707e-03","7":"+","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-309.1615","19":"638.6651","20":"22.821443","21":"3.732065e-06","_rn_":"384"},{"1":"-0.66324417","2":"-0.3218411656","3":"0.040497508","4":"+","5":"+","6":"6.188680e-03","7":"NA","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-311.2890","19":"638.8012","20":"22.957511","21":"3.486603e-06","_rn_":"160"},{"1":"0.19172271","2":"-0.4272867784","3":"0.042661927","4":"+","5":"+","6":"6.646700e-03","7":"+","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"11","18":"-308.7098","19":"639.8309","20":"23.987211","21":"2.083560e-06","_rn_":"4736"},{"1":"0.68019233","2":"-0.4134600247","3":"0.035282789","4":"+","5":"+","6":"6.418196e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"13","18":"-306.7044","19":"639.9776","20":"24.133939","21":"1.936174e-06","_rn_":"5120"},{"1":"-0.20137874","2":"-0.3872249088","3":"0.043809772","4":"+","5":"+","6":"6.398739e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"12","18":"-307.7639","19":"640.0145","20":"24.170837","21":"1.900782e-06","_rn_":"1024"},{"1":"0.11700416","2":"-0.4103760366","3":"0.038643255","4":"+","5":"+","6":"6.775262e-03","7":"NA","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"12","18":"-307.7903","19":"640.0673","20":"24.223654","21":"1.851242e-06","_rn_":"3040"},{"1":"0.16570291","2":"-0.4248128504","3":"0.038394904","4":"+","5":"+","6":"6.968341e-03","7":"+","8":"+","9":"+","10":"+","11":"NA","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"12","18":"-307.7912","19":"640.0692","20":"24.225583","21":"1.849457e-06","_rn_":"2560"},{"1":"-1.07560235","2":"-0.3388617603","3":"0.049457045","4":"+","5":"+","6":"6.250328e-03","7":"+","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-312.1759","19":"640.5751","20":"24.731414","21":"1.436165e-06","_rn_":"64"},{"1":"-0.77246184","2":"-0.3203085718","3":"0.042962077","4":"+","5":"+","6":"6.100460e-03","7":"+","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-311.1541","19":"640.5877","20":"24.744048","21":"1.427122e-06","_rn_":"192"},{"1":"-0.34384440","2":"-0.4079069254","3":"0.047627885","4":"+","5":"+","6":"6.597710e-03","7":"+","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-309.1204","19":"640.6521","20":"24.808411","21":"1.381926e-06","_rn_":"896"},{"1":"-1.90747745","2":"-0.2975975864","3":"0.071663719","4":"+","5":"+","6":"4.914929e-03","7":"+","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"11","18":"-309.1314","19":"640.6740","20":"24.830364","21":"1.366840e-06","_rn_":"2432"},{"1":"-0.70240070","2":"-0.3209897123","3":"0.040931580","4":"+","5":"+","6":"6.175148e-03","7":"NA","8":"NA","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-311.2377","19":"640.7549","20":"24.911286","21":"1.312640e-06","_rn_":"672"},{"1":"0.15299379","2":"-0.4564288518","3":"0.037858584","4":"+","5":"+","6":"7.565157e-03","7":"NA","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-312.2927","19":"640.8086","20":"24.964963","21":"1.277879e-06","_rn_":"96"},{"1":"-0.85317811","2":"-0.3191651212","3":"0.043365329","4":"+","5":"+","6":"6.149288e-03","7":"NA","8":"NA","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-311.2757","19":"640.8308","20":"24.987190","21":"1.263757e-06","_rn_":"416"},{"1":"0.09899151","2":"-0.4496869069","3":"0.038617832","4":"+","5":"+","6":"7.407557e-03","7":"NA","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-311.3514","19":"640.9823","20":"25.138665","21":"1.171577e-06","_rn_":"608"},{"1":"-0.63522028","2":"-0.3047091978","3":"0.042660272","4":"+","5":"NA","6":"5.829178e-03","7":"NA","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-313.6977","19":"641.5689","20":"25.725219","21":"8.737804e-07","_rn_":"152"},{"1":"-3.25926613","2":"-0.0929284265","3":"0.096120428","4":"+","5":"+","6":"1.464374e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"+","14":"+","15":"NA","16":"NA","17":"14","18":"-306.5067","19":"641.6707","20":"25.827047","21":"8.304064e-07","_rn_":"7168"},{"1":"0.15950034","2":"-0.4269039512","3":"0.043152672","4":"+","5":"+","6":"6.641402e-03","7":"+","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"12","18":"-308.7095","19":"641.9058","20":"26.062156","21":"7.383076e-07","_rn_":"4992"},{"1":"-0.21718313","2":"-0.3859714849","3":"0.044050208","4":"+","5":"+","6":"6.379643e-03","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"13","18":"-307.7639","19":"642.0965","20":"26.252840","21":"6.711675e-07","_rn_":"3072"},{"1":"-0.68308183","2":"-0.4480878393","3":"0.051113435","4":"+","5":"+","6":"7.396764e-03","7":"NA","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-312.0017","19":"642.2829","20":"26.439280","21":"6.114290e-07","_rn_":"352"},{"1":"-2.50603311","2":"-0.2348226649","3":"0.080439024","4":"+","5":"+","6":"3.966583e-03","7":"+","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"12","18":"-309.0520","19":"642.5908","20":"26.747169","21":"5.241901e-07","_rn_":"2944"},{"1":"-1.08513701","2":"-0.3386694372","3":"0.049478427","4":"+","5":"+","6":"6.251612e-03","7":"+","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-312.1673","19":"642.6140","20":"26.770377","21":"5.181426e-07","_rn_":"576"},{"1":"-0.78422150","2":"-0.3199663686","3":"0.042963695","4":"+","5":"+","6":"6.101578e-03","7":"+","8":"NA","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-311.1379","19":"642.6179","20":"26.774247","21":"5.171409e-07","_rn_":"704"},{"1":"-0.97998305","2":"-0.3400636213","3":"0.048022937","4":"+","5":"+","6":"6.267044e-03","7":"+","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-312.1725","19":"642.6246","20":"26.780916","21":"5.154194e-07","_rn_":"320"},{"1":"-0.86053324","2":"-0.3190675470","3":"0.044271303","4":"+","5":"+","6":"6.083848e-03","7":"+","8":"NA","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-311.1511","19":"642.6444","20":"26.800785","21":"5.103243e-07","_rn_":"448"},{"1":"-0.69690781","2":"-0.3210646727","3":"0.040847369","4":"+","5":"+","6":"6.176243e-03","7":"NA","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-311.2377","19":"642.8176","20":"26.973911","21":"4.680069e-07","_rn_":"928"},{"1":"-0.01911049","2":"-0.4487547920","3":"0.040494024","4":"+","5":"+","6":"7.389592e-03","7":"NA","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-311.3469","19":"643.0359","20":"27.192210","21":"4.196134e-07","_rn_":"864"},{"1":"-0.76302306","2":"-0.3031088488","3":"0.045513437","4":"+","5":"NA","6":"5.730155e-03","7":"+","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-313.5150","19":"643.2533","20":"27.409659","21":"3.763837e-07","_rn_":"184"},{"1":"-5.10250284","2":"0.0038776882","3":"0.124422671","4":"+","5":"+","6":"-1.706578e-05","7":"+","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"+","14":"+","15":"NA","16":"NA","17":"13","18":"-308.3511","19":"643.2709","20":"27.427274","21":"3.730834e-07","_rn_":"7040"},{"1":"-1.09438390","2":"-0.3226777450","3":"0.052730905","4":"+","5":"NA","6":"5.878325e-03","7":"+","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-314.7255","19":"643.6243","20":"27.780639","21":"3.126609e-07","_rn_":"56"},{"1":"0.78280079","2":"-0.5605252219","3":"0.028838014","4":"+","5":"+","6":"9.102937e-03","7":"NA","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"10","18":"-311.9674","19":"644.2769","20":"28.433246","21":"2.256118e-07","_rn_":"2400"},{"1":"-0.88849008","2":"-0.3860603214","3":"0.044559317","4":"+","5":"+","6":"7.172910e-03","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-315.1162","19":"644.4059","20":"28.562206","21":"2.115235e-07","_rn_":"32"},{"1":"-0.86244370","2":"-0.3414140267","3":"0.046047007","4":"+","5":"+","6":"6.292760e-03","7":"+","8":"NA","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-312.1527","19":"644.6475","20":"28.803807","21":"1.874544e-07","_rn_":"832"},{"1":"-0.76453775","2":"-0.3202350677","3":"0.042662581","4":"+","5":"+","6":"6.105455e-03","7":"+","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-311.1378","19":"644.6867","20":"28.843081","21":"1.838092e-07","_rn_":"960"},{"1":"-1.24671514","2":"-0.3505951080","3":"0.059106445","4":"+","5":"+","6":"5.898698e-03","7":"NA","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"11","18":"-311.3248","19":"645.0607","20":"29.217075","21":"1.524599e-07","_rn_":"2912"},{"1":"-0.98940837","2":"-0.3769001230","3":"0.045520345","4":"+","5":"+","6":"7.030994e-03","7":"NA","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-314.5725","19":"645.3682","20":"29.524518","21":"1.307359e-07","_rn_":"544"},{"1":"-1.16020015","2":"-0.3820874598","3":"0.048660460","4":"+","5":"+","6":"7.114345e-03","7":"NA","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-315.0893","19":"646.4018","20":"30.558120","21":"7.797428e-08","_rn_":"288"},{"1":"-0.53976599","2":"-0.3819707552","3":"0.038623496","4":"+","5":"+","6":"7.104395e-03","7":"NA","8":"NA","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-314.5126","19":"647.3048","20":"31.461120","21":"4.964407e-08","_rn_":"800"},{"1":"-0.88413994","2":"-0.3738982981","3":"0.047668356","4":"+","5":"NA","6":"6.870708e-03","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-318.4460","19":"649.0218","20":"33.178170","21":"2.103849e-08","_rn_":"24"},{"1":"0.28318510","2":"-0.4945543289","3":"0.036185140","4":"NA","5":"+","6":"8.166727e-03","7":"NA","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-317.4492","19":"649.0717","20":"33.228057","21":"2.052021e-08","_rn_":"92"},{"1":"-0.73511264","2":"-0.4838470519","3":"0.052323061","4":"NA","5":"+","6":"7.953066e-03","7":"NA","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-317.0247","19":"650.2726","20":"34.428997","21":"1.125644e-08","_rn_":"348"},{"1":"-0.68921230","2":"-0.4277570367","3":"0.042472634","4":"NA","5":"+","6":"7.779840e-03","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-319.8423","19":"651.8144","20":"35.970781","21":"5.207232e-09","_rn_":"28"},{"1":"2.24804331","2":"-0.7120877326","3":"0.006985221","4":"NA","5":"+","6":"1.141629e-02","7":"NA","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"+","14":"NA","15":"NA","16":"NA","17":"9","18":"-316.8837","19":"652.0468","20":"36.203161","21":"4.636028e-09","_rn_":"2396"},{"1":"-1.18578661","2":"-0.4201646060","3":"0.049959960","4":"NA","5":"+","6":"7.667984e-03","7":"NA","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-319.7537","19":"653.6808","20":"37.837170","21":"2.047979e-09","_rn_":"284"},{"1":"-0.66360684","2":"-0.4181822851","3":"0.045808000","4":"NA","5":"NA","6":"7.497486e-03","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-324.0689","19":"658.2304","20":"42.386760","21":"2.105692e-10","_rn_":"20"},{"1":"-0.13635635","2":"0.0060267548","3":"0.046821873","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"12","18":"-321.6391","19":"667.7649","20":"51.921263","21":"1.790621e-12","_rn_":"9200"},{"1":"-0.39095941","2":"0.0193653254","3":"0.048026830","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"11","18":"-323.1405","19":"668.6923","20":"52.848654","21":"1.126220e-12","_rn_":"9168"},{"1":"0.06646218","2":"-0.0045988411","3":"0.045861996","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"+","15":"+","16":"NA","17":"13","18":"-321.4380","19":"669.4447","20":"53.601035","21":"7.731182e-13","_rn_":"13296"},{"1":"-1.04422940","2":"0.0535899250","3":"0.051118552","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"11","18":"-324.5559","19":"671.5230","20":"55.679348","21":"2.734928e-13","_rn_":"9136"},{"1":"-1.34069428","2":"0.0691216219","3":"0.052521628","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"10","18":"-326.2158","19":"672.7737","20":"56.930056","21":"1.463384e-13","_rn_":"9104"},{"1":"-4.73648285","2":"0.0336520382","3":"0.112253656","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-328.3138","19":"674.9072","20":"59.063505","21":"5.035998e-14","_rn_":"464"},{"1":"-4.65873413","2":"0.0254094957","3":"0.112618282","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-327.6339","19":"675.6099","20":"59.766233","21":"3.543970e-14","_rn_":"496"},{"1":"-3.32964838","2":"0.0541871099","3":"0.087149928","4":"+","5":"NA","6":"NA","7":"+","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-330.8948","19":"675.9630","20":"60.119372","21":"2.970346e-14","_rn_":"168"},{"1":"-3.09862409","2":"0.0668503842","3":"0.081243028","4":"+","5":"NA","6":"NA","7":"NA","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-332.1819","19":"676.4936","20":"60.649916","21":"2.278247e-14","_rn_":"136"},{"1":"-4.99266240","2":"0.0716275483","3":"0.108419591","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-330.1715","19":"676.5663","20":"60.722618","21":"2.196917e-14","_rn_":"400"},{"1":"-4.90299509","2":"0.0339034850","3":"0.114939705","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-328.2611","19":"676.8643","20":"61.020613","21":"1.892801e-14","_rn_":"976"},{"1":"-2.85636557","2":"0.0292344701","3":"0.084374840","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-329.2936","19":"676.8667","20":"61.023097","21":"1.890451e-14","_rn_":"240"},{"1":"-3.41624637","2":"0.0570967639","3":"0.087218766","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-330.3328","19":"676.8888","20":"61.045122","21":"1.869747e-14","_rn_":"176"},{"1":"-4.89664587","2":"0.0610015158","3":"0.108978642","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-329.3518","19":"676.9831","20":"61.139439","21":"1.783620e-14","_rn_":"432"},{"1":"-2.62409581","2":"0.0414481705","3":"0.078528355","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-330.5482","19":"677.3197","20":"61.476040","21":"1.507337e-14","_rn_":"208"},{"1":"-4.96137025","2":"0.0249435878","3":"0.117684054","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"11","18":"-327.4576","19":"677.3264","20":"61.482775","21":"1.502269e-14","_rn_":"1008"},{"1":"-3.18794379","2":"0.0697209293","3":"0.081350612","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-331.6057","19":"677.3848","20":"61.541187","21":"1.459028e-14","_rn_":"144"},{"1":"-4.14501451","2":"0.0014236471","3":"0.109867543","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"12","18":"-326.5735","19":"677.6337","20":"61.790064","21":"1.288311e-14","_rn_":"5104"},{"1":"-2.25593066","2":"-0.0012777771","3":"0.081157460","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"11","18":"-327.7742","19":"677.9597","20":"62.116067","21":"1.094536e-14","_rn_":"4848"},{"1":"-3.88421634","2":"0.0397836322","3":"0.098714709","4":"+","5":"NA","6":"NA","7":"+","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-333.1010","19":"678.3318","20":"62.488142","21":"9.087303e-15","_rn_":"40"},{"1":"-5.16313638","2":"0.0718577835","3":"0.111175311","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-330.1164","19":"678.5123","20":"62.668634","21":"8.303129e-15","_rn_":"912"},{"1":"-5.21490014","2":"0.0602908991","3":"0.114352616","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-329.1560","19":"678.6542","20":"62.810567","21":"7.734308e-15","_rn_":"944"},{"1":"-2.67011542","2":"0.0394713205","3":"0.079205493","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-330.2426","19":"678.7648","20":"62.921143","21":"7.318298e-15","_rn_":"720"},{"1":"-2.86206398","2":"0.0291339597","3":"0.084301981","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-329.2369","19":"678.8160","20":"62.972317","21":"7.133421e-15","_rn_":"752"},{"1":"-3.42575650","2":"0.0574163003","3":"0.087226326","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-330.3235","19":"678.9266","20":"63.082912","21":"6.749668e-15","_rn_":"688"},{"1":"-3.96526105","2":"0.0432530733","3":"0.098527818","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-332.4479","19":"679.0692","20":"63.225557","21":"6.285033e-15","_rn_":"48"},{"1":"-5.09722172","2":"0.0137294318","3":"0.121816830","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-330.3966","19":"679.0728","20":"63.229147","21":"6.273760e-15","_rn_":"368"},{"1":"-3.25154774","2":"0.0697119280","3":"0.082002501","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-331.4332","19":"679.0896","20":"63.245992","21":"6.221140e-15","_rn_":"656"},{"1":"-3.49492498","2":"0.0179089200","3":"0.096539866","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-331.6326","19":"679.4885","20":"63.644876","21":"5.096282e-15","_rn_":"112"},{"1":"-5.27670246","2":"0.0459379357","3":"0.117968245","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-331.7100","19":"679.6432","20":"63.799593","21":"4.716906e-15","_rn_":"304"},{"1":"-5.39295946","2":"0.0132571084","3":"0.126770007","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"10","18":"-330.2305","19":"680.8032","20":"64.959506","21":"2.641102e-15","_rn_":"880"},{"1":"-3.97035606","2":"0.0433892942","3":"0.098543643","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-332.4459","19":"681.1150","20":"65.271326","21":"2.259823e-15","_rn_":"560"},{"1":"-5.58678062","2":"0.0452132043","3":"0.123210017","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-331.5265","19":"681.3325","20":"65.488892","21":"2.026891e-15","_rn_":"816"},{"1":"-3.50213375","2":"0.0177814580","3":"0.096549038","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-331.6045","19":"681.4885","20":"65.644809","21":"1.874881e-15","_rn_":"624"},{"1":"-5.08901622","2":"0.0027735867","3":"0.124214375","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"11","18":"-330.0690","19":"682.5493","20":"66.705634","21":"1.103109e-15","_rn_":"4976"},{"1":"-3.26793651","2":"0.0001694096","3":"0.096537811","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"10","18":"-331.1562","19":"682.6545","20":"66.810808","21":"1.046598e-15","_rn_":"4720"},{"1":"-6.80498191","2":"0.0389648547","3":"0.143956980","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-342.1798","19":"700.5828","20":"84.739174","21":"1.338705e-19","_rn_":"336"},{"1":"-6.95589939","2":"0.0683601706","3":"0.140237684","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-343.2496","19":"700.6725","20":"84.828880","21":"1.279987e-19","_rn_":"272"},{"1":"-6.10371576","2":"0.0377723083","3":"0.132746229","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"9","18":"-341.5254","19":"701.3303","20":"85.486686","21":"9.212229e-20","_rn_":"848"},{"1":"-4.60499863","2":"0.0659896402","3":"0.103733983","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-343.6019","19":"701.3771","20":"85.533496","21":"8.999120e-20","_rn_":"528"},{"1":"-6.28255678","2":"0.0678103362","3":"0.129348072","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-342.6423","19":"701.5079","20":"85.664274","21":"8.429502e-20","_rn_":"784"},{"1":"-4.17576411","2":"0.0424512909","3":"0.101918365","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-342.9078","19":"702.0389","20":"86.195293","21":"6.463871e-20","_rn_":"592"},{"1":"-4.54422029","2":"0.0655093227","3":"0.104199428","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-345.8968","19":"703.9234","20":"88.079703","21":"2.519406e-20","_rn_":"16"},{"1":"-4.44855957","2":"0.0613638045","3":"0.104559639","4":"+","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-346.9873","19":"704.0672","20":"88.223565","21":"2.344547e-20","_rn_":"8"},{"1":"-4.24137943","2":"0.0490732376","3":"0.102961777","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-345.5539","19":"705.2811","20":"89.437433","21":"1.277824e-20","_rn_":"80"},{"1":"-7.69261523","2":"0.0636869686","3":"0.153262222","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-353.0106","19":"718.1511","20":"102.307468","21":"2.050116e-23","_rn_":"268"},{"1":"-7.58573290","2":"0.0402925701","3":"0.156438411","4":"NA","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-352.3550","19":"718.8835","20":"103.039812","21":"1.421516e-23","_rn_":"332"},{"1":"-0.02131926","2":"NA","3":"0.046277438","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"+","16":"NA","17":"9","18":"-352.4660","19":"723.2114","20":"107.367759","21":"1.632864e-24","_rn_":"9103"},{"1":"-4.72623888","2":"0.0597410477","3":"0.109094739","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-356.9841","19":"724.0608","20":"108.217148","21":"1.067844e-24","_rn_":"12"},{"1":"-4.61046617","2":"0.0542806767","3":"0.109711835","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"4","18":"-358.6768","19":"725.4152","20":"109.571507","21":"5.425157e-25","_rn_":"4"},{"1":"-4.59304350","2":"0.0523955970","3":"0.108581315","4":"NA","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-356.9181","19":"725.9660","20":"110.122365","21":"4.119031e-25","_rn_":"76"},{"1":"-4.31821884","2":"NA","3":"0.112426000","4":"+","5":"NA","6":"NA","7":"NA","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-359.2683","19":"728.6291","20":"112.785468","21":"1.087701e-25","_rn_":"135"},{"1":"-4.17443370","2":"NA","3":"0.110958022","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-358.6727","19":"729.4752","20":"113.631576","21":"7.124911e-26","_rn_":"143"},{"1":"-5.00616167","2":"NA","3":"0.123617026","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-358.3969","19":"730.9673","20":"115.123623","21":"3.378980e-26","_rn_":"399"},{"1":"-4.23925078","2":"NA","3":"0.111619774","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-358.5071","19":"731.1875","20":"115.343902","21":"3.026584e-26","_rn_":"655"},{"1":"-4.88416923","2":"NA","3":"0.121610566","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"+","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-358.3709","19":"732.9651","20":"117.121466","21":"1.244398e-26","_rn_":"911"},{"1":"-5.39026319","2":"NA","3":"0.130230511","4":"+","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"4","18":"-369.2430","19":"746.5477","20":"130.704057","21":"1.398097e-29","_rn_":"7"},{"1":"-5.38930760","2":"NA","3":"0.129435947","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-367.2533","19":"746.6364","20":"130.792758","21":"1.337446e-29","_rn_":"527"},{"1":"-5.32794013","2":"NA","3":"0.129692881","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-369.0722","19":"748.2371","20":"132.393420","21":"6.007541e-30","_rn_":"15"},{"1":"-6.77913777","2":"NA","3":"0.151734323","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-368.1914","19":"748.5127","20":"132.669058","21":"5.234109e-30","_rn_":"271"},{"1":"-5.87882622","2":"NA","3":"0.137019353","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"+","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-367.1779","19":"748.5291","20":"132.685457","21":"5.191367e-30","_rn_":"783"},{"1":"-5.43267880","2":"NA","3":"0.131975571","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"3","18":"-376.0547","19":"758.1464","20":"142.302759","21":"4.235564e-32","_rn_":"3"},{"1":"-7.40164764","2":"NA","3":"0.161908816","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"+","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-374.3996","19":"758.8917","20":"143.048063","21":"2.917901e-32","_rn_":"267"},{"1":"-5.42130023","2":"NA","3":"0.131882555","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"4","18":"-376.0489","19":"760.1595","20":"144.315821","21":"1.548034e-32","_rn_":"11"},{"1":"2.84187138","2":"0.0095937432","3":"NA","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-478.6986","19":"971.5706","20":"355.726934","21":"1.916198e-78","_rn_":"110"},{"1":"2.83940485","2":"0.0095458621","3":"NA","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"8","18":"-478.6961","19":"973.6155","20":"357.771809","21":"6.892892e-79","_rn_":"622"},{"1":"3.08411827","2":"-0.0089141441","3":"NA","4":"+","5":"+","6":"NA","7":"+","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"+","15":"NA","16":"NA","17":"9","18":"-478.3820","19":"975.0435","20":"359.199898","21":"3.375172e-79","_rn_":"4718"},{"1":"0.70368808","2":"0.1679711664","3":"NA","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-496.8082","19":"1005.7463","20":"389.902673","21":"7.265625e-86","_rn_":"46"},{"1":"0.84946714","2":"0.1627288975","3":"NA","4":"+","5":"NA","6":"NA","7":"+","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-497.8452","19":"1005.7830","20":"389.939359","21":"7.133568e-86","_rn_":"38"},{"1":"0.77165351","2":"0.1655271043","3":"NA","4":"+","5":"+","6":"NA","7":"+","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-496.5030","19":"1007.1794","20":"391.335742","21":"3.548837e-86","_rn_":"558"},{"1":"2.19813443","2":"0.0579202271","3":"NA","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"7","18":"-505.3926","19":"1024.9585","20":"409.114882","21":"4.890969e-90","_rn_":"590"},{"1":"2.19747503","2":"0.0703022261","3":"NA","4":"+","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-510.6951","19":"1033.5201","20":"417.676469","21":"6.765031e-92","_rn_":"78"},{"1":"-0.03585243","2":"0.2264414794","3":"NA","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"6","18":"-523.9875","19":"1060.1048","20":"444.261145","21":"1.141513e-97","_rn_":"526"},{"1":"0.08379669","2":"0.2267942091","3":"NA","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-526.8434","19":"1063.7795","20":"447.935840","21":"1.817736e-98","_rn_":"14"},{"1":"0.28137791","2":"0.2204453116","3":"NA","4":"+","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"4","18":"-528.7991","19":"1065.6599","20":"449.816281","21":"7.099021e-99","_rn_":"6"},{"1":"2.19696626","2":"0.0798557371","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"+","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-539.3666","19":"1088.8259","20":"472.982237","21":"6.618735e-104","_rn_":"74"},{"1":"0.15837816","2":"0.2306045731","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"4","18":"-553.1670","19":"1114.3956","20":"498.551933","21":"1.855180e-109","_rn_":"10"},{"1":"0.43164811","2":"0.2220409760","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"3","18":"-556.5149","19":"1119.0668","20":"503.223108","21":"1.794954e-110","_rn_":"2"},{"1":"2.96594872","2":"NA","3":"NA","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"+","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"5","18":"-793.4442","19":"1596.9809","20":"981.137293","21":"2.994377e-214","_rn_":"525"},{"1":"3.11857896","2":"NA","3":"NA","4":"+","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"4","18":"-795.3345","19":"1598.7306","20":"982.886971","21":"1.248443e-214","_rn_":"13"},{"1":"3.27686154","2":"NA","3":"NA","4":"NA","5":"+","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"3","18":"-813.8791","19":"1633.7952","20":"1017.951549","21":"3.035236e-222","_rn_":"9"},{"1":"2.45116981","2":"NA","3":"NA","4":"+","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"3","18":"-819.6720","19":"1645.3809","20":"1029.537242","21":"9.255312e-225","_rn_":"5"},{"1":"2.63677982","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"2","18":"-834.1935","19":"1672.4055","20":"1056.561855","21":"1.253346e-230","_rn_":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -2083,7 +2330,7 @@ Smoker    1 12               1    Age, Height, Sex             --  </code></pre>
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-modelse2004" class="csl-entry" role="listitem">
 Burnham, Kenneth P., and David R. Anderson, eds. 2004. <em>Model Selection and Multimodel Inference</em>. New York, NY: Springer. <a href="https://doi.org/10.1007/b97636">https://doi.org/10.1007/b97636</a>.
 </div>
@@ -2135,6 +2382,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -2203,13 +2477,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -2288,10 +2564,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -2301,8 +2576,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -2315,6 +2599,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -2358,6 +2761,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -2383,6 +2787,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -2444,12 +2874,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/chapters/Relationships_among_numerical_variables.html" class="pagination-link">
+      <a href="../../content/chapters/Relationships_among_numerical_variables.html" class="pagination-link  aria-label=" relationships="" among="" numerical="" variables"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Relationships among numerical variables</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/chapters/Linear_model_extensions.html" class="pagination-link">
+      <a href="../../content/chapters/Linear_model_extensions.html" class="pagination-link" aria-label="Linear model extensions">
         <span class="nav-page-text">Linear model extensions</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -2457,11 +2887,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">© CC BY-NC-SA 4.0</a></div>   
-    <div class="nav-footer-center"><a href="https://jsgosnell.github.io/cuny_biostats_book/">Course notes</a> &amp; <a href="https://jsgosnell.github.io/cuny_biostats_website/">slides</a></div>
-    <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a>.</div>
+    <div class="nav-footer-left">
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">© CC BY-NC-SA 4.0</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://jsgosnell.github.io/cuny_biostats_book/">Course notes</a> &amp; <a href="https://jsgosnell.github.io/cuny_biostats_website/">slides</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Combining_numerical_and_categorical_predictors.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Combining_numerical_and_categorical_predictors.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
   </div>
 </footer>
+
 
 
 

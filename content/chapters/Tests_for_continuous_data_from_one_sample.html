@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -58,6 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -102,7 +103,13 @@ div.csl-indent {
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -111,17 +118,44 @@ div.csl-indent {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
-
 <link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -131,12 +165,12 @@ div.csl-indent {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/Tests_for_continuous_data_from_one_sample.html">Tests for continuous data from one sample</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/Tests_for_continuous_data_from_one_sample.html">Tests for continuous data from one sample</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -146,16 +180,16 @@ div.csl-indent {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
-    <div class="pt-lg-2 mt-2 text-center sidebar-header sidebar-header-stacked">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="../../index.html" class="sidebar-logo-link">
       <img src="../../images/image-from-rawpixel-id-547642-jpeg.jpg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">An introduction to statistics and modern tools</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://www.gosnelllab.com/" rel="" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
-    <a href="https://github.com/jsgosnell" rel="" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
+    <a href="https://www.gosnelllab.com/" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
+    <a href="https://github.com/jsgosnell" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -551,7 +585,7 @@ div.csl-indent {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -577,12 +611,12 @@ div.csl-indent {
   </ul></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Tests_for_continuous_data_from_one_sample.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Tests_for_continuous_data_from_one_sample.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Tests_for_continuous_data_from_one_sample.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Tests_for_continuous_data_from_one_sample.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/Tests_for_continuous_data_from_one_sample.html">Tests for continuous data from one sample</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">One sample tests for continuous data</h1>
 <p class="subtitle lead">The one where we fully introduce normality</p>
@@ -598,7 +632,9 @@ div.csl-indent {
   </div>
   
 
+
 </header>
+
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
 <p>In this chapter will build on our introduction to significance testing by considering tests for continuous data collected on one trait from a single population. This will also allow/require us to more fully define <em>normal</em> distributions, which we have already started to discuss.</p>
@@ -618,7 +654,11 @@ div.csl-indent {
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>What if we wanted to test if the height was equal to a certain value like 7 cm?</p>
@@ -669,7 +709,11 @@ H_A: \mu_{sepal \ length} \neq 7 \ cm
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>It does appear to be fairly symmetric and peaked in the middle. It turns out normal distributions (finally defined below!) are very common in nature.</p>
@@ -708,7 +752,7 @@ x =  (x-\mu)^2
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Note how <span class="math inline">\(\mu\)</span> sets the location of the distribution and <span class="math inline">\(\sigma\)</span> effects the spread</figcaption>
+<figcaption>Note how <span class="math inline">\(\mu\)</span> sets the location of the distribution and <span class="math inline">\(\sigma\)</span> effects the spread</figcaption>
 </figure>
 </div>
 </div>
@@ -730,7 +774,11 @@ x =  (x-\mu)^2
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Note it fits fairly well, so we’ll use it for our sampling experiment. To do so, we’ll take 50 draws (since we had a sample size of 50) from a normal distribution, find means for each draw, then consider their distribution.</p>
@@ -768,7 +816,11 @@ x =  (x-\mu)^2
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Now let’s see how that compares to what we actually saw.</p>
@@ -790,7 +842,11 @@ x =  (x-\mu)^2
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>So in our example simulation, <strong>no</strong> observed means were as far from the value from the null hypothesis as our sample mean was. This would leave to a p-value of 0 - unusual in some regards, but possible here.</p>
@@ -835,7 +891,11 @@ SSE=sum \ squared \ error = \sum_{i=1}^{n}(Y_i-\hat{Y_i})^2
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>difference_SSE_observed <span class="ot">&lt;-</span> <span class="fu">sum</span>((iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>]<span class="sc">-</span><span class="dv">7</span>)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">-</span><span class="fu">sum</span>((iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>]<span class="sc">-</span><span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>]))<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -850,7 +910,11 @@ SSE=sum \ squared \ error = \sum_{i=1}^{n}(Y_i-\hat{Y_i})^2
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Note we never saw as large a difference in the <strong>signal</strong> our sampling experiment as we did in the data!</p>
@@ -873,10 +937,14 @@ z=\frac{Y - \mu}{\sigma}
 <p>After this transformation, the data is centered at 0 (think about it - if you subtract the mean from all data points…) and has a standard deviation of 1 (because you divided by the standard deviation!). This also makes the mean of transformed data equal to <span class="math inline">\(\delta\)</span> and the mean under the null hypothesis equal to zero. This also means ~68% of the data points lie between -1 and 1, while ~95% lie between -2 and 2 (since the standard deviation is 1!).</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-z-colored" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/fig-z-colored-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: ~65% of the data lies with 1 standard deviation of the mean, ~95% lies within 2 standard deviations, and ~99% lies within 3 standard deviations of the mean</figcaption>
+<div id="fig-z-colored" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-z-colored-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Tests_for_continuous_data_from_one_sample_files/figure-html/fig-z-colored-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-z-colored-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: ~65% of the data lies with 1 standard deviation of the mean, ~95% lies within 2 standard deviations, and ~99% lies within 3 standard deviations of the mean
+</figcaption>
 </figure>
 </div>
 </div>
@@ -910,8 +978,8 @@ mean of x
 <p>Although software now provides us exact (approximate) p-values, historically this was far more difficult. For this reason, people took advantage of a transformation so they could use a standardized table like this one.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://commons.wikimedia.org/wiki/File:Tabla_z.png"><img src="../..\images/Tabla_z.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Example of z-table. Jsmura, Creative Commons Attribution-Share Alike 4.0 International licence</figcaption>
+<p><a href="https://commons.wikimedia.org/wiki/File:Tabla_z.png"><img src="../..\images/Tabla_z.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Example of z-table. Jsmura, Creative Commons Attribution-Share Alike 4.0 International licence"></a></p>
+<figcaption>Example of z-table. Jsmura, Creative Commons Attribution-Share Alike 4.0 International licence</figcaption>
 </figure>
 </div>
 <p>These tables showed how Z-scores related to p-values. Note these often showed the area to the left of the value, so two-tailed tests required one to multiple the given p-value by 2 (or, if focused on the upper tail, multiply (1-given p-value) by 2 since the distribution is symmetric. Similarly, some tables only had values &lt;0; for those you could find the score whose absolute value corresponed to the observed z-score and multiply the noted p-value by 2 for two-tailed tests .</p>
@@ -929,10 +997,14 @@ mean of x
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<div id="fig-normal_draws" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/fig-normal_draws-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;2: Means drawn from a normal distribution are normal regardless of sample size</figcaption>
+<div id="fig-normal_draws" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-normal_draws-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Tests_for_continuous_data_from_one_sample_files/figure-html/fig-normal_draws-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-normal_draws-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Means drawn from a normal distribution are normal regardless of sample size
+</figcaption>
 </figure>
 </div>
 </div>
@@ -946,7 +1018,11 @@ mean of x
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>or as skewed <span class="math inline">\(\chi^2\)</span> distribution (here with a df =4, to be explained later!):</p>
@@ -958,7 +1034,11 @@ mean of x
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Even for these very non-normal distributions, the means approach a normal distribution at fairly low sample sizes. This is even true for binomial data, especially when <em>p</em> is not very close to 0 or 1. Consider</p>
@@ -970,7 +1050,11 @@ mean of x
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>This is why it used to be more common to use a normal approximation to the binomial distribution - even though the binomial distribution is easy to compute,the z is even easier! For example, Sandidge <span class="citation" data-cites="sandidge2003">(<a href="#ref-sandidge2003" role="doc-biblioref">Sandidge 2003</a>)</span> noted that brown recluse spiders chose dead prey items (as opposed to live - 2 categories!) when offered choices. This data could be assessed using a binomial test</p>
@@ -1019,7 +1103,11 @@ X-squared = 66.73, df = 1, p-value = 3.113e-16</code></pre>
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>])</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,<span class="st">"Sepal.Length"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>While we introduce Q-Q plots here, and they are often used to assess normality, remember our tests (so far) are relying on the means of the data being normally-distributed and not the data itself!</p>
@@ -1037,7 +1125,11 @@ t=\frac{\bar{x} - \mu}{\frac{s}{\sqrt{n}}}
 <p>Because it directly uses the estimate of the population variance, smaller sample sizes show more spread (and thus make null hypotheses more difficult to reject!). For example, note how small sample sizes (remember, df=3 means n=4!) are notably different from the normal distribution, while larger sample sizes become very hard to distinguish!</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Note this means the t-distribution is actually a class of distributions.</p>
@@ -1053,15 +1145,18 @@ t=\frac{\bar{x} - \mu}{\frac{s}{\sqrt{n}}}
 <span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
 <span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(t_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="fig-t_table" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
+<div id="fig-t_table" class="cell-output-display quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-t_table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div data-pagedtable="false">
-
 <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["df"],"name":[1],"type":["int"],"align":["right"]},{"label":[".1"],"name":[2],"type":["dbl"],"align":["right"]},{"label":[".05"],"name":[3],"type":["dbl"],"align":["right"]},{"label":[".025"],"name":[4],"type":["dbl"],"align":["right"]},{"label":[".01"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"3.078","3":"6.314","4":"12.706","5":"31.821"},{"1":"2","2":"1.886","3":"2.920","4":"4.303","5":"6.965"},{"1":"3","2":"1.638","3":"2.353","4":"3.182","5":"4.541"},{"1":"4","2":"1.533","3":"2.132","4":"2.776","5":"3.747"},{"1":"5","2":"1.476","3":"2.015","4":"2.571","5":"3.365"},{"1":"6","2":"1.440","3":"1.943","4":"2.447","5":"3.143"},{"1":"7","2":"1.415","3":"1.895","4":"2.365","5":"2.998"},{"1":"8","2":"1.397","3":"1.860","4":"2.306","5":"2.896"},{"1":"9","2":"1.383","3":"1.833","4":"2.262","5":"2.821"},{"1":"10","2":"1.372","3":"1.812","4":"2.228","5":"2.764"},{"1":"11","2":"1.363","3":"1.796","4":"2.201","5":"2.718"},{"1":"12","2":"1.356","3":"1.782","4":"2.179","5":"2.681"},{"1":"13","2":"1.350","3":"1.771","4":"2.160","5":"2.650"},{"1":"14","2":"1.345","3":"1.761","4":"2.145","5":"2.624"},{"1":"15","2":"1.341","3":"1.753","4":"2.131","5":"2.602"},{"1":"16","2":"1.337","3":"1.746","4":"2.120","5":"2.583"},{"1":"17","2":"1.333","3":"1.740","4":"2.110","5":"2.567"},{"1":"18","2":"1.330","3":"1.734","4":"2.101","5":"2.552"},{"1":"19","2":"1.328","3":"1.729","4":"2.093","5":"2.539"},{"1":"20","2":"1.325","3":"1.725","4":"2.086","5":"2.528"},{"1":"21","2":"1.323","3":"1.721","4":"2.080","5":"2.518"},{"1":"22","2":"1.321","3":"1.717","4":"2.074","5":"2.508"},{"1":"23","2":"1.319","3":"1.714","4":"2.069","5":"2.500"},{"1":"24","2":"1.318","3":"1.711","4":"2.064","5":"2.492"},{"1":"25","2":"1.316","3":"1.708","4":"2.060","5":"2.485"},{"1":"26","2":"1.315","3":"1.706","4":"2.056","5":"2.479"},{"1":"27","2":"1.314","3":"1.703","4":"2.052","5":"2.473"},{"1":"28","2":"1.313","3":"1.701","4":"2.048","5":"2.467"},{"1":"29","2":"1.311","3":"1.699","4":"2.045","5":"2.462"},{"1":"30","2":"1.310","3":"1.697","4":"2.042","5":"2.457"},{"1":"31","2":"1.309","3":"1.696","4":"2.040","5":"2.453"},{"1":"32","2":"1.309","3":"1.694","4":"2.037","5":"2.449"},{"1":"33","2":"1.308","3":"1.692","4":"2.035","5":"2.445"},{"1":"34","2":"1.307","3":"1.691","4":"2.032","5":"2.441"},{"1":"35","2":"1.306","3":"1.690","4":"2.030","5":"2.438"},{"1":"36","2":"1.306","3":"1.688","4":"2.028","5":"2.434"},{"1":"37","2":"1.305","3":"1.687","4":"2.026","5":"2.431"},{"1":"38","2":"1.304","3":"1.686","4":"2.024","5":"2.429"},{"1":"39","2":"1.304","3":"1.685","4":"2.023","5":"2.426"},{"1":"40","2":"1.303","3":"1.684","4":"2.021","5":"2.423"},{"1":"41","2":"1.303","3":"1.683","4":"2.020","5":"2.421"},{"1":"42","2":"1.302","3":"1.682","4":"2.018","5":"2.418"},{"1":"43","2":"1.302","3":"1.681","4":"2.017","5":"2.416"},{"1":"44","2":"1.301","3":"1.680","4":"2.015","5":"2.414"},{"1":"45","2":"1.301","3":"1.679","4":"2.014","5":"2.412"},{"1":"46","2":"1.300","3":"1.679","4":"2.013","5":"2.410"},{"1":"47","2":"1.300","3":"1.678","4":"2.012","5":"2.408"},{"1":"48","2":"1.299","3":"1.677","4":"2.011","5":"2.407"},{"1":"49","2":"1.299","3":"1.677","4":"2.010","5":"2.405"},{"1":"50","2":"1.299","3":"1.676","4":"2.009","5":"2.403"},{"1":"51","2":"1.298","3":"1.675","4":"2.008","5":"2.402"},{"1":"52","2":"1.298","3":"1.675","4":"2.007","5":"2.400"},{"1":"53","2":"1.298","3":"1.674","4":"2.006","5":"2.399"},{"1":"54","2":"1.297","3":"1.674","4":"2.005","5":"2.397"},{"1":"55","2":"1.297","3":"1.673","4":"2.004","5":"2.396"},{"1":"56","2":"1.297","3":"1.673","4":"2.003","5":"2.395"},{"1":"57","2":"1.297","3":"1.672","4":"2.002","5":"2.394"},{"1":"58","2":"1.296","3":"1.672","4":"2.002","5":"2.392"},{"1":"59","2":"1.296","3":"1.671","4":"2.001","5":"2.391"},{"1":"60","2":"1.296","3":"1.671","4":"2.000","5":"2.390"},{"1":"61","2":"1.296","3":"1.670","4":"2.000","5":"2.389"},{"1":"62","2":"1.295","3":"1.670","4":"1.999","5":"2.388"},{"1":"63","2":"1.295","3":"1.669","4":"1.998","5":"2.387"},{"1":"64","2":"1.295","3":"1.669","4":"1.998","5":"2.386"},{"1":"65","2":"1.295","3":"1.669","4":"1.997","5":"2.385"},{"1":"66","2":"1.295","3":"1.668","4":"1.997","5":"2.384"},{"1":"67","2":"1.294","3":"1.668","4":"1.996","5":"2.383"},{"1":"68","2":"1.294","3":"1.668","4":"1.995","5":"2.382"},{"1":"69","2":"1.294","3":"1.667","4":"1.995","5":"2.382"},{"1":"70","2":"1.294","3":"1.667","4":"1.994","5":"2.381"},{"1":"71","2":"1.294","3":"1.667","4":"1.994","5":"2.380"},{"1":"72","2":"1.293","3":"1.666","4":"1.993","5":"2.379"},{"1":"73","2":"1.293","3":"1.666","4":"1.993","5":"2.379"},{"1":"74","2":"1.293","3":"1.666","4":"1.993","5":"2.378"},{"1":"75","2":"1.293","3":"1.665","4":"1.992","5":"2.377"},{"1":"76","2":"1.293","3":"1.665","4":"1.992","5":"2.376"},{"1":"77","2":"1.293","3":"1.665","4":"1.991","5":"2.376"},{"1":"78","2":"1.292","3":"1.665","4":"1.991","5":"2.375"},{"1":"79","2":"1.292","3":"1.664","4":"1.990","5":"2.374"},{"1":"80","2":"1.292","3":"1.664","4":"1.990","5":"2.374"},{"1":"81","2":"1.292","3":"1.664","4":"1.990","5":"2.373"},{"1":"82","2":"1.292","3":"1.664","4":"1.989","5":"2.373"},{"1":"83","2":"1.292","3":"1.663","4":"1.989","5":"2.372"},{"1":"84","2":"1.292","3":"1.663","4":"1.989","5":"2.372"},{"1":"85","2":"1.292","3":"1.663","4":"1.988","5":"2.371"},{"1":"86","2":"1.291","3":"1.663","4":"1.988","5":"2.370"},{"1":"87","2":"1.291","3":"1.663","4":"1.988","5":"2.370"},{"1":"88","2":"1.291","3":"1.662","4":"1.987","5":"2.369"},{"1":"89","2":"1.291","3":"1.662","4":"1.987","5":"2.369"},{"1":"90","2":"1.291","3":"1.662","4":"1.987","5":"2.368"},{"1":"91","2":"1.291","3":"1.662","4":"1.986","5":"2.368"},{"1":"92","2":"1.291","3":"1.662","4":"1.986","5":"2.368"},{"1":"93","2":"1.291","3":"1.661","4":"1.986","5":"2.367"},{"1":"94","2":"1.291","3":"1.661","4":"1.986","5":"2.367"},{"1":"95","2":"1.291","3":"1.661","4":"1.985","5":"2.366"},{"1":"96","2":"1.290","3":"1.661","4":"1.985","5":"2.366"},{"1":"97","2":"1.290","3":"1.661","4":"1.985","5":"2.365"},{"1":"98","2":"1.290","3":"1.661","4":"1.984","5":"2.365"},{"1":"99","2":"1.290","3":"1.660","4":"1.984","5":"2.365"},{"1":"100","2":"1.290","3":"1.660","4":"1.984","5":"2.364"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<figcaption class="figure-caption">Figure&nbsp;3: Critical values</figcaption>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-t_table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Critical values
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1154,7 +1249,11 @@ Upper Achieved CI     0.9672    6.3    6.7</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Now’s let’s take samples of 50 from it a lot of times (1000 here) and plot the means of these samples.</p>
@@ -1172,7 +1271,11 @@ Upper Achieved CI     0.9672    6.3    6.7</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Now let’s instead think of what might happen - we get a single sample of 50.</p>
@@ -1187,7 +1290,11 @@ Upper Achieved CI     0.9672    6.3    6.7</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Now (here’s the odd part): Let’s sample from that sample with replacement to get “new” samples, then get those means, again, 1000 times.</p>
@@ -1210,7 +1317,11 @@ Upper Achieved CI     0.9672    6.3    6.7</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Overall, this means we can use our sample to recreate our underlying distribution and explore its properties!</p>
@@ -1232,7 +1343,11 @@ Upper Achieved CI     0.9672    6.3    6.7</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>We again (thanks to the central limit theorem) see the means follow a normal distribution.</p>
@@ -1250,7 +1365,11 @@ Upper Achieved CI     0.9672    6.3    6.7</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Tests_for_continuous_data_from_one_sample_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>and then find the 95% confidence interval. Like binomial data, there are a few ways to do this. One is to use the percentile, or quantile, method. This is intuitive. We rank the bootstrapped values from smallest to largest and then find points that cut off the bottom and top 2.5%.</p>
@@ -1318,7 +1437,7 @@ mean of x
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-sandidge2003" class="csl-entry" role="listitem">
 Sandidge, Jamel S. 2003. <span>“Scavenging by Brown Recluse Spiders.”</span> <em>Nature</em> 426 (6962): 30–30. <a href="https://doi.org/10.1038/426030a">https://doi.org/10.1038/426030a</a>.
 </div>
@@ -1364,6 +1483,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -1432,13 +1578,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1517,10 +1665,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1530,8 +1677,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1544,6 +1700,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1587,6 +1862,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1612,6 +1888,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1673,12 +1975,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/chapters/Binomial.html" class="pagination-link">
+      <a href="../../content/chapters/Binomial.html" class="pagination-link  aria-label=" hypothesis="" testing="" starting="" with="" binomial="" tests"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Hypothesis testing starting with binomial tests</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/chapters/Compare_proportions_among_populations.html" class="pagination-link">
+      <a href="../../content/chapters/Compare_proportions_among_populations.html" class="pagination-link" aria-label="Compare proportions among groups">
         <span class="nav-page-text">Compare proportions among groups</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -1686,11 +1988,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">© CC BY-NC-SA 4.0</a></div>   
-    <div class="nav-footer-center"><a href="https://jsgosnell.github.io/cuny_biostats_book/">Course notes</a> &amp; <a href="https://jsgosnell.github.io/cuny_biostats_website/">slides</a></div>
-    <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a>.</div>
+    <div class="nav-footer-left">
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">© CC BY-NC-SA 4.0</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://jsgosnell.github.io/cuny_biostats_book/">Course notes</a> &amp; <a href="https://jsgosnell.github.io/cuny_biostats_website/">slides</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Tests_for_continuous_data_from_one_sample.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Tests_for_continuous_data_from_one_sample.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
   </div>
 </footer>
+
 
 
 

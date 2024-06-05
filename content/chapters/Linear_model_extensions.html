@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -58,6 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -102,7 +103,13 @@ div.csl-indent {
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -111,17 +118,44 @@ div.csl-indent {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
-
 <link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -131,12 +165,12 @@ div.csl-indent {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/Linear_model_extensions.html">Linear model extensions</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/Linear_model_extensions.html">Linear model extensions</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -146,16 +180,16 @@ div.csl-indent {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
-    <div class="pt-lg-2 mt-2 text-center sidebar-header sidebar-header-stacked">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="../../index.html" class="sidebar-logo-link">
       <img src="../../images/image-from-rawpixel-id-547642-jpeg.jpg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">An introduction to statistics and modern tools</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://www.gosnelllab.com/" rel="" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
-    <a href="https://github.com/jsgosnell" rel="" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
+    <a href="https://www.gosnelllab.com/" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
+    <a href="https://github.com/jsgosnell" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -551,7 +585,7 @@ div.csl-indent {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -592,12 +626,12 @@ div.csl-indent {
   <li><a href="#combinining-these" id="toc-combinining-these" class="nav-link" data-scroll-target="#combinining-these">Combinining these</a></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Linear_model_extensions.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Linear_model_extensions.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Linear_model_extensions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Linear_model_extensions.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/Linear_model_extensions.html">Linear model extensions</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Linear model extensions</h1>
 <p class="subtitle lead">When to trust it, and how to fix it when it’s broken</p>
@@ -613,7 +647,9 @@ div.csl-indent {
   </div>
   
 
+
 </header>
+
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
 <p>The past several chapters/lessons have focused on linear models. Here we explore options for analysis when linear model assumptions are not met. In doing so, we review several different approaches, many of which could be (and are) the focal topic of courses and books. The goal here is to</p>
@@ -657,13 +693,25 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>In fact, we could run simulations and show that p values from these 2 approaches are highly correlated (now you know what that means) with a <span class="math inline">\(\beta\)</span> of almost 1 (from <span class="citation" data-cites="lindelov">Lindelov (<a href="#ref-lindelov" role="doc-biblioref">n.d.</a>)</span>).</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Linear models are also extremely robust. Consider the basic assumptions of a linear model</p>
@@ -724,20 +772,40 @@ What’s linear anyway?
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">lm</span>(Growth<span class="sc">~</span>Population, example_skewed))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-5.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-4-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Growth<span class="sc">~</span>Population, example_skewed), <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -772,7 +840,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Note the right-skewed data shows a convex curve on the Q-Q plot.</p>
@@ -780,7 +852,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(blue_jays)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(blue_jays)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>To help you understand Q-Q plots, remember they are comparing the relative spread of data (quantiles) from a target and theoretical distribution. For right-skewed data, points are shifted right (both smallest and largest observations are larger than you would expect from a normal distribution).</p>
@@ -798,7 +874,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>and note a concave shape is seen in the Q-Q plot,as all points are shifted left.</p>
@@ -806,7 +886,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(cardinals)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(cardinals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>For this type of data, power transformations (raising the variable to the 2, 3, or higher power) may be useful.</p>
@@ -824,7 +908,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>shows as a s-shape on the Q-Q plot</p>
@@ -832,7 +920,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(rochester)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(rochester)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>because it is <em>under-dispersed</em> (has no tails, and thus the lower points are larger than expected and the higher points are smaller than expected). Alternatively, data may be <em>over-dispersed</em>, like this (fake) finch data where lower points are lower than expected and higher points are higher.</p>
@@ -850,14 +942,22 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(finch)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(finch)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Over- and under-dispersed data may mean there’s a missing factor in your analysis. For example, our bi-modal woodpecker data</p>
@@ -874,7 +974,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>is under-dispersed due the shape of the distribution, but there also signs of other issues.</p>
@@ -882,7 +986,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(woodpeckers)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(woodpeckers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Under-dispersion could also happen if data are bounded (e.g., by practicality or due to a measurement issue). Over-dispersion can similarly occur if the model does not account for variability (e.g., missing factors, non-linear relationship) and/or outliers, which might be related to the underlying form of the data <span class="citation" data-cites="payne2017">(<a href="#ref-payne2017" role="doc-biblioref">Payne et al. 2017</a>)</span> (more to come on this). In this way, over- and under-dispersion relate to both the linear relationship.</p>
@@ -942,7 +1050,7 @@ logit(\pi) = \ln(\frac{\pi}{1-\pi}), \text{where } \pi \text{ is the probability
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><a href="https://https://commons.wikimedia.org/wiki/File:Thamnophis_cyrtopsis_(Natricidae).jpg"><img src="../..\images/Thamnophis_cyrtopsis_(Natricidae).jpg" class="img-fluid figure-img" alt="Thamnophis cyrtopsis (Family: Natricidae). Common name: blackneck garter snake."></a></p>
-<figcaption class="figure-caption">Juan Carlos Fonseca Mata, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons</figcaption>
+<figcaption>Juan Carlos Fonseca Mata, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons</figcaption>
 </figure>
 </div>
 <p>One of their analyses considered how snake movement (labelled 0 for no movement, 1 for movement) differed among age classes (adults and juveniles).</p>
@@ -1032,8 +1140,8 @@ ageclass 0.087974  1     0.7668</code></pre>
 <p>To consider this approach and extend glm to binomial data, consider work by <span class="citation" data-cites="bueno2020">Bueno, Machado, and Leite (<a href="#ref-bueno2020" role="doc-biblioref">2020</a>)</span>. The authors carried out a series of experiments to determine how various factors impacted colonization of a host algae, <em>Sargassum filipendula</em>, by a small amphipod, <em>Cymadusa filosa</em>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://molecol-unesp-clp.jimdofree.com/2017/03/01/the-first-set-of-microsatellite-markers-for-the-amphipod-cymadusa-filosa/"><img src="../..\images/Cymadusa_filosa.jpg" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Rob Young, Centre for Biodiversity Genomics - CC - BY - NC - S</figcaption>
+<p><a href="https://molecol-unesp-clp.jimdofree.com/2017/03/01/the-first-set-of-microsatellite-markers-for-the-amphipod-cymadusa-filosa/"><img src="../..\images/Cymadusa_filosa.jpg" class="img-fluid figure-img" alt="Rob Young, Centre for Biodiversity Genomics - CC - BY - NC - S"></a></p>
+<figcaption>Rob Young, Centre for Biodiversity Genomics - CC - BY - NC - S</figcaption>
 </figure>
 </div>
 <p>For one experiment, they stocked portions of aquariums with pieces of algal. Half the algae pieces had adult amphipods present(4 total; the species builds tubes to live on algae) while the other half had no adult residents. Juveniles were initially placed on patches of natural substrate, artificial substrate, or bare areas(no substrate) in the aquarium. After 24 hours, the number of juveniles that colonized the focal algae were counted. Since the number of introduced juveniles was known, the number that did not colonize was also accounted for (raw data estimated from supplemental data given variation in sample size).</p>
@@ -1067,16 +1175,32 @@ ageclass 0.087974  1     0.7668</code></pre>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    juvenile)</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(juvenile_fit_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-24-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-24-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-24-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-24-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-24-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-24-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>The assumptions don’t even look that bad, but note the data is over-dispersed (will come back to this). We also know the model will make predictions that aren’t logical (outcomes outside of the 0-1 range). For this reason we will use a generalized linear model (or a log linear model) to analyze the data. We can fit a glm using the binomial family.</p>
@@ -1236,16 +1360,32 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>growth_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature, experiment)</span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(growth_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-32-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-32-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-32-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-32-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-32-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-32-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(growth_lm, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1275,7 +1415,6 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
 <span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(averaged_experiment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["predator_cue"],"name":[1],"type":["fct"],"align":["left"]},{"label":["temperature"],"name":[2],"type":["fct"],"align":["left"]},{"label":["container"],"name":[3],"type":["chr"],"align":["left"]},{"label":["N"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["growth"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["se"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["ci"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"high","2":"ambient","3":"c","4":"25","5":"0.7893411","6":"0.7859693","7":"0.1571939","8":"0.3244322"},{"1":"high","2":"elevated_scenario1","3":"f","4":"25","5":"0.8200710","6":"0.6938491","7":"0.1387698","8":"0.2864068"},{"1":"high","2":"elevated_scenario2","3":"i","4":"25","5":"2.8548160","6":"1.0748246","7":"0.2149649","8":"0.4436658"},{"1":"none","2":"ambient","3":"a","4":"25","5":"2.0791580","6":"0.7758511","7":"0.1551702","8":"0.3202556"},{"1":"none","2":"elevated_scenario1","3":"d","4":"25","5":"2.5724463","6":"1.0918574","7":"0.2183715","8":"0.4506966"},{"1":"none","2":"elevated_scenario2","3":"g","4":"25","5":"2.9199695","6":"1.1043899","7":"0.2208780","8":"0.4558697"},{"1":"normal","2":"ambient","3":"b","4":"25","5":"1.7124232","6":"1.1511870","7":"0.2302374","8":"0.4751867"},{"1":"normal","2":"elevated_scenario1","3":"e","4":"25","5":"1.4993876","6":"0.9759186","7":"0.1951837","8":"0.4028394"},{"1":"normal","2":"elevated_scenario2","3":"h","4":"25","5":"3.1388696","6":"1.0096012","7":"0.2019202","8":"0.4167429"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -1398,7 +1537,11 @@ predator_cuenormal:temperatureelevated_scenario2  0         -1        </code></p
 <div class="cell">
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_mixed_model</span>(mixed_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Here we have only 9 levels of units, so the spread is not perfect. However, we also know each of these is itself an average,and averages should be normally-distributed under the central limit theorem, so we can plow ahead.</p>
@@ -1488,7 +1631,7 @@ predator_cue:temperature 0.0459  4 3230137 0.9960</code></pre>
 <summary>
 Is this really new?
 </summary>
-<p>It should be noted that random effects match up to paired t-tests and blocking approaches for simple experiments.</p>
+<p>It should be noted that random effects match up to paired t-tests and blocking approaches for simple experiments.Remember our feather experiment (example and data provided by <span class="citation" data-cites="mcdonald2014">McDonald (<a href="#ref-mcdonald2014" role="doc-biblioref">2014</a>)</span>)?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>two_way_anova_example <span class="ot">&lt;-</span> <span class="fu">lm</span>(Color_index <span class="sc">~</span> Feather_type <span class="sc">+</span> Bird, <span class="at">data=</span>feather)</span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(two_way_anova_example, <span class="at">type=</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1505,13 +1648,28 @@ Residuals    0.13657 15
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
+<p>Note we can get the same results using a paired t-test, but (as of early 2024) we need to use a wide dataset.</p>
+<!-- t.test no longer allowing paired in formula method as of early 2024  -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Color_index <span class="sc">~</span> Feather_type, <span class="at">data=</span>feather, <span class="at">paired=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2) </span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>feather_wide <span class="ot">&lt;-</span> <span class="fu">dcast</span>(feather, Bird<span class="sc">~</span>Feather_type, <span class="at">value.var=</span><span class="st">"Color_index"</span>)</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(feather_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Bird"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Odd"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Typical"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"A","2":"-0.324","3":"-0.255"},{"1":"B","2":"-0.185","3":"-0.213"},{"1":"C","2":"-0.299","3":"-0.190"},{"1":"D","2":"-0.144","3":"-0.185"},{"1":"E","2":"-0.027","3":"-0.045"},{"1":"F","2":"-0.039","3":"-0.025"},{"1":"G","2":"-0.264","3":"-0.015"},{"1":"H","2":"-0.077","3":"0.003"},{"1":"I","2":"-0.017","3":"0.015"},{"1":"J","2":"-0.169","3":"0.020"},{"1":"K","2":"-0.096","3":"0.023"},{"1":"L","2":"-0.330","3":"0.040"},{"1":"M","2":"-0.346","3":"0.040"},{"1":"N","2":"-0.191","3":"0.050"},{"1":"O","2":"-0.128","3":"0.055"},{"1":"P","2":"-0.182","3":"0.058"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Now we have wide data…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(feather_wide<span class="sc">$</span>Odd, feather_wide<span class="sc">$</span>Typical, <span class="at">data=</span>feather, <span class="at">paired=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Paired t-test
 
-data:  Color_index by Feather_type
+data:  feather_wide$Odd and feather_wide$Typical
 t = -4.0647, df = 15, p-value = 0.001017
 alternative hypothesis: true mean difference is not equal to 0
 95 percent confidence interval:
@@ -1522,8 +1680,8 @@ mean difference
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>two_way_lme_example <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Color_index <span class="sc">~</span> Feather_type <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Bird), <span class="at">data=</span>feather)</span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(two_way_lme_example, <span class="at">type=</span> <span class="st">"III"</span>, <span class="at">test=</span><span class="st">"F"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>two_way_lme_example <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Color_index <span class="sc">~</span> Feather_type <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Bird), <span class="at">data=</span>feather)</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(two_way_lme_example, <span class="at">type=</span> <span class="st">"III"</span>, <span class="at">test=</span><span class="st">"F"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table (Type III Wald F tests with Kenward-Roger df)
 
@@ -1544,46 +1702,78 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <h2 class="anchored" data-anchor-id="errors-are-not-equal-among-groups">Errors are not equal among groups</h2>
 <p>Another option is to use weighted-least squares regression - this approach specifically helps when residuals are not evenly distributed among groups (or when a funnel/cone appears when you plot the model to check assumptions). For example, we could take the model on below-ground biomass that we developed in the <a href="../../content/chapters/More_ANOVAs.html">More Anovas chapter</a>. As a reminder, <span class="citation" data-cites="valdez2023">Valdez et al. (<a href="#ref-valdez2023" role="doc-biblioref">2023</a>)</span> wanted to consider the impact of top-down (snail grazing) and bottom- up (nutrient availability) on marsh plant (<em>Spartina alterniflora</em>) growth. To do this, they assigned plots to one of 3 grazer treatments and one of 2 nitrogen treatments. We focused on the impact of these treatments on standing dead mass and noted a funnel-shape when reviewing the residuals.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>valdez_2023 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Spartina_alterniflora_traits.csv"</span>, <span class="at">stringsAsFactors =</span> T)</span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>sdm_model <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,])</span>
-<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>valdez_2023 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Spartina_alterniflora_traits.csv"</span>, <span class="at">stringsAsFactors =</span> T)</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>sdm_model <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,])</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-47-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-48-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-47-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-48-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-47-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-48-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>To address the, we can use weighted least squares. This approach assume you built the model and then noted an issue with heteroscedasticity. To use, we can calculate a weight for each residual that is based on its variance. Doing this requires an iterative process similar to those used for estimation for generalized linear models (we’ll get to these) - below makes a value that increases with low variance.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>wt_sdm <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">lm</span>(<span class="fu">abs</span>(sdm_model<span class="sc">$</span>residuals) <span class="sc">~</span> sdm_model<span class="sc">$</span>fitted.values)<span class="sc">$</span>fitted.values<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>wt_sdm <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">lm</span>(<span class="fu">abs</span>(sdm_model<span class="sc">$</span>residuals) <span class="sc">~</span> sdm_model<span class="sc">$</span>fitted.values)<span class="sc">$</span>fitted.values<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can then add a new argument to the <em>lm</em> function to use these weights.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>sdm_model_wls <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,], <span class="at">weights =</span> wt_sdm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>sdm_model_wls <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,], <span class="at">weights =</span> wt_sdm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can then continue on our normal route:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model_wls) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model_wls) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-50-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-51-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-50-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-51-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-50-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-51-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model_wls, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model_wls, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -1600,7 +1790,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>If you compare the two models you notice slight differences - these are minimal here due to lack of differences in variance.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1634,7 +1824,7 @@ Residual standard error: 1.788 on 12 degrees of freedom
 Multiple R-squared:  0.9284,    Adjusted R-squared:  0.8986 
 F-statistic: 31.14 on 5 and 12 DF,  p-value: 1.792e-06</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model_wls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model_wls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1686,7 +1876,7 @@ F-statistic: 16.75 on 5 and 12 DF,  p-value: 4.789e-05</code></pre>
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-agresti2007" class="csl-entry" role="listitem">
 Agresti, Alan. 2007. <span>“Introduction to Categorical Data Analysis.”</span>
 </div>
@@ -1743,6 +1933,9 @@ Lazic, Stanley E. 2010. <span>“The Problem of Pseudoreplication in Neuroscient
 </div>
 <div id="ref-lindelov" class="csl-entry" role="listitem">
 Lindelov, J. K. n.d. <em>Common Statistical Tests Are Linear Models (or: How to Teach Stats)</em>. <a href="https://lindeloev.github.io/tests-as-linear/">https://lindeloev.github.io/tests-as-linear/</a>.
+</div>
+<div id="ref-mcdonald2014" class="csl-entry" role="listitem">
+McDonald, J. H. 2014. <em>Handbook of Biological Statistics</em>. 3rd ed. Baltimore, MD: Sparky House Publishing.
 </div>
 <div id="ref-molenberghs2012" class="csl-entry" role="listitem">
 Molenberghs, Geert, Geert Verbeke, Samuel Iddi, and Clarice G. B. Demétrio. 2012. <span>“A Combined Beta and Normal Random-Effects Model for Repeated, Overdispersed Binary and Binomial Data.”</span> <em>Journal of Multivariate Analysis</em> 111 (October): 94–109. <a href="https://doi.org/10.1016/j.jmva.2012.05.005">https://doi.org/10.1016/j.jmva.2012.05.005</a>.
@@ -1821,6 +2014,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
   }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
   const toggleColorMode = (alternate) => {
     // Switch the stylesheets
     const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
@@ -1887,13 +2107,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1972,10 +2194,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1985,8 +2206,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1999,6 +2229,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -2042,6 +2391,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -2067,6 +2417,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -2128,12 +2504,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/chapters/Combining_numerical_and_categorical_predictors.html" class="pagination-link">
+      <a href="../../content/chapters/Combining_numerical_and_categorical_predictors.html" class="pagination-link  aria-label=" combining="" numerical="" and="" categorical="" predictors"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Combining numerical and categorical predictors</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/chapters/bayesian_analysis.html" class="pagination-link">
+      <a href="../../content/chapters/bayesian_analysis.html" class="pagination-link" aria-label="Bayesian analysis">
         <span class="nav-page-text">Bayesian analysis</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -2141,11 +2517,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">© CC BY-NC-SA 4.0</a></div>   
-    <div class="nav-footer-center"><a href="https://jsgosnell.github.io/cuny_biostats_book/">Course notes</a> &amp; <a href="https://jsgosnell.github.io/cuny_biostats_website/">slides</a></div>
-    <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a>.</div>
+    <div class="nav-footer-left">
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">© CC BY-NC-SA 4.0</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://jsgosnell.github.io/cuny_biostats_book/">Course notes</a> &amp; <a href="https://jsgosnell.github.io/cuny_biostats_website/">slides</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Linear_model_extensions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Linear_model_extensions.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
   </div>
 </footer>
+
 
 
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -83,7 +83,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -92,17 +98,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
-
 <link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -112,12 +145,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/summarizing_data.html">Summarizing data</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/summarizing_data.html">Summarizing data</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -127,16 +160,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
-    <div class="pt-lg-2 mt-2 text-center sidebar-header sidebar-header-stacked">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="../../index.html" class="sidebar-logo-link">
       <img src="../../images/image-from-rawpixel-id-547642-jpeg.jpg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">An introduction to statistics and modern tools</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://www.gosnelllab.com/" rel="" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
-    <a href="https://github.com/jsgosnell" rel="" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
+    <a href="https://www.gosnelllab.com/" title="Gosnell lab website" class="quarto-navigation-tool px-1" aria-label="Gosnell lab website"><i class="bi bi-globe"></i></a>
+    <a href="https://github.com/jsgosnell" title="J. Stephen Gosnell github" class="quarto-navigation-tool px-1" aria-label="J. Stephen Gosnell github"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -532,7 +565,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -573,12 +606,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/summarizing_data.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/summarizing_data.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/summarizing_data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/summarizing_data.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/Introduction.html">Chapters</a></li><li class="breadcrumb-item"><a href="../../content/chapters/summarizing_data.html">Summarizing data</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Summarizing data</h1>
 <p class="subtitle lead">Working with a sample</p>
@@ -594,13 +627,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
 
+
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
-<div id="fig-XKDC2582" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><a href="https://xkcd.com/2582/"><img src="https://imgs.xkcd.com/comics/data_trap_2x.png" class="img-fluid figure-img" alt="Two stick figures in single panel. One sitting at desk states &quot;Hey, look, we have a bunch of data! I'm gonna analyze it&quot;.  The other responds, &quot;No, you fool! That will only create more data!&quot;"></a></p>
-<figcaption class="figure-caption">Figure&nbsp;1: XKCD: Data Trap. It's important to make sure your analysis destroys as much information as it produces. https://xkcd.com/2582/, CC BY-NC 2.5 https://creativecommons.org/licenses/by-nc/2.5/.</figcaption>
+<div id="fig-XKDC2582" class="quarto-figure quarto-figure-center quarto-float anchored" alt="Two stick figures in single panel. One sitting at desk states &quot;Hey, look, we have a bunch of data! I'm gonna analyze it&quot;.  The other responds, &quot;No, you fool! That will only create more data!&quot;" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-XKDC2582-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="https://xkcd.com/2582/"><img src="https://imgs.xkcd.com/comics/data_trap_2x.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Two stick figures in single panel. One sitting at desk states &quot;Hey, look, we have a bunch of data! I'm gonna analyze it&quot;.  The other responds, &quot;No, you fool! That will only create more data!&quot;"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-XKDC2582-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: XKCD: Data Trap. It's important to make sure your analysis destroys as much information as it produces. https://xkcd.com/2582/, CC BY-NC 2.5 https://creativecommons.org/licenses/by-nc/2.5/.
+</figcaption>
 </figure>
 </div>
 <p>Once we have some data, the next step is often to summarize it. In fact, we’ve already done that in some ways. Some statistics like the mean may be considered a summary of the data. This may be useful because we prefer large datasets (remember good sampling!), but making sense of a list of numbers can be really hard! Summaries help us describe, and eventually compare, datasets, which we are using to infer something about a population.</p>
@@ -761,13 +800,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 150          5.9         3.0          5.1         1.8  virginica</code></pre>
 </div>
 </div>
+<details>
+<summary>
+Getting data into R
+</summary>
+<p>Often in class we will datasets that are included in R. These can simply be called (we’ll learn more about objects when we introduce R in class). Other times we will read in data; how to do that will also be introduced later.</p>
+</details>
 <p>Overwhelming, isn’t it? And this isn’t a huge dataset! There are only 150 rows, yet some datasets have tens of thousands! It’s really hard (or impossible) to just look at these numbers and infer anything about the population. Summary statistics help us get a better mental image of the distribution of the sample data.</p>
 <blockquote class="blockquote">
 <p><strong>Aside</strong>: While summaries can help make sense of data, and eventually we’ll add p-values to think about things like significance, in best case scenarios we don’t need this! We are going to focus on graphing (visual summaries) and numerical summaries in this section, but sometimes the data speaks for itself (or through an easy graph like this one!).</p>
-<div id="fig-XKCD2400" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><a href="https://xkcd.com/2400/"><img src="https://imgs.xkcd.com/comics/statistics_2x.png" class="img-fluid figure-img" alt="Graph showing a clear difference over time (x-axis) between number of Covid cases (y) in placebo and vaccinated group. Note this not real data (its a comic strip)."></a></p>
-<figcaption class="figure-caption">Figure&nbsp;2: XKCD: Statistics. Note this not real data (its a comic strip). https://xkcd.com/2400/, CC BY-NC 2.5 https://creativecommons.org/licenses/by-nc/2.5/.</figcaption>
+<div id="fig-XKCD2400" class="quarto-figure quarto-figure-center quarto-float anchored" alt="Graph showing a clear difference over time (x-axis) between number of Covid cases (y) in placebo and vaccinated group. Note this not real data (its a comic strip)." data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-XKCD2400-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="https://xkcd.com/2400/"><img src="https://imgs.xkcd.com/comics/statistics_2x.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Graph showing a clear difference over time (x-axis) between number of Covid cases (y) in placebo and vaccinated group. Note this not real data (its a comic strip)."></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-XKCD2400-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: XKCD: Statistics. Note this not real data (its a comic strip). https://xkcd.com/2400/, CC BY-NC 2.5 https://creativecommons.org/licenses/by-nc/2.5/.
+</figcaption>
 </figure>
 </div>
 <p>Don’t let complicated approaches confuse you! If your findings disagree with your (mental or actual) visualization of the data, something is likely wrong!</p>
@@ -793,10 +842,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 What’s the data showing? Click on the grey triangle
 </summary>
 <p>We’ll use many datasets in class to illustrate points. I don’t expect you to become an expert on any of them, but I will provide some background along the way. For example, this isn’t a botany class, but in case you are interested, here’s some flower morphology.</p>
-<div id="fig-flower_morphology" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><a href="https://commons.wikimedia.org/wiki/File:Sepal2_(PSF).png"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Sepal2_%28PSF%29.png/1079px-Sepal2_%28PSF%29.png?20100516143615" class="img-fluid figure-img" alt="Black and white drawing of flower.  Notes that petals are the inner parts of the bloom (what we often think of as the flower), while sepals are the outermost parts (we often seen them as the green &quot;stuff&quot; around a &quot;flower&quot; before it blooms)."></a></p>
-<figcaption class="figure-caption">Figure&nbsp;3: Flower morphology. Pearson Scott Foresman, Public domain, via Wikimedia Commons</figcaption>
+<div id="fig-flower_morphology" class="quarto-figure quarto-figure-center quarto-float anchored" alt="Black and white drawing of flower.  Notes that petals are the inner parts of the bloom (what we often think of as the flower), while sepals are the outermost parts (we often seen them as the green &quot;stuff&quot; around a &quot;flower&quot; before it blooms)." data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-flower_morphology-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="https://commons.wikimedia.org/wiki/File:Sepal2_(PSF).png"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Sepal2_%28PSF%29.png/1079px-Sepal2_%28PSF%29.png?20100516143615" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Black and white drawing of flower.  Notes that petals are the inner parts of the bloom (what we often think of as the flower), while sepals are the outermost parts (we often seen them as the green &quot;stuff&quot; around a &quot;flower&quot; before it blooms)."></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flower_morphology-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Flower morphology. Pearson Scott Foresman, Public domain, via Wikimedia Commons
+</figcaption>
 </figure>
 </div>
 </details>
@@ -855,10 +908,14 @@ What’s the data showing? Click on the grey triangle
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span>label_size, <span class="at">cex.main=</span>title_size, </span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.sub=</span>label_size, <span class="at">col =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-normal_virginica_plot" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-normal_virginica_plot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;4: Example of approximately normal data</figcaption>
+<div id="fig-normal_virginica_plot" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-normal_virginica_plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-normal_virginica_plot-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-normal_virginica_plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Example of approximately normal data
+</figcaption>
 </figure>
 </div>
 </div>
@@ -873,10 +930,14 @@ What’s the data showing? Click on the grey triangle
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-normal_virginica_ggplot" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-normal_virginica_ggplot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5: Example of approximately normal data</figcaption>
+<div id="fig-normal_virginica_ggplot" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-normal_virginica_ggplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-normal_virginica_ggplot-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-normal_virginica_ggplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Example of approximately normal data
+</figcaption>
 </figure>
 </div>
 </div>
@@ -887,44 +948,57 @@ What’s the data showing? Click on the grey triangle
 Why do these graphs look slightly different? (Click the grey triangle to see the answer)
 </summary>
 <p>Most programs, including R, have autobreak functions that separate the data into bins for histograms. Notice ggplot2 uses a different algorithm to bin the data. That also impacts what you see! Users, however, can override these, so it’s worth noting that differences in bin size can influence what distributions look like.</p>
-<div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>],       <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>))),       <span class="at">xlab =</span> <span class="st">"Sepal Length (cm)"</span>,       <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span>label_size, <span class="at">cex.main=</span>title_size,       <span class="at">cex.sub=</span>label_size, <span class="at">col =</span> <span class="st">"blue"</span>) </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>],        <span class="at">breaks=</span><span class="dv">3</span>, <span class="at">main =</span> <span class="st">"Sepal length histogram, 3 breaks"</span>, <span class="at">xlab =</span> <span class="st">"Sepal Length (cm)"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span>label_size, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size, <span class="at">col =</span> <span class="st">"blue"</span>)  </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>],        <span class="at">breaks=</span><span class="dv">10</span>, <span class="at">main =</span> <span class="st">"Sepal length histogram, 10 breaks"</span>, <span class="at">xlab =</span> <span class="st">"Sepal Length (cm)"</span>, <span class="at">cex.lab=</span>label_size, <span class="at">cex.axis=</span>label_size, <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size, <span class="at">col =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="fig-charts" class="cell quarto-layout-panel">
-<figure class="figure">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
-<div id="fig-charts-1" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-charts-1.png" class="img-fluid figure-img" data-ref-parent="fig-charts" width="672"></p>
-<figcaption class="figure-caption">(a) Auto breaks with ggplot2</figcaption>
+<div id="fig-charts" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-charts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-charts" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-charts-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-charts-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-charts-1.png" class="img-fluid figure-img" data-ref-parent="fig-charts" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-charts-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Auto breaks with ggplot2
+</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
-<div id="fig-charts-2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-charts-2.png" class="img-fluid figure-img" data-ref-parent="fig-charts" width="672"></p>
-<figcaption class="figure-caption">(b) 3 breaks</figcaption>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-charts" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-charts-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-charts-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-charts-2.png" class="img-fluid figure-img" data-ref-parent="fig-charts" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-charts-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) 3 breaks
+</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
-<div id="fig-charts-3" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-charts-3.png" class="img-fluid figure-img" data-ref-parent="fig-charts" width="672"></p>
-<figcaption class="figure-caption">(c) 10 breaks</figcaption>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-charts" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-charts-3" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-charts-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-charts-3.png" class="img-fluid figure-img" data-ref-parent="fig-charts" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-charts-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) 10 breaks
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figure&nbsp;6: The number of bins changes how histograms look .</figcaption><p></p>
-</figure>
 </div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-charts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: The number of bins changes how histograms look .
+</figcaption>
+</figure>
 </div>
 <p>or, in ggplot2,</p>
-<div>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length)) <span class="sc">+</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
@@ -943,37 +1017,52 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica"</span>), <span class="st">", 10 breaks"</span>)),</span>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="fig-charts-ggplot2" class="cell quarto-layout-panel">
-<figure class="figure">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
-<div id="fig-charts-ggplot2-1" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-charts-ggplot2-1.png" class="img-fluid figure-img" data-ref-parent="fig-charts-ggplot2" width="672"></p>
-<figcaption class="figure-caption">(a) Auto breaks with ggplot2</figcaption>
+<div id="fig-charts-ggplot2" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-charts-ggplot2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-charts-ggplot2" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-charts-ggplot2-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-charts-ggplot2-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-charts-ggplot2-1.png" class="img-fluid figure-img" data-ref-parent="fig-charts-ggplot2" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-charts-ggplot2-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Auto breaks with ggplot2
+</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
-<div id="fig-charts-ggplot2-2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-charts-ggplot2-2.png" class="img-fluid figure-img" data-ref-parent="fig-charts-ggplot2" width="672"></p>
-<figcaption class="figure-caption">(b) 3 breaks</figcaption>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-charts-ggplot2" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-charts-ggplot2-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-charts-ggplot2-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-charts-ggplot2-2.png" class="img-fluid figure-img" data-ref-parent="fig-charts-ggplot2" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-charts-ggplot2-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) 3 breaks
+</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 33.3%;justify-content: center;">
-<div id="fig-charts-ggplot2-3" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-charts-ggplot2-3.png" class="img-fluid figure-img" data-ref-parent="fig-charts-ggplot2" width="672"></p>
-<figcaption class="figure-caption">(c) 10 breaks</figcaption>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-charts-ggplot2" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div id="fig-charts-ggplot2-3" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-charts-ggplot2-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-charts-ggplot2-3.png" class="img-fluid figure-img" data-ref-parent="fig-charts-ggplot2" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-charts-ggplot2-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) 10 breaks
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figure&nbsp;7: The number of bins changes how histograms look (now in ggplot2).</figcaption><p></p>
-</figure>
 </div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-charts-ggplot2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: The number of bins changes how histograms look (now in ggplot2).
+</figcaption>
+</figure>
 </div>
 <p>A similar issue exists for qualitative data in regards to the categories that are combined/used.</p>
 </details>
@@ -989,10 +1078,14 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-cardinals_ggplot2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-cardinals_ggplot2-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;8: Example of left-skewed data (ggplot2). Note this is not actual data, only simulated for use in example.</figcaption>
+<div id="fig-cardinals_ggplot2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cardinals_ggplot2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-cardinals_ggplot2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cardinals_ggplot2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Example of left-skewed data (ggplot2). Note this is not actual data, only simulated for use in example.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1007,10 +1100,14 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-parrots" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-parrots-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;9: Example of normal data. Note this is not actual data, only simulated for use in example.</figcaption>
+<div id="fig-parrots" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-parrots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-parrots-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-parrots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Example of normal data. Note this is not actual data, only simulated for use in example.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1025,15 +1122,19 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-blue_jays" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-blue_jays-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;10: Example of right-skewed data. Note this is not actual data, only simulated for use in example.</figcaption>
+<div id="fig-blue_jays" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-blue_jays-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-blue_jays-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-blue_jays-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Example of right-skewed data. Note this is not actual data, only simulated for use in example.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>The cardinal (<a href="#fig-cardinals_ggplot2">Figure&nbsp;8</a>) data has a longer left tail and is not symmetric. We call this left- or negatively-skewed data (since it’s going lower on the x-axis). Compare that to the blue jay (<a href="#fig-blue_jays">Figure&nbsp;10</a>) data; it has a longer right-tail and is positively- or right-skewed. Again, note this is all relative to symmetric data like you see with the parrots (<a href="#fig-parrots">Figure&nbsp;9</a>), which is normally-distributed data.</p>
+<p>The cardinal (<a href="#fig-cardinals_ggplot2" class="quarto-xref">Figure&nbsp;8</a>) data has a longer left tail and is not symmetric. We call this left- or negatively-skewed data (since it’s going lower on the x-axis). Compare that to the blue jay (<a href="#fig-blue_jays" class="quarto-xref">Figure&nbsp;10</a>) data; it has a longer right-tail and is positively- or right-skewed. Again, note this is all relative to symmetric data like you see with the parrots (<a href="#fig-parrots" class="quarto-xref">Figure&nbsp;9</a>), which is normally-distributed data.</p>
 <p>All symmetric data is not normal, however. Look at the data on robin and woodpecker weights.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
@@ -1045,10 +1146,14 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-robins" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-robins-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;11: Example of uniform data. Note this is not actual data, only simulated for use in example.</figcaption>
+<div id="fig-robins" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-robins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-robins-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-robins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: Example of uniform data. Note this is not actual data, only simulated for use in example.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1063,24 +1168,32 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Weight (g)"</span>,</span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-woodpeckers" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-woodpeckers-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;12: Example of bimodal data. Note this is not actual data, only simulated for use in example.</figcaption>
+<div id="fig-woodpeckers" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-woodpeckers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-woodpeckers-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-woodpeckers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12: Example of bimodal data. Note this is not actual data, only simulated for use in example.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Both these are roughly symmetric but clearly different from normally-distributed data (we will return to the woodpecker data!). The robin data (@fig-robins) is what we call <em>uniformly</em> distributed. There are really no tails, as it appears you are just as likely to see any number within the bounds as any other. <em>Kurtosis</em> is the statistical term for what proportion of the data points are in the tails. High kurtosis distributions have heavy tails with multiple outliers. The uniform distribution is an example of a low kurtosis distribution (it has no tails!).</p>
 <p>This figure may also help.</p>
-<div id="fig-comparison" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><a href="https://commons.wikimedia.org/wiki/File:Standard_symmetric_pdfs.png"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Standard_symmetric_pdfs.png/1200px-Standard_symmetric_pdfs.png?20061206071924" class="img-fluid figure-img" alt="Image compares the shape of various distributions."></a></p>
-<figcaption class="figure-caption">Figure&nbsp;13: English: Plot of several symmetric unimodal probability densities with unit variance. From highest to lowest peak: red, kurtosis 3, Laplace (D)ouble exponential distribution; orange, kurtosis 2, hyperbolic (S)ecant distribution; green, kurtosis 1.2, (L)ogistic distribution; black, kurtosis 0, (N)ormal distribution; cyan, kurtosis −0.593762…, raised (C)osine distribution; blue, kurtosis −1, (W)igner semicircle distribution; magenta, kurtosis −1.2, (U)niform distribution. Public domain.</figcaption>
+<div id="fig-comparison" class="quarto-figure quarto-figure-center quarto-float anchored" alt="Image compares the shape of various distributions." data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-comparison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="https://commons.wikimedia.org/wiki/File:Standard_symmetric_pdfs.png"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Standard_symmetric_pdfs.png/1200px-Standard_symmetric_pdfs.png?20061206071924" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Image compares the shape of various distributions."></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-comparison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: English: Plot of several symmetric unimodal probability densities with unit variance. From highest to lowest peak: red, kurtosis 3, Laplace (D)ouble exponential distribution; orange, kurtosis 2, hyperbolic (S)ecant distribution; green, kurtosis 1.2, (L)ogistic distribution; black, kurtosis 0, (N)ormal distribution; cyan, kurtosis −0.593762…, raised (C)osine distribution; blue, kurtosis −1, (W)igner semicircle distribution; magenta, kurtosis −1.2, (U)niform distribution. Public domain.
+</figcaption>
 </figure>
 </div>
-<p>If we consider the normal distribution (shown in black) to have 0 kurtosis, the uniform (pink) has less, and the double-exponential (red) has more <a href="#fig-comparison">Figure&nbsp;13</a>.</p>
-<p>Finally, the woodpecker data (<a href="#fig-woodpeckers">Figure&nbsp;12</a>) is what we call bimodal. It is symmetric in this case (not always true!), but it has a two clear peaks instead of a single central or skewed high point in the distribution.</p>
+<p>If we consider the normal distribution (shown in black) to have 0 kurtosis, the uniform (pink) has less, and the double-exponential (red) has more <a href="#fig-comparison" class="quarto-xref">Figure&nbsp;13</a>.</p>
+<p>Finally, the woodpecker data (<a href="#fig-woodpeckers" class="quarto-xref">Figure&nbsp;12</a>) is what we call bimodal. It is symmetric in this case (not always true!), but it has a two clear peaks instead of a single central or skewed high point in the distribution.</p>
 <p>These distributions helps us think about what we would expect to find in future samples (remember, we are assuming we have good samples!). To think about future sampling, we can change our y-axis from what we saw (frequency) to a probability density.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
@@ -1095,10 +1208,14 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 ℹ Please use `after_stat(density)` instead.</code></pre>
 </div>
 <div class="cell-output-display">
-<div id="fig-normal_virginica_overlay" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-normal_virginica_overlay-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;14: Probability density distribution</figcaption>
+<div id="fig-normal_virginica_overlay" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-normal_virginica_overlay-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-normal_virginica_overlay-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-normal_virginica_overlay-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: Probability density distribution
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1118,10 +1235,14 @@ Why do these graphs look slightly different? (Click the grey triangle to see the
 <span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="fu">mean</span>(parrots_df<span class="sc">$</span>parrots), <span class="at">sd =</span> <span class="fu">sd</span>(parrots_df<span class="sc">$</span>parrots)), <span class="fu">aes</span>(<span class="at">color=</span><span class="st">"normal curve"</span>))<span class="sc">+</span></span>
 <span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-parrots_with_overlay" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-parrots_with_overlay-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;15: Comparing the distribution of the data to a perfect normal distribution. Note this is not actual data, only simulated for use in example.</figcaption>
+<div id="fig-parrots_with_overlay" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-parrots_with_overlay-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-parrots_with_overlay-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-parrots_with_overlay-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15: Comparing the distribution of the data to a perfect normal distribution. Note this is not actual data, only simulated for use in example.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1144,10 +1265,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal Length (cm)"</span>)<span class="sc">+</span></span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-box_plot_virginica_plot" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-box_plot_virginica_plot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;16: Example of approximately normal data</figcaption>
+<div id="fig-box_plot_virginica_plot" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-box_plot_virginica_plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-box_plot_virginica_plot-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-box_plot_virginica_plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16: Example of approximately normal data
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1203,10 +1328,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">cex.main=</span>title_size, <span class="at">cex.sub=</span>label_size, </span>
 <span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Color of "</span>,<span class="fu">italic</span>(<span class="st">"I. virginica "</span>), <span class="st">"flowers"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-bar_chart_flowers" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-bar_chart_flowers-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;17: Distribution of flower colors</figcaption>
+<div id="fig-bar_chart_flowers" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bar_chart_flowers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-bar_chart_flowers-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bar_chart_flowers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17: Distribution of flower colors
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1222,10 +1351,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab=</span><span class="st">"Frequency"</span>,</span>
 <span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-bar_chart_flowers_with_colors_plot" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-bar_chart_flowers_with_colors_plot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;18: Distribution of flower colors (plot)</figcaption>
+<div id="fig-bar_chart_flowers_with_colors_plot" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bar_chart_flowers_with_colors_plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-bar_chart_flowers_with_colors_plot-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bar_chart_flowers_with_colors_plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18: Distribution of flower colors (plot)
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1240,10 +1373,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
 <span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"legend"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"orange"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-bar_chart_flowers_with_colors_ggplot2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-bar_chart_flowers_with_colors_ggplot2-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;19: Distribution of flower colors (ggplot2)</figcaption>
+<div id="fig-bar_chart_flowers_with_colors_ggplot2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bar_chart_flowers_with_colors_ggplot2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-bar_chart_flowers_with_colors_ggplot2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bar_chart_flowers_with_colors_ggplot2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19: Distribution of flower colors (ggplot2)
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1259,10 +1396,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-bar_chart_flowers_with_colors_ggplot2_no_legend" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-bar_chart_flowers_with_colors_ggplot2_no_legend-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;20: Let colors match traits if possible, but note everyone can’t see colors and sometimes they are not printed.</figcaption>
+<div id="fig-bar_chart_flowers_with_colors_ggplot2_no_legend" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bar_chart_flowers_with_colors_ggplot2_no_legend-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-bar_chart_flowers_with_colors_ggplot2_no_legend-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bar_chart_flowers_with_colors_ggplot2_no_legend-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20: Let colors match traits if possible, but note everyone can’t see colors and sometimes they are not printed.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1283,10 +1424,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<div id="fig-bar_charts_but_lines" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-bar_charts_but_lines-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;21: Note you only really <em>know</em> the tops of the bar!</figcaption>
+<div id="fig-bar_charts_but_lines" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bar_charts_but_lines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-bar_charts_but_lines-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bar_charts_but_lines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21: Note you only really <em>know</em> the tops of the bar!
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1301,10 +1446,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
 <span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-bar_charts_but_just_points" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-bar_charts_but_just_points-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;22: Displaying the data may be the easiest option for small-ish datasets.</figcaption>
+<div id="fig-bar_charts_but_just_points" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bar_charts_but_just_points-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-bar_charts_but_just_points-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bar_charts_but_just_points-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;22: Displaying the data may be the easiest option for small-ish datasets.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1325,14 +1474,22 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="summarizing_data_files/figure-html/fig-bar_charts_all species-1.png" class="img-fluid" alt="Note the top of the bar is the mean (we’ll get there!) for each group!">{#fig-bar_charts_all species width=672}</p>
+<div>
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-bar_charts_all species-1.png" class="img-fluid figure-img" alt="Note the top of the bar is the mean (we’ll get there!) for each group!">{#fig-bar_charts_all species width=672}</p>
+</figure>
+</div>
 </div>
 </div>
 <p>or the distribution using stacked histograms…</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x=</span>Sepal.Length)) <span class="sc">+</span>     <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Species))<span class="sc">+</span>    <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. species"</span>))),        <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,        <span class="at">x=</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="summarizing_data_files/figure-html/fig-stacked_histograms_all species-1.png" class="img-fluid">{#fig-stacked_histograms_all species width=672}</p>
+<div>
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-stacked_histograms_all species-1.png" class="img-fluid figure-img">{#fig-stacked_histograms_all species width=672}</p>
+</figure>
+</div>
 </div>
 </div>
 <p>or box-and-whisker plots.</p>
@@ -1341,7 +1498,11 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Species))<span class="sc">+</span></span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Sepal lengths of "</span>,<span class="fu">italic</span>(<span class="st">"I. species"</span>))),        <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>, <span class="at">x=</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="summarizing_data_files/figure-html/fig-box_whisker_all species-1.png" class="img-fluid">{#fig-box_whisker_all species width=672}</p>
+<div>
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-box_whisker_all species-1.png" class="img-fluid figure-img">{#fig-box_whisker_all species width=672}</p>
+</figure>
+</div>
 </div>
 </div>
 <p>We can also still just display the data for each group…</p>
@@ -1352,7 +1513,11 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="summarizing_data_files/figure-html/fig-point_all species-1.png" class="img-fluid" alt="We can still just display the data for each group!">{#fig-point_all species width=672}</p>
+<div>
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-point_all species-1.png" class="img-fluid figure-img" alt="We can still just display the data for each group!">{#fig-point_all species width=672}</p>
+</figure>
+</div>
 </div>
 </div>
 <p>We also need to ensure the different groups are visible when distributions overlap. Sometimes stacked histograms (and similar graphs) make it hard to actually visualize each individual group. One option is to instead <em>facet</em> these graphs. Faceting means we produce different graphs for each group, treatment, etc, but they (typically) share axes. This makes it easier to compare the groups.</p>
@@ -1364,7 +1529,11 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Species"</span>)<span class="sc">+</span></span>
 <span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">facet_wrap</span>(<span class="sc">~</span>Species, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="summarizing_data_files/figure-html/fig-faceted_histograms_all species-1.png" class="img-fluid" alt="Note how common axes allow comparison.">{#fig-faceted_histograms_all species width=672}</p>
+<div>
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/fig-faceted_histograms_all species-1.png" class="img-fluid figure-img" alt="Note how common axes allow comparison.">{#fig-faceted_histograms_all species width=672}</p>
+</figure>
+</div>
 </div>
 </div>
 <p>Another option is to show the cumulative frequency distribution for each group.</p>
@@ -1374,10 +1543,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Cumulative frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-cdf_all_species" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-cdf_all_species-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;23: Cumulative frequency distributions can be useful in noting exactly where distributions diverge</figcaption>
+<div id="fig-cdf_all_species" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cdf_all_species-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-cdf_all_species-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cdf_all_species-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;23: Cumulative frequency distributions can be useful in noting exactly where distributions diverge
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1395,10 +1568,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"legend"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"orange"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>))<span class="sc">+</span></span>
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-stacked_bar_plot_iris" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-stacked_bar_plot_iris-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;24: Bar plots are stacked by default and count the number of rows found in each category</figcaption>
+<div id="fig-stacked_bar_plot_iris" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stacked_bar_plot_iris-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-stacked_bar_plot_iris-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stacked_bar_plot_iris-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;24: Bar plots are stacked by default and count the number of rows found in each category
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1413,10 +1590,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"legend"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"orange"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>))<span class="sc">+</span></span>
 <span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-group_bar_plot_iris" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-group_bar_plot_iris-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;25: Bar plots can also be grouped by adding the position_dodge argument</figcaption>
+<div id="fig-group_bar_plot_iris" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-group_bar_plot_iris-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-group_bar_plot_iris-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-group_bar_plot_iris-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25: Bar plots can also be grouped by adding the position_dodge argument
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1444,10 +1625,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
 <span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"legend"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"not blue"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-divergent_bar_plot_iris" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-divergent_bar_plot_iris-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;26: Divergent plots show how 2 categories differ among groups</figcaption>
+<div id="fig-divergent_bar_plot_iris" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-divergent_bar_plot_iris-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-divergent_bar_plot_iris-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-divergent_bar_plot_iris-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;26: Divergent plots show how 2 categories differ among groups
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1461,10 +1646,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Frequency"</span>)<span class="sc">+</span></span>
 <span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"legend"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"not blue"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-divergent_bar_plot_iris_flipped" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-divergent_bar_plot_iris_flipped-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;27: Reorienting graphs may help viewers better visualize differnces</figcaption>
+<div id="fig-divergent_bar_plot_iris_flipped" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-divergent_bar_plot_iris_flipped-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-divergent_bar_plot_iris_flipped-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-divergent_bar_plot_iris_flipped-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27: Reorienting graphs may help viewers better visualize differnces
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1479,10 +1668,14 @@ Bonus question: Why isn’t it perfect? (Click the grey triangle to see the answ
 <span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"legend"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"not blue"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>)) <span class="sc">+</span></span>
 <span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-divergent_bar_plot_iris_flipped_2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-divergent_bar_plot_iris_flipped_2-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;28: Note we get the same results by simply adding the argument coord_flip</figcaption>
+<div id="fig-divergent_bar_plot_iris_flipped_2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-divergent_bar_plot_iris_flipped_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-divergent_bar_plot_iris_flipped_2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-divergent_bar_plot_iris_flipped_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;28: Note we get the same results by simply adding the argument coord_flip
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1503,10 +1696,14 @@ geom_bar vs geom_col
 <span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"legend"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"orange"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>))<span class="sc">+</span></span>
 <span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-mosaic_plot" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-mosaic_plot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;29: For proportion-based visualizations, stacked bar plots may be easier to read than grouped. We just add the position=fill argument to make these.</figcaption>
+<div id="fig-mosaic_plot" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mosaic_plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-mosaic_plot-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mosaic_plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;29: For proportion-based visualizations, stacked bar plots may be easier to read than grouped. We just add the position=fill argument to make these.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1528,10 +1725,14 @@ geom_bar vs geom_col
 <span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"Flower color"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"orange"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>, <span class="st">"pink"</span><span class="ot">=</span><span class="st">"pink"</span>, <span class="st">"yellow"</span><span class="ot">=</span><span class="st">"yellow"</span>))<span class="sc">+</span></span>
 <span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Population, <span class="at">nrow=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-faceted_mosaic_plot" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-faceted_mosaic_plot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;30: Faceting can make patterns easier to compare.</figcaption>
+<div id="fig-faceted_mosaic_plot" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-faceted_mosaic_plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-faceted_mosaic_plot-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-faceted_mosaic_plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;30: Faceting can make patterns easier to compare.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1546,10 +1747,14 @@ geom_bar vs geom_col
 <span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"Flower color"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"orange"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>, <span class="st">"pink"</span><span class="ot">=</span><span class="st">"pink"</span>, <span class="st">"yellow"</span><span class="ot">=</span><span class="st">"yellow"</span>))<span class="sc">+</span></span>
 <span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Population, <span class="at">nrow=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-faceted_mosaic_plot_proportion" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-faceted_mosaic_plot_proportion-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;31: We can add facets and proportions.</figcaption>
+<div id="fig-faceted_mosaic_plot_proportion" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-faceted_mosaic_plot_proportion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-faceted_mosaic_plot_proportion-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-faceted_mosaic_plot_proportion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;31: We can add facets and proportions.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1566,10 +1771,14 @@ geom_bar vs geom_col
 <span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(Population<span class="sc">~</span>Species) <span class="sc">+</span></span>
 <span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">coord_polar</span>(<span class="at">theta=</span><span class="st">"y"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-faceted_pie_plot_proportion" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-faceted_pie_plot_proportion-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;32: We can add facets and proportions.</figcaption>
+<div id="fig-faceted_pie_plot_proportion" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-faceted_pie_plot_proportion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-faceted_pie_plot_proportion-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-faceted_pie_plot_proportion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;32: We can add facets and proportions.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1586,10 +1795,14 @@ geom_bar vs geom_col
 <span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-scatterplot" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-scatterplot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;33: Scatter plots show relationships among numerical variables.</figcaption>
+<div id="fig-scatterplot" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-scatterplot-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;33: Scatter plots show relationships among numerical variables.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1603,10 +1816,14 @@ geom_bar vs geom_col
 <span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Petal Length (cm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-scatterplot_all_species" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-scatterplot_all_species-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;34: We can add facets and proportions</figcaption>
+<div id="fig-scatterplot_all_species" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplot_all_species-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-scatterplot_all_species-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplot_all_species-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;34: We can add facets and proportions
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1622,10 +1839,14 @@ geom_bar vs geom_col
 <span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Date"</span>,</span>
 <span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="fu">expression</span>(<span class="st">"Temperature "</span> ( degree<span class="sc">*</span>F)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-scatterplot_regression" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-scatterplot_regression-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;35: Scatter plots can also include temporal data</figcaption>
+<div id="fig-scatterplot_regression" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplot_regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-scatterplot_regression-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplot_regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;35: Scatter plots can also include temporal data
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1639,10 +1860,14 @@ geom_bar vs geom_col
 <span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Date"</span>,</span>
 <span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="fu">expression</span>(<span class="st">"Temperature "</span> ( degree<span class="sc">*</span>F)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-scatterplot_regression_lines" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-scatterplot_regression_lines-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;36: Scatter plots can also include lines</figcaption>
+<div id="fig-scatterplot_regression_lines" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplot_regression_lines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-scatterplot_regression_lines-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplot_regression_lines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;36: Scatter plots can also include lines
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1654,10 +1879,14 @@ geom_bar vs geom_col
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Date"</span>,</span>
 <span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="fu">expression</span>(<span class="st">"Temperature "</span> ( degree<span class="sc">*</span>F)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-scatterplot_regression_lines_two" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-scatterplot_regression_lines_two-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;37: Scatter plots can also include multiple lines</figcaption>
+<div id="fig-scatterplot_regression_lines_two" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scatterplot_regression_lines_two-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-scatterplot_regression_lines_two-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatterplot_regression_lines_two-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;37: Scatter plots can also include multiple lines
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1679,10 +1908,14 @@ geom_bar vs geom_col
 <span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="fu">annotate_figure</span>(compare,</span>
 <span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">top =</span> <span class="fu">text_grob</span>(<span class="st">"Including a zero point can make a big difference!"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">14</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-compare_zero_points" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-compare_zero_points-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;38: The decision of where to start the y-axis can have major impacts on interpretation. A is bar charts for the data, with 0 included on the y-axis. B is the same dataset using scatter plots and y-axis set (by default) to not include 0</figcaption>
+<div id="fig-compare_zero_points" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-compare_zero_points-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-compare_zero_points-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-compare_zero_points-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;38: The decision of where to start the y-axis can have major impacts on interpretation. A is bar charts for the data, with 0 included on the y-axis. B is the same dataset using scatter plots and y-axis set (by default) to not include 0
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1716,10 +1949,14 @@ geom_bar vs geom_col
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">annotate_figure</span>(compare,</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">top =</span> <span class="fu">text_grob</span>(<span class="st">"Same data, three visualizations"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">14</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-outliers" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-outliers-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;39: Same data graphed 3 ways. A is raw data, B is raw data with smooth (averaged) curve added, and C is curve only (which also rescales by default.</figcaption>
+<div id="fig-outliers" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-outliers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-outliers-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-outliers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;39: Same data graphed 3 ways. A is raw data, B is raw data with smooth (averaged) curve added, and C is curve only (which also rescales by default.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1755,10 +1992,14 @@ geom_bar vs geom_col
 <span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>)<span class="sc">+</span></span>
 <span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Measure"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-cardinals_ggplot2_ct" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-cardinals_ggplot2_ct-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;40: Skew impacts value of and relationships among various measures of central tendency</figcaption>
+<div id="fig-cardinals_ggplot2_ct" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cardinals_ggplot2_ct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-cardinals_ggplot2_ct-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cardinals_ggplot2_ct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;40: Skew impacts value of and relationships among various measures of central tendency
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1777,10 +2018,14 @@ geom_bar vs geom_col
 <span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>)<span class="sc">+</span></span>
 <span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Measure"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-blue_jays_ggplot2_ct" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-blue_jays_ggplot2_ct-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;41: Skew impacts value of and relationships among various measures of central tendency. . Note this is not actual data, only simulated for use in example.</figcaption>
+<div id="fig-blue_jays_ggplot2_ct" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-blue_jays_ggplot2_ct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-blue_jays_ggplot2_ct-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-blue_jays_ggplot2_ct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;41: Skew impacts value of and relationships among various measures of central tendency. . Note this is not actual data, only simulated for use in example.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1799,10 +2044,14 @@ geom_bar vs geom_col
 <span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>)<span class="sc">+</span></span>
 <span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Measure"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-parrots_ggplot2_ct" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-parrots_ggplot2_ct-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;42: For symmetric data, measures of central tendency are more aligned. . Note this is not actual data, only simulated for use in example.</figcaption>
+<div id="fig-parrots_ggplot2_ct" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-parrots_ggplot2_ct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-parrots_ggplot2_ct-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-parrots_ggplot2_ct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;42: For symmetric data, measures of central tendency are more aligned. . Note this is not actual data, only simulated for use in example.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1813,7 +2062,7 @@ Why is the mode not always on the highest bar?
 </summary>
 <p>Note the mode is heavily/totally impacted by data precision and thus can lead to unusual matches with histograms. In our above example, cardinals were measured to 10<sup>-3</sup> grams. However, the data was binned to levels of 10<sup>-2</sup> grams. Due to this mismatch, the most common measurement of the <em>raw</em> data was 52.401, which occurred 6 times. However, more data points still fell in another bin!</p>
 </details>
-<p>A special case where central tendency may not be the best way to describe a distribution is known as <em>bimodal</em> data. In this case, the distribution shows two, not one, clear peak. Remember the woodpecker <a href="#fig-woodpeckers">Figure&nbsp;12</a> data?</p>
+<p>A special case where central tendency may not be the best way to describe a distribution is known as <em>bimodal</em> data. In this case, the distribution shows two, not one, clear peak. Remember the woodpecker <a href="#fig-woodpeckers" class="quarto-xref">Figure&nbsp;12</a> data?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(woodpeckers), </span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>woodpeckers)) <span class="sc">+</span></span>
@@ -1829,10 +2078,14 @@ Why is the mode not always on the highest bar?
 <span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()<span class="sc">+</span><span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"bottom"</span>)<span class="sc">+</span></span>
 <span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Measure"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-woodpeckers-measures" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-woodpeckers-measures-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;43: Example of bimodal data with various measures. Note this is not actual data, only simulated for use in example.</figcaption>
+<div id="fig-woodpeckers-measures" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-woodpeckers-measures-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-woodpeckers-measures-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-woodpeckers-measures-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;43: Example of bimodal data with various measures. Note this is not actual data, only simulated for use in example.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1841,7 +2094,7 @@ Why is the mode not always on the highest bar?
 </section>
 <section id="spread" class="level3">
 <h3 class="anchored" data-anchor-id="spread">Spread</h3>
-<p>Along with the central tendency, another set of numerical summaries focus on the spread of the data. In some ways these focus on how much of the data is in the tail (or how <em>heavy</em> the tail is). To illustrate this, consider the <a href="#fig-normal_virginica_ggplot">Figure&nbsp;5</a> data.</p>
+<p>Along with the central tendency, another set of numerical summaries focus on the spread of the data. In some ways these focus on how much of the data is in the tail (or how <em>heavy</em> the tail is). To illustrate this, consider the <a href="#fig-normal_virginica_ggplot" class="quarto-xref">Figure&nbsp;5</a> data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>,],</span>
@@ -1851,10 +2104,14 @@ Why is the mode not always on the highest bar?
 <span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-normal_virginica_ggplot_2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-normal_virginica_ggplot_2-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;44: Remember this example of approximately normal data?</figcaption>
+<div id="fig-normal_virginica_ggplot_2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-normal_virginica_ggplot_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-normal_virginica_ggplot_2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-normal_virginica_ggplot_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;44: Remember this example of approximately normal data?
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1869,10 +2126,14 @@ Why is the mode not always on the highest bar?
 <span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Sepal length (cm)"</span>,</span>
 <span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">"Collection #"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-virginica_raw" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-virginica_raw-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;45: Note x-axis is just sample order!</figcaption>
+<div id="fig-virginica_raw" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-virginica_raw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-virginica_raw-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-virginica_raw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;45: Note x-axis is just sample order!
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1888,10 +2149,14 @@ Why is the mode not always on the highest bar?
 <span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])), <span class="at">color =</span> <span class="st">"blue"</span>)<span class="sc">+</span></span>
 <span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"mean"</span>, <span class="at">x =</span> <span class="dv">135</span>, <span class="at">y =</span> <span class="fu">mean</span>(iris[iris<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])<span class="sc">+</span>.<span class="dv">13</span>, <span class="at">color =</span> <span class="st">"blue"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-virginica_raw_mean" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-virginica_raw_mean-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;46: Mean shown in blue!</figcaption>
+<div id="fig-virginica_raw_mean" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-virginica_raw_mean-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-virginica_raw_mean-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-virginica_raw_mean-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;46: Mean shown in blue!
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1912,10 +2177,14 @@ Why is the mode not always on the highest bar?
 <span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"I. uniforma mean"</span>, <span class="at">x =</span> <span class="dv">135</span>, <span class="at">y =</span> <span class="fu">mean</span>(iris_hypothetical[iris_hypothetical<span class="sc">$</span>Species <span class="sc">==</span> <span class="st">"virginica"</span>, <span class="st">"Sepal.Length"</span>])<span class="sc">-</span>.<span class="dv">13</span>, <span class="at">color =</span> <span class="st">"blue"</span>)<span class="sc">+</span></span>
 <span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-virginica_raw_mean_new_species" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-virginica_raw_mean_new_species-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;47: Similar mean, very different distribution!</figcaption>
+<div id="fig-virginica_raw_mean_new_species" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-virginica_raw_mean_new_species-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-virginica_raw_mean_new_species-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-virginica_raw_mean_new_species-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;47: Similar mean, very different distribution!
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1941,10 +2210,14 @@ s^2 = \frac{\sum_{i=1}^{n} (Y_{i}-\overline{Y})^2}{n-1} \sim \sigma^2
 ℹ Please use `linewidth` instead.</code></pre>
 </div>
 <div class="cell-output-display">
-<div id="fig-virginica_raw_mean_lines" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-virginica_raw_mean_lines-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;48: Mean shown in blue!</figcaption>
+<div id="fig-virginica_raw_mean_lines" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-virginica_raw_mean_lines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-virginica_raw_mean_lines-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-virginica_raw_mean_lines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;48: Mean shown in blue!
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1966,7 +2239,7 @@ CV = \frac{s}{Y} * 100\%
 </section>
 <section id="odds-and-ends-quartiles-percentiles-other-splits-maximum-and-minimum" class="level3">
 <h3 class="anchored" data-anchor-id="odds-and-ends-quartiles-percentiles-other-splits-maximum-and-minimum">Odds and Ends: Quartiles, percentiles, other splits, maximum and minimum</h3>
-<p>As noted above in the discussion of five-number summaries, we can also find the assorted quartiles, minimum, and maximum of a dataset. This can be especially helpful when the mean isn’t a useful measure of central tendency (since variance and <span class="math inline">\(CV\)</span> rely on the estimate of the mean!). For examples, see <a href="#fig-cardinals_ggplot2">Figure&nbsp;8</a>. The original five number summary is</p>
+<p>As noted above in the discussion of five-number summaries, we can also find the assorted quartiles, minimum, and maximum of a dataset. This can be especially helpful when the mean isn’t a useful measure of central tendency (since variance and <span class="math inline">\(CV\)</span> rely on the estimate of the mean!). For examples, see <a href="#fig-cardinals_ggplot2" class="quarto-xref">Figure&nbsp;8</a>. The original five number summary is</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cardinals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -2013,10 +2286,14 @@ CV = \frac{s}{Y} * 100\%
 <span id="cb73-27"><a href="#cb73-27" aria-hidden="true" tabindex="-1"></a><span class="fu">annotate_figure</span>(compare,</span>
 <span id="cb73-28"><a href="#cb73-28" aria-hidden="true" tabindex="-1"></a>                <span class="at">top =</span> <span class="fu">text_grob</span>(<span class="st">"Impacts of shifting data on 5-number summary"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">14</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-cardinals_ggplot2_shifted" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="summarizing_data_files/figure-html/fig-cardinals_ggplot2_shifted-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;49: Shifted cardinal data. Note this is not actual data, only simulated for use in example.</figcaption>
+<div id="fig-cardinals_ggplot2_shifted" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cardinals_ggplot2_shifted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="summarizing_data_files/figure-html/fig-cardinals_ggplot2_shifted-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cardinals_ggplot2_shifted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;49: Shifted cardinal data. Note this is not actual data, only simulated for use in example.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -2035,13 +2312,16 @@ CV = \frac{s}{Y} * 100\%
 <span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="st">"Flower color"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"orange"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"purple"</span> <span class="ot">=</span> <span class="st">"purple"</span>, <span class="st">"pink"</span><span class="ot">=</span><span class="st">"pink"</span>, <span class="st">"yellow"</span><span class="ot">=</span><span class="st">"yellow"</span>))<span class="sc">+</span></span>
 <span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Population, <span class="at">nrow=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="summarizing_data_files/figure-html/unnamed-chunk-62-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="summarizing_data_files/figure-html/unnamed-chunk-62-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Let’s see where this came from. We can count the number of each color in each species in each population:</p>
 <div class="cell">
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["Population"],"name":[1],"type":["fct"],"align":["left"]},{"label":["Species"],"name":[2],"type":["fct"],"align":["left"]},{"label":["Color"],"name":[3],"type":["fct"],"align":["left"]},{"label":["Frequency"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"East","2":"setosa","3":"blue","4":"20"},{"1":"East","2":"setosa","3":"orange","4":"12"},{"1":"East","2":"setosa","3":"purple","4":"18"},{"1":"East","2":"setosa","3":"pink","4":"0"},{"1":"East","2":"setosa","3":"yellow","4":"0"},{"1":"East","2":"versicolor","3":"blue","4":"14"},{"1":"East","2":"versicolor","3":"orange","4":"16"},{"1":"East","2":"versicolor","3":"purple","4":"20"},{"1":"East","2":"versicolor","3":"pink","4":"0"},{"1":"East","2":"versicolor","3":"yellow","4":"0"},{"1":"East","2":"virginica","3":"blue","4":"14"},{"1":"East","2":"virginica","3":"orange","4":"19"},{"1":"East","2":"virginica","3":"purple","4":"17"},{"1":"East","2":"virginica","3":"pink","4":"0"},{"1":"East","2":"virginica","3":"yellow","4":"0"},{"1":"West","2":"setosa","3":"blue","4":"0"},{"1":"West","2":"setosa","3":"orange","4":"12"},{"1":"West","2":"setosa","3":"purple","4":"0"},{"1":"West","2":"setosa","3":"pink","4":"13"},{"1":"West","2":"setosa","3":"yellow","4":"25"},{"1":"West","2":"versicolor","3":"blue","4":"0"},{"1":"West","2":"versicolor","3":"orange","4":"14"},{"1":"West","2":"versicolor","3":"purple","4":"0"},{"1":"West","2":"versicolor","3":"pink","4":"16"},{"1":"West","2":"versicolor","3":"yellow","4":"20"},{"1":"West","2":"virginica","3":"blue","4":"0"},{"1":"West","2":"virginica","3":"orange","4":"16"},{"1":"West","2":"virginica","3":"purple","4":"0"},{"1":"West","2":"virginica","3":"pink","4":"18"},{"1":"West","2":"virginica","3":"yellow","4":"16"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -2058,7 +2338,6 @@ CV = \frac{s}{Y} * 100\%
 <span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(flower_prop_df) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
 <span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(flower_prop_df[,<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["Population"],"name":[1],"type":["fct"],"align":["left"]},{"label":["Species"],"name":[2],"type":["fct"],"align":["left"]},{"label":["Color"],"name":[3],"type":["fct"],"align":["left"]},{"label":["Proportion"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"East","2":"setosa","3":"blue","4":"0.40"},{"1":"East","2":"setosa","3":"orange","4":"0.24"},{"1":"East","2":"setosa","3":"purple","4":"0.36"},{"1":"East","2":"setosa","3":"pink","4":"0.00"},{"1":"East","2":"setosa","3":"yellow","4":"0.00"},{"1":"East","2":"versicolor","3":"blue","4":"0.28"},{"1":"East","2":"versicolor","3":"orange","4":"0.32"},{"1":"East","2":"versicolor","3":"purple","4":"0.40"},{"1":"East","2":"versicolor","3":"pink","4":"0.00"},{"1":"East","2":"versicolor","3":"yellow","4":"0.00"},{"1":"East","2":"virginica","3":"blue","4":"0.28"},{"1":"East","2":"virginica","3":"orange","4":"0.38"},{"1":"East","2":"virginica","3":"purple","4":"0.34"},{"1":"East","2":"virginica","3":"pink","4":"0.00"},{"1":"East","2":"virginica","3":"yellow","4":"0.00"},{"1":"West","2":"setosa","3":"blue","4":"0.00"},{"1":"West","2":"setosa","3":"orange","4":"0.24"},{"1":"West","2":"setosa","3":"purple","4":"0.00"},{"1":"West","2":"setosa","3":"pink","4":"0.26"},{"1":"West","2":"setosa","3":"yellow","4":"0.50"},{"1":"West","2":"versicolor","3":"blue","4":"0.00"},{"1":"West","2":"versicolor","3":"orange","4":"0.28"},{"1":"West","2":"versicolor","3":"purple","4":"0.00"},{"1":"West","2":"versicolor","3":"pink","4":"0.32"},{"1":"West","2":"versicolor","3":"yellow","4":"0.40"},{"1":"West","2":"virginica","3":"blue","4":"0.00"},{"1":"West","2":"virginica","3":"orange","4":"0.32"},{"1":"West","2":"virginica","3":"purple","4":"0.00"},{"1":"West","2":"virginica","3":"pink","4":"0.36"},{"1":"West","2":"virginica","3":"yellow","4":"0.32"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -2117,6 +2396,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -2185,13 +2491,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -2270,10 +2578,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -2283,8 +2590,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -2297,6 +2613,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -2340,6 +2775,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -2365,6 +2801,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -2426,12 +2888,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/chapters/Acquiring_data.html" class="pagination-link">
+      <a href="../../content/chapters/Acquiring_data.html" class="pagination-link  aria-label=" acquiring="" data"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Acquiring data</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/chapters/Estimation.html" class="pagination-link">
+      <a href="../../content/chapters/Estimation.html" class="pagination-link" aria-label="Estimation">
         <span class="nav-page-text">Estimation</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -2439,11 +2901,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">© CC BY-NC-SA 4.0</a></div>   
-    <div class="nav-footer-center"><a href="https://jsgosnell.github.io/cuny_biostats_book/">Course notes</a> &amp; <a href="https://jsgosnell.github.io/cuny_biostats_website/">slides</a></div>
-    <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a>.</div>
+    <div class="nav-footer-left">
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">© CC BY-NC-SA 4.0</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://jsgosnell.github.io/cuny_biostats_book/">Course notes</a> &amp; <a href="https://jsgosnell.github.io/cuny_biostats_website/">slides</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/summarizing_data.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/summarizing_data.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
   </div>
 </footer>
+
 
 
 
