@@ -547,16 +547,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#hypothesis-testing-and-the-binomial-distribution" id="toc-hypothesis-testing-and-the-binomial-distribution" class="nav-link" data-scroll-target="#hypothesis-testing-and-the-binomial-distribution">Hypothesis Testing and the Binomial Distribution</a>
-  <ul>
-  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
-  </ul></li>
-  <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice">Practice!</a>
-  <ul>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">1</a></li>
-  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">2</a></li>
-  </ul></li>
+  <li><a href="#connected-swirl-lesson" id="toc-connected-swirl-lesson" class="nav-link active" data-scroll-target="#connected-swirl-lesson">Connected swirl lesson</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/practice_problems/3_Introduction_to_hypothesis_testing_via_binomial_test.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/practice_problems/3_Introduction_to_hypothesis_testing_via_binomial_test.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -582,103 +573,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
-<p>Remember you should</p>
+<section id="connected-swirl-lesson" class="level2">
+<h2 class="anchored" data-anchor-id="connected-swirl-lesson">Connected swirl lesson</h2>
+<p>Swirl is an R package that provides guided lessons to help you learn and review material. These lessons should serve as a bridge between all the code provided in the slides and background reading and the key functions and concepts from each lesson. A full course lesson (all lessons combined) can also be downloaded using the following instructions.</p>
+<p><strong>THIS IS ONE OF THE FEW TIMES I RECOMMEND WORKING DIRECTLY IN THE CONSOLE! THERE IS NO NEED TO DEVELOP A SCRIPT FOR THESE INTERACTIVE SESSIONS, THOUGH YOU CAN!</strong></p>
 <ul>
-<li>add code chunks by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Ctrl+Alt+I</em> to answer the questions!</li>
-<li>use visual mode or <strong>render</strong> your file to produce a version that you can see!</li>
-<li><strong>render</strong> your file to make sure it runs (and that you haven’t been working out of order)</li>
-<li>save your work often
+<li><p>install the “swirl” package</p></li>
+<li><p>run the following code once on the computer to install a new course</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(swirl)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_course_github</span>(<span class="st">"jsgosnell"</span>, <span class="st">"JSG_swirl_lessons"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>start swirl!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">swirl</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>then follow the on-screen prompts to select the JSG_swirl_lessons course and the lessons you want</p>
 <ul>
-<li><strong>commit</strong> it via git!</li>
-<li><strong>push</strong> updates to github</li>
+<li>Here we will focus on the <strong>Hypothesis testing starting with binomial tests</strong> lesson</li>
+</ul></li>
+<li><p>TIP: If you are seeing duplicate courses (or odd versions of each), you can clear all courses and then re-download the courses by</p>
+<ul>
+<li><p>exiting swirl using escape key or bye() function</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bye</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>uninstalling and reinstalling courses</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">uninstall_all_courses</span>()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_course_github</span>(<span class="st">"jsgosnell"</span>, <span class="st">"JSG_swirl_lessons"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>when you restart swirl with swirl(), you may need to select</p>
+<ul>
+<li>No.&nbsp;Let me start something new</li>
+</ul></li>
 </ul></li>
 </ul>
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>This practice reviews the <a href="https://jsgosnell.github.io/cuny_biostats_book/content/chapters/Binomial.html" target="&quot;_blank">Hypothesis testing starting with binomial tests lecture</a>.</p>
-</section>
-<section id="hypothesis-testing-and-the-binomial-distribution" class="level2">
-<h2 class="anchored" data-anchor-id="hypothesis-testing-and-the-binomial-distribution">Hypothesis Testing and the Binomial Distribution</h2>
-<section id="example" class="level3">
-<h3 class="anchored" data-anchor-id="example">Example</h3>
-<p>Using the bat paper from class (Geipel et al.&nbsp;2021), let’s consider how to analyze data showing all 10 bats chose the walking over the motionless model.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">10</span>,<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Exact binomial test
-
-data:  10 and 10
-number of successes = 10, number of trials = 10, p-value = 0.001953
-alternative hypothesis: true probability of success is not equal to 0.5
-95 percent confidence interval:
- 0.6915029 1.0000000
-sample estimates:
-probability of success 
-                     1 </code></pre>
-</div>
-</div>
-<p>We use the binom.test function. We only need arguments for # of succeses and # of trials. By default it runs a 2-sided test against a null hypothesis value of p = .5. You can see how to update thee options by looking at the help file.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>?binom.test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Note the confidence interval is assymetric since its estimated to be 1! We can see other options using the binom.confint function from the <em>binom</em> package.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(binom)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.confint</span>(<span class="dv">10</span>,<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>          method  x  n      mean     lower    upper
-1  agresti-coull 10 10 1.0000000 0.6791127 1.043355
-2     asymptotic 10 10 1.0000000 1.0000000 1.000000
-3          bayes 10 10 0.9545455 0.8292269 1.000000
-4        cloglog 10 10 1.0000000 0.6915029 1.000000
-5          exact 10 10 1.0000000 0.6915029 1.000000
-6          logit 10 10 1.0000000 0.6915029 1.000000
-7         probit 10 10 1.0000000 0.6915029 1.000000
-8        profile 10 10 1.0000000 0.7303058 1.000000
-9            lrt 10 10 1.0000000 0.8252466 1.000000
-10     prop.test 10 10 1.0000000 0.6554628 1.000000
-11        wilson 10 10 1.0000000 0.7224672 1.000000</code></pre>
-</div>
-</div>
-<p>All of these correct for the fact that most intervals use a normal approximation, which as you remember from our earlier discussions is not good when sample sizes are small and/or the p parameter is extreme (close to 0 or 1).</p>
-</section>
-</section>
-<section id="practice" class="level2">
-<h2 class="anchored" data-anchor-id="practice">Practice!</h2>
-<p>Make sure you are comfortable with null and alternative hypotheses for all examples.</p>
-<section id="section" class="level3">
-<h3 class="anchored" data-anchor-id="section">1</h3>
-<p>Are people eared (do they prefer one ear or another)? Of 25 people observed while in conversation in a nightclub, 19 turned their right ear to the speaker and 6 turn their left ear to the speaker. How strong is the evidence for eared-ness given this data (adapted from Analysis of Biological Data)?</p>
-<ul>
-<li>state a null and alternative hypothesis</li>
-<li>calculate a test statistic (signal) for this data
-<ul>
-<li>Make sure you understand how to construct a null distribution
-<ul>
-<li>using sampling/simulation (code or written explanation)</li>
-<li>by using an appropriate distribution (code or written explanation)</li>
-</ul></li>
-</ul></li>
-<li>Calculate and compare p-values obtained using
-<ul>
-<li>simulation (calculation won’t be required on test, but make sure you understand!) (code or written explanation)</li>
-<li>equations for binomial distribution (code or written explanation) + R functions (required)(code)</li>
-</ul></li>
-<li>Calculate a 95% confidence interval for the proportion of people who are right-eared
-<ul>
-<li>How do your 95% confidence interval and hypothesis test compare?</li>
-</ul></li>
-</ul>
-</section>
-<section id="section-1" class="level3">
-<h3 class="anchored" data-anchor-id="section-1">2</h3>
-<p>A professor lets his dog take every multiple-choice test to see how it compares to his students (I know someone who did this). Unfortunately, the professor believes undergraduates in the class tricked him by helping the dog do better on a test. It’s a 100 question test, and every questions has 4 answer choices. For the last test, the dog picked 33 questions correctly. How likely is this to happen, and is there evidence the students helped the dog?</p>
-<p><strong>MAKE SURE TO THINK ABOUT YOUR TEST OPTIONS</strong></p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
