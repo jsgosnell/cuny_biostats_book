@@ -547,10 +547,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a>
-  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
-  </ul></li>
   <li><a href="#swirl-lesson" id="toc-swirl-lesson" class="nav-link" data-scroll-target="#swirl-lesson">Swirl lesson</a></li>
   <li><a href="#lets-practice" id="toc-lets-practice" class="nav-link" data-scroll-target="#lets-practice">Let’s practice!</a>
   <ul>
@@ -607,8 +605,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
 <p>This practice reviews the <a href="https://jsgosnell.github.io/cuny_biostats_book/content/chapters/Tests_for_continuous_data_from_one_sample.html" target="&quot;_blank">Tests for continuous data from one sample lecture</a>.</p>
-<section id="examples" class="level3">
-<h3 class="anchored" data-anchor-id="examples">Examples</h3>
+</section>
+<section id="examples" class="level2">
+<h2 class="anchored" data-anchor-id="examples">Examples</h2>
 <p>From lecture! Consider if average height of males training at the Australian Institute of Sport is different than average of human population.</p>
 <p>These are all one sample tests, but they differ in what we know. If we know the variance of our population, we use a z test (function in BSDA package).</p>
 <div class="cell">
@@ -744,7 +743,7 @@ probability of success
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(boostrap_outcomes<span class="sc">$</span>mean, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-184.1068 187.0198 </code></pre>
+184.0188 187.1022 </code></pre>
 </div>
 </div>
 <p>or using functions in the <em>boot</em> library</p>
@@ -779,7 +778,7 @@ Attaching package: 'boot'</code></pre>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>( results<span class="sc">$</span>t, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-183.9663 187.0040 </code></pre>
+183.8642 187.0591 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(results)     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -795,10 +794,10 @@ boot.ci(boot.out = results)
 
 Intervals : 
 Level      Normal              Basic         
-95%   (183.9, 187.0 )   (184.0, 187.1 )  
+95%   (183.9, 187.1 )   (183.9, 187.2 )  
 
 Level     Percentile            BCa          
-95%   (184.0, 187.0 )   (183.8, 186.9 )  
+95%   (183.8, 187.1 )   (183.8, 187.0 )  
 Calculations and Intervals on Original Scale</code></pre>
 </div>
 </div>
@@ -812,9 +811,9 @@ Calculations and Intervals on Original Scale</code></pre>
 data:  sport[sport$Sex == "male", "Ht"]
 number of bootstrap samples:  9999
 bootstrap p-value &lt; 1e-04 
-bootstrap mean of x (SE) = 185.5131 (0.7773771) 
+bootstrap mean of x (SE) = 185.503 (0.7769018) 
 95 percent bootstrap percentile confidence interval:
- 183.9490 187.0619
+ 184.0029 187.0168
 
 Results without bootstrap:
 t = 12.658, df = 101, p-value &lt; 2.2e-16
@@ -826,7 +825,6 @@ mean of x
  185.5059 </code></pre>
 </div>
 </div>
-</section>
 </section>
 <section id="swirl-lesson" class="level2">
 <h2 class="anchored" data-anchor-id="swirl-lesson">Swirl lesson</h2>
@@ -1218,10 +1216,10 @@ probability of success
 
 data:  sport[sport$Sex == "male", "Wt"]
 number of bootstrap samples:  9999
-bootstrap p-value = 0.009401 
-bootstrap mean of x (SE) = 82.52531 (1.219976) 
+bootstrap p-value = 0.011 
+bootstrap mean of x (SE) = 82.51936 (1.217846) 
 95 percent bootstrap percentile confidence interval:
- 80.14010 84.97728
+ 80.15684 84.96265
 
 Results without bootstrap:
 t = -2.7487, df = 101, p-value = 0.007089

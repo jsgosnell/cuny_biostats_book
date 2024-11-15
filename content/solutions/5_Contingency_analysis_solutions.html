@@ -551,8 +551,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a>
   <ul>
   <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">The data</a></li>
-  <li><a href="#tests" id="toc-tests" class="nav-link" data-scroll-target="#tests">tests</a></li>
+  <li><a href="#tests" id="toc-tests" class="nav-link" data-scroll-target="#tests">Tests</a></li>
   </ul></li>
+  <li><a href="#swirl-lesson" id="toc-swirl-lesson" class="nav-link" data-scroll-target="#swirl-lesson">Swirl lesson</a></li>
   <li><a href="#lets-practice" id="toc-lets-practice" class="nav-link" data-scroll-target="#lets-practice">Let’s practice</a>
   <ul>
   <li><a href="#heart-attacks" id="toc-heart-attacks" class="nav-link" data-scroll-target="#heart-attacks">Heart attacks</a>
@@ -571,7 +572,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/solutions/5_Contingency_analysis_solutions.Rmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/solutions/5_Contingency_analysis_solutions.Rmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/solutions/5_Contingency_analysis_solutions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/solutions/5_Contingency_analysis_solutions.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -599,8 +600,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Remember you should</p>
 <ul>
 <li>add code chunks by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Ctrl+Alt+I</em> to answer the questions!</li>
-<li>use visual mode or <strong>render</strong> your file to produce a version that you can see!</li>
-<li><strong>render</strong> your file to make sure it runs (and that you haven’t been working out of order)</li>
+<li><strong>render</strong> your file to produce a markdown version that you can see!</li>
 <li>save your work often
 <ul>
 <li><strong>commit</strong> it via git!</li>
@@ -609,7 +609,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>This practice reviews the <a href="../../content/chapters/Compare_proportions_among_populations.html" target="_blank">Compare proportions among groups lecture</a>.</p>
+<p>This practice reviews the <a href="https://jsgosnell.github.io/cuny_biostats_book/content/chapters/Compare_proportions_among_populations.html" target="&quot;_blank">Compare means among groups lecture</a>.</p>
 </section>
 <section id="examples" class="level2">
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
@@ -624,21 +624,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Assume data is in a dataframe where each row is an individual data point.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mirt)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>everest_expand <span class="ot">&lt;-</span> <span class="fu">expand.table</span>(everest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mirt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: stats4</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lattice</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>everest_expand <span class="ot">&lt;-</span> <span class="fu">expand.table</span>(everest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="tests" class="level3">
-<h3 class="anchored" data-anchor-id="tests">tests</h3>
+<h3 class="anchored" data-anchor-id="tests">Tests</h3>
 <p>First, let’s ask if the same amount of people used or did not use oxygen. WE can use the table command to summarize. Note the chisq.test, by default, assumes each group is equally likely!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Not used     Used 
       96     1077 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Chi-squared test for given probabilities
@@ -649,11 +655,11 @@ X-squared = 820.43, df = 1, p-value &lt; 2.2e-16</code></pre>
 </div>
 <p>Dong this with summarized data is actually harder</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(Number<span class="sc">~</span>Oxygen, everest, sum)<span class="sc">$</span>Number</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(Number<span class="sc">~</span>Oxygen, everest, sum)<span class="sc">$</span>Number</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]   96 1077</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">aggregate</span>(Number<span class="sc">~</span>Oxygen, everest, sum)<span class="sc">$</span>Number) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">aggregate</span>(Number<span class="sc">~</span>Oxygen, everest, sum)<span class="sc">$</span>Number) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Chi-squared test for given probabilities
@@ -664,7 +670,7 @@ X-squared = 820.43, df = 1, p-value &lt; 2.2e-16</code></pre>
 </div>
 <p>But this is better!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Exact binomial test
@@ -681,7 +687,7 @@ probability of success
 </div>
 <p>What if we wanted to compare to past years where 10% of climbers did not use oxygen? Note <em>table</em> function splits into alphabetical order.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen), <span class="at">p=</span>.<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen), <span class="at">p=</span>.<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Exact binomial test
@@ -698,7 +704,7 @@ probability of success
 </div>
 <p>What if we want to determine if using oxygen impacts surival?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen, everest_expand<span class="sc">$</span>Survived))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen, everest_expand<span class="sc">$</span>Survived))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(table(everest_expand$Oxygen, everest_expand$Survived)):
 Chi-squared approximation may be incorrect</code></pre>
@@ -713,7 +719,7 @@ X-squared = 6.1524, df = 1, p-value = 0.01312</code></pre>
 </div>
 <p>Issue (which we’ll address), but note same as</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Survived, everest_expand<span class="sc">$</span>Oxygen))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Survived, everest_expand<span class="sc">$</span>Oxygen))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(table(everest_expand$Survived, everest_expand$Oxygen)):
 Chi-squared approximation may be incorrect</code></pre>
@@ -725,7 +731,7 @@ Chi-squared approximation may be incorrect</code></pre>
 data:  table(everest_expand$Survived, everest_expand$Oxygen)
 X-squared = 6.1524, df = 1, p-value = 0.01312</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="at">x =</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1045</span>, <span class="dv">88</span>, <span class="dv">32</span>, <span class="dv">8</span>), <span class="dv">2</span>, <span class="dv">2</span>, <span class="at">byrow =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="at">x =</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1045</span>, <span class="dv">88</span>, <span class="dv">32</span>, <span class="dv">8</span>), <span class="dv">2</span>, <span class="dv">2</span>, <span class="at">byrow =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(x = matrix(c(1045, 88, 32, 8), 2, 2, byrow = T)):
 Chi-squared approximation may be incorrect</code></pre>
@@ -737,7 +743,7 @@ Chi-squared approximation may be incorrect</code></pre>
 data:  matrix(c(1045, 88, 32, 8), 2, 2, byrow = T)
 X-squared = 6.1524, df = 1, p-value = 0.01312</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="at">x =</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1045</span>, <span class="dv">32</span>, <span class="dv">88</span>,  <span class="dv">8</span>), <span class="dv">2</span>, <span class="dv">2</span>, <span class="at">byrow =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="at">x =</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1045</span>, <span class="dv">32</span>, <span class="dv">88</span>,  <span class="dv">8</span>), <span class="dv">2</span>, <span class="dv">2</span>, <span class="at">byrow =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(x = matrix(c(1045, 32, 88, 8), 2, 2, byrow = T)):
 Chi-squared approximation may be incorrect</code></pre>
@@ -752,7 +758,7 @@ X-squared = 6.1524, df = 1, p-value = 0.01312</code></pre>
 </div>
 <p><strong>Key is first argument must be all the info</strong>. This is different from (incorrect) approach like</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(everest<span class="sc">$</span>Survived,everest<span class="sc">$</span>Oxygen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(everest<span class="sc">$</span>Survived,everest<span class="sc">$</span>Oxygen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(everest$Survived, everest$Oxygen): Chi-squared
 approximation may be incorrect</code></pre>
@@ -768,7 +774,7 @@ X-squared = 0, df = 1, p-value = 1</code></pre>
 <p>This is comparing split among Survived and not to split (expected) using Oxygen!</p>
 <p>So order has minimal input with 2 groups. Other test options necessitated by the warning</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen, everest_expand<span class="sc">$</span>Survived))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen, everest_expand<span class="sc">$</span>Survived))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Fisher's Exact Test for Count Data
@@ -782,8 +788,8 @@ sample estimates:
 odds ratio 
   2.964765 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DescTools)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">GTest</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen, everest_expand<span class="sc">$</span>Survived))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DescTools)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">GTest</span>(<span class="fu">table</span>(everest_expand<span class="sc">$</span>Oxygen, everest_expand<span class="sc">$</span>Survived))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Log likelihood ratio (G-test) test of independence without correction
@@ -794,21 +800,21 @@ G = 5.7466, X-squared df = 1, p-value = 0.01652</code></pre>
 </div>
 <p>What if we added another group? Like Enriched, Regular, None for oxygen.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>everest_enriched <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Survived =</span> <span class="fu">c</span>(<span class="st">"Y"</span>,<span class="st">"N"</span>,<span class="st">"Y"</span>, <span class="st">"N"</span>, <span class="st">"Y"</span>, <span class="st">"N"</span>),</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">Oxygen =</span> <span class="fu">c</span>(<span class="st">"Regular"</span>, <span class="st">"Regular"</span>, <span class="st">"None"</span>, <span class="st">"None"</span>, <span class="fu">rep</span>(<span class="st">"Enriched"</span>, <span class="dv">2</span>)),</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">Number =</span> <span class="fu">c</span>(<span class="dv">1045</span>, <span class="dv">32</span>, <span class="dv">88</span>, <span class="dv">8</span>, <span class="dv">15</span>, <span class="dv">2</span>))</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>everest_enriched_expand <span class="ot">&lt;-</span> <span class="fu">expand.table</span>(everest_enriched)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>everest_enriched <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Survived =</span> <span class="fu">c</span>(<span class="st">"Y"</span>,<span class="st">"N"</span>,<span class="st">"Y"</span>, <span class="st">"N"</span>, <span class="st">"Y"</span>, <span class="st">"N"</span>),</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">Oxygen =</span> <span class="fu">c</span>(<span class="st">"Regular"</span>, <span class="st">"Regular"</span>, <span class="st">"None"</span>, <span class="st">"None"</span>, <span class="fu">rep</span>(<span class="st">"Enriched"</span>, <span class="dv">2</span>)),</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">Number =</span> <span class="fu">c</span>(<span class="dv">1045</span>, <span class="dv">32</span>, <span class="dv">88</span>, <span class="dv">8</span>, <span class="dv">15</span>, <span class="dv">2</span>))</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>everest_enriched_expand <span class="ot">&lt;-</span> <span class="fu">expand.table</span>(everest_enriched)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we compare</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(everest_enriched_expand<span class="sc">$</span>Survived, everest_enriched_expand<span class="sc">$</span>Oxygen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(everest_enriched_expand<span class="sc">$</span>Survived, everest_enriched_expand<span class="sc">$</span>Oxygen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   
     Enriched None Regular
   N        2    8      32
   Y       15   88    1045</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(everest_enriched_expand<span class="sc">$</span>Survived, everest_enriched_expand<span class="sc">$</span>Oxygen))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(everest_enriched_expand<span class="sc">$</span>Survived, everest_enriched_expand<span class="sc">$</span>Oxygen))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(table(everest_enriched_expand$Survived,
 everest_enriched_expand$Oxygen)): Chi-squared approximation may be incorrect</code></pre>
@@ -823,7 +829,7 @@ X-squared = 10.879, df = 2, p-value = 0.004343</code></pre>
 </div>
 <p>Fisher again due to size</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(<span class="fu">table</span>(everest_enriched_expand<span class="sc">$</span>Survived, everest_enriched_expand<span class="sc">$</span>Oxygen))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(<span class="fu">table</span>(everest_enriched_expand<span class="sc">$</span>Survived, everest_enriched_expand<span class="sc">$</span>Oxygen))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Fisher's Exact Test for Count Data
@@ -835,12 +841,12 @@ alternative hypothesis: two.sided</code></pre>
 </div>
 <p>Now we follow-up, and rows/columns matter. Note default is row and fdr method. I order results for ease of view</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>everest_expand_correct_fdr <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(<span class="fu">table</span>(everest_enriched_expand<span class="sc">$</span>Survived, everest_enriched_expand<span class="sc">$</span>Oxygen))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>everest_expand_correct_fdr <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(<span class="fu">table</span>(everest_enriched_expand<span class="sc">$</span>Survived, everest_enriched_expand<span class="sc">$</span>Oxygen))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>everest_expand_correct_fdr[<span class="fu">order</span>(everest_expand_correct_fdr<span class="sc">$</span>p.adj.Fisher),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>everest_expand_correct_fdr[<span class="fu">order</span>(everest_expand_correct_fdr<span class="sc">$</span>p.adj.Fisher),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Comparison p.Fisher p.adj.Fisher p.Gtest p.adj.Gtest p.Chisq p.adj.Chisq
 1      N : Y  0.00586      0.00586  0.0189      0.0189 0.00434     0.00434</code></pre>
@@ -848,16 +854,14 @@ alternative hypothesis: two.sided</code></pre>
 </div>
 <p>Not quite what we wanted. How about</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>everest_expand_correct_fdr <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(<span class="fu">table</span>(everest_enriched_expand<span class="sc">$</span>Survived, everest_enriched_expand<span class="sc">$</span>Oxygen),</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>                                                          <span class="at">compare =</span> <span class="st">"col"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>everest_expand_correct_fdr <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(<span class="fu">table</span>(everest_enriched_expand<span class="sc">$</span>Survived, everest_enriched_expand<span class="sc">$</span>Oxygen),</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                                                          <span class="at">compare =</span> <span class="st">"col"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
-
 Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
-
 Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>everest_expand_correct_fdr[<span class="fu">order</span>(everest_expand_correct_fdr<span class="sc">$</span>p.adj.Fisher),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>everest_expand_correct_fdr[<span class="fu">order</span>(everest_expand_correct_fdr<span class="sc">$</span>p.adj.Fisher),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          Comparison p.Fisher p.adj.Fisher p.Gtest p.adj.Gtest p.Chisq
 3     None : Regular   0.0128       0.0384  0.0165      0.0495  0.0131
@@ -871,17 +875,15 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</c
 </div>
 <p>and you can change methods</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>everest_expand_correct_fdr <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(<span class="fu">table</span>(everest_enriched_expand<span class="sc">$</span>Survived, everest_enriched_expand<span class="sc">$</span>Oxygen),</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>                                                          <span class="at">compare =</span> <span class="st">"col"</span>,</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>                                                          <span class="at">method =</span> <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>everest_expand_correct_fdr <span class="ot">&lt;-</span> <span class="fu">pairwiseNominalIndependence</span>(<span class="fu">table</span>(everest_enriched_expand<span class="sc">$</span>Survived, everest_enriched_expand<span class="sc">$</span>Oxygen),</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>                                                          <span class="at">compare =</span> <span class="st">"col"</span>,</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>                                                          <span class="at">method =</span> <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
-
 Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
-
 Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>everest_expand_correct_fdr[<span class="fu">order</span>(everest_expand_correct_fdr<span class="sc">$</span>p.adj.Fisher),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>everest_expand_correct_fdr[<span class="fu">order</span>(everest_expand_correct_fdr<span class="sc">$</span>p.adj.Fisher),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          Comparison p.Fisher p.adj.Fisher p.Gtest p.adj.Gtest p.Chisq
 3     None : Regular   0.0128       0.0384  0.0165      0.0495  0.0131
@@ -895,10 +897,10 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</c
 </div>
 <p>To put in manually, we need a few extra things</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>everest_table <span class="ot">&lt;-</span> <span class="fu">as.table</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">8</span>,<span class="dv">32</span>,<span class="dv">15</span>,<span class="dv">88</span>,<span class="dv">1045</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> T))</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(everest_table) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"N"</span>, <span class="st">"Y"</span>)</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(everest_table) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Enriched"</span>, <span class="st">"None"</span>, <span class="st">"Regular"</span>)</span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>everest_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>everest_table <span class="ot">&lt;-</span> <span class="fu">as.table</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">8</span>,<span class="dv">32</span>,<span class="dv">15</span>,<span class="dv">88</span>,<span class="dv">1045</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> T))</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(everest_table) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"N"</span>, <span class="st">"Y"</span>)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(everest_table) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Enriched"</span>, <span class="st">"None"</span>, <span class="st">"Regular"</span>)</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>everest_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Enriched None Regular
 N        2    8      32
@@ -906,6 +908,46 @@ Y       15   88    1045</code></pre>
 </div>
 </div>
 </section>
+</section>
+<section id="swirl-lesson" class="level2">
+<h2 class="anchored" data-anchor-id="swirl-lesson">Swirl lesson</h2>
+<p>Swirl is an R package that provides guided lessons to help you learn and review material. These lessons should serve as a bridge between all the code provided in the slides and background reading and the key functions and concepts from each lesson. A full course lesson (all lessons combined) can also be downloaded using the following instructions.</p>
+<p><strong>THIS IS ONE OF THE FEW TIMES I RECOMMEND WORKING DIRECTLY IN THE CONSOLE! THERE IS NO NEED TO DEVELOP A SCRIPT FOR THESE INTERACTIVE SESSIONS, THOUGH YOU CAN! FOR THIS REASONS, THE CODE BELOW IS DISPLAYED BUT NOT RUN WHEN THIS FILE IS RENDERED</strong></p>
+<ul>
+<li><p>install the “swirl” package</p></li>
+<li><p>run the following code once on the computer to install a new course</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(swirl)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_course_github</span>(<span class="st">"jsgosnell"</span>, <span class="st">"JSG_swirl_lessons"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>start swirl!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">swirl</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>swirl()</li>
+</ul></li>
+<li><p>then follow the on-screen prompts to select the JSG_swirl_lessons course and the lessons you want</p>
+<ul>
+<li>Here we will focus on the <strong>Compare proportions among groups</strong> lesson</li>
+</ul></li>
+<li><p>TIP: If you are seeing duplicate courses (or odd versions of each), you can clear all courses and then re-download the courses by</p>
+<ul>
+<li><p>exiting swirl using escape key or bye() function</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bye</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>uninstalling and reinstalling courses</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">uninstall_all_courses</span>()</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_course_github</span>(<span class="st">"jsgosnell"</span>, <span class="st">"JSG_swirl_lessons"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>when you restart swirl with swirl(), you may need to select</p>
+<ul>
+<li>No.&nbsp;Let me start something new</li>
+</ul></li>
+</ul></li>
+</ul>
 </section>
 <section id="lets-practice" class="level2">
 <h2 class="anchored" data-anchor-id="lets-practice">Let’s practice</h2>
@@ -915,19 +957,19 @@ Y       15   88    1045</code></pre>
 <h4 class="anchored" data-anchor-id="section">1</h4>
 <p>Let’s look at some heart attack data. Read in the data using</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>heart_attacks <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/heartatk4R.txt"</span>,<span class="at">header=</span>T, <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>heart_attacks <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/heartatk4R.txt"</span>,<span class="at">header=</span>T, <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Every entry is a person that has suffered a heart attack. More information on the dataset can be found at</p>
 <p>http://statland.org/Software_Help/DataDesk/datafile.htm</p>
 <p>We want to again test if heart attacks occur equally across genders.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(heart_attacks<span class="sc">$</span>SEX)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(heart_attacks<span class="sc">$</span>SEX)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
    F    M 
 5065 7779 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">7779</span>, <span class="dv">7779</span><span class="sc">+</span><span class="dv">5065</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">7779</span>, <span class="dv">7779</span><span class="sc">+</span><span class="dv">5065</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Exact binomial test
@@ -944,7 +986,7 @@ probability of success
 </div>
 <p><em>If I assume males compose 50% of the population, I can test the null hypothesis that 50% of heart attacks occur in males using a binom.test to conduct a binomial test. I used the table command to determine the number of heart attacks in males and females and then used binom.test. The alternative is less than or greater than 50% of hear attacks occur in males. With a p-value of &lt;.001, I reject the null hypothesis. Data suggest that males are more likely to have heart attacks. Note this is better than</em></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(heart_attacks<span class="sc">$</span>SEX), <span class="at">p=</span><span class="fu">c</span>(.<span class="dv">50</span>, .<span class="dv">50</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(heart_attacks<span class="sc">$</span>SEX), <span class="at">p=</span><span class="fu">c</span>(.<span class="dv">50</span>, .<span class="dv">50</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Chi-squared test for given probabilities
@@ -958,13 +1000,13 @@ X-squared = 573.48, df = 1, p-value &lt; 2.2e-16</code></pre>
 <li>What if we know that males actually make up 50.8% of the population?</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(heart_attacks<span class="sc">$</span>SEX)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(heart_attacks<span class="sc">$</span>SEX)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
    F    M 
 5065 7779 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">7779</span>, <span class="dv">7779</span><span class="sc">+</span><span class="dv">5065</span>, .<span class="dv">508</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">7779</span>, <span class="dv">7779</span><span class="sc">+</span><span class="dv">5065</span>, .<span class="dv">508</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Exact binomial test
@@ -985,16 +1027,16 @@ probability of success
 <h4 class="anchored" data-anchor-id="section-1">2</h4>
 <p>Still using the heart attack data, is survival independent of gender?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co">#note what this does</span></span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(heart_attacks<span class="sc">$</span>SEX, heart_attacks<span class="sc">$</span>DIED)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co">#note what this does</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(heart_attacks<span class="sc">$</span>SEX, heart_attacks<span class="sc">$</span>DIED)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   
        0    1
   F 4298  767
   M 7136  643</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co">#then feed it to chisq.test (notice order here does not matter for 2x2 table)</span></span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(heart_attacks<span class="sc">$</span>SEX, heart_attacks<span class="sc">$</span>DIED))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co">#then feed it to chisq.test (notice order here does not matter for 2x2 table)</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(heart_attacks<span class="sc">$</span>SEX, heart_attacks<span class="sc">$</span>DIED))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's Chi-squared test with Yates' continuity correction
@@ -1002,7 +1044,7 @@ probability of success
 data:  table(heart_attacks$SEX, heart_attacks$DIED)
 X-squared = 147.76, df = 1, p-value &lt; 2.2e-16</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(heart_attacks<span class="sc">$</span>DIED, heart_attacks<span class="sc">$</span>SEX))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(heart_attacks<span class="sc">$</span>DIED, heart_attacks<span class="sc">$</span>SEX))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's Chi-squared test with Yates' continuity correction
@@ -1017,8 +1059,8 @@ X-squared = 147.76, df = 1, p-value &lt; 2.2e-16</code></pre>
 <h4 class="anchored" data-anchor-id="section-2">3</h4>
 <p>For people that have a heart attack before they turn 30, is survival independent of gender?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(heart_attacks[heart_attacks<span class="sc">$</span>AGE <span class="sc">&lt;</span> <span class="dv">30</span>, <span class="st">"SEX"</span>], </span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>                 heart_attacks[heart_attacks<span class="sc">$</span>AGE <span class="sc">&lt;</span><span class="dv">30</span>, <span class="st">"DIED"</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(heart_attacks[heart_attacks<span class="sc">$</span>AGE <span class="sc">&lt;</span> <span class="dv">30</span>, <span class="st">"SEX"</span>], </span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>                 heart_attacks[heart_attacks<span class="sc">$</span>AGE <span class="sc">&lt;</span><span class="dv">30</span>, <span class="st">"DIED"</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(table(heart_attacks[heart_attacks$AGE &lt; 30, "SEX"], :
 Chi-squared approximation may be incorrect</code></pre>
@@ -1030,9 +1072,9 @@ Chi-squared approximation may be incorrect</code></pre>
 data:  table(heart_attacks[heart_attacks$AGE &lt; 30, "SEX"], heart_attacks[heart_attacks$AGE &lt;     30, "DIED"])
 X-squared = 3.2597e-30, df = 1, p-value = 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co">#note warning on approximation, so check it</span></span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(heart_attacks[heart_attacks<span class="sc">$</span>AGE <span class="sc">&lt;</span> <span class="dv">30</span>, <span class="st">"SEX"</span>], </span>
-<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>                 heart_attacks[heart_attacks<span class="sc">$</span>AGE <span class="sc">&lt;</span><span class="dv">30</span>, <span class="st">"DIED"</span>]))<span class="sc">$</span>expected</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co">#note warning on approximation, so check it</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(heart_attacks[heart_attacks<span class="sc">$</span>AGE <span class="sc">&lt;</span> <span class="dv">30</span>, <span class="st">"SEX"</span>], </span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>                 heart_attacks[heart_attacks<span class="sc">$</span>AGE <span class="sc">&lt;</span><span class="dv">30</span>, <span class="st">"DIED"</span>]))<span class="sc">$</span>expected</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(table(heart_attacks[heart_attacks$AGE &lt; 30, "SEX"], :
 Chi-squared approximation may be incorrect</code></pre>
@@ -1043,9 +1085,9 @@ Chi-squared approximation may be incorrect</code></pre>
   F  7.8 0.2
   M 31.2 0.8</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co">#several &lt;1, so use fisher.test</span></span>
-<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(<span class="fu">table</span>(heart_attacks[heart_attacks<span class="sc">$</span>AGE <span class="sc">&lt;</span> <span class="dv">30</span>, <span class="st">"SEX"</span>], </span>
-<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>                  heart_attacks[heart_attacks<span class="sc">$</span>AGE <span class="sc">&lt;</span><span class="dv">30</span>, <span class="st">"DIED"</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co">#several &lt;1, so use fisher.test</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(<span class="fu">table</span>(heart_attacks[heart_attacks<span class="sc">$</span>AGE <span class="sc">&lt;</span> <span class="dv">30</span>, <span class="st">"SEX"</span>], </span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>                  heart_attacks[heart_attacks<span class="sc">$</span>AGE <span class="sc">&lt;</span><span class="dv">30</span>, <span class="st">"DIED"</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Fisher's Exact Test for Count Data
@@ -1059,7 +1101,7 @@ sample estimates:
 odds ratio 
        Inf </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co">#so if you are young, no difference</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co">#so if you are young, no difference</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><em>I amended the previous question’s code to only focus on individuals who were under the age of 30 when they suffered a heart. Otherwise the hypotheses remain the same. I attempted to use a chi<sup>2</sup> test but was warned the approximation may be incorrect. Remember that no cells can have expected values of &lt;1 and &lt;20% should have expected values &lt;5. Upon checking 2 cells have expected values &lt;1, so I instead used Fisher’s Test.<br>
 I found a p-value of 1, thus I fail to reject the null hypothesis.</em></p>
@@ -1073,14 +1115,14 @@ I found a p-value of 1, thus I fail to reject the null hypothesis.</em></p>
 <p>http://www.statsci.org/data/general/dolpacti.txt</p>
 <p>Since this is a .txt file, not a .csv, you’ll need to use something like</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>dolphin <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/general/dolpacti.txt"</span>, <span class="at">sep=</span><span class="st">""</span>, <span class="at">header =</span> T, <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>dolphin <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/general/dolpacti.txt"</span>, <span class="at">sep=</span><span class="st">""</span>, <span class="at">header =</span> T, <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>More info on data @</p>
 <p>http://www.statsci.org/data/general/dolpacti.html</p>
 <p>Is traveling independent of time of day? You’ll need to consider traveling vs not traveling due to different number of groups observed in each period. Carry out post-hoc tests if needed.</p>
 <p><em>I looked at the data and then just made a table manually</em></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>dolphin</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>dolphin</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Activity    Period Groups
 1    Travel   Morning      6
@@ -1096,12 +1138,12 @@ I found a p-value of 1, thus I fail to reject the null hypothesis.</em></p>
 11     Feed   Evening     56
 12   Social   Evening     10</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>travel_table <span class="ot">&lt;-</span> <span class="fu">as.table</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">28</span><span class="sc">+</span> <span class="dv">38</span>, <span class="dv">6</span>, <span class="dv">9</span>, <span class="dv">14</span>, <span class="dv">9</span>, <span class="dv">13</span>, <span class="dv">66</span>), <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">byrow =</span> T))</span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Adding in row and column names will make everything easier to read at end.</span></span>
-<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(travel_table) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"travel"</span>, <span class="st">"not_travel"</span>)</span>
-<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(travel_table) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"morning"</span>, <span class="st">"noon"</span>, <span class="st">"afternoon"</span>, <span class="st">"night"</span>)</span>
-<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a><span class="co">#now look at it</span></span>
-<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>travel_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>travel_table <span class="ot">&lt;-</span> <span class="fu">as.table</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">28</span><span class="sc">+</span> <span class="dv">38</span>, <span class="dv">6</span>, <span class="dv">9</span>, <span class="dv">14</span>, <span class="dv">9</span>, <span class="dv">13</span>, <span class="dv">66</span>), <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">byrow =</span> T))</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Adding in row and column names will make everything easier to read at end.</span></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(travel_table) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"travel"</span>, <span class="st">"not_travel"</span>)</span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(travel_table) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"morning"</span>, <span class="st">"noon"</span>, <span class="st">"afternoon"</span>, <span class="st">"night"</span>)</span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a><span class="co">#now look at it</span></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>travel_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          travel not_travel
 morning        6         66
@@ -1109,7 +1151,7 @@ noon           6          9
 afternoon     14          9
 night         13         66</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(travel_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(travel_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(travel_table): Chi-squared approximation may be incorrect</code></pre>
 </div>
@@ -1120,8 +1162,8 @@ night         13         66</code></pre>
 data:  travel_table
 X-squared = 33.665, df = 3, p-value = 2.331e-07</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check outcome given warning</span></span>
-<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(travel_table)<span class="sc">$</span>expected</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check outcome given warning</span></span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(travel_table)<span class="sc">$</span>expected</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(travel_table): Chi-squared approximation may be incorrect</code></pre>
 </div>
@@ -1132,7 +1174,7 @@ noon       3.095238   11.90476
 afternoon  4.746032   18.25397
 night     16.301587   62.69841</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(travel_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(travel_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Fisher's Exact Test for Count Data
@@ -1141,14 +1183,13 @@ data:  travel_table
 p-value = 9.192e-07
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span>
-<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwiseNominalIndependence</span>(travel_table, <span class="at">compare =</span> <span class="st">"row"</span>, <span class="at">method =</span> <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rcompanion)</span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwiseNominalIndependence</span>(travel_table, <span class="at">compare =</span> <span class="st">"row"</span>, <span class="at">method =</span> <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect
-
 Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
@@ -1180,15 +1221,15 @@ Warning in chisq.test(Dataz, ...): Chi-squared approximation may be incorrect</c
 <p>to determine if smoking is independent of exercise. You’ll need to input data manually. Carry out post-hoc tests if needed.</p>
 <p><em>I created a table from the data and tested it using a chi<sup>2</sup> test to determine if smoking was independent of exercise (null hypothesis) or differed based on exercise levels (alternative). However, a warning led me to see the expected cell values were too small, so I instead used a Fisher’s test.</em></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>smoke <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="co">#spacing just for visual use</span></span>
-<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">87</span>,<span class="dv">18</span>,<span class="dv">84</span>,</span>
-<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">12</span>,<span class="dv">3</span>,<span class="dv">4</span>,</span>
-<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">9</span>,<span class="dv">1</span>,<span class="dv">7</span>), <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">byrow =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>smoke <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="co">#spacing just for visual use</span></span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">87</span>,<span class="dv">18</span>,<span class="dv">84</span>,</span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">12</span>,<span class="dv">3</span>,<span class="dv">4</span>,</span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">9</span>,<span class="dv">1</span>,<span class="dv">7</span>), <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">byrow =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in chisq.test(matrix(c(7, 1, 3, 87, 18, 84, 12, 3, 4, 9, 1, 7), :
 Chi-squared approximation may be incorrect</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>smoke<span class="sc">$</span>expected <span class="co">#too small!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>smoke<span class="sc">$</span>expected <span class="co">#too small!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          [,1]      [,2]      [,3]
 [1,]  5.360169  1.072034  4.567797
@@ -1196,10 +1237,10 @@ Chi-squared approximation may be incorrect</code></pre>
 [3,]  9.258475  1.851695  7.889831
 [4,]  8.283898  1.656780  7.059322</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="co">#spacing just for visuals</span></span>
-<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">87</span>,<span class="dv">18</span>,<span class="dv">84</span>,</span>
-<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">12</span>,<span class="dv">3</span>,<span class="dv">4</span>,</span>
-<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">9</span>,<span class="dv">1</span>,<span class="dv">7</span>), <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">byrow =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fisher.test</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="co">#spacing just for visuals</span></span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">87</span>,<span class="dv">18</span>,<span class="dv">84</span>,</span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">12</span>,<span class="dv">3</span>,<span class="dv">4</span>,</span>
+<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a>                     <span class="dv">9</span>,<span class="dv">1</span>,<span class="dv">7</span>), <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">byrow =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Fisher's Exact Test for Count Data
@@ -1768,7 +1809,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
 <p><a href="https://jsgosnell.github.io/cuny_biostats_book/">Course notes</a> &amp; <a href="https://jsgosnell.github.io/cuny_biostats_website/">slides</a></p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/solutions/5_Contingency_analysis_solutions.Rmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/solutions/5_Contingency_analysis_solutions.Rmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/solutions/5_Contingency_analysis_solutions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/solutions/5_Contingency_analysis_solutions.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

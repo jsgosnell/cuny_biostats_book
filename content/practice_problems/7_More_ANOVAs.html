@@ -54,27 +54,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -568,17 +548,18 @@ div.csl-indent {
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a>
+  <ul>
+  <li><a href="#if-interaction-is-significant" id="toc-if-interaction-is-significant" class="nav-link" data-scroll-target="#if-interaction-is-significant">If interaction is significant</a></li>
+  <li><a href="#blocking-example" id="toc-blocking-example" class="nav-link" data-scroll-target="#blocking-example">Blocking example</a></li>
+  </ul></li>
   <li><a href="#swirl-lesson" id="toc-swirl-lesson" class="nav-link" data-scroll-target="#swirl-lesson">Swirl lesson</a></li>
-  <li><a href="#just-for-practice" id="toc-just-for-practice" class="nav-link" data-scroll-target="#just-for-practice">Just for practice</a>
+  <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice">Practice</a>
   <ul>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">1</a></li>
   <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">2</a></li>
   <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">3</a></li>
   <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">4</a></li>
-  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">5</a></li>
-  <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5">6</a></li>
-  <li><a href="#section-6" id="toc-section-6" class="nav-link" data-scroll-target="#section-6">7</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/practice_problems/7_More_ANOVAs.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/practice_problems/7_More_ANOVAs.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -609,8 +590,7 @@ div.csl-indent {
 <p>Remember you should</p>
 <ul>
 <li>add code chunks by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Ctrl+Alt+I</em> to answer the questions!</li>
-<li>use visual mode or <strong>render</strong> your file to produce a version that you can see!</li>
-<li><strong>render</strong> your file to make sure it runs (and that you haven’t been working out of order)</li>
+<li><strong>render</strong> your file to produce a markdown version that you can see!</li>
 <li>save your work often
 <ul>
 <li><strong>commit</strong> it via git!</li>
@@ -619,73 +599,152 @@ div.csl-indent {
 </ul>
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>This practice reviews the <a href="https://jsgosnell.github.io/cuny_biostats_book/content/chapters/Compare_means_among_populations.html" target="&quot;_blank">Compare means among groups lecture</a>.</p>
+<p>This practice reviews the <a href="https://jsgosnell.github.io/cuny_biostats_book/content/chapters/More_ANOVAs.html" target="_blank">More ANOVAs lecuture</a>.</p>
 </section>
 <section id="examples" class="level2">
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
-<p>We will run ANOVA’s using the <em>lm</em> function to connect them to other test. First, build the model</p>
+<section id="if-interaction-is-significant" class="level3">
+<h3 class="anchored" data-anchor-id="if-interaction-is-significant">If interaction is significant</h3>
+<p>Following the memory example from class, read in and check data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>iris_anova <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>memory <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/general/eysenck.txt"</span>, <span class="at">header =</span> T,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">stringsAsFactors =</span> T)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(memory)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   100 obs. of  3 variables:
+ $ Age    : Factor w/ 2 levels "Older","Younger": 2 2 2 2 2 2 2 2 2 2 ...
+ $ Process: Factor w/ 5 levels "Adjective","Counting",..: 2 2 2 2 2 2 2 2 2 2 ...
+ $ Words  : num  8 6 4 6 7 6 5 7 9 7 ...</code></pre>
 </div>
-<p>Then use the object it created to test assumptions</p>
+</div>
+<p>Let’s put younger level first</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plyr)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>memory<span class="sc">$</span>Age <span class="ot">&lt;-</span> <span class="fu">relevel</span>(memory<span class="sc">$</span>Age, <span class="st">"Younger"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>and graph</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lattice</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>function_output <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(memory, <span class="at">measurevar=</span><span class="st">"Words"</span>, <span class="at">groupvars =</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">c</span>(<span class="st">"Age"</span>, <span class="st">"Process"</span>), <span class="at">na.rm =</span> T)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(function_output, <span class="fu">aes</span>(<span class="at">x=</span>Age, <span class="at">y=</span>Words,<span class="at">color=</span>Process, </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">shape =</span> Process)) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group=</span>Process, <span class="at">linetype =</span> Process), <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Words remembered"</span>)<span class="sc">+</span> </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Age"</span>) <span class="sc">+</span> </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Process type interacts with </span><span class="sc">\n</span><span class="st"> age to impact memory"</span>)<span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">28</span>), </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">28</span>), </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y  =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>),</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x  =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>), </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>),</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>, <span class="at">face=</span><span class="st">"bold"</span>),</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">32</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="7_More_ANOVAs_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="7_More_ANOVAs_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>If assumptions are met, check the p-value using the <em>summary</em> or <em>Anova</em> function.</p>
+<p>There appears to be some interactions. Let’ build a model</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(iris_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = Sepal.Length ~ Species, data = iris)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--1.6880 -0.3285 -0.0060  0.3120  1.3120 
-
-Coefficients:
-                  Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)         5.0060     0.0728  68.762  &lt; 2e-16 ***
-Speciesversicolor   0.9300     0.1030   9.033 8.77e-16 ***
-Speciesvirginica    1.5820     0.1030  15.366  &lt; 2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.5148 on 147 degrees of freedom
-Multiple R-squared:  0.6187,    Adjusted R-squared:  0.6135 
-F-statistic: 119.3 on 2 and 147 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>memory_interactions <span class="ot">&lt;-</span> <span class="fu">lm</span>(Words <span class="sc">~</span> Age <span class="sc">*</span> Process, memory)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and check assumptions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(memory_interactions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="7_More_ANOVAs_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>These appear to be met, so look at output</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'car' was built under R version 4.4.1</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: carData</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(iris_anova, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(memory_interactions, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
-Response: Sepal.Length
-             Sum Sq  Df F value    Pr(&gt;F)    
-(Intercept) 1253.00   1 4728.16 &lt; 2.2e-16 ***
-Species       63.21   2  119.26 &lt; 2.2e-16 ***
-Residuals     38.96 147                      
+Response: Words
+            Sum Sq Df  F value    Pr(&gt;F)    
+(Intercept) 2190.4  1 272.9281 &lt; 2.2e-16 ***
+Age           72.2  1   8.9963 0.0034984 ** 
+Process     1353.7  4  42.1690 &lt; 2.2e-16 ***
+Age:Process  190.3  4   5.9279 0.0002793 ***
+Residuals    722.3 90                       
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>If the overall test is significant, carry out post hoc tests (Tukey shown here for all pairs, as most common)</p>
+<p>Since interaction is significant, analyze subsets. For example,</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>memory_interactions_young <span class="ot">&lt;-</span> <span class="fu">lm</span>(Words <span class="sc">~</span> Process, memory[memory<span class="sc">$</span>Age <span class="sc">==</span> <span class="st">"Younger"</span>,])</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(memory_interactions_young)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="7_More_ANOVAs_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="7_More_ANOVAs_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="7_More_ANOVAs_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="7_More_ANOVAs_files/figure-html/unnamed-chunk-7-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(memory_interactions_young, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Words
+            Sum Sq Df F value    Pr(&gt;F)    
+(Intercept) 2190.4  1 343.442 &lt; 2.2e-16 ***
+Process     1353.7  4  53.064 &lt; 2.2e-16 ***
+Residuals    287.0 45                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>There is a significant difference in words recalled based on process, but why? Investigate with post-hoc tests.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: mvtnorm</code></pre>
 </div>
@@ -707,8 +766,8 @@ Attaching package: 'TH.data'</code></pre>
 
     geyser</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>compare_cont_tukey <span class="ot">&lt;-</span> <span class="fu">glht</span>(iris_anova, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Species =</span> <span class="st">"Tukey"</span>))</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(compare_cont_tukey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>comp_young <span class="ot">&lt;-</span> <span class="fu">glht</span>(memory_interactions_young, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">Process =</span> <span class="st">"Tukey"</span>))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(comp_young)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Simultaneous Tests for General Linear Hypotheses
@@ -716,175 +775,90 @@ Attaching package: 'TH.data'</code></pre>
 Multiple Comparisons of Means: Tukey Contrasts
 
 
-Fit: lm(formula = Sepal.Length ~ Species, data = iris)
+Fit: lm(formula = Words ~ Process, data = memory[memory$Age == "Younger", 
+    ])
 
 Linear Hypotheses:
-                            Estimate Std. Error t value Pr(&gt;|t|)    
-versicolor - setosa == 0       0.930      0.103   9.033   &lt;1e-08 ***
-virginica - setosa == 0        1.582      0.103  15.366   &lt;1e-08 ***
-virginica - versicolor == 0    0.652      0.103   6.333   &lt;1e-08 ***
+                             Estimate Std. Error t value Pr(&gt;|t|)    
+Counting - Adjective == 0      -8.300      1.129  -7.349  &lt; 1e-04 ***
+Imagery - Adjective == 0        2.800      1.129   2.479  0.11350    
+Intentional - Adjective == 0    4.500      1.129   3.984  0.00219 ** 
+Rhyming - Adjective == 0       -7.200      1.129  -6.375  &lt; 1e-04 ***
+Imagery - Counting == 0        11.100      1.129   9.828  &lt; 1e-04 ***
+Intentional - Counting == 0    12.800      1.129  11.333  &lt; 1e-04 ***
+Rhyming - Counting == 0         1.100      1.129   0.974  0.86545    
+Intentional - Imagery == 0      1.700      1.129   1.505  0.56457    
+Rhyming - Imagery == 0        -10.000      1.129  -8.854  &lt; 1e-04 ***
+Rhyming - Intentional == 0    -11.700      1.129 -10.359  &lt; 1e-04 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)</code></pre>
 </div>
 </div>
-<p>Note a special case of an ANOVA (which is a special case of a linear model) is when we only are comparing 2 populations. When this happens, we have a t-test. For example, we can compare only <em>I. virginica</em> and <em>I. setosa</em>.</p>
+</section>
+<section id="blocking-example" class="level3">
+<h3 class="anchored" data-anchor-id="blocking-example">Blocking example</h3>
+<p>Following feather color example from class:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>not_versicolor <span class="ot">&lt;-</span> iris[iris<span class="sc">$</span>Species <span class="sc">!=</span> <span class="st">"versicolor"</span>,]</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Sepal.Length <span class="sc">~</span> Species, not_versicolor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># more than 2? ####</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>feather <span class="ot">&lt;-</span>  <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/wiebe_2002_example.csv"</span>, <span class="at">stringsAsFactors =</span> T)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(feather)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   32 obs. of  3 variables:
+ $ Bird       : Factor w/ 16 levels "A","B","C","D",..: 1 2 3 4 5 6 7 8 9 10 ...
+ $ Feather    : Factor w/ 2 levels "Odd","Typical": 2 2 2 2 2 2 2 2 2 2 ...
+ $ Color_index: num  -0.255 -0.213 -0.19 -0.185 -0.045 -0.025 -0.015 0.003 0.015 0.02 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">25</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>special <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Bird =</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">16</span>], <span class="at">Feather =</span> <span class="st">"Special"</span>, </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">Color_index=</span> feather[feather<span class="sc">$</span>Feather <span class="sc">==</span> <span class="st">"Typical"</span>, <span class="st">"Color_index"</span>] <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                        .<span class="dv">3</span> <span class="sc">+</span><span class="fu">runif</span>(<span class="dv">16</span>,<span class="dv">1</span>,<span class="dv">1</span>)<span class="sc">*</span>.<span class="dv">01</span>)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>feather <span class="ot">&lt;-</span> <span class="fu">merge</span>(feather, special, <span class="at">all =</span> T)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Color_index <span class="sc">~</span> Feather <span class="sc">+</span> Bird, <span class="at">data=</span>feather), <span class="at">type=</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Color_index
+             Sum Sq Df  F value    Pr(&gt;F)    
+(Intercept) 0.36392  1  59.9538 1.224e-08 ***
+Feather     1.67906  2 138.3093 7.208e-16 ***
+Bird        0.34649 15   3.8055 0.0008969 ***
+Residuals   0.18210 30                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>compare <span class="ot">&lt;-</span> <span class="fu">glht</span>(<span class="fu">lm</span>(Color_index <span class="sc">~</span> Feather <span class="sc">+</span> Bird, <span class="at">data=</span>feather), <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="st">"Feather"</span> <span class="ot">=</span> <span class="st">"Tukey"</span>))</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(compare)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-    Welch Two Sample t-test
+     Simultaneous Tests for General Linear Hypotheses
 
-data:  Sepal.Length by Species
-t = -15.386, df = 76.516, p-value &lt; 2.2e-16
-alternative hypothesis: true difference in means between group setosa and group virginica is not equal to 0
-95 percent confidence interval:
- -1.78676 -1.37724
-sample estimates:
-   mean in group setosa mean in group virginica 
-                  5.006                   6.588 </code></pre>
-</div>
-</div>
-<p>If you compare lm and ANOVA output, it may look slightly different.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Species, not_versicolor))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = Sepal.Length ~ Species, data = not_versicolor)
+Multiple Comparisons of Means: Tukey Contrasts
 
-Residuals:
-    Min      1Q  Median      3Q     Max 
--1.6880 -0.2880 -0.0060  0.2985  1.3120 
 
-Coefficients:
-                 Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)        5.0060     0.0727   68.85   &lt;2e-16 ***
-Speciesvirginica   1.5820     0.1028   15.39   &lt;2e-16 ***
+Fit: lm(formula = Color_index ~ Feather + Bird, data = feather)
+
+Linear Hypotheses:
+                       Estimate Std. Error t value Pr(&gt;|t|)    
+Typical - Odd == 0      0.13712    0.02755   4.978   &lt;1e-04 ***
+Special - Odd == 0      0.44712    0.02755  16.232   &lt;1e-04 ***
+Special - Typical == 0  0.31000    0.02755  11.254   &lt;1e-04 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.5141 on 98 degrees of freedom
-Multiple R-squared:  0.7072,    Adjusted R-squared:  0.7042 
-F-statistic: 236.7 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
+(Adjusted p values reported -- single-step method)</code></pre>
 </div>
 </div>
-<p>That’s because by default the t-test does not assume equal variances. We can fix that.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Sepal.Length <span class="sc">~</span> Species, not_versicolor, <span class="at">var.equal=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Two Sample t-test
-
-data:  Sepal.Length by Species
-t = -15.386, df = 98, p-value &lt; 2.2e-16
-alternative hypothesis: true difference in means between group setosa and group virginica is not equal to 0
-95 percent confidence interval:
- -1.786042 -1.377958
-sample estimates:
-   mean in group setosa mean in group virginica 
-                  5.006                   6.588 </code></pre>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#note comparison doesn't work</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(Color_index <span class="sc">~</span> Feather <span class="sc">*</span> Bird, <span class="at">data=</span>feather), <span class="at">type=</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in Anova.lm(lm(Color_index ~ Feather * Bird, data = feather), type = "III"): residual df = 0</code></pre>
 </div>
 </div>
-<p>but in this case it has minimal impact.</p>
-<p>If assumptions are not met, we can use the Kruskal Wallis non-parametric test and associated post hoc tests.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kruskal.test</span>(Sepal.Length <span class="sc">~</span> Species, <span class="at">data =</span> iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Kruskal-Wallis rank sum test
-
-data:  Sepal.Length by Species
-Kruskal-Wallis chi-squared = 96.937, df = 2, p-value &lt; 2.2e-16</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.wilcox.test</span>(iris<span class="sc">$</span>Sepal.Length, </span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                          iris<span class="sc">$</span>Species, </span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">p.adjust.method=</span><span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
-
-data:  iris$Sepal.Length and iris$Species 
-
-           setosa  versicolor
-versicolor 1.7e-13 -         
-virginica  &lt; 2e-16 5.9e-07   
-
-P value adjustment method: holm </code></pre>
-</div>
-</div>
-<p>The 2-sample connected test here is a Wilcoxon test (also known as the Mann-Whitney test or Mann-Whitney-Wilcox test) (and why we used pairwise.wilcox.test earrlier).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Sepal.Length <span class="sc">~</span> Species, not_versicolor, <span class="at">var.equal=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Wilcoxon rank sum test with continuity correction
-
-data:  Sepal.Length by Species
-W = 38.5, p-value &lt; 2.2e-16
-alternative hypothesis: true location shift is not equal to 0</code></pre>
-</div>
-</div>
-<p>We can also use a bootstrap alternative</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(WRS2)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t1waybt</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Call:
-t1waybt(formula = Sepal.Length ~ Species, data = iris)
-
-Effective number of bootstrap samples was 599.
-
-Test statistic: 111.9502 
-p-value: 0 
-Variance explained: 0.716 
-Effect size: 0.846 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>bootstrap_post_hoc <span class="ot">&lt;-</span> <span class="fu">mcppb20</span>(Sepal.Length<span class="sc">~</span>Species, iris)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(<span class="fu">as.numeric</span>(bootstrap_post_hoc<span class="sc">$</span>comp[,<span class="dv">6</span>]), <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0 0 0</code></pre>
-</div>
-</div>
-<p>For 2 groups, the <em>boot.t.test</em> function in the <strong>MKinfer</strong> package is also an option.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MKinfer)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.t.test</span>(Sepal.Length <span class="sc">~</span> Species, not_versicolor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Bootstrap Welch Two Sample t-test
-
-data:  Sepal.Length by Species
-number of bootstrap samples:  9999
-bootstrap p-value &lt; 1e-04 
-bootstrap difference of means (SE) = -1.580394 (0.1014523) 
-95 percent bootstrap percentile confidence interval:
- -1.778 -1.374
-
-Results without bootstrap:
-t = -15.386, df = 76.516, p-value &lt; 2.2e-16
-alternative hypothesis: true difference in means is not equal to 0
-95 percent confidence interval:
- -1.78676 -1.37724
-sample estimates:
-   mean in group setosa mean in group virginica 
-                  5.006                   6.588 </code></pre>
-</div>
-</div>
-<p>A final option (shown here for 2 groups) is to use permutation tests. These tests work by rearranging the data in all (theoretically) possible ways and calculating signals for each permutation. You can then compare what we actually found to that to obtain p-values. Often times we can’t find all the combinations there are too many!), but a good sample (10,000+) should work. The function that we’ll use for this is independence_test from the coin package. It uses the same arguments as the t-test (including the formula interface).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(coin)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">independence_test</span>(Sepal.Length <span class="sc">~</span> Species, not_versicolor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Asymptotic General Independence Test
-
-data:  Sepal.Length by Species (setosa, virginica)
-Z = -8.3675, p-value &lt; 2.2e-16
-alternative hypothesis: two.sided</code></pre>
-</div>
-</div>
+</section>
 </section>
 <section id="swirl-lesson" class="level2">
 <h2 class="anchored" data-anchor-id="swirl-lesson">Swirl lesson</h2>
@@ -894,30 +868,30 @@ alternative hypothesis: two.sided</code></pre>
 <li><p>install the “swirl” package</p></li>
 <li><p>run the following code once on the computer to install a new course</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(swirl)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_course_github</span>(<span class="st">"jsgosnell"</span>, <span class="st">"JSG_swirl_lessons"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(swirl)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_course_github</span>(<span class="st">"jsgosnell"</span>, <span class="st">"JSG_swirl_lessons"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 <li><p>start swirl!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">swirl</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">swirl</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>swirl()</li>
 </ul></li>
 <li><p>then follow the on-screen prompts to select the JSG_swirl_lessons course and the lessons you want</p>
 <ul>
-<li>Here we will focus on the <strong>Compare means among groups</strong> lesson</li>
+<li>Here we will focus on the <strong>More ANOVAs</strong> lesson</li>
 </ul></li>
 <li><p>TIP: If you are seeing duplicate courses (or odd versions of each), you can clear all courses and then re-download the courses by</p>
 <ul>
 <li><p>exiting swirl using escape key or bye() function</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bye</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bye</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 <li><p>uninstalling and reinstalling courses</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">uninstall_all_courses</span>()</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_course_github</span>(<span class="st">"jsgosnell"</span>, <span class="st">"JSG_swirl_lessons"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">uninstall_all_courses</span>()</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_course_github</span>(<span class="st">"jsgosnell"</span>, <span class="st">"JSG_swirl_lessons"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 <li><p>when you restart swirl with swirl(), you may need to select</p>
 <ul>
@@ -926,127 +900,49 @@ alternative hypothesis: two.sided</code></pre>
 </ul></li>
 </ul>
 </section>
-<section id="just-for-practice" class="level2">
-<h2 class="anchored" data-anchor-id="just-for-practice">Just for practice</h2>
-<p><em>For the following questions, you will use multiple methods to analyze a single dataset. This is for practice and so you can compare! For actual analysis you should only use the best method!</em></p>
+<section id="practice" class="level2">
+<h2 class="anchored" data-anchor-id="practice">Practice</h2>
 <section id="section" class="level3">
 <h3 class="anchored" data-anchor-id="section">1</h3>
-<p>Use the iris dataset in R to determine if petal length differs among species. <em>Do this problem using the following methods</em></p>
-<ul>
-<li><p><em>ANOVA</em></p></li>
-<li><p><em>Kruskal-Wallis</em></p></li>
-<li><p><em>bootstrapping</em></p></li>
-</ul>
-<p><em>Make sure you can plot the data and carry out multiple comparison methods as needed. Also be sure to understand the use of coefficients and adjusted R<sup>2</sup> values and where to find them.</em></p>
+<p>A survey was conducted to see if athletes and non-athletes deal with anger in the same way. Data is @</p>
+<p>angry &lt;- read.csv(“<a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSaawG37o1ZUEs1B4keIJpZAY2c5tuljf29dWnzqQ0tHNCzfbz85AlWobYzBQ3nPPXJBLP-FWe4BNZB/pub?gid=1784556512&amp;single=true&amp;output=csv" class="uri">https://docs.google.com/spreadsheets/d/e/2PACX-1vSaawG37o1ZUEs1B4keIJpZAY2c5tuljf29dWnzqQ0tHNCzfbz85AlWobYzBQ3nPPXJBLP-FWe4BNZB/pub?gid=1784556512&amp;single=true&amp;output=csv</a>”, stringsAsFactors = T)</p>
+<p>and more information is at</p>
+<p><a href="http://onlinestatbook.com/case_studies/angry_moods.html" class="uri">http://onlinestatbook.com/case_studies/angry_moods.html</a>.</p>
+<p>Focus on the following variables:</p>
+<p>Sports 1 = athletes, 2 = non-athletes Gender 1 = males, 2 = females Expression (AE) index of general anger expression: (Anger-Out) + (Anger-In) - (Control-Out) - (Control-In) + 48</p>
+<p>Is there any evidence that gender or athlete status impact how anger is expressed?</p>
 </section>
 <section id="section-1" class="level3">
 <h3 class="anchored" data-anchor-id="section-1">2</h3>
-<p>Data on plant heights (in cm) for plants grown with a new and old formulation of fertilizer can be found at</p>
-<p><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSUVowOKlmTic4ekL7LSbwDcqrsDSXv5K_c4Qyfcvz1lLE1_iINmGzy0zMGxY7z5DImlUErK4S2wY7Y/pub?gid=0&amp;single=true&amp;output=csv" class="uri">https://docs.google.com/spreadsheets/d/e/2PACX-1vSUVowOKlmTic4ekL7LSbwDcqrsDSXv5K_c4Qyfcvz1lLE1_iINmGzy0zMGxY7z5DImlUErK4S2wY7Y/pub?gid=0&amp;single=true&amp;output=csv</a>.</p>
-<p>Analyze this data using the t.test function and the lm function to convince yourself that t-tests are special cases of ANOVAs, which are special cases of linear models!</p>
-<p><em>For the following questions, pick the appropriate method for analyzing the question. Use a plot of the data and/or model analysis to justify your decision. Make sure you can carry out multiple comparison methods as needed. Also be sure to understand the use of coefficients and adjusted R<sup>2</sup> values and where to find them.</em></p>
+<p>A professor carried out a long-term study to see how various factors impacted pulse rate before and after exercise. Data can be found at <a href="http://www.statsci.org/data/oz/ms212.txt" class="uri">http://www.statsci.org/data/oz/ms212.txt</a> With more info at <a href="http://www.statsci.org/data/oz/ms212.html" class="uri">http://www.statsci.org/data/oz/ms212.html</a>. Is there evidence that frequency of exercise (Exercise column) and gender impact change in pulse rate for students who ran (Ran column = 1)?</p>
 </section>
 <section id="section-2" class="level3">
 <h3 class="anchored" data-anchor-id="section-2">3</h3>
-<p>Data on sugar cane yield for multiple fields is available using</p>
-<p>read.table(“<a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRjstKreIM6UknyKFQCtw2_Q6itY9iOAVWO1hUNZkBFL8mwVssvTevqgzV22YDKCUeJq0HBDrsBrf5O/pub?gid=971470377&amp;single=true&amp;output=tsv" class="uri">https://docs.google.com/spreadsheets/d/e/2PACX-1vRjstKreIM6UknyKFQCtw2_Q6itY9iOAVWO1hUNZkBFL8mwVssvTevqgzV22YDKCUeJq0HBDrsBrf5O/pub?gid=971470377&amp;single=true&amp;output=tsv</a>”, header = T, stringsAsFactors = T)</p>
-<p>More info on the data can be found at <a href="http://www.statsci.org/data/oz/cane.html" class="uri">http://www.statsci.org/data/oz/cane.html</a>. Is there evidence that location (DistrictPosition column) impacts yield (Tonn.Hect column)? If so, which areas are driving this distance?</p>
+<p>Data from Valdez et al 2023 is available @ <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vT2gaLu6pyRMlcbzarn3ej4bFmT_iHvrlNWJYSdrsLdUWIjcJi7rU11-ipvYpGnqD9qLDnbhNd2sDUW/pub?gid=1707080634&amp;single=true&amp;output=csv" class="uri">https://docs.google.com/spreadsheets/d/e/2PACX-1vT2gaLu6pyRMlcbzarn3ej4bFmT_iHvrlNWJYSdrsLdUWIjcJi7rU11-ipvYpGnqD9qLDnbhNd2sDUW/pub?gid=1707080634&amp;single=true&amp;output=csv</a>.</p>
+<p>Import it into to R and</p>
+<ul>
+<li>determine how the snail grazing and nitrogen levels impact number of flowering shoots ( Shoot.density..m2)</li>
+<li>construct a plot to showcase your analysis</li>
+</ul>
 </section>
 <section id="section-3" class="level3">
 <h3 class="anchored" data-anchor-id="section-3">4</h3>
-<p>Data on FEV (forced expiratory volume), a measure of lung function, can be found at</p>
-<p><a href="http://www.statsci.org/data/general/fev.txt" class="uri">http://www.statsci.org/data/general/fev.txt</a></p>
-<p>More information on the dataset is available at</p>
-<p><a href="http://www.statsci.org/data/general/fev.html" class="uri">http://www.statsci.org/data/general/fev.html</a>.</p>
-<p>Is there evidence that FEV depends on gender? If so, which gender has the higher FEV score? How much variance does gender explain?</p>
-</section>
-<section id="section-4" class="level3">
-<h3 class="anchored" data-anchor-id="section-4">5</h3>
-<p>The following data are human blood clotting times (in minutes) of individuals given one of two different drugs.</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th style="text-align: center;">Drug B</th>
-<th style="text-align: center;">Drug G</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">8.8</td>
-<td style="text-align: center;">9.9</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">8.4</td>
-<td style="text-align: center;">9.0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">7.9</td>
-<td style="text-align: center;">11.1</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">8.7</td>
-<td style="text-align: center;">9.6</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">9.1</td>
-<td style="text-align: center;">8.7</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">9.6</td>
-<td style="text-align: center;">10.4</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"></td>
-<td style="text-align: center;">9.5</td>
-</tr>
-</tbody>
-</table>
-<p>Test the hypothesis that the mean clotting times are equal for the two groups</p>
-<ul>
-<li>Estimating the variance from the data</li>
-<li>Using rank transform analysis</li>
-<li>Using a permutation test</li>
-<li>Using a bootstrap test</li>
-</ul>
-<p>Test the hypothesis that the mean clotting times are equal for the two groups</p>
-<ul>
-<li>Estimating the variance from the data</li>
-<li>Using rank transform analysis</li>
-<li>Using a permutation test</li>
-<li>Using a bootstrap test</li>
-</ul>
-</section>
-<section id="section-5" class="level3">
-<h3 class="anchored" data-anchor-id="section-5">6</h3>
-<p>(Example from Handbook on Biological Statistics) Odd (stunted, short, new) feathers were compared in color to typical feathers in Northern Flickers (<em>Colaptes auratus</em>) <span class="citation" data-cites="wiebe2002">(<a href="#ref-wiebe2002" role="doc-biblioref">Wiebe and Bortolotti 2002</a>)</span> . Data is at</p>
-<p><a href="https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/wiebe_2002_example.csv" class="uri">https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/wiebe_2002_example.csv</a></p>
-<p>Test the hypothesis that odd and typical feathers did not differ using</p>
-<ul>
-<li>a Student’s t test and/or lm</li>
-<li>a rank test</li>
-<li>bootstrapping</li>
-</ul>
-<p>Note we will return to this question next week!</p>
-</section>
-<section id="section-6" class="level3">
-<h3 class="anchored" data-anchor-id="section-6">7</h3>
-<p>Find an example of a one-way ANOVA from a paper that is related to your research or a field of interest (hint: use Google Scholar or another search engine to search for a keyword of interest plus ANOVA). Make sure you understand the connections between the methods, results, and graphs. Briefly answer the following questions</p>
+<p>Find an example of a factorial ANOVA from a paper that is related to your research or a field of interest. Make sure you understand the connections between the methods, results, and graphs. Briefly answer the following questions</p>
 <ul>
 <li>What was the dependent variable?</li>
 <li>What were the independent variables?</li>
-<li>Was there a difference in mean values among the groups? If so, how did the paper address or explain this finding.</li>
+<li>Was the interaction significant?
+<ul>
+<li>If so, how did they interpret findings</li>
+<li>If not, were the main effects significant?</li>
+</ul></li>
 </ul>
 
 
-
 </section>
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-wiebe2002" class="csl-entry" role="listitem">
-Wiebe, Karen L., and Gary R. Bortolotti. 2002. <span>“Variation in Carotenoid-Based Color in Northern Flickers in a Hybrid Zone.”</span> <em>The Wilson Bulletin</em> 114 (3): 393–400. <a href="http://www.jstor.org/stable/4164474">http://www.jstor.org/stable/4164474</a>.
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
