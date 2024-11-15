@@ -61,6 +61,31 @@ compare_cont_tukey <- glht(iris_anova, linfct = mcp(Species = "Tukey"))
 summary(compare_cont_tukey)
 ```
 
+Note a special case of an ANOVA (which is a special case of a linear
+model) is when we only are comparing 2 populations. When this happens,
+we have a t-test. For example, we can compare only *I. virginica* and
+*I. setosa*.
+
+```{r}
+not_versicolor <- iris[iris$Species != "versicolor",]
+t.test(Sepal.Length ~ Species, not_versicolor)
+```
+
+If you compare lm and ANOVA output, it may look slightly different.
+
+```{r}
+summary(lm(Sepal.Length ~ Species, not_versicolor))
+```
+
+That's because by default the t-test does not assume equal variances. We
+can fix that.
+
+```{r}
+t.test(Sepal.Length ~ Species, not_versicolor, var.equal=T)
+```
+
+but in this case it has minimal impact.
+
 If assumptions are not met, we can use the Kruskal Wallis non-parametric
 test and associated post hoc tests.
 
@@ -82,6 +107,11 @@ p.adjust(as.numeric(bootstrap_post_hoc$comp[,6]), "holm")
 
 For 2 groups, the *boot.t.test* function in the **MKinfer** package is
 also an option.
+
+```{r}
+library(MKinfer)
+boot.t.test(Sepal.Length ~ Species, not_versicolor)
+```
 
 A final option (shown here for 2 groups) is to use permutation tests.
 These tests work by rearranging the data in all (theoretically) possible
@@ -422,8 +452,8 @@ corresponds to a p-value of 0.02. This p-value is \<.05, so I reject the
 null hypothesis that the mean clotting times are the same for the two
 drugs.*
 
-I could also do this using a linear model approach,but that needs a long
-dataframe
+*I could also do this using a linear model approach,but that needs a
+long dataframe*
 
 ```{r}
 drug_df <- data.frame(drug= c(rep("b", length(drug_b)), rep("g", length(drug_g))), time = c(drug_b, drug_g))
@@ -432,7 +462,7 @@ plot(drug_lm)
 Anova(drug_lm, type="III")
 ```
 
-but that assumes variances are equal
+*but that assumes variances are equal*
 
 ```{r}
 t.test(drug_b, drug_g,var.equal = T)
@@ -455,7 +485,7 @@ the two drugs. This is the same as*
 kruskal.test(time~drug, drug_df)
 ```
 
-If we remove the continuity correction
+*If we remove the continuity correction*
 
 ```{r}
 wilcox.test(drug_b, drug_g, correct = F)
@@ -513,39 +543,42 @@ feather <-  read.csv("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/
 t.test(Color_index ~ Feather, data=feather)
 ```
 
--   I assumed the difference in means was normally distributed given the
-    trait and sample size. The test resulted in a statistic of t~29.971~
-    = -3.56. This corresponds to a p-value of .001. Since the p-value is
-    \<.05, I reject the null hypothesis that feather color is the same
-    between odd and typical feathers. Note if we assume the variances of
-    the groups are equal (not the default for a t-test)
+*I assumed the difference in means was normally distributed given the
+trait and sample size. The test resulted in a statistic of t~29.971~ =
+-3.56. This corresponds to a p-value of .001. Since the p-value is
+\<.05, I reject the null hypothesis that feather color is the same
+between odd and typical feathers. Note if we assume the variances of the
+groups are equal (not the default for a t-test)*
 
 ```{r}
 t.test(Color_index ~ Feather, data=feather, var.equal=T)
 ```
 
--   this equivalent too:
-
-    ```{r}
-    library(car)
-    Anova(lm(Color_index ~ Feather, data=feather), type="III")
-    ```
-
-However (we'll get to this next chapter), we should really use a
-blocking approach that accounts for the fact each bird was measured
-twice. This can be a paired t-test:
+*this equivalent too:*
 
 ```{r}
-t.test(Color_index ~ Feather, data=feather, paired=TRUE)
+library(car)
+Anova(lm(Color_index ~ Feather, data=feather), type="III")
 ```
 
--   I used a paired t-test because feathers were measured on the same
-    bird.\
-    I also assumed the difference in means was normally distributed
-    given the trait and sample size. The test resulted in a statistic of
-    t~15~ = -4.06. This corresponds to a p-value of .001. Since the
-    p-value is \<.05, I reject the null hypothesis that feather color is
-    the same between odd and typical feathers. Note this equivalent too:
+*However (we'll get to this next chapter), we should really use a
+blocking approach that accounts for the fact each bird was measured
+twice. This can be a paired t-test (note you can no longer use paired
+data in formula interface):*
+
+```{r}
+t.test(feather[feather$Feather == "Typical", "Color_index"],
+       feather[feather$Feather == "Odd", "Color_index"],
+       paired=TRUE)
+```
+
+*I used a paired t-test because feathers were measured on the same
+bird.\
+I also assumed the difference in means was normally distributed given
+the trait and sample size. The test resulted in a statistic of t~15~ =
+-4.06. This corresponds to a p-value of .001. Since the p-value is
+\<.05, I reject the null hypothesis that feather color is the same
+between odd and typical feathers. Note this equivalent too:*
 
 ```{r}
 library(car)
@@ -553,28 +586,30 @@ Anova(lm(Color_index ~ Feather+Bird, data=feather))
 ```
 
 -   a rank test
--   I could used a rank-based test if I assumed the distribution of
-    means was symmetrical but normal.
+
+*I could used a rank-based test if I assumed the distribution of means
+was symmetrical but normal.*
 
 ```{r}
 wilcox.test(Color_index ~ Feather, data=feather)
 ```
 
-which led to W=45.5, p=0.002, thus I reject the null hypothesis.
+*which led to W=45.5, p=0.002, thus I reject the null hypothesis.
 However, as noted above, we will see next week we should use a paired
-test.
+test.*
 
 ```{r}
-wilcox.test(Color_index ~ Feather, data=feather, paired=TRUE)
+wilcox.test(feather[feather$Feather == "Typical", "Color_index"],
+       feather[feather$Feather == "Odd", "Color_index"],
+       paired=TRUE)
 ```
 
--   I used a paired rank-based test because feathers were measured on
-    the same bird. I did not assume the difference in means was normally
-    distributed but did assume it followed a symmetric distribution. The
-    test resulted in a statistic of V = 10. This corresponds to a
-    p-value of .001. Since the p-value is \<.05, I reject the null
-    hypothesis that feather color is the same between odd and typical
-    feathers.\*
+*I used a paired rank-based test because feathers were measured on the
+same bird. I did not assume the difference in means was normally
+distributed but did assume it followed a symmetric distribution. The
+test resulted in a statistic of V = 10. This corresponds to a p-value of
+.001. Since the p-value is \<.05, I reject the null hypothesis that
+feather color is the same between odd and typical feathers.*
 
 -   a binary test is only possible for paired data (so not required
     here, but in case you are interested...)
@@ -585,24 +620,23 @@ SIGN.test(feather[feather$Feather == "Odd", "Color_index"],
           feather[feather$Feather == "Typical", "Color_index"])
 ```
 
--   I used a sign test (always paired!) because feathers were measured
-    on the same bird. I did not assume the difference in means was
-    normally distributed or that the differences followed a symmetric
-    distribution. The test resulted in a statistic of s = 3. This
-    corresponds to a p-value of .02. Since the p-value is \<.05, I
-    reject the null hypothesis that feather color is the same between
-    odd and typical feathers.\*
+*I used a sign test (always paired!) because feathers were measured on
+the same bird. I did not assume the difference in means was normally
+distributed or that the differences followed a symmetric distribution.
+The test resulted in a statistic of s = 3. This corresponds to a p-value
+of .02. Since the p-value is \<.05, I reject the null hypothesis that
+feather color is the same between odd and typical feathers.*
 
 -   bootstrapping
 
--   Could be done using a non-paired approach
+*Could be done using a non-paired approach*
 
 ```{r}
 library(MKinfer)
 boot.t.test(Color_index ~ Feather, data=feather)
 ```
 
-or a paired approach (next chapter)
+*or a paired approach (next chapter)*
 
 ```{r}
 boot.t.test(Color_index ~ Feather, data=feather, paired=TRUE)
