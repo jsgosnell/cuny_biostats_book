@@ -8,27 +8,27 @@ bibliography: ../references.bib
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
-source("../globals.R")
-
 ```
 
 Remember you should
 
-* add code chunks by clicking the *Insert Chunk* button on the toolbar or by
-pressing *Ctrl+Alt+I* to answer the questions!
-* use visual mode or **render** your file to produce a version that you can see!
-* **render** your file to make sure it runs (and that you haven't been working
-out of order)
-* save your work often 
-  * **commit** it via git!
-  * **push** updates to github
+-   add code chunks by clicking the *Insert Chunk* button on the toolbar
+    or by pressing *Ctrl+Alt+I* to answer the questions!
+-   use visual mode or **render** your file to produce a version that
+    you can see!
+-   **render** your file to make sure it runs (and that you haven't been
+    working out of order)
+-   save your work often
+    -   **commit** it via git!
+    -   **push** updates to github
 
 ## Overview
 
 This practice reviews the [Estimation
-lecture](../chapters/Estimation.qmd){target="_blank"} and the use of ggplots (lots of ggplot2 
-example code in the [Summarizing data
-lecture](../chapters/summarizing_data.qmd){target="_blank"}
+lecture](https://jsgosnell.github.io/cuny_biostats_book/content/chapters/Estimation.html){target="_blank"}
+and the use of ggplots (lots of ggplot2 example code in the [Summarizing
+data
+lecture](https://jsgosnell.github.io/cuny_biostats_book/content/chapters/summarizing_data.html){target="_blank"}
 
 ### ggplot2 basics
 
@@ -105,7 +105,7 @@ ggplot(sleep, aes(x=TotalSleep, y = Dreaming)) +
 
 Now we've added information on primates. Since that require us to get
 more data from the dataset, we had to add another aes argument. Note
-this is different from (not evaluated in code, as it causes an error!)
+this is different from this (which causes an error1)
 
 ```{r, error=T}
 ggplot(sleep, aes(x=TotalSleep, y = Dreaming)) +
@@ -294,6 +294,7 @@ using
 
 ```{r}
 ggsave("Fig1.jpg")
+
 ```
 
 This is useful when we need to send just an image to someone (or add it
@@ -490,7 +491,7 @@ All the exta color is nice, but its not really adding anything!
 
 ## Let's practice!
 
-Let's return to the mammal sleep dataset that we left off with last week
+Let’s return to the mammal sleep dataset that we left off with last week
 (**Make sure you did the first assignment!**).
 
 Load the dataset
@@ -500,13 +501,13 @@ sleep <- read.csv("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/mas
 #need to use stringsAsFactors to make characters read in as factors
 ```
 
-Last time you used the built-in plot functions to do some plots. Let's
+Last time you used the built-in plot functions to do some plots. Let’s
 replace those with ggplot2 and do some more.
 
 ### 1
 
-1.  First plot how TotalSleep is explained by BrainWt (remember the
-    issues with the data). Use ggplot2 to plot the relationship.
+First plot how TotalSleep is explained by BrainWt (remember the issues
+with the data). Use ggplot2 to plot the relationship.
 
 ```{r}
 library(ggplot2)
@@ -532,12 +533,13 @@ ggplot(sleep[sleep$BrainWt <1000, ], aes(x=BrainWt, y = TotalSleep)) +
         legend.background = element_rect(fill="gray"))
 ```
 
+
 ### 2
 
-2.  Next color code each plot point by whether or not its a primate. In
-    order to do this you can use the Primate column or (following class
-    code) make a new column called Taxa to represent the information
-    (hint:search for " revalue"). Make sure axes are well-labeled.
+Next color code each plot point by whether or not its a primate. In
+order to do this you can use the Primate column or (following class
+code) make a new column called Taxa to represent the information
+(hint:search for “ revalue”). Make sure axes are well-labeled.
 
 ```{r}
 library(plyr)
@@ -570,11 +572,11 @@ ggplot(sleep[sleep$BrainWt <1000, ], aes(x=BrainWt, y = TotalSleep)) +
 
 ### 3
 
-3.  Let's work with histograms.
+Let’s work with histograms.
 
 -   What type of variation do we see in total time spent sleeping?
     Create a histogram to explore this issue.
-
+    
 ```{r}
 ggplot(sleep
        , aes(x=TotalSleep)) +
@@ -591,7 +593,7 @@ ggplot(sleep
 
 -   Facet the graph you created based on whether or not the animal is a
     primate (Primate column).
-
+    
 ```{r}
 ggplot(sleep
        , aes(x=TotalSleep)) +
@@ -623,14 +625,16 @@ ggplot(sleep[sleep$Taxa == "Primate",]
         plot.title = element_text(hjust = 0.5, face="bold", size=32))
 ```
 
+
 ### 4
 
-4.  Develop a properly-labeled bar graph with error bars to explore how
-    total sleep changes with
+Develop a properly-labeled bar graph with error bars to explore how
+total sleep changes with
 
 -   Primate (relabeled as yes/no as Primate/Non-Primate; note there are
-    multiple ways to do this!) -- use a 95% confidence interval for the
+    multiple ways to do this!) – use a 95% confidence interval for the
     bar
+    
 
 ```{r}
 #use summarySE function from Rmisc package
@@ -658,9 +662,9 @@ ggplot(sleep_by_primate
 
 ```
 
--   Predation risk (as a factor!) -- use 1 standard error for the bar.
+-   Predation risk (as a factor!) – use 1 standard error for the bar.
     Note the difference!
-
+    
 ```{r}
 sleep$Predation <- as.factor(sleep$Predation)
 sleep_by_predation <- summarySE(sleep, measurevar = "TotalSleep", 
@@ -684,20 +688,22 @@ ggplot(sleep_by_predation
 
 ```
 
+
 ## Estimates and Certainty Concepts
 
 ### 5
 
-5.  What does a 95% confidence interval mean?
+What does a 95% confidence interval mean?
 
 *A 95% confidence interval means the true population parameter value
 will be in the created interval 95% of the time we create it.*
 
+
 ### 6
 
-6.  To make sure you understand the ideas of sampling, confidence
-    intervals, and the central limit theorem, review the visualizations
-    produced by UBC:
+To make sure you understand the ideas of sampling, confidence intervals,
+and the central limit theorem, review the visualizations produced by
+UBC:
 
 -   https://www.zoology.ubc.ca/\~whitlock/Kingfisher/SamplingNormal.htm
 -   https://www.zoology.ubc.ca/\~whitlock/Kingfisher/CIMean.htm
@@ -710,13 +716,13 @@ sample size is large enough.*
 
 ### 7
 
-7.  For this question you'll need the central_limit_theorem.R script
-    from the [code_examples
-    folder](https://github.com/jsgosnell/CUNY-BioStats/tree/master/code_examples).
-    Download it to your computer and open it. Alternatively, go ahead
-    and make a copy of the CUNY-Biostats repository. You won't have
-    write access but can keep one up-to-date on your machine/cloud
-    (**pull** occassionally!).
+For this question you'll need the central_limit_theorem.R script from
+the [code_examples
+folder](https://github.com/jsgosnell/CUNY-BioStats/tree/master/code_examples).
+Download it to your computer and open it. Alternatively, go ahead and
+make a copy of the CUNY-Biostats repository. You won't have write access
+but can keep one up-to-date on your machine/cloud (**pull**
+occassionally!).
 
 Once you get the script, open it in Rstudio (it will be in another
 tab!). Make sure you have the VGAM library installed (if you open the
