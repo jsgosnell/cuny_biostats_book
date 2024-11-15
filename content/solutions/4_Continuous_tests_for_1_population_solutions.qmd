@@ -1,0 +1,387 @@
+---
+title: "Tests for continuous data from one sample"
+---
+
+<!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+Remember you should
+
+-   add code chunks by clicking the *Insert Chunk* button on the toolbar
+    or by pressing *Ctrl+Alt+I* to answer the questions!
+-   **render** your file to produce a markdown version that you can see!
+-   save your work often
+    -   **commit** it via git!
+    -   **push** updates to github
+
+## Overview
+
+This practice reviews the [Tests for continuous data from one sample
+lecture](https://jsgosnell.github.io/cuny_biostats_book/content/chapters/Tests_for_continuous_data_from_one_sample.html){target="_blank}.
+
+### Examples
+
+From lecture! Consider if average height of males training at the
+Australian Institute of Sport is different than average of human
+population.
+
+These are all one sample tests, but they differ in what we know. If we
+know the variance of our population, we use a z test (function in BSDA
+package).
+
+```{r}
+sport <- read.table("http://www.statsci.org/data/oz/ais.txt", header = T)
+library(BSDA)
+z.test(sport[sport$Sex == "male", "Ht"], mu = 175.6, sigma.x=7)
+```
+
+If we don't, we use a t-test
+
+```{r}
+t.test(sport[sport$Sex == "male", "Ht"], mu = 175.6)
+```
+
+These both assume the means of the data are normal! If we want to relax
+that assumption, we can use the Wilcoxon test (also known as
+Mann-Whitney test, signed binary transform, or other terms!). This
+assumes the distribution of means is symmetric.
+
+```{r}
+wilcox.test(sport[sport$Sex == "male", "Ht"], mu = 175.6)
+```
+
+or the sign-test/media test.
+
+```{r}
+SIGN.test(sport[sport$Sex == "male", "Ht"], md = 175.6)
+```
+
+Note this is just transforming data to 1/0 and doing a binomial test!
+
+```{r}
+above_175.6 <- nrow(sport[sport$Sex == "male" & sport$Ht > 175.6,])
+binom.test(above_175.6, nrow(sport[sport$Sex == "male",]))
+```
+
+We can also bootstrap the data.
+
+```{r}
+number_of_simulations <- 1000
+library(ggplot2)
+boostrap_data<- sport[sport$Sex == "male", "Ht"]
+boostrap_outcomes <- data.frame(mean = rep(NA, number_of_simulations), sd = NA)
+for (i in 1:number_of_simulations){
+iris_bootstrap <-sample(boostrap_data, length(boostrap_data), replace = T)
+boostrap_outcomes$mean[i] <- mean(iris_bootstrap)
+boostrap_outcomes$sd[i] <- sd(iris_bootstrap)
+}
+ggplot(boostrap_outcomes, aes(x=mean)) +
+  geom_histogram(color="black") +
+  labs(title=expression(paste("Bootstrapped means")),
+       x= "Mean value",
+       y= "Frequency")
+```
+
+and find associated quantile-based 95% confidence intervals:
+
+```{r}
+quantile(boostrap_outcomes$mean, probs=c(.025, .975) ) 
+```
+
+or using functions in the *boot* library
+
+```{r}
+library(boot)
+results <- boot(data=boostrap_data, statistic = function(x, inds) mean(x[inds]),
+   R=number_of_simulations)
+ggplot(data.frame(results$t), aes(x=results.t)) +
+  geom_histogram(color="black") +
+  labs(title=expression(paste("Bootstrapped means")),
+       x= "Mean value",
+       y= "Frequency")
+quantile( results$t, probs=c(.025, .975) ) 
+boot.ci(results)     
+```
+
+```{r}
+library(MKinfer)
+boot.t.test(sport[sport$Sex == "male", "Ht"], mu = 175.6)
+```
+
+## Swirl lesson
+
+Swirl is an R package that provides guided lessons to help you learn and
+review material. These lessons should serve as a bridge between all the
+code provided in the slides and background reading and the key functions
+and concepts from each lesson. A full course lesson (all lessons
+combined) can also be downloaded using the following instructions.
+
+**THIS IS ONE OF THE FEW TIMES I RECOMMEND WORKING DIRECTLY IN THE
+CONSOLE! THERE IS NO NEED TO DEVELOP A SCRIPT FOR THESE INTERACTIVE
+SESSIONS, THOUGH YOU CAN!**
+
+-   install the "swirl" package
+
+-   run the following code once on the computer to install a new course
+
+    ```{r, eval=FALSE}
+    library(swirl)
+    install_course_github("jsgosnell", "JSG_swirl_lessons")
+    ```
+
+-   start swirl!
+
+    ```{r, eval=F}
+    swirl()
+    ```
+
+    -   swirl()
+
+-   then follow the on-screen prompts to select the JSG_swirl_lessons
+    course and the lessons you want
+
+    -   Here we will focus on the **Tests for continuous data from one
+        sample** lesson
+
+-   TIP: If you are seeing duplicate courses (or odd versions of each),
+    you can clear all courses and then re-download the courses by
+
+    -   exiting swirl using escape key or bye() function
+
+        ```{r, eval=F}
+        bye()
+        ```
+
+    -   uninstalling and reinstalling courses
+
+        ```{r, eval=F}
+        uninstall_all_courses()
+        install_course_github("jsgosnell", "JSG_swirl_lessons")
+        ```
+
+    -   when you restart swirl with swirl(), you may need to select
+
+        -   No. Let me start something new
+
+## Let's practice!
+
+### Recognizing and assessing normality
+
+#### 1
+
+Using the qqplot_example.R code, examine the following distributions
+and, for the continuous distributions (marked with a “\*”), observe how
+a normal probability plot (qqplot) can be used to visually test for
+approximate normality.
+
+-   Normal (u= 0; σ^2^= 1, 10, 100)
+-   Student's t (df = 1, 10, 30, & 100)
+-   Chi-square (df= 1, 2, 5, 30, 50)
+-   Bernoulli (P=0.1, 0.5, & 0.9)
+-   Binomial (P=0.05; N= 2, 5, 25, & 50); (P=0.25; N= 2, 5, 25, & 50);
+    (P=0.50; N= 2, 5, 25, & 50); (P=0.75; N= 2, 5, 25, & 50); (P=0.95;
+    N= 2, 5, 25, & 50)
+-   Poisson ( u= 2, 5, 10, 30, & 50)
+
+For this question, its easiest to just source the main file and see what
+happens. When you source a script, it is run in R without showing any
+console output (but graphs and objects are still produced!). Try
+*source("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/qqplot_example.R")*
+
+*Notice the spread of DATA of every distribution tend towards normality as sample size increases*
+
+
+#### 2
+
+Review the central_limit_theorem.R code (remember
+
+```{r}
+library(VGAM)
+source("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/central_limit_theorem.R")
+```
+
+if you need to convince/remind yourself how common normality of means is
+for even non-normal data.
+
+*Here we are focused on how the means look as sample size increases*
+
+### Working with data (note some sample sizes may be too small for these to all be good ideas!)
+
+Make sure you are comfortable with null and alternative hypotheses for
+all examples. You should also feel comfortable graphing the data.
+
+#### 3
+
+Seven observers were shown, for a brief period, a grill with 161 flies
+impaled and were asked to estimate the number. The results are given by
+Cochran (1954). Based on five estimates, they were 183.2, 149.0, 154.0,
+167.2, 187.2, 158.0, and 143.0. Test the null hypothesis that the mean
+of the estimates is 161 flies.
+
+-   Assuming variance = 275
+
+```{r}
+flies <- c(183.2, 149.0, 154.0, 167.2, 187.2, 158.0, 143.0)
+library(BSDA)
+z.test(x=flies, mu = 161, sigma.x=sqrt(275))
+```
+
+*Using a z-test, I found a test statistics of z~=0.33 .This corresponds to a p-value of 0.73. This p value is >.05, so I fail to reject 
+the null hypothesis that the mean of the estimates is 161 flies.*
+
+-   Estimating the variance from the data
+
+
+```{r}
+t.test(x=flies,mu = 161)
+```
+*Using a t-test, which is appropriate when the variance must be estimated
+from the sample and the means of the data may be assumed to follow a normal 
+distribution,  I found a test statistics of t~6~=0.32.  This corresponds to a 
+p-value of 0.76. This p-value is >.05, so I fail to reject 
+the null hypothesis that the mean of the estimates is 161 flies.*
+
+-   Using rank transform analysis
+
+```{r}
+wilcox.test(flies, mu=161)
+```
+*Using a Wilcoxon signed rank test, which is appropriate when normality assumptions 
+can't be met and the distribution of the data appears to be symmetric, I found a test
+statistics of V = 15 .This corresponds to a p-value of 0.94. This p-value is >.05, so I 
+fail to reject the null hypothesis that the mean of the estimates is 161 flies.*
+
+-   Using binary transform analysis
+
+```{r}
+SIGN.test(flies, md=161)
+```
+
+*Using a sign test, which is appropriate when the data is continuous and other 
+assumptions can't be met, I found a test statistics of s = 3 .This corresponds to a p-value of 1. This p-value is >.05, so I fail to reject 
+the null hypothesis that the median (**Note change here**) of the estimates is
+161 flies.*
+
+Note there are several ways to load the data! You can make a list (since
+the list is short):
+
+```{r}
+flies <- c(183.2, 149.0, 154.0, 167.2, 187.2, 158.0, 143.0 )
+```
+
+or make a dataframe in a spreadsheet software (eg, Excel, Google Sheets)
+and then upload using a read.csv command. We did this in your
+introduction to R!
+
+#### 4
+
+Yields of 10 strawberry plants in a uniformity trial are given by Baker
+and Baker (1953) as 239, 176, 235, 217, 234, 216, 318, 190, 181, and 225
+g. Test the hypothesis that µ = 205 
+
+```{r}
+strawberries <- c(239, 176, 235, 217, 234, 216, 318, 190, 181, 225)
+z.test(x=strawberries,mu = 205, sigma.x=sqrt(1500))
+```
+*Using a z-test, I found a test statistics of z=1.48.  This corresponds to a 
+p-value of 0.14. This p-value is >.05, so I fail to reject 
+the null hypothesis that the population mean is equal to 205.*
+
+*  Estimating the variance from the data
+
+```{r}
+t.test(x=strawberries,mu = 205)
+```
+*Using a t-test, which is appropriate when the variance must be estimated
+from the sample and the means of the data may be assumed to follow a normal distribution, I found a test statistics of t~9~=1.42.  This corresponds to a 
+p-value of 0.19. This p-value is >.05, so I fail to reject 
+the null hypothesis that the population mean is equal to 205.*
+
+* Using rank transform analysis 
+```{r}
+wilcox.test(strawberries, mu=205)
+```
+
+*Using a Wilcoxon signed rank test, which is appropriate when normality assumptions 
+can't be met and the distribution of the data appears to be symmetric, I found a test statistics of V=40.5.  This corresponds to a 
+p-value of 0.20.  This p-value is >.05, so I fail to reject 
+the null hypothesis that the population mean is equal to 205.*
+
+* Using binary transform analysis
+```{r}
+SIGN.test(strawberries, md=205)
+```
+
+*Using a sign test, which is appropriate when the data is continuous and other 
+assumptions can't be met,  I found a test statistics of s= 7.  This corresponds 
+to a p-value of 0.34. This p-value is >.05,so I fail to reject 
+the null hypothesis that the population median (**Note change here**) is equal to 205.*
+
+#### 5
+
+Evolutionary geneticists predicts the family sex ratio will be 80%
+female in broods of eagles that successfully fledge \>3 young. Nests
+that fledge 3 or more chicks are very rare but a sample of 30 chicks are
+obtained from such nests and they yield 25 females and 5 males. Test the
+hypotheses that that: \* a) the sex ratio is 50% females \* b) the sex
+ratio is 80% females.
+
+```{r}
+binom.test(25,30, p=.5)
+```
+*A binomial test was used as we are comparing an observed proportion against a 
+set value.  Given a p-value of <.001, I reject the null hypothesis that the 
+proportion of sons is equal to .5.*
+
+* b) the sex ratio is 80% females.
+
+```{r}
+binom.test(25,30, .8)
+```
+*A binomial test was used as we are comparing an observed proportion against a 
+set value.  Given a p-value of <.001, I fail to reject the null hypothesis that the 
+proportion of sons is equal to .8.*
+
+#### 6
+
+Studies of flying snakes have led researchers to posit the mean
+undulation rate is 1.4 Hz. You wish to test this hypothesis using the
+small sample of undulation rates shown below. Create a small dataset of
+the paradise tree snake undulation rates and choose and justify a test
+you can use to assess the data.
+
+Undulation rates (in Hz): 0.9, 1.4, 1.2, 1.2, 1.3, 2.0, 1.4, 1.6
+
+*Using a t-test, which is appropriate when the variance must be estimated
+from the sample and the means of the data may be assumed to follow a normal
+distribution,  I found a test statistics of t~7~=-.22.  This corresponds to a 
+p-value of 0.83. This p-value is >.05, so I fail to reject 
+the null hypothesis that the mean undulation rate is 1.4 Hz.*
+
+
+#### 7
+
+Using data from Australian athletes
+(http://www.statsci.org/data/oz/ais.html for details), determine if the
+average male training at the Australian Institute of Sport differs in
+weight from the average Australian male (85.9 kg) using bootstrapping
+techniques. Data at
+
+```{r}
+sport <- read.table("http://www.statsci.org/data/oz/ais.txt", header = T, 
+                    stringsAsFactors = T)
+```
+
+```{r}
+library(MKinfer)
+boot.t.test(sport[sport$Sex == "male", "Wt"], mu= 85.9)
+```
+
+*Using a bootstrap test wtih 10,000 samples, we found a p-value of .007; we thus 
+reject the null hypothesis that males training at the AIS have the same weight as
+the average Australian male.  Data indicated they weigh less.*
+
