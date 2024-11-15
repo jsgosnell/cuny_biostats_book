@@ -8,33 +8,33 @@ bibliography: ../references.bib
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
-source("../globals.R")
 ```
 
 Remember you should
 
-* add code chunks by clicking the *Insert Chunk* button on the toolbar or by
-pressing *Ctrl+Alt+I* to answer the questions!
-* use visual mode or **render** your file to produce a version that you can see!
-* **render** your file to make sure it runs (and that you haven't been working
-out of order)
-* save your work often 
-  * **commit** it via git!
-  * **push** updates to github
-  
+-   add code chunks by clicking the *Insert Chunk* button on the toolbar
+    or by pressing *Ctrl+Alt+I* to answer the questions!
+-   **render** your file to produce a markdown version that you can see!
+-   save your work often
+    -   **commit** it via git!
+    -   **push** updates to github
+
 ## Overview
 
-This practice reviews the [Relationships among numerical variabless lecuture](../chapters/Relationships_among_numerical_variables.qmd).
-  
+This practice reviews the [Relationships among numerical variabless
+lecuture](https://jsgosnell.github.io/cuny_biostats_book/content/chapters/Relationships_among_numerical_variables.html){target="_blank"}.
+
 ## Example
 
-Following the iris dataset from class
+Following the iris dataset from class, let's investigate the
+relationships between sepal and petal length. First, we can plot the
+data.
 
 ```{r}
 library(ggplot2)
 ggplot(iris, aes(x=Petal.Length, y=Sepal.Length)) +
   geom_point(size = 3) +
-  ylab("Sepal Length")+ggtitle("Sepal length increases with petal length")+
+  ylab("Sepal Length")+ggtitle("Sepal length increases \n with petal length")+
   theme(axis.title.x = element_text(face="bold", size=28), 
         axis.title.y = element_text(face="bold", size=28), 
         axis.text.y  = element_text(size=20),
@@ -45,27 +45,114 @@ ggplot(iris, aes(x=Petal.Length, y=Sepal.Length)) +
   xlab("Petal length (cm)") +
   ylab("Sepal length (cm)")
 
+```
 
+A linear relationship appears logical here. We can build the model and
+check assumptions.
+
+```{r}
 iris_regression <- lm(Sepal.Length ~ Petal.Length, iris)
-par(mfrow = c(2,2))
 plot(iris_regression)
+
+```
+
+Visual checks of assumptions appear to be met, so we can determine if
+the slope differs from 0.
+
+```{r}
 library(car)
 Anova(iris_regression, type = "III")
 summary(iris_regression)
 ```
 
+We find that F~1,148~=468.5, p \< 0.01, so we reject the null hypothesis
+that the slope is equal to 0. The estimate indicates a slope of 0.408,
+so sepal length increases with petal length. An R^2^ value of 0.76
+indicates petal length explains about 75% of the variation in sepal
+length.
+
+Alternatively, we could consider if the association between the two
+variables is equal to 0 (or not).
+
 ```{r}
 cor.test(~ Sepal.Length + Petal.Length, data = iris)
-cor.test(~ Sepal.Length + Petal.Length, data = iris,
-         method="spearman")
 
 ```
+
+We find the same p-value (using a t-distribution), and see that the
+estimated linear correlation coefficient, .87, is the square of our R^2^
+value.
+
+If we prefer a rank-based test, we can update the code:
+
+```{r}
+cor.test(~ Sepal.Length + Petal.Length, data = iris,
+         method="spearman")
+```
+
+Which again leads us to reject the null hypothesis. Finally, a bootstrap
+options can be produced
 
 ```{r}
 bootstrap_iris <- Boot(iris_regression)
 Confint(bootstrap_iris)
 ```
 
+where estimates indicated the slope does not contain 0.
+
+## Swirl lesson
+
+Swirl is an R package that provides guided lessons to help you learn and
+review material. These lessons should serve as a bridge between all the
+code provided in the slides and background reading and the key functions
+and concepts from each lesson. A full course lesson (all lessons
+combined) can also be downloaded using the following instructions.
+
+**THIS IS ONE OF THE FEW TIMES I RECOMMEND WORKING DIRECTLY IN THE
+CONSOLE! THERE IS NO NEED TO DEVELOP A SCRIPT FOR THESE INTERACTIVE
+SESSIONS, THOUGH YOU CAN!**
+
+-   install the "swirl" package
+
+-   run the following code once on the computer to install a new course
+
+    ```{r, eval=FALSE}
+    library(swirl)
+    install_course_github("jsgosnell", "JSG_swirl_lessons")
+    ```
+
+-   start swirl!
+
+    ```{r, eval=F}
+    swirl()
+    ```
+
+    -   swirl()
+
+-   then follow the on-screen prompts to select the JSG_swirl_lessons
+    course and the lessons you want
+
+    -   Here we will focus on the **Relationships among numerical variables** lesson
+
+-   TIP: If you are seeing duplicate courses (or odd versions of each),
+    you can clear all courses and then re-download the courses by
+
+    -   exiting swirl using escape key or bye() function
+
+        ```{r, eval=F}
+        bye()
+        ```
+
+    -   uninstalling and reinstalling courses
+
+        ```{r, eval=F}
+        uninstall_all_courses()
+        install_course_github("jsgosnell", "JSG_swirl_lessons")
+        ```
+
+    -   when you restart swirl with swirl(), you may need to select
+
+        -   No. Let me start something new
 
 ## Practice
 
@@ -324,3 +411,12 @@ ggplot(function_output, aes(x=Sex, y=FEV)) +
         plot.title = element_text(hjust = 0.5, face="bold", size=32))
 
 ```
+### 7
+
+Find an example of a regression or correlation from a paper that is related to
+your research or a field of interest.  Make sure you understand the connections between the methods,
+results, and graphs. Briefly answer the following questions
+
+-   What was the dependent variable?
+-   What were the independent variables?
+-   Was there a relationship between them? If so, describe it (positive, negative).

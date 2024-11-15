@@ -1,5 +1,6 @@
 ---
 title: "Compare means among groups"
+bibliography: ../references.bib
 ---
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
@@ -82,7 +83,79 @@ p.adjust(as.numeric(bootstrap_post_hoc$comp[,6]), "holm")
 For 2 groups, the *boot.t.test* function in the **MKinfer** package is
 also an option.
 
+A final option (shown here for 2 groups) is to use permutation tests.
+These tests work by rearranging the data in all (theoretically) possible
+ways and calculating signals for each permutation. You can then compare
+what we actually found to that to obtain p-values. Often times we can't
+find all the combinations there are too many!), but a good sample
+(10,000+) should work. The function that we'll use for this is
+independence_test from the coin package. It uses the same arguments as
+the t-test (including the formula interface).
+
+```{r}
+library(coin)
+independence_test(Sepal.Length ~ Species, not_versicolor)
+```
+
+## Swirl lesson
+
+Swirl is an R package that provides guided lessons to help you learn and
+review material. These lessons should serve as a bridge between all the
+code provided in the slides and background reading and the key functions
+and concepts from each lesson. A full course lesson (all lessons
+combined) can also be downloaded using the following instructions.
+
+**THIS IS ONE OF THE FEW TIMES I RECOMMEND WORKING DIRECTLY IN THE
+CONSOLE! THERE IS NO NEED TO DEVELOP A SCRIPT FOR THESE INTERACTIVE
+SESSIONS, THOUGH YOU CAN!**
+
+-   install the "swirl" package
+
+-   run the following code once on the computer to install a new course
+
+    ```{r, eval=FALSE}
+    library(swirl)
+    install_course_github("jsgosnell", "JSG_swirl_lessons")
+    ```
+
+-   start swirl!
+
+    ```{r, eval=F}
+    swirl()
+    ```
+
+    -   swirl()
+
+-   then follow the on-screen prompts to select the JSG_swirl_lessons
+    course and the lessons you want
+
+    -   Here we will focus on the **Compare means among groups** lesson
+
+-   TIP: If you are seeing duplicate courses (or odd versions of each),
+    you can clear all courses and then re-download the courses by
+
+    -   exiting swirl using escape key or bye() function
+
+        ```{r, eval=F}
+        bye()
+        ```
+
+    -   uninstalling and reinstalling courses
+
+        ```{r, eval=F}
+        uninstall_all_courses()
+        install_course_github("jsgosnell", "JSG_swirl_lessons")
+        ```
+
+    -   when you restart swirl with swirl(), you may need to select
+
+        -   No. Let me start something new
+
 ## Just for practice
+
+*For the following questions, you will use multiple methods to analyze a
+single dataset. This is for practice and so you can compare! For actual
+analysis you should only use the best method!*
 
 ### 1
 
@@ -544,3 +617,16 @@ bootstrap (10,000 samples) focused on the difference in color. This
 resulted in a p-value of \<.001. Since the p-value is \<.05, I reject
 the null hypothesis that feather color is the same between odd and
 typical feathers using this approach as well.*
+
+### 7
+
+Find an example of a one-way ANOVA from a paper that is related to your
+research or a field of interest (hint: use Google Scholar or another
+search engine to search for a keyword of interest plus ANOVA). Make sure
+you understand the connections between the methods, results, and graphs.
+Briefly answer the following questions
+
+-   What was the dependent variable?
+-   What were the independent variables?
+-   Was there a difference in mean values among the groups? If so, how
+    did the paper address or explain this finding.

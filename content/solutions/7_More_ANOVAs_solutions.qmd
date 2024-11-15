@@ -8,23 +8,21 @@ bibliography: ../references.bib
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
-source("../globals.R")
 ```
 
 Remember you should
 
-* add code chunks by clicking the *Insert Chunk* button on the toolbar or by
-pressing *Ctrl+Alt+I* to answer the questions!
-* use visual mode or **render** your file to produce a version that you can see!
-* **render** your file to make sure it runs (and that you haven't been working
-out of order)
-* save your work often 
-  * **commit** it via git!
-  * **push** updates to github
-  
+-   add code chunks by clicking the *Insert Chunk* button on the toolbar
+    or by pressing *Ctrl+Alt+I* to answer the questions!
+-   **render** your file to produce a markdown version that you can see!
+-   save your work often
+    -   **commit** it via git!
+    -   **push** updates to github
+
 ## Overview
 
-This practice reviews the [More ANOVAs lecuture](../chapters/More_ANOVAs.qmd).
+This practice reviews the [More ANOVAs
+lecuture](https://jsgosnell.github.io/cuny_biostats_book/content/chapters/More_ANOVAs.html){target="_blank"}.
 
 ## Examples
 
@@ -58,7 +56,7 @@ ggplot(function_output, aes(x=Age, y=Words,color=Process,
     geom_point(size = 5) +
   ylab("Words remembered")+ 
   xlab("Age") + 
-  ggtitle("Process type interacts with age to impact memory")+
+  ggtitle("Process type interacts with \n age to impact memory")+
   theme(axis.title.x = element_text(face="bold", size=28), 
         axis.title.y = element_text(face="bold", size=28), 
         axis.text.y  = element_text(size=20),
@@ -132,6 +130,60 @@ summary(compare)
 Anova(lm(Color_index ~ Feather * Bird, data=feather), type= "III")
 ```
 
+## Swirl lesson
+
+Swirl is an R package that provides guided lessons to help you learn and
+review material. These lessons should serve as a bridge between all the
+code provided in the slides and background reading and the key functions
+and concepts from each lesson. A full course lesson (all lessons
+combined) can also be downloaded using the following instructions.
+
+**THIS IS ONE OF THE FEW TIMES I RECOMMEND WORKING DIRECTLY IN THE
+CONSOLE! THERE IS NO NEED TO DEVELOP A SCRIPT FOR THESE INTERACTIVE
+SESSIONS, THOUGH YOU CAN!**
+
+-   install the "swirl" package
+
+-   run the following code once on the computer to install a new course
+
+    ```{r, eval=FALSE}
+    library(swirl)
+    install_course_github("jsgosnell", "JSG_swirl_lessons")
+    ```
+
+-   start swirl!
+
+    ```{r, eval=F}
+    swirl()
+    ```
+
+    -   swirl()
+
+-   then follow the on-screen prompts to select the JSG_swirl_lessons
+    course and the lessons you want
+
+    -   Here we will focus on the **More ANOVAs** lesson
+
+-   TIP: If you are seeing duplicate courses (or odd versions of each),
+    you can clear all courses and then re-download the courses by
+
+    -   exiting swirl using escape key or bye() function
+
+        ```{r, eval=F}
+        bye()
+        ```
+
+    -   uninstalling and reinstalling courses
+
+        ```{r, eval=F}
+        uninstall_all_courses()
+        install_course_github("jsgosnell", "JSG_swirl_lessons")
+        ```
+
+    -   when you restart swirl with swirl(), you may need to select
+
+        -   No. Let me start something new
+        
 ## Practice
 
 ### 1
