@@ -53,7 +53,7 @@ In fact, we could run simulations and show that p values from these 2
 approaches are highly correlated (now you know what that means) with a
 $\beta$ of almost 1 (from @lindelov).
 
-```{r, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F, cache=T}
 library(tidyverse)
 set.seed(21)
 weird_data <- c(rnorm(10000), exp(rnorm(10000)), runif(10000, min=-3, max=-2))
@@ -138,14 +138,59 @@ group variance is 4-10x larger than the smallest group variance and
 sample sizes are approximately equal [@blanca2018; @fox2015; @zuur2010],
 though highly uneven group sizes begin to cause issues [@blanca2018].
 
-Similarly, non-normal data is not an issue. This is partially because
-the assumptions are focused on residuals, but also because the procedure
-is highly robust [@blanca2017]. This finding further supports the
-graphical consideration of assumptions , especially since many tests for
-normality are conservative (samples are almost never *perfectly* normal,
-and slight deviations are easier to pick up with larger sample sizes
-despite the fact the central limit theorem suggests this is when the
-issue is least important) [@zuur2010; @shatz2023].
+Similarly, non-normal data is not an issue in an of itself \[@knief2021.
+This is partially because the assumptions are focused on residuals, but
+also because the procedure is highly robust \[@blanca2017\]. This
+finding further supports the graphical consideration of assumptions ,
+especially since many tests for normality are conservative (samples are
+almost never *perfectly* normal, and slight deviations are easier to
+pick up with larger sample sizes despite the fact the central limit
+theorem suggests this is when the issue is least important) [@zuur2010;
+@shatz2023].
+
+<details>
+
+<summary>How can residuals be normal when data is not?</summary>
+
+This is a common question. Sometimes the outcome variable is not
+normally distributed due to the impact of various factors. Consider this
+example of sparrow weight from @zuur2010. The raw data may look like
+this...
+
+```{r, message=F}
+Sparrows <- read.table(file="data/SparrowsElphick.txt", header=TRUE)
+
+Sparrows$fMonth<-factor(Sparrows$Month,
+                        levels = c(5, 6, 7, 8, 9, 10),
+                        labels = c("May", "June", "July", "August",
+                                   "Sept.", "Oct."))
+
+
+Sparrows$I1 <- Sparrows$fMonth =="June" |
+               Sparrows$fMonth =="July" |
+               Sparrows$fMonth =="August"
+
+library(ggplot2)
+ggplot(Sparrows[Sparrows$I1== T, ], aes(x=wt))+
+  geom_histogram()+
+  labs( x = "Weight (g)", main = "Weight of sparrows in study", y = "Frequency")
+```
+
+which is skewed (albeit slightly). However, if we consider the impact of
+month...
+
+```{r, message=F}
+library(ggplot2)
+ggplot(Sparrows[Sparrows$I1== T, ], aes(x=wt, fill=fMonth))+
+  geom_histogram()+
+  labs( x = "Weight (g)", main = "Weight of sparrows in study", y = "Frequency", 
+        fill= "Month")+
+  facet_col(~fMonth)
+```
+
+We would find the residuals to be much better behaved.
+
+</details>
 
 These issues have led some authors to argue violations of the linear
 model assumptions are less dangerous than trying new, and often
@@ -1031,7 +1076,8 @@ ecology and other fields [@hurlbert1984; @heffner1996; @lazic2010].
 <summary>Is this really new?</summary>
 
 It should be noted that random effects match up to paired t-tests and
-blocking approaches for simple experiments.Remember our feather experiment (example and data provided by @mcdonald2014)?
+blocking approaches for simple experiments.Remember our feather
+experiment (example and data provided by @mcdonald2014)?
 
 ```{r, echo=FALSE}
 Input = ("
@@ -1078,8 +1124,8 @@ two_way_anova_example <- lm(Color_index ~ Feather_type + Bird, data=feather)
 Anova(two_way_anova_example, type= "III")
 ```
 
-Note we can get the same results using a paired t-test,  but (as of early 2024) we need to use a wide
-dataset.
+Note we can get the same results using a paired t-test, but (as of early
+2024) we need to use a wide dataset.
 
 <!-- t.test no longer allowing paired in formula method as of early 2024  -->
 
@@ -1174,6 +1220,3 @@ linearity, as noted above.
 ## Combinining these
 
 ## Next steps
-
-These methods can be extended to other models that are used when linear
-model assumptions are not met, which is the focus of the next chapter.
