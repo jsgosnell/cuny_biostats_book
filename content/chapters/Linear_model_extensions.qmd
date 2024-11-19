@@ -294,7 +294,7 @@ in general:
 -   The Box-Cox approach requires a model - it still focused on
     transforming data so that *residuals* meet assumptions. Datashould
     not be transformed before model assumptions are analyzed to ensure
-    it is necessary. 
+    it is necessary.
 
 -   Similarly (and already noted!). non-normal data may lead to models
     with normal residuals. However, normal data (or data transformed to
@@ -318,10 +318,10 @@ right-skewed data, but some can only be carried out for non-negative
 this for log transformations, a small value is often added to 0
 measurements.
 
-Let's use data (not residuals) to show what different types of data look
-like and consider possible fixes (always fit a model first for real
-analysis!). For example, we can return to our right-skewed blue jay data
-[from the summarizing data
+Let's use data (not residuals) to show how different distributions of
+data connect to q-q plots and consider possible fixes (always fit a
+model first for real analysis!). For example, we can return to our
+right-skewed blue jay data [from the summarizing data
 chapter](summarizing_data.qmd)(target="\_blank")(idea from [@hunt]) .
 
 ```{r, message=F}
@@ -453,52 +453,75 @@ The linear relationship may be inappropriate because our data doesn't
 fit it! For example, if we are modeling proportions, estimates less than
 0 or below 1 do not make sense, but a linear model doesn't account for
 that. The same issues arise for binary outcomes (outcome must be 0 or 1)
-and count data (where outcomes can't be non-integer). Along with impacts on 
-the assumption of linearity, data like this may also lead to unequal variances
-and lack of normality for residuals.  While we may be
-able to transform the response variable to make relationships linear,
-another option is to translate the *link* function.
+and count data (where outcomes can't be non-integer). Along with impacts
+on the assumption of linearity, data like this may also lead to unequal
+variances and lack of normality for residuals. While we may be able to
+transform the response variable to make relationships linear, another
+option is to translate the *link* function.
 
 Although we haven't fully explained it before, a linear model contains
 three components. There is always a random component that focuses on the
-distribution of the data. There is also a systematic component, where a
-number of covariates and data points produce an estimate. Finally, there
-is the link function, which connects that estimate to the data
-distribution (this maintains the linearity of the model).
+distribution of the data. This typically requires a few parameters (or
+at least one!). For example, for normally-distributed data, the two
+parameters that describe the distribution are the mean and the variance.
+Note these parameters are independent (we covered all this when we
+[introduced
+normality](Tests_for_continuous_data_from_one_sample.qmd){target="\_blank").
+There is also a systematic component, where a number of covariates and
+data points produce an estimate. Finally, there is the link function,
+which connects that estimate to the data distribution (this maintains
+the linearity of the model). Notice this means the link connects to the
+distribution of the data, not the data itself (which is what
+transforming the data is doing).
 
-Notice this means the link connects to the distribution of the data, not
-the data itself (which is what transforming the data is doing). So far
-we have focused on the *mean* of the data, and the estimate is the mean,
-so the link has been implied. We can *generalize* this setup to include
-other distributions in the exponential family (and now others
-[@applied2022, ch. 15]).
+So far we have focused on the *mean* of the data, and the estimate is
+the mean, so the link has been implied. We can *generalize* this setup
+to include other distributions in the exponential family (and now others
+[@applied2022, ch. 15]). While we won't develop all the math,
+exponential family distributions all have a canonical parameter (the
+mean for Gaussian, or normal, data) and a dispersion parameter (the
+variance for normal data). Different distributions have different
+relationships between these two parameters. For normal data, there is
+*no* relationship, so the variance is constant. This is why we have
+assumed *homoscedasticity* of residuals for linear models. This is not
+true for other families; for example, the variance in binomial data
+depends on the *p* parameter (as we noted in the [chapter introducing
+binomial data](Binomial.qmd){target="\_blank")), and for the Poisson
+distribution (used for count data) the variance is the mean. Different
+families also use different link functions, which can impact how we
+interpret coefficient values and associated impacts. In general, impacts
+and outcomes will need to be transformed (based on the link) to the
+actual scale.
 
-While we won't develop all the math, exponential family distributions
-all have a canonical parameter (the mean for Gaussian, or normal, data)
-and a dispersion parameter (the variance for normal data). Different
-distributions have different relationships between these two parameters.
-For normal data, there is *no* relationship, so the variance is
-constant. This is not true for other families; for example, the variance
-in binomial data depends on the *p* parameter (as we noted in the
-\[chapter introducing binomial data\](Binomial.qmd){target="\_blank"))!
-
-We can specify other families using *generalized linear models* (which
+We can specify other data types using *generalized linear models* (which
 are different than general linear models, which is another term used to
 describe our "regular" linear models). These models are also known as
-glm or glim (we'll use the glm jargon here). GLM make different
-assumptions (though everyone does not agree on what they are!). While we
-still need independence of the residuals (or some extension, see below),
-they no longer need to be normally distributed [@zuur2007, p. 86-87;
-@zuur2009, section 9.8.3] (though normality may hold at large sample
-sizes for Pearson [@agresti2007, p. 87] or deviance [@montgomery2012,
-section 13.4.4]
+glm or glim (we'll use the glm jargon here). These models let us
+consider data that do not fit a normal approximation.
+
+| Family             | Typical usage                                                                                                                                     |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| Gaussian/normal    | continuous variables, or variables connected to large sample sizes and not extreme values (remember the z-test approximation for $\chi^2$ tests?) |
+| Bernoulli/binomial | data that can be divided into successes and failures                                                                                              |
+| Beta               | Proportions that do not include 0 or 1                                                                                                            |
+| Poisson            | Count data where low counts and 0's are common                                                                                                    |
+
+: Connections between exponential family data types and real-world data
+
+GLM make different assumptions (though everyone does not agree on what
+they are!). While we still need independence of the residuals (or some
+extension, see below), they no longer need to be normally distributed
+[@zuur2007, p. 86-87; @zuur2009, section 9.8.3] (though normality may
+hold at large sample sizes for Pearson [@agresti2007, p. 87] or deviance
+[@montgomery2012, section 13.4.4]
 <!-- https://stats.stackexchange.com/questions/92394/checking-residuals-for-normality-in-generalised-linear-models; https://online.stat.psu.edu/stat504/lesson/6/6.1 -->
 residuals, and some authors argue normality is required for testing
 [@feng2020]) . As noted above, non-Gaussian families don't assume a
 constant variance, so homogeneity assumptions would not be appropriate
 [@fox2016]. However, we need to ensure the correct family (and thus
-mean-variance link) is chosen. In general, plotting the residuals
-against [@zuur2009]
+mean-variance link) is chosen.
+
+In general, plotting the residuals against [@zuur2009]
 
 -   the predicted values
 
@@ -559,24 +582,19 @@ This is known as McFadden's pseudo-R^2^ value.
 Once developed, GLMs can use most of the tools we developed for basic
 linear models. However, a few key differences exist. Estimation of
 parameters and significance for these models rely on maximum-likelihood
-methods (remember, the ratio of likelihood values follow a $\chi^2$
-distribution and can thus provide a p-value to compare possible models
-as noted in [introducing G
+methods. It should be noted that solving for coefficients also requires
+iterative approaches due to non-linearity; common methods (not described
+here) include the Newton-Raphson or Fisher scoring methods. The key
+point here for practice is any noted issues with optimization are due to
+this process. The ratio of likelihood values from various nested tests
+follow a $\chi^2$ distribution and can thus provide a p-value to compare
+possible models as noted in [introducing G
 tests](Compare_proportions_among_populations.qmd){target="\_blank")).This
 may be represented as a Z test for single parameters (since a $\chi^2$
 distribution is a Z distribution squared - sometimes labelled a Wald
 test/statistic). F test reappear for distributions where we estimate the
 dispersion parameter (like the normal), but otherwise we can use the
 dispersion parameter to check that the right approach was taken.
-
-It should be noted that solving for coefficients also requires iterative
-approaches due to non-linearity; common methods (not described here)
-include the Newton-Raphson or Fisher scoring methods. The key point here
-for practice is any noted issues with optimization are due to this
-process. Finally, it should be noted that coefficients and predictions
-are related to the estimate, which is **no longer** the actual mean.
-Due to this, impacts and outcomes will need to be transformed (based on
-the link) to the actual scale.
 
 There are numerous types of GLMs. Here we outline some of the more
 common ones. Each of these deserves a much fuller treatment - remember,
@@ -720,12 +738,12 @@ S](/images/Cymadusa_filosa.jpg)](https://molecol-unesp-clp.jimdofree.com/2017/03
 For one experiment, they stocked portions of aquariums with pieces of
 algal. Half the algae pieces had adult amphipods present(4 total; the
 species builds tubes to live on algae) while the other half had no adult
-residents. Juveniles were initially placed on patches of natural
-substrate, artificial substrate, or bare areas(no substrate) in the
-aquarium. After 24 hours, the number of juveniles that colonized the
-focal algae were counted. Since the number of introduced juveniles was
-known, the number that did not colonize was also accounted for (raw data
-estimated from supplemental data given variation in sample size).
+residents. Juveniles (n=16 per patch) were initially placed on patches
+of natural substrate, artificial substrate, or bare areas(no substrate)
+in the aquarium. After 24 hours, the number of juveniles that colonized
+the focal algae were counted. Since the number of introduced juveniles
+was known, the number that did not colonize was also accounted for (raw
+data estimated from supplemental data given variation in sample size).
 
 ```{r}
 juvenile <- read.csv ("data/Supplemental_Data_Bueno_2020-S1-Presence of adults_lab.csv", 
@@ -1152,19 +1170,20 @@ tests that match likelihood-based methods).
 
 ## Errors are not equal among groups
 
-Issues with errors not being equal among groups is often tied to other issues,
-like non-linearity or the nature of the data, which we have addressed above.
-Another option is to use weighted-least squares regression - this
-approach specifically helps when residuals are not evenly distributed
-among groups (or when a funnel/cone appears when you plot the model to
-check assumptions). For example, we could take the model on below-ground
-biomass that we developed in the [More Anovas chapter](More_ANOVAs.qmd).
-As a reminder, @valdez2023 wanted to consider the impact of top-down
-(snail grazing) and bottom- up (nutrient availability) on marsh plant
-(*Spartina alterniflora*) growth. To do this, they assigned plots to one
-of 3 grazer treatments and one of 2 nitrogen treatments. We focused on
-the impact of these treatments on standing dead mass and noted a
-funnel-shape when reviewing the residuals.
+Issues with errors not being equal among groups is often tied to other
+issues, like non-linearity or the nature of the data, which we have
+addressed above. Another option is to use weighted-least squares
+regression - this approach specifically helps when residuals are not
+evenly distributed among groups (or when a funnel/cone appears when you
+plot the model to check assumptions). For example, we could take the
+model on below-ground biomass that we developed in the [More Anovas
+chapter](More_ANOVAs.qmd). As a reminder, @valdez2023 wanted to consider
+the impact of top-down (snail grazing) and bottom- up (nutrient
+availability) on marsh plant (*Spartina alterniflora*) growth. To do
+this, they assigned plots to one of 3 grazer treatments and one of 2
+nitrogen treatments. We focused on the impact of these treatments on
+standing dead mass and noted a funnel-shape when reviewing the
+residuals.
 
 ```{r}
 valdez_2023 <- read.csv("data/Spartina_alterniflora_traits.csv", stringsAsFactors = T)
