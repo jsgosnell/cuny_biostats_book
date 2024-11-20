@@ -497,16 +497,25 @@ We can specify other data types using *generalized linear models* (which
 are different than general linear models, which is another term used to
 describe our "regular" linear models). These models are also known as
 glm or glim (we'll use the glm jargon here). These models let us
-consider data that do not fit a normal approximation.
+consider data that do not fit a normal approximation. @bolker2008 has an
+excellent review of when various distributions should be used.
 
-| Family             | Typical usage                                                                                                                                     |
-|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| Gaussian/normal    | continuous variables, or variables connected to large sample sizes and not extreme values (remember the z-test approximation for $\chi^2$ tests?) |
-| Bernoulli/binomial | data that can be divided into successes and failures                                                                                              |
-| Beta               | Proportions that do not include 0 or 1                                                                                                            |
-| Poisson            | Count data where low counts and 0's are common                                                                                                    |
+| Distribution       | Typical usage, notes, and examples                                                                                                                                                    |
+|-------------------|-----------------------------------------------------|
+| ***Continuous***   |                                                                                                                                                                                       |
+| Gaussian/normal    | continuous variables, or variables connected to large sample sizes and not extreme values (remember the z-test approximation for $\chi^2$ tests?)                                     |
+| Gamma              | Amount of time until a certain number of events takes place (how long do you wait for a parking spot?); variance changes with mean; related to negative binomial                      |
+| Exponential        | amount of time for a single event to occur; related to geometric                                                                                                                      |
+| Beta               | distribution of success parameter in binomial trials with a-1 success and b-1 failures; bounded by 0 -1 (not inclusive)                                                               |
+| *Discrete*         |                                                                                                                                                                                       |
+| Bernoulli/binomial | data that can be divided into successes and failures                                                                                                                                  |
+| Beta               | Proportions that do not include 0 or 1                                                                                                                                                |
+| Poisson            | Fits count data where all events are independent (random); Count data where low counts and 0's are common                                                                             |
+| Negative binomial  | Number of failures before a set number of successes occur; Poisson-ish where variance is larger than the mean (good for overdispersion!) or where the mean (and thus variance) varies |
+| Geometric          | Number of trials until you get a single failure                                                                                                                                       |
+| Beta binomial      | Binomial-ish but the success parameter (and thus variance) varies across trials                                                                                                       |
 
-: Connections between exponential family data types and real-world data
+: Connections between data distributions and real-world data
 
 GLM make different assumptions (though everyone does not agree on what
 they are!). While we still need independence of the residuals (or some
@@ -700,7 +709,35 @@ summary(as_glm)
 
 For Bernoulli data like this, however, over-dispersion is not an issue
 [@molenberghs2012]. For binomial and Poisson data, this should be
-approximately one. We can note the impact of given factors using *Anova*
+approximately one. While we can still plot the model like we did for lms
+
+```{r}
+plot(as_glm)
+```
+
+the findings may not be as useful. We only have 4 predicted values
+(why?) and thus only 4 residual values (why?), so we no longer expect
+the residuals to be normally distributed. Checking for patterns in these
+residuals is also complicated.
+
+Another option (which also works for linear models) is offered by the
+*performance* package in R.
+
+```{r}
+library(performance)
+check_model(as_glm)
+```
+
+Here we see no real issues with the model. We can also check for
+over-dispersion
+
+```{r}
+check_overdispersion(as_glm)
+```
+
+but remember for Bernoulli data (n=1) this isn't an issue anyway.
+
+We can note the impact of given factors using *Anova*
 
 ```{r}
 Anova(as_glm, type="III")
@@ -786,12 +823,19 @@ juvenile_fit_lm <- lm(Colonized ~ adults_updated*source.habitat,
 plot(juvenile_fit_lm)
 ```
 
-The assumptions don't even look that bad, but note the data is
-over-dispersed (will come back to this). We also know the model will
-make predictions that aren't logical (outcomes outside of the 0-1
-range). For this reason we will use a generalized linear model (or a log
-linear model) to analyze the data. We can fit a glm using the binomial
-family.
+The assumptions don't even look that bad, but note the residuals are
+over-dispersed. We could also assess the model using
+
+```{r}
+check_model(juvenile_fit_lm)
+```
+
+which again shows some issues.
+
+We also know the model will make predictions that aren't logical
+(outcomes outside of the 0-1 range). For this reason we will use a
+generalized linear model (or a log linear model) to analyze the data. We
+can fit a glm using the binomial family.
 
 ```{r}
 juvenile_fit_glm <- glm(cbind(Colonized, Not_colonized) ~ adults*source.habitat, 
@@ -808,7 +852,10 @@ summary(juvenile_fit_glm)
 
 ```
 
-We can also use our *Anova* function to investigate outcomes.
+The residual deviance/residual df (97.393/30) is \~ 3 when it is
+supposed to be 1. We'll come back to this (and should), but just to show
+what we can do with these models, note we can use our *Anova* function
+to investigate outcomes.
 
 ```{r}
 Anova(juvenile_fit_glm, type="III")
@@ -819,10 +866,10 @@ adults and source habitat on the proportion of amphipods that move to
 colonize algae. Given this, we can follow our typical approach to
 significant interactions - break the data into subsets.
 
-However, we should first note that our dispersion estimate is 97.393/30
-\~ 3; this should be closer to 1! What should we do? One option is to
-use an approach that estimates the dispersion parameter. Though not
-fully developed here, this approach uses a "quasi-binomial" family.
+However, we may want to reconsider this model given the over-dispersion
+issue. What should we do? One option is to use an approach that
+estimates the dispersion parameter. Though not fully developed here (but
+a little more below), this approach uses a "quasi-binomial" family.
 
 ```{r}
 juvenile_fit_glm_quasi <- glm(cbind(Colonized, Not_colonized) ~ adults*source.habitat, 
@@ -843,8 +890,69 @@ here
 Anova(juvenile_fit_glm_quasi, type="III", test = "F")
 ```
 
-Another option for proportion data when the outcome is bounded (does not
-include) between 0 and 1 is beta regression.
+#### Poisson regression
+
+Poisson regression focuses on count-based data. For simplicity (and to
+demonstrate the connections) here we note that we can almost always
+assess binomial data using the Poisson approach *if we only focus on the
+number of successes*. As you might imagine, this means we are ignoring
+data, which isn't a great idea.
+
+For example, we could consider the shrimp data like this
+
+```{r}
+juvenile_fit_glm_poisson <- glm(Colonized ~ adults*source.habitat, 
+    juvenile, family = "poisson")
+```
+
+We could use our familiar protocol to assess the model.
+
+```{r}
+plot(juvenile_fit_glm_poisson)
+check_model(juvenile_fit_glm_poisson)
+check_overdispersion(juvenile_fit_glm_poisson)
+summary(juvenile_fit_glm_poisson)
+```
+
+Noting a lack of issues, we can try
+
+```{r}
+Anova(juvenile_fit_glm_poisson, type= "III")
+```
+
+So which is right? Here I might argue that "losing" data in the Poisson
+approach justifies the binomial (or quasi-binomial) approach.
+
+#### Gamma regression
+
+For an example of continuous data using glms, consider the work by
+@li2024 on how humidity impacted responses to heat stress in parasitoids
+(*Venturia canescens*) and their hosts (*Plodia interpunctella*, Indian
+meal moths). Eggs were placed in incubators kept at ambient or increased
+humidity levels. Half of each group was parasitized during their 4th
+instar. Parasitized eggs were then exposed to no heat stress or stress
+for 6 or 72 hours in their 4th or 5th instar phase. Multiple traits in
+host and parasitoid were then measured.
+
+![Parasitic wasp ; image by Slimguy, CC BY 4.0
+\<https://creativecommons.org/licenses/by/4.0\>, via Wikimedia
+Commons](/images/Venturia_canescens_lateral2.jpg){fig-alt="Venturia canescens"}
+
+![Indian meal moth larvae ; Public domain via Wikimedia
+Commons](/images/Plodia_interpunctella_lrv_79.jpg){fig-alt="Plodia interpunctella"}
+
+One measured factor was wasp development time.
+
+```{r, message=F}
+wasp_no_humidity <- read.csv ("data/Nonhumidity_hostwithparasitoids.csv", 
+                      stringsAsFactors = T)
+wasp_humidity <- read.csv ("data/humidity_hostwithparasitoids.csv", 
+                      stringsAsFactors = T)
+wasp <- rbind(wasp_humidity,wasp_no_humidity)
+wasp$Parasited_date <-as.Date(wasp$Parasited_date, "%Y%m%d") 
+wasp$Emerge_date <-as.Date(as.character(wasp$Emerge_date), "%Y%m%d") 
+wasp$develop_time <- as.numeric(wasp$Emerge_date - wasp$Parasited_date)
+```
 
 #### Beta regression
 
@@ -852,16 +960,14 @@ Beta regression [@geissinger2022] is similar to logistic regression, but
 it focuses on true proportion data where the outcome is between 0 and 1
 (e.g. % cover, % nitrogen).
 
-#### Poisson regression
-
-Poisson regression focuses on count-based data.
-
 #### Negative binomial regression
 
 Similar to poisson, but an additional parameter allows the mean to not
 be equal to the variance.
 
 #### Non-linear options
+
+(**to be added**)
 
 ## Data are not independent
 
@@ -1238,4 +1344,8 @@ linearity, as noted above.
 
 ## Combinining these
 
+(**to be added**)
+
 ## Next steps
+
+(**to be added**)

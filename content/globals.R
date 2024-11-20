@@ -52,6 +52,7 @@ checkPackage(rgbif)
 checkPackage(geodata)
 checkPackage(purrr)
 checkPackage(tidyr)
+checkPackage(performance)
 
 
 
