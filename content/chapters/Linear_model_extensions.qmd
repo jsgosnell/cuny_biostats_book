@@ -756,6 +756,11 @@ exp(.1335)
 ```
 
 and very close to 1 (thus the high p-value given our small sample size).
+Note this means a coefficient of 0 means no impact, since
+
+```{r}
+exp(0)
+```
 
 While this example simply replicates the $\chi^2$ tests we learned
 earlier (deviations may arise when counts are low or high for any group,
@@ -920,6 +925,11 @@ Noting a lack of issues, we can try
 Anova(juvenile_fit_glm_poisson, type= "III")
 ```
 
+Similar to a binomial model, we can exponentiate parameter values to aid
+interpretation, but this time it means how increasing the measured value
+by 1 leads to a multiplicative change in the outcome. Again, a
+coefficient value of 0 means no impact.
+
 So which is right? Here I might argue that "losing" data in the Poisson
 approach justifies the binomial (or quasi-binomial) approach.
 
@@ -953,6 +963,38 @@ wasp$Parasited_date <-as.Date(wasp$Parasited_date, "%Y%m%d")
 wasp$Emerge_date <-as.Date(as.character(wasp$Emerge_date), "%Y%m%d") 
 wasp$develop_time <- as.numeric(wasp$Emerge_date - wasp$Parasited_date)
 ```
+
+This could be analyzed using a linear model
+
+```{r}
+time_model <- lm(develop_time~Humidity*Duration, wasp)
+```
+
+but the residuals are clearly overdispersed and may be increasing with
+the mean.
+
+```{r}
+plot(time_model)
+```
+
+This makes sense as the data is bounded. Negative development times are
+not possible, and we might assume that as the average development date
+increases, there is more room for variability (so variance is not
+constant). A gamma distribution can help these issues.
+
+```{r}
+time_model_gamma <- glm(develop_time~Humidity*Duration, wasp, family = Gamma)
+check_model(time_model_gamma)
+```
+
+and AIC suggests it is very slightly better (remember, linear models are
+very robust!).
+
+```{r}
+AICc(time_model, time_model_gamma)
+```
+
+For our purposes, let's consider what the covariates mean
 
 #### Beta regression
 
