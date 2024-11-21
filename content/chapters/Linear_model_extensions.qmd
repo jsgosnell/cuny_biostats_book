@@ -501,7 +501,7 @@ consider data that do not fit a normal approximation. @bolker2008 has an
 excellent review of when various distributions should be used.
 
 | Distribution       | Typical usage, notes, and examples                                                                                                                                                    |
-|--------------------|----------------------------------------------------|
+|---------------------|---------------------------------------------------|
 | ***Continuous***   |                                                                                                                                                                                       |
 | Gaussian/normal    | continuous variables, or variables connected to large sample sizes and not extreme values (remember the z-test approximation for $\chi^2$ tests?)                                     |
 | Gamma              | Amount of time until a certain number of events takes place (how long do you wait for a parking spot?); variance changes with mean; related to negative binomial                      |
@@ -721,7 +721,8 @@ the residuals to be normally distributed. Checking for patterns in these
 residuals is also complicated.
 
 Another option (which also works for linear models) is offered by the
-*performance* package in R.
+*performance* package in R (another, related package not explored here,
+is *DHARMa*).
 
 ```{r}
 library(performance)
@@ -964,6 +965,23 @@ wasp$Emerge_date <-as.Date(as.character(wasp$Emerge_date), "%Y%m%d")
 wasp$develop_time <- as.numeric(wasp$Emerge_date - wasp$Parasited_date)
 ```
 
+The experimental data can be visualized as:
+
+```{r}
+library(plyr)
+library(Hmisc)
+wasp$Duration_new <- revalue(wasp$Duration, c("C"="0", "L"="72", "S"="6"))
+wasp$Duration_new <- factor(wasp$Duration_new, levels = c("0", "6", "72"))
+
+wasp$Humidity_new <- revalue(wasp$Humidity, c("H"="high", "NH"="ambient"))
+wasp$Humidity_new <- factor(wasp$Humidity_new, levels = c("ambient", "high"))
+
+ggplot(wasp, aes(x=Duration_new, y=develop_time, color=Humidity_new))+
+  geom_jitter()+
+  labs(x="Heat Stress Duration (hours)", y= "Development time (days)", 
+       color="Humidity")
+```
+
 This could be analyzed using a linear model
 
 ```{r}
@@ -1027,14 +1045,11 @@ summary(time_model_gamma)
 Coefficients indicate the highest predicted value for control conditions
 (remember, that's the intercept condition), followed short and long
 stress events. This would suggest that heat stress *lowers* development
-time...but look at the graphed data.
+time...but remember the graphed data (here with humidity impacts
+removed).
 
 ```{r}
-library(plyr)
-library(Hmisc)
-wasp$Duration <- revalue(wasp$Duration, c("C"="0", "L"="72", "S"="6"))
-wasp$Duration <- factor(wasp$Duration, levels = c("0", "6", "72"))
-ggplot(wasp, aes(x=Duration, y=develop_time))+
+ggplot(wasp, aes(x=Duration_new, y=develop_time))+
   geom_jitter()+
   stat_summary(fun.data="mean_sdl", geom="crossbar", width=0.5)+
   labs(x="Heat Stress Duration (hours)", y= "Development time (days)")
@@ -1058,18 +1073,50 @@ exposed to more heat stress.
 
 #### Beta regression
 
-Beta regression [@geissinger2022] is similar to logistic regression, but
-it focuses on true proportion data where the outcome is between 0 and 1
-(e.g. % cover, % nitrogen).
+Beta regression [@geissinger2022] is similar to logistic/binomial
+regression, but it focuses on true proportion data. In other words,
+whereas binomial regression focuses on modeling the number of successes
+in a given number of trials, beta regression focuses on the distribution
+of the probability parameter itself. If we are exploring this, it means
+we know the value can't really be 0 or 1 (or we would have no
+variation), so responses may not be 0 or 1 (they must be in this range).
+Since "accidents" do happen and may lead to zeroes or ones in the data,
+there are options for adjusting the data to account for these issues [p.
+11, @corlatti2021]. This is useful if the outcome is between 0 and 1
+(e.g. % cover, % nitrogen). Packages that can do beta analysis in R
+include *betareg* and *glmmTMB*.
 
 #### Negative binomial regression
 
 Similar to poisson, but an additional parameter allows the mean to not
-be equal to the variance.
+be equal to the variance. Packages to build these models include
+*MASS*(glm.nb function).
 
 #### Non-linear options
 
-(**to be added**)
+All the options above still rely on a linear-link property: the
+systematic component of the model has a linear relationship to a
+predictor (in glm, we just transformed this back to the raw data as
+needed). However, we may instead actually want a non-linear relationship
+between our predictors and outcome. In fact, we may actually want to
+compare various linear and non-linear fits or determine parameter values
+for a specified relationship.
+
+For example, many fisheries use length of organisms as baseline data
+because it's easy to collect, but we may want to use length data to
+estimate mass. Determining this length-weight relatioship may be useful
+to fisheries management.
+
+We know from basic principles the relationship between length and mass
+is probably not linear, because length is only capturing growth in one
+dimension, whereas mass is likely more closely related to volume. Given
+this, we might decide to fit the equation
+
+$$
+Weight =a*Length^B
+$$ to determine this relationship.
+
+A group [@gosnell2023]
 
 ## Data are not independent
 
@@ -1185,7 +1232,7 @@ and are not getting credit for all your work! This is a good example of
 why you should analyze simulated data before you run an experiment, but
 there are other options.
 
-##### Blocking
+#### Blocking
 
 The blocking approach we've already covered works might seem appropriate
 here.
