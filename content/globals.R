@@ -53,6 +53,7 @@ checkPackage(geodata)
 checkPackage(purrr)
 checkPackage(tidyr)
 checkPackage(performance)
+checkPackage(Hmisc)
 
 
 
