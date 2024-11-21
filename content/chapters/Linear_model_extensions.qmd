@@ -501,7 +501,7 @@ consider data that do not fit a normal approximation. @bolker2008 has an
 excellent review of when various distributions should be used.
 
 | Distribution       | Typical usage, notes, and examples                                                                                                                                                    |
-|-------------------|-----------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | ***Continuous***   |                                                                                                                                                                                       |
 | Gaussian/normal    | continuous variables, or variables connected to large sample sizes and not extreme values (remember the z-test approximation for $\chi^2$ tests?)                                     |
 | Gamma              | Amount of time until a certain number of events takes place (how long do you wait for a parking spot?); variance changes with mean; related to negative binomial                      |
@@ -994,11 +994,67 @@ very robust!).
 AICc(time_model, time_model_gamma)
 ```
 
+We can then analyze the impact of various factors on development time
+using our standard approach.
+
 ```{r}
 Anova(time_model_gamma, type="III")
 ```
 
-For our purposes, let's consider what the coefficients mean.
+Since there is not evidence for a significant interaction, we could
+remove it
+
+```{r}
+time_model_gamma <- glm(develop_time~Humidity+Duration, wasp, family = Gamma)
+Anova(time_model_gamma, type="III")
+```
+
+Results indicate heat stress, but not humidity, impact wasp development
+time. Since there are three levels, we could use post hoc tests to
+determine which treatments differ from others.
+
+```{r}
+summary(glht(time_model_gamma, linfct = mcp("Duration"= "Tukey")))
+```
+
+This suggests the longest duration is signifcantly different than the
+others and has a lower value. Similary, let's consider the coefficients.
+
+```{r}
+summary(time_model_gamma)
+```
+
+Coefficients indicate the highest predicted value for control conditions
+(remember, that's the intercept condition), followed short and long
+stress events. This would suggest that heat stress *lowers* development
+time...but look at the graphed data.
+
+```{r}
+library(plyr)
+library(Hmisc)
+wasp$Duration <- revalue(wasp$Duration, c("C"="0", "L"="72", "S"="6"))
+wasp$Duration <- factor(wasp$Duration, levels = c("0", "6", "72"))
+ggplot(wasp, aes(x=Duration, y=develop_time))+
+  geom_jitter()+
+  stat_summary(fun.data="mean_sdl", geom="crossbar", width=0.5)+
+  labs(x="Heat Stress Duration (hours)", y= "Development time (days)")
+```
+
+Here we see that the highest heat stress level is associated with a
+longer wasp development time. Why do the results seem contradictory?
+
+Again, this is due to the link function. For gamma models, the link is
+the inverse, so to determine the impact of a given coefficient on the
+raw data we would combine the intercept and coefficients in this way.
+
+```{r}
+1/(.05-.007)
+1/(.05-.001)
+1/(.05)
+```
+
+Which indicates a longer development time (23 days vs 20) for wasps
+exposed to more heat stress.
 
 #### Beta regression
 
