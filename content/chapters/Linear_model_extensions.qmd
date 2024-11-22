@@ -244,7 +244,7 @@ Many datasets will violate multiple of these assumptions simultaneously,
 so addressing issues is often best resolved by understanding *why* this
 is happening.
 
-## Linear relationship is inappropriate
+## Broken assumption: Linear relationship is inappropriate
 
 A central (and often overlooked assumption) of linear models is that the
 relationship between the predictors (remember, not the actual data!) and
@@ -1099,12 +1099,12 @@ systematic component of the model has a linear relationship to a
 predictor (in glm, we just transformed this back to the raw data as
 needed). However, we may instead actually want a non-linear relationship
 between our predictors and outcome. In fact, we may actually want to
-compare various linear and non-linear fits or determine parameter values
-for a specified relationship.
+compare various linear and non-linear fits [e.g., @dornberger2016]or
+determine parameter values for a specified relationship.
 
 For example, many fisheries use length of organisms as baseline data
 because it's easy to collect, but we may want to use length data to
-estimate mass. Determining this length-weight relatioship may be useful
+estimate mass. Determining this length-weight relationship may be useful
 to fisheries management.
 
 We know from basic principles the relationship between length and mass
@@ -1116,9 +1116,60 @@ $$
 Weight =a*Length^B
 $$ to determine this relationship.
 
-A group [@gosnell2023]
+A group [@gosnell2023] used data collected on whelks from multiple
+locations to consider the parameter values for this model (only 2
+locations used here).
 
-## Data are not independent
+[![](/images/1024px-Kellet's_Whelk_-_Kelletia_kelletii_(29525885698).jpg){fig-alt="Björn S..., CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>, via Wikimedia Commons"}](https://commons.wikimedia.org/wiki/File:Kellet%27s_Whelk_-_Kelletia_kelletii_(29525885698).jpg)
+
+```{r}
+whelk <- read.csv("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/whelk.csv") 
+ggplot(whelk, aes(x=Shell.Length, y = Mass, color=Location)) + 
+  geom_point()+
+  labs(y= "Mass (g)", x= "Shell length (mm)", color= "Population")
+```
+
+```{r}
+whelk_lm <- lm(Mass ~ Shell.Length, whelk, na.action = na.omit)
+whelk_nls <- nls(Mass ~ b0 * Shell.Length^b1, whelk, 
+                   start = list(b0 = 1, b1=3), na.action = na.omit)
+AICc(whelk_lm, whelk_nls)
+```
+
+The non-linear fit is obviously better. Parameters can be found using
+
+```{r}
+summary(whelk_nls)
+
+```
+
+Comparing parameters among sites is slightly more difficult, as dummy
+variables need to be included for each site; alternatlvely, data can be
+transformed and a linear model considered.
+
+Notice this approach is mechanistic - we set the relationship and found
+the best parameters. There are other ways to build non-linear
+relationships, however, and some allow algorithms to find the best
+relationship. While these may not be hypothesis-driven, they may prove
+very useful for predictions. One example of this approach is known as
+generalized additive modelings (or gams). These models can fit multiple
+functions to the data, including piece-wise functions. In this example
+we consider how a splines, or smooth, polynomial curves that are fit to
+various portions of the data and then "knotted" together, fit the data.
+
+```{r}
+whelk_gam_spline <- gam(Mass ~ s(Shell.Length), data = whelk)
+summary(whelk_gam_spline)
+```
+
+As noted above, this is just meant to introduce these approaches. We can
+compare these (and others, such as loess) using
+
+```{r}
+AICc(whelk_gam_spline, whelk_nls, whelk_lm)
+```
+
+## Broken assumption:  Data are not independent
 
 ### In respect to predictors
 
@@ -1143,6 +1194,14 @@ inflation factors (vif) can be assessed for the final and other models
 to consider this issues (all this is covered in the [previous chapter
 that introduces multiple
 regression](Combining_numerical_and_categorical_predictors.qmd){target="_blank"}.
+If this occurs, some variables may need to be removed from
+consideration.
+
+#### Multivariate methods
+
+Covered in later chapters, but if predictors (or multiple outcomes) are
+correlated, methods can be used to derive statistically independent
+predictors (though they may be hard to interpret).
 
 ### In respect to measured outcomes
 
@@ -1150,14 +1209,15 @@ When outcome variables are linked together, a few options exist. Note
 this issue may be obvious from checks of assumptions, but it also may be
 due to experimental design.
 
-Consider this example. In order to investigate impacts of climate stress
-on oysters, specimens are placed in individual tanks and held at normal
-summer (calculated using recent data) temperature or at temperatures
-predicted under 2 IPCC --- Intergovernmental Panel on Climate Change-
-scenarios. Oysters were also exposed to predator cues by dropping in
-water from tanks with 0, low (.25/m2), or high (2/m2) predators. After
-two months changes in oyster shell length (growth) was measured.
-Twenty-five oysters were measured for each treatment combination.
+Consider this toy example. In order to investigate impacts of climate
+stress on oysters, specimens are placed in individual tanks and held at
+normal summer (calculated using recent data) temperature or at
+temperatures predicted under 2 IPCC --- Intergovernmental Panel on
+Climate Change- scenarios. Oysters were also exposed to predator cues by
+dropping in water from tanks with 0, low (.25/m2), or high (2/m2)
+densities of predators. After two months, changes in oyster shell length
+(growth) was measured. Twenty-five oysters were measured for each
+treatment combination.
 
 You hopefully recognize this as a factorial ANOVA experiment that you
 know how to analyze. If you need a reminder, see the [chapter on ANOVA
