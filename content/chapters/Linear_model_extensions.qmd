@@ -493,12 +493,14 @@ interpret coefficient values and associated impacts. In general, impacts
 and outcomes will need to be transformed (based on the link) to the
 actual scale.
 
-We can specify other data types using *generalized linear models* (which
-are different than general linear models, which is another term used to
-describe our "regular" linear models). These models are also known as
-glm or glim (we'll use the glm jargon here). These models let us
-consider data that do not fit a normal approximation. @bolker2008 has an
-excellent review of when various distributions should be used.
+We can specify other data distributions using *generalized linear
+models* (which are different than general linear models, which is
+another term used to describe our "regular" linear models). These models
+are also known as glm or glim (we'll use the glm jargon here). These
+models let us consider data that do not fit a normal approximation.
+@bolker2008 has an excellent review of when various distributions should
+be used. The table below gives some of the more common distributions and
+notes on their usage.
 
 | Distribution       | Typical usage, notes, and examples                                                                                                                                                    |
 |----------------------|--------------------------------------------------|
@@ -509,10 +511,10 @@ excellent review of when various distributions should be used.
 | Beta               | distribution of success parameter in binomial trials with a-1 success and b-1 failures; bounded by 0 -1 (not inclusive)                                                               |
 | *Discrete*         |                                                                                                                                                                                       |
 | Bernoulli/binomial | data that can be divided into successes and failures                                                                                                                                  |
-| Beta               | Proportions that do not include 0 or 1                                                                                                                                                |
 | Poisson            | Fits count data where all events are independent (random); Count data where low counts and 0's are common                                                                             |
 | Negative binomial  | Number of failures before a set number of successes occur; Poisson-ish where variance is larger than the mean (good for overdispersion!) or where the mean (and thus variance) varies |
 | Geometric          | Number of trials until you get a single failure                                                                                                                                       |
+| *Combination*      |                                                                                                                                                                                       |
 | Beta binomial      | Binomial-ish but the success parameter (and thus variance) varies across trials                                                                                                       |
 
 : Connections between data distributions and real-world data
@@ -585,6 +587,9 @@ $$
 $$
 
 This is known as McFadden's pseudo-R^2^ value.
+
+Another option are quantile residuals. These are the focus of the DHARMa
+package and should be uniformly distributed for appropriate models.
 
 </details>
 
@@ -1209,61 +1214,57 @@ When outcome variables are linked together, a few options exist. Note
 this issue may be obvious from checks of assumptions, but it also may be
 due to experimental design.
 
-Consider this toy example. In order to investigate impacts of climate
-stress on oysters, specimens are placed in individual tanks and held at
-normal summer (calculated using recent data) temperature or at
-temperatures predicted under 2 IPCC --- Intergovernmental Panel on
-Climate Change- scenarios. Oysters were also exposed to predator cues by
-dropping in water from tanks with 0, low (.25/m2), or high (2/m2)
-densities of predators. After two months, changes in oyster shell length
-(growth) was measured. Twenty-five oysters were measured for each
-treatment combination.
+Consider this toy example. In order to investigate impacts of predator
+stress on oysters, oysters are exposed to predator cues by dropping in
+water from tanks with 0, low (.25/m2), or high (2/m2) densities of
+predators. After two months, changes in oyster shell length (growth) was
+measured. Here we make the data.
 
-You hopefully recognize this as a factorial ANOVA experiment that you
-know how to analyze. If you need a reminder, see the [chapter on ANOVA
-extensions](../chapters/More_ANOVAs.qmd){target="_blank"}. Experiments
-like this are odd, however, given the space they require. It is far more
-common to put lots of organisms in a single container given space and
-costs. However, this means our measurements are connected; remember
-[blocking and paired
+```{r}
+set.seed(19)
+experiment <- data.frame(                      predator_cue = factor(c(rep(c(rep("none",25),
+                                               rep("low",25),
+                                               rep("high",25)),1))),
+                         growth = c(rnorm(25,2),
+                                    rnorm(25, 1.5),
+                                    rnorm(25, .7)),
+                         container = c(rep(letters[1:3],each=25)))
+experiment[experiment$growth<0, "growth"] <- 0
+```
+
+The data look something like this:
+
+```{r}
+experiment$predator_cue <- factor(experiment$predator_cue, levels = c("none", "low", "high"))
+ggplot(experiment, aes(x=predator_cue, y=growth, color= predator_cue))+
+  geom_jitter()+
+  labs(x= "Predator exposure", y= "Growth (mm)")+
+   guides(color = "none")
+```
+
+
+How would you analyze this data? If we assume that each oyster was in
+its own space (and received cues from a unique predator), you hopefully
+recognize this as a lm/ANOVA that you know(almost) how to analyze. If
+you need a reminder, see the [chapter on
+ANOVAs.](../chapters/Compare_means_among_populations.qmd){target="_blank"}
+
+```{r}
+growth_lm <- lm(growth~predator_cue, experiment)
+plot(growth_lm)
+Anova(growth_lm, type="III")
+```
+
+
+This approach takes a lot of space (and time!). If I have a large tank, I may 
+instead decide to put a few more oysters in there.  At an extreme, let's instead 
+use one tank was used for each predator level, with twenty-five oysters
+measured in each tank.However, this means our measurements are
+connected; remember [blocking and paired
 tests](../chapters/More_ANOVAs.qmd){target="_blank"})?
 
 There are several ways to deal with this. Here we explore each for our
 oyster example.
-
-```{r, echo=F}
-set.seed(19)
-experiment <- data.frame(temperature = factor(c(rep("ambient",75), rep("elevated_scenario1", 75), rep("elevated_scenario2", 75))),
-                         predator_cue = factor(c(rep(c(rep("none",25),
-                                               rep("normal",25),
-                                               rep("high",25)),3))),
-                         growth = c(rnorm(25,2),
-                                    rnorm(25, 1.5),
-                                    rnorm(25, .7),
-                                    rnorm(25,2.7),
-                                    rnorm(25,1.0),
-                                    rnorm(25, .4),
-                                    rnorm(25, 3.1),
-                                    rnorm(25, 3.1),
-                                    rnorm(25, 3.1)),
-                         container = c(rep(letters[1:9],each=25)))
-experiment[experiment$growth<0, "growth"] <- 0
-```
-
-#### Ignore it (don't do this!)
-
-First, let's ignore the lack of independence. This is *not* an option,
-but it let's you see the impact.
-
-```{r}
-growth_lm <- lm(growth~predator_cue*temperature, experiment)
-plot(growth_lm)
-library(car)
-Anova(growth_lm, type="III")
-```
-
-We find significant main effects and interactions using this *wrong*
-approach.
 
 #### Find average for each unit
 
@@ -1272,7 +1273,7 @@ One way of doing this focuses on the average for each unit
 ```{r}
 library(Rmisc)
 averaged_experiment <- summarySE(experiment, measurevar = "growth",
-                             groupvars = c("predator_cue", "temperature", "container"))
+                             groupvars = c("predator_cue", "container"))
 library(rmarkdown)
 paged_table(averaged_experiment)
 ```
@@ -1280,13 +1281,16 @@ paged_table(averaged_experiment)
 and use that for your analysis.
 
 ```{r, error=T}
-average_analysis <- lm(growth~predator_cue*temperature, averaged_experiment)
+average_analysis <- lm(growth~predator_cue, averaged_experiment)
 Anova(average_analysis, type = "III")
 ```
 
-but that leads to an issue! Since we only get 9 average outcomes and our
-model requires 10 degrees of freedom (consider why), we are left with no
-"noise" to make the denominator for our F ratio! Even when this doesn't
+but that leads to an issue! Since we only get 3 average outcomes and our
+model requires 4 degrees of freedom (consider why), we are left with no
+"noise" to make the denominator for our F ratio! This is partially due to a lack 
+of replication - we'll fix that below after we explore another problem.  
+
+Even when this doesn't
 happen, you have reduced your data to a much smaller number of points
 and are not getting credit for all your work! This is a good example of
 why you should analyze simulated data before you run an experiment, but
@@ -1298,7 +1302,7 @@ The blocking approach we've already covered works might seem appropriate
 here.
 
 ```{r, error=T}
-blocking_analysis <- lm(growth~predator_cue*temperature+container, experiment)
+blocking_analysis <- lm(growth~predator_cue+container, experiment)
 Anova(blocking_analysis, type = "III")
 ```
 
@@ -1309,22 +1313,80 @@ issues. We can actually see where
 alias(blocking_analysis)
 ```
 
-though the output is confusing. In general, the issue here is each unit
-only contributes to one level of other traits..so if we know the average
-impact of ambient temperatures, for example, and the impacts in two of
-the treatments that were held at that temperature, we can predict the
-other. If instead each unit contributed to multiple levels, like in our
+though the output is confusing. In general, the issue here is each container only 
+measures one level of predator risk, so risk and container are completely 
+confounded. This is (again) why we need replication in studies!  This was just a bad 
+experiment... let's fix it now....
+
+
+```{r}
+set.seed(19)
+experiment2 <- data.frame(                      predator_cue = factor(c(rep(c(rep("none",175),
+                                               rep("low",175),
+                                               rep("high",175)),1))),
+                         growth = c(rnorm(175,2),
+                                    rnorm(175, 1.5),
+                                    rnorm(175, .7)),
+                         container = c(rep(letters[4:24],each=25)))
+experiment2[experiment2$growth<0, "growth"] <- 0
+
+experiment_new <- merge (experiment, experiment2, all=T)
+```
+
+```{r, error=T}
+blocking_analysis <- lm(growth~predator_cue+container, experiment_new)
+Anova(blocking_analysis, type = "III")
+```
+
+Even with replicates we still get an issue...why?
+
+```{r}
+alias(blocking_analysis)
+```
+
+It's because the container variable can fully "explain" the predation levels. 
+This is because each container only contributes to one level of other traits.
+If instead each unit contributed to multiple levels, like in our
 [feather experiment](../chapters/More_ANOVAs.qmd){target="blank"}) this
 isn't an issue.
+
+Consider instead if we had truly independent samples - the data might look 
+like this:
+
+```{r}
+set.seed(19)
+experiment3 <- data.frame(                      predator_cue = factor(c(rep(c(rep("none",200),
+                                               rep("low",200),
+                                               rep("high",200)),1))),
+                         growth = c(rnorm(200,2),
+                                    rnorm(200, 1.5),
+                                    rnorm(200, .7)),
+                         container = paste ("cont", 1:600, sep="_"))
+experiment3[experiment3$growth<0, "growth"] <- 0
+```
+
+which is just our data but in unique containers.  Then we could analyze it like
+this...
+
+```{r}
+unique_analysis <- lm(growth~predator_cue, experiment3)
+Anova(unique_analysis, type = "III")
+```
+which is back where we started!  
+
 
 #### Random effects
 
 Our final option takes a new approach. It considers the units we
-measured as simply a sample from a larger population. Using that
-background, we use the information from the units to consider the
+measured as simply a potential samples from a larger population. Using
+that background, we use the information from the units to consider the
 distribution of sample effects we might see. The impact of unit is then
-considered a random-effect. For this to work, you probably want 5+
-levels of the unit variable. This is because we are using the means to
+considered a random effect. For this to work, you probably want 5+
+levels of the unit variable.
+
+
+
+This is because we are using the means to
 estimate variance (confusing?). For factors with \<5 levels, random
 effects likely offer no benefit [@gomes2022].
 
