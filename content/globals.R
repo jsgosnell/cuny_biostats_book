@@ -55,6 +55,7 @@ checkPackage(tidyr)
 checkPackage(performance)
 checkPackage(Hmisc)
 checkPackage(DHARMa)
+checkPackage(see)
 
 
 

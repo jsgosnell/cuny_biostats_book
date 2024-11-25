@@ -2,6 +2,8 @@
 title: Linear model extensions
 subtitle: When to trust it, and how to fix it when it's broken
 bibliography: ../references.bib
+editor_options: 
+  chunk_output_type: inline
 ---
 
 <!-- COMMENT NOT SHOW IN ANY OUTPUT: Code chunk below sets overall defaults for .qmd file; these inlcude showing output by default and looking for files relative to .Rpoj file, not .qmd file, which makes putting filesin different folders easier  -->
@@ -502,20 +504,20 @@ models let us consider data that do not fit a normal approximation.
 be used. The table below gives some of the more common distributions and
 notes on their usage.
 
-| Distribution       | Typical usage, notes, and examples                                                                                                                                                    |
-|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ***Continuous***   |                                                                                                                                                                                       |
-| Gaussian/normal    | continuous variables, or variables connected to large sample sizes and not extreme values (remember the z-test approximation for $\chi^2$ tests?)                                     |
-| Gamma              | Amount of time until a certain number of events takes place (how long do you wait for a parking spot?); variance changes with mean; related to negative binomial                      |
-| Exponential        | amount of time for a single event to occur; related to geometric                                                                                                                      |
-| Beta               | distribution of success parameter in binomial trials with a-1 success and b-1 failures; bounded by 0 -1 (not inclusive)                                                               |
-| *Discrete*         |                                                                                                                                                                                       |
-| Bernoulli/binomial | data that can be divided into successes and failures                                                                                                                                  |
-| Poisson            | Fits count data where all events are independent (random); Count data where low counts and 0's are common                                                                             |
-| Negative binomial  | Number of failures before a set number of successes occur; Poisson-ish where variance is larger than the mean (good for overdispersion!) or where the mean (and thus variance) varies |
-| Geometric          | Number of trials until you get a single failure                                                                                                                                       |
-| *Combination*      |                                                                                                                                                                                       |
-| Beta binomial      | Binomial-ish but the success parameter (and thus variance) varies across trials                                                                                                       |
+| Distribution | Typical usage, notes, and examples |
+|------------------------------------|------------------------------------|
+| ***Continuous*** |  |
+| Gaussian/normal | continuous variables, or variables connected to large sample sizes and not extreme values (remember the z-test approximation for $\chi^2$ tests?) |
+| Gamma | Amount of time until a certain number of events takes place (how long do you wait for a parking spot?); variance changes with mean; related to negative binomial |
+| Exponential | amount of time for a single event to occur; related to geometric |
+| Beta | distribution of success parameter in binomial trials with a-1 success and b-1 failures; bounded by 0 -1 (not inclusive) |
+| *Discrete* |  |
+| Bernoulli/binomial | data that can be divided into successes and failures |
+| Poisson | Fits count data where all events are independent (random); Count data where low counts and 0's are common |
+| Negative binomial | Number of failures before a set number of successes occur; Poisson-ish where variance is larger than the mean (good for overdispersion!) or where the mean (and thus variance) varies |
+| Geometric | Number of trials until you get a single failure |
+| *Combination* |  |
+| Beta binomial | Binomial-ish but the success parameter (and thus variance) varies across trials |
 
 : Connections between data distributions and real-world data
 
@@ -1321,21 +1323,21 @@ One way of doing this focuses on the average for each unit
 
 ```{r}
 library(Rmisc)
-averaged_experiment <- summarySE(experiment_with_3_tanks, measurevar = "growth",
+averaged_experiment_3_tanks <- summarySE(experiment_with_3_tanks, measurevar = "growth",
                              groupvars = c("predator_cue", "tank"))
 library(rmarkdown)
-paged_table(averaged_experiment)
+paged_table(averaged_experiment_3_tanks)
 ```
 
 and use that for your analysis.
 
 ```{r, error=T}
-average_analysis <- lm(growth~predator_cue, averaged_experiment)
-Anova(average_analysis, type = "III")
+average_analysis_3_tanks <- lm(growth~predator_cue, averaged_experiment_3_tanks)
+Anova(average_analysis_3_tanks, type = "III")
 ```
 
 but that leads to an issue! Since we only get 3 average outcomes and our
-model requires 4 degrees of freedom (consider why), we are left with no
+model requires 3 degrees of freedom (consider why), we are left with no
 "noise" to make the denominator for our F ratio! This is partially due
 to a lack of replication - we'll fix that now.
 
@@ -1369,12 +1371,16 @@ experiment_with_12_tanks$growth <- fixed_intercept + experiment_with_12_tanks$b_
 experiment_with_12_tanks <- experiment_with_12_tanks[order(experiment_with_12_tanks$tank),]
 ```
 
+Now we can find the average for each of our 12 tanks.
+
 ```{r}
-averaged_experiment <- summarySE(experiment_with_12_tanks, measurevar = "growth",
+averaged_experiment_12_tanks <- summarySE(experiment_with_12_tanks, measurevar = "growth",
                              groupvars = c("predator_cue", "tank"))
-paged_table(averaged_experiment)
+paged_table(averaged_experiment_12_tanks)
 
 ```
+
+plot ...
 
 ```{r}
 ggplot(averaged_experiment, aes(x=predator_cue, y=growth, color= predator_cue))+
@@ -1383,15 +1389,16 @@ ggplot(averaged_experiment, aes(x=predator_cue, y=growth, color= predator_cue))+
    guides(color = "none")
 ```
 
+and analyze them.
+
 ```{r}
 average_analysis <- lm(growth~predator_cue, averaged_experiment)
 Anova(average_analysis, type = "III")
 ```
 
-Even when this doesn't happen, you have reduced your data to a much
-smaller number of points and are not getting credit for all your work!
-This is a good example of why you should analyze simulated data before
-you run an experiment, but there are other options.
+This is one way to manage dependent data, but you have reduced your data
+to a much smaller number of points and are not getting credit for all
+your work!
 
 ##### Blocking
 
@@ -1417,10 +1424,8 @@ can fully "explain" the predation levels - this goes back to the
 singularity issues we discussed in introducing linear models. This is
 because each container only contributes to one level of other traits. If
 instead each unit contributed to multiple levels, like in our [feather
-experiment](../chapters/More_ANOVAs.qmd){target="blank"}) this isn't an
-issue.
-
-However, note with replicates we could consider averages...
+experiment](../chapters/More_ANOVAs.qmd){target="blank"}, as show below)
+this isn't an issue.
 
 ##### Random effects
 
@@ -1453,11 +1458,11 @@ Z  \textrm{ is a coefficient matrix that signifies each unit (an n x (n * number
 $$
 
 Two common packages for carrying out this analysis in R are the **nlme**
-and **lme4** packages. We will focus on the lme4 package here. Random
-effects can be entered in the *lmer* (linear mixed-effects regression)
-function and specified as (1\|Grouping Unit). One nice thing about
-**lme4** is it will handle crossed and random effects on it's own **as
-long as you don't repeat unit names**. For example, we could note
+and **lme4** packages. We will focus on the **lme4** package here.
+Random effects can be entered in the *lmer* (linear mixed-effects
+regression) function and specified as (1\|Grouping Unit). One nice thing
+about **lme4** is it will handle crossed and random effects on it's own
+**as long as you don't repeat unit names**. For example, we could note
 
 ```{r}
 library(lme4)
@@ -1550,7 +1555,8 @@ Anova(mixed_analysis, type = "III")
 
 You can also ask for F tests, but note the degrees of freedom associated
 with these tests is not clear. It's somewhere between the "average" and
-"ignore" approach used above.
+"ignore" approach used above. You also will see these 2 approaches give
+different answers.
 
 ```{r}
 Anova(mixed_analysis, type = "III", test="F")
