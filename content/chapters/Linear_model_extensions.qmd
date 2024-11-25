@@ -176,7 +176,7 @@ ggplot(Sparrows[Sparrows$I1== T, ], aes(x=wt, fill=fMonth))+
 
 We would find the residuals to be much better behaved.
 
-Similary, highly skewed data may arise due to unequal sample sizes
+Similarly, highly skewed data may arise due to unequal sample sizes
 (which may pose their own problems, but not outright), but models using
 this data may meet assumptions.
 
@@ -503,7 +503,7 @@ be used. The table below gives some of the more common distributions and
 notes on their usage.
 
 | Distribution       | Typical usage, notes, and examples                                                                                                                                                    |
-|-----------------------|-------------------------------------------------|
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | ***Continuous***   |                                                                                                                                                                                       |
 | Gaussian/normal    | continuous variables, or variables connected to large sample sizes and not extreme values (remember the z-test approximation for $\chi^2$ tests?)                                     |
 | Gamma              | Amount of time until a certain number of events takes place (how long do you wait for a parking spot?); variance changes with mean; related to negative binomial                      |
@@ -1214,6 +1214,11 @@ When outcome variables are linked together, a few options exist. Note
 this issue may be obvious from checks of assumptions, but it also may be
 due to experimental design.
 
+#### Include random effects
+
+We start with an approach that models connections among variables via
+random effects.
+
 Consider this toy example. In order to investigate impacts of predator
 stress on oysters, oysters are exposed to predator cues by dropping in
 water from tanks with 0, low (.25/m2), or high (2/m2) densities of
@@ -1265,7 +1270,9 @@ look more like
 
 ```{r}
 set.seed(19)
-J = 3                # number of tanks
+n_levels <- 3
+replicates_each_level <- 1 
+J = n_levels * replicates_each_level             # number of tanks
 n_j = 25              # number of observations per tank 
 sigma_b = .15           # variance of the random intercept
 sigma_e = .15           # variance of the random noise
@@ -1308,7 +1315,7 @@ fields [@hurlbert1984; @heffner1996; @lazic2010].
 There are several ways to deal with this. Here we explore each for our
 oyster example.
 
-#### Find average for each unit
+##### Find average for each unit
 
 One way of doing this focuses on the average for each unit
 
@@ -1334,7 +1341,9 @@ to a lack of replication - we'll fix that now.
 
 ```{r}
 set.seed(19)
-J = 12                # number of tanks
+n_levels <- 3
+replicates_each_level <- 4 
+J = n_levels * replicates_each_level             # number of tanks
 n_j = 25              # number of observations per tank 
 sigma_b = .15           # variance of the random intercept
 sigma_e = .15           # variance of the random noise
@@ -1364,6 +1373,17 @@ experiment_with_12_tanks <- experiment_with_12_tanks[order(experiment_with_12_ta
 averaged_experiment <- summarySE(experiment_with_12_tanks, measurevar = "growth",
                              groupvars = c("predator_cue", "tank"))
 paged_table(averaged_experiment)
+
+```
+
+```{r}
+ggplot(averaged_experiment, aes(x=predator_cue, y=growth, color= predator_cue))+
+  geom_point()+
+  labs(x= "Predator exposure", y= "Growth (mm)")+
+   guides(color = "none")
+```
+
+```{r}
 average_analysis <- lm(growth~predator_cue, averaged_experiment)
 Anova(average_analysis, type = "III")
 ```
@@ -1373,7 +1393,7 @@ smaller number of points and are not getting credit for all your work!
 This is a good example of why you should analyze simulated data before
 you run an experiment, but there are other options.
 
-#### Blocking
+##### Blocking
 
 The blocking approach we've already covered works might seem appropriate
 here.
@@ -1402,7 +1422,7 @@ issue.
 
 However, note with replicates we could consider averages...
 
-#### Random effects
+##### Random effects
 
 Our final option takes a new approach. It considers the units we
 measured as simply a potential samples from a larger population. We use
@@ -1413,24 +1433,51 @@ variable. This is because we are using the means to estimate variance
 (confusing?). For factors with \<5 levels, random effects likely offer
 no benefit [@gomes2022].
 
-The impact of unit is then included in the model as a random effect.
-When models contain fixed (what we've done before) and random effects,
-we call them mixed-effects models. Two common packages for carrying out
-this analysis in R are the **nlme** and **lme4** packages. We will focus
-on the lme4 package here. Random effects can be entered in the *lmer*
-(linear mixed-effects regression) function and specified as (1\|Grouping
-Unit). One nice thing about **lme4** is it will handle crossed and
-random effects on it's own **as long as you don't repeat unit names**.
-For example, we could note
+<!--useful here: https://stats.oarc.ucla.edu/other/mult-pkg/introduction-to-linear-mixed-models/-->
+
+The impact of unit is then included in the model as a random
+effect[@introduca]. When models contain fixed (what we've done before)
+and random effects, we call them mixed-effects models. To update our our
+model, we now have
+
+$$
+\begin{split}
+Y=X\beta+ Z\mu+\epsilon , \textrm{ where }\\
+\textrm{Y is our observations (an nx1 matrix)}\\
+\textrm{X is a matrix showing our explanatory variables (an nxk matrix)}\\
+\beta \textrm{ is our coefficient matrix(an kx1 matrix)}\\
+Z  \textrm{ is a coefficient matrix that signifies each unit (an n x (n * number or random effects) matrix)}\\
+\mu \textrm{ is our coefficient matrix for each unit (an (n * number of random effects) x 1 matrix) }\\
+\epsilon \textrm{ is a matrix (an nx1) of residuals)}\\
+\end{split}
+$$
+
+Two common packages for carrying out this analysis in R are the **nlme**
+and **lme4** packages. We will focus on the lme4 package here. Random
+effects can be entered in the *lmer* (linear mixed-effects regression)
+function and specified as (1\|Grouping Unit). One nice thing about
+**lme4** is it will handle crossed and random effects on it's own **as
+long as you don't repeat unit names**. For example, we could note
 
 ```{r}
 library(lme4)
 mixed_analysis <- lmer(growth~predator_cue+(1|tank), experiment_with_12_tanks)
 ```
 
-Once built, we need to consider assumptions. The main assumption we add
-here is that the random effects are normally distributed. This should be
-checked at each level of grouping.
+and we now assume
+
+$$
+\epsilon \approx i.i.d.\ N(\mu,\sigma)\\
+\mu \approx N(0, \sigma_{\mu})
+$$
+
+The main assumption we add here is that the random effects are normally
+distributed. This means we can estimate all the random parameters at a
+single level (we will stick with one level for now) using just one
+degree of freedom.
+
+Once we build these models,, we need to consider assumptions.This should
+be checked at each level of grouping.
 
 ```{r}
 check_model(mixed_analysis)
@@ -1513,10 +1560,10 @@ Anova(mixed_analysis, type = "III", test="F")
 summary(glht(mixed_analysis, linfct = mcp("predator_cue"= "Tukey")))
 ```
 
-Note this approach suggests we do not have enough data to reject the
-null hypothesis. Ignoring the linkages among data led to *very*
-different results. This issue (pseudopreplication) has been noted in
-ecology and other fields [@hurlbert1984; @heffner1996; @lazic2010].
+Note our results indicate we can only see differences between the high
+and control treatments. This is due to the noise we introduced in the
+data (which always happens in the real world) in addition to the random
+effect issues.
 
 <details>
 
@@ -1599,6 +1646,26 @@ tests that match likelihood-based methods).
 
 </details>
 
+##### More random effects
+
+What we have demonstrated above is a *random intercepts* model. This
+means each group (tank in this case) differs slightly. This approach
+works well when we are considering impacts of categorical predictors
+(like an ANOVA). If we are considering slopes, we can also have *random
+slope* models, where every group responds slightly differently to the
+continuous predictor. You can also combine these into models with both
+random intercepts and random slopes.
+
+<!-- simulation @ https://verynormal.substack.com/p/office-hours-1-simulating-from-mixed -->
+
+#### Consider a correlation structure: The bigger picture
+
+Though not developed here (for now), random effects are an example of a
+correlation structure. We could also consider linkages among our data in
+different ways. This is common in spatial statistics and where time is
+involved. When data are connected in this way, various correlation
+structures can be included in the model.
+
 ## Errors are not equal among groups
 
 Issues with errors not being equal among groups is often tied to other
@@ -1667,10 +1734,16 @@ assumption is based on residuals, not data!). However, non-normal
 residuals are often (not always) connected to other issues, namely
 linearity, as noted above.
 
-## Combinining these
+## Next steps: Combining these approaches
 
-(**to be added**)
-
-## Next steps
-
-(**to be added**)
+Many of these approaches can be combined. For example, random effects be
+included in generalized linear models and generalized additive models ,
+or a model could include random effects for measurement unit and a
+correlation structure given other relationships. Random effects could
+also be included in a model focused on transformed variables. It can all
+get really complicated - the key is to focus on making the model fit the
+data and ensuring assumptions are met before considering results. As
+noted at the beginning, this module is introducing you to these
+techniques so you are prepared to explore them further. Suggested
+reading includes @zuur2009, @harrison2018, @corlatti2021, and
+@crawley2014.
