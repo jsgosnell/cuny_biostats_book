@@ -504,20 +504,20 @@ models let us consider data that do not fit a normal approximation.
 be used. The table below gives some of the more common distributions and
 notes on their usage.
 
-| Distribution | Typical usage, notes, and examples |
+| Distribution       | Typical usage, notes, and examples                                                                                                                                                    |
 |------------------------------------|------------------------------------|
-| ***Continuous*** |  |
-| Gaussian/normal | continuous variables, or variables connected to large sample sizes and not extreme values (remember the z-test approximation for $\chi^2$ tests?) |
-| Gamma | Amount of time until a certain number of events takes place (how long do you wait for a parking spot?); variance changes with mean; related to negative binomial |
-| Exponential | amount of time for a single event to occur; related to geometric |
-| Beta | distribution of success parameter in binomial trials with a-1 success and b-1 failures; bounded by 0 -1 (not inclusive) |
-| *Discrete* |  |
-| Bernoulli/binomial | data that can be divided into successes and failures |
-| Poisson | Fits count data where all events are independent (random); Count data where low counts and 0's are common |
-| Negative binomial | Number of failures before a set number of successes occur; Poisson-ish where variance is larger than the mean (good for overdispersion!) or where the mean (and thus variance) varies |
-| Geometric | Number of trials until you get a single failure |
-| *Combination* |  |
-| Beta binomial | Binomial-ish but the success parameter (and thus variance) varies across trials |
+| ***Continuous***   |                                                                                                                                                                                       |
+| Gaussian/normal    | continuous variables, or variables connected to large sample sizes and not extreme values (remember the z-test approximation for $\chi^2$ tests?)                                     |
+| Gamma              | Amount of time until a certain number of events takes place (how long do you wait for a parking spot?); variance changes with mean; related to negative binomial                      |
+| Exponential        | amount of time for a single event to occur; related to geometric                                                                                                                      |
+| Beta               | distribution of success parameter in binomial trials with a-1 success and b-1 failures; bounded by 0 -1 (not inclusive)                                                               |
+| *Discrete*         |                                                                                                                                                                                       |
+| Bernoulli/binomial | data that can be divided into successes and failures                                                                                                                                  |
+| Poisson            | Fits count data where all events are independent (random); Count data where low counts and 0's are common                                                                             |
+| Negative binomial  | Number of failures before a set number of successes occur; Poisson-ish where variance is larger than the mean (good for overdispersion!) or where the mean (and thus variance) varies |
+| Geometric          | Number of trials until you get a single failure                                                                                                                                       |
+| *Combination*      |                                                                                                                                                                                       |
+| Beta binomial      | Binomial-ish but the success parameter (and thus variance) varies across trials                                                                                                       |
 
 : Connections between data distributions and real-world data
 
@@ -1383,7 +1383,7 @@ paged_table(averaged_experiment_12_tanks)
 plot ...
 
 ```{r}
-ggplot(averaged_experiment, aes(x=predator_cue, y=growth, color= predator_cue))+
+ggplot(averaged_experiment_12_tanks, aes(x=predator_cue, y=growth, color= predator_cue))+
   geom_point()+
   labs(x= "Predator exposure", y= "Growth (mm)")+
    guides(color = "none")
@@ -1392,8 +1392,8 @@ ggplot(averaged_experiment, aes(x=predator_cue, y=growth, color= predator_cue))+
 and analyze them.
 
 ```{r}
-average_analysis <- lm(growth~predator_cue, averaged_experiment)
-Anova(average_analysis, type = "III")
+average_analysis_12_tanks <- lm(growth~predator_cue, averaged_experiment_12_tanks)
+Anova(average_analysis_12_tanks, type = "III")
 ```
 
 This is one way to manage dependent data, but you have reduced your data
@@ -1664,6 +1664,120 @@ random intercepts and random slopes.
 
 <!-- simulation @ https://verynormal.substack.com/p/office-hours-1-simulating-from-mixed -->
 
+As an example, consider work by @oconnor2007 on relationship between
+pelagic larval duration (pld) and temperature (exampled developed in
+@midway). The group collected data from 214 observations.
+
+```{r}
+pld <- read.table("data/PLD.txt", stringsAsFactors = T, header = T)
+ggplot(pld, aes(y = pld, x= temp)) +
+  geom_point() +
+  labs(x='Temperature (C)', 
+       y='PLD (days)') 
+```
+
+but they were all from 72 species. These 72 species could be averaged
+out ...
+
+```{r}
+averaged_species_pld <- summarySE(pld, measurevar = "pld",
+                             groupvars = c("species"))
+averaged_species_temp <- summarySE(pld, measurevar = "temp",
+                             groupvars = c("species"))
+averaged_species <- merge(averaged_species_pld[,1:3],averaged_species_temp[,1:3], all = T)
+paged_table(averaged_species)
+```
+
+and plotted
+
+```{r}
+ggplot(averaged_species, aes(y = pld, x= temp)) +
+  geom_point() +
+  labs(x='Temperature (C)', 
+       y='PLD (days)') 
+```
+
+Models could be built according to both of these approaches. For now we
+will only consider a random intercept model
+
+```{r}
+averaged_model <- lm(pld ~ temp, averaged_species)
+mixed_model <- lmer(pld ~ temp + (1 | species), pld)
+```
+
+and checked
+
+```{r}
+plot(averaged_model)
+check_model(mixed_model)
+```
+
+The average model looks ok, but the mixed-model is struggling with
+variances that are increasing over time. To follow the paper's lead
+(despite what we wrote above), let's log-transform the data.
+
+```{r}
+averaged_model_log <- lm(log(pld) ~ log(temp), averaged_species)
+mixed_model_log_intercept <- lmer(log(pld) ~ log(temp) + (1 | species), pld)
+```
+
+and check them again
+
+```{r}
+plot(averaged_model_log)
+check_model(mixed_model_log_intercept)
+```
+
+The mixed model looks better now. But how do these models impact our
+findings?
+
+```{r}
+Anova(averaged_model_log, type = "III")
+Anova(mixed_model_log_intercept, type = "III")
+```
+
+Here we see a clear benefit (if we trust p-values...) of including all
+our data. However, we might also think that each species has a unique
+relationship to temperature. This would be a random slopes models
+(notice we no longer have a constant intercept per(line) species, but
+instead have a 0.
+
+```{r}
+mixed_model_log_slope <- lmer(log(pld) ~ log(temp) + (0+temp | species), pld)
+```
+
+We could also have both
+
+```{r}
+mixed_model_log_both <- lmer(log(pld) ~ log(temp) + (temp | species), pld)
+```
+
+Which should we use? @zuur2009 recommends fitting a maximal model (all
+the fixed effects we might want to include, like starting at top-down
+approach) to the data and then comparing these using AIC.
+
+```{r}
+paged_table(AICc(mixed_model_log_both, mixed_model_log_intercept, mixed_model_log_slope))
+```
+
+Here we find fitting both a random slope and intercept fit the data
+best. We can then analyze the model
+
+```{r}
+Anova(mixed_model_log_both, type="III")
+```
+
+and note a significant impact of temperature on pelagic larval duration.
+This is another example of how blocking may have missed this, unless we
+considered interactions...
+
+```{r}
+Anova(lm(log(pld) ~ log(temp)*species, pld), type="III")
+```
+
+which would have been harder to interpret given our lack of concern
+about species.
+
 #### Consider a correlation structure: The bigger picture
 
 Though not developed here (for now), random effects are an example of a
@@ -1676,18 +1790,23 @@ structures can be included in the model.
 
 Issues with errors not being equal among groups is often tied to other
 issues, like non-linearity or the nature of the data, which we have
-addressed above. Another option is to use weighted-least squares
-regression - this approach specifically helps when residuals are not
-evenly distributed among groups (or when a funnel/cone appears when you
-plot the model to check assumptions). For example, we could take the
-model on below-ground biomass that we developed in the [More Anovas
-chapter](More_ANOVAs.qmd). As a reminder, @valdez2023 wanted to consider
-the impact of top-down (snail grazing) and bottom- up (nutrient
-availability) on marsh plant (*Spartina alterniflora*) growth. To do
-this, they assigned plots to one of 3 grazer treatments and one of 2
-nitrogen treatments. We focused on the impact of these treatments on
-standing dead mass and noted a funnel-shape when reviewing the
-residuals.
+addressed above. Correlation structures can also be used to address
+issues with errors are not equal among groups.
+
+For example (from @zuur2009), we could consider the relationship between
+the testis weight and dorsal mantle length of squid.
+
+Another option is to use weighted-least squares regression - this
+approach specifically helps when residuals are not evenly distributed
+among groups (or when a funnel/cone appears when you plot the model to
+check assumptions). For example, we could take the model on below-ground
+biomass that we developed in the [More Anovas chapter](More_ANOVAs.qmd).
+As a reminder, @valdez2023 wanted to consider the impact of top-down
+(snail grazing) and bottom- up (nutrient availability) on marsh plant
+(*Spartina alterniflora*) growth. To do this, they assigned plots to one
+of 3 grazer treatments and one of 2 nitrogen treatments. We focused on
+the impact of these treatments on standing dead mass and noted a
+funnel-shape when reviewing the residuals.
 
 ```{r}
 valdez_2023 <- read.csv("data/Spartina_alterniflora_traits.csv", stringsAsFactors = T)
