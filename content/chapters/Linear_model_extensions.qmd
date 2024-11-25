@@ -503,7 +503,7 @@ be used. The table below gives some of the more common distributions and
 notes on their usage.
 
 | Distribution       | Typical usage, notes, and examples                                                                                                                                                    |
-|----------------------|--------------------------------------------------|
+|-----------------------|-------------------------------------------------|
 | ***Continuous***   |                                                                                                                                                                                       |
 | Gaussian/normal    | continuous variables, or variables connected to large sample sizes and not extreme values (remember the z-test approximation for $\chi^2$ tests?)                                     |
 | Gamma              | Amount of time until a certain number of events takes place (how long do you wait for a parking spot?); variance changes with mean; related to negative binomial                      |
@@ -1225,10 +1225,9 @@ set.seed(19)
 experiment <- data.frame(                      predator_cue = factor(c(rep(c(rep("none",25),
                                                rep("low",25),
                                                rep("high",25)),1))),
-                         growth = c(rnorm(25,2),
-                                    rnorm(25, 1.5),
-                                    rnorm(25, .7)),
-                         container = c(rep(letters[1:3],each=25)))
+                         growth = c(rnorm(25,5,.15),
+                                    rnorm(25, 4.7, .15),
+                                    rnorm(25, 4.4, .15)))
 experiment[experiment$growth<0, "growth"] <- 0
 ```
 
@@ -1237,16 +1236,15 @@ The data look something like this:
 ```{r}
 experiment$predator_cue <- factor(experiment$predator_cue, levels = c("none", "low", "high"))
 ggplot(experiment, aes(x=predator_cue, y=growth, color= predator_cue))+
-  geom_jitter()+
+  geom_point()+
   labs(x= "Predator exposure", y= "Growth (mm)")+
    guides(color = "none")
 ```
 
-
 How would you analyze this data? If we assume that each oyster was in
-its own space (and received cues from a unique predator), you hopefully
-recognize this as a lm/ANOVA that you know(almost) how to analyze. If
-you need a reminder, see the [chapter on
+its own space (and received cues from a unique predator) and is thus an
+independent measurement, you hopefully recognize this as a lm/ANOVA that
+you know how to analyze. If you need a reminder, see the [chapter on
 ANOVAs.](../chapters/Compare_means_among_populations.qmd){target="_blank"}
 
 ```{r}
@@ -1255,13 +1253,57 @@ plot(growth_lm)
 Anova(growth_lm, type="III")
 ```
 
+This experimental approach takes a lot of space (and time!). If I have a
+large tank, I may instead decide to put a few more oysters in there. At
+an extreme, let's instead use one tank was used for each predator level,
+with twenty-five oysters measured in each tank.However, this means our
+measurements are connected; remember [blocking and paired
+tests](../chapters/More_ANOVAs.qmd){target="_blank"})? So our data may
+look more like
 
-This approach takes a lot of space (and time!). If I have a large tank, I may 
-instead decide to put a few more oysters in there.  At an extreme, let's instead 
-use one tank was used for each predator level, with twenty-five oysters
-measured in each tank.However, this means our measurements are
-connected; remember [blocking and paired
-tests](../chapters/More_ANOVAs.qmd){target="_blank"})?
+<!-- helpful here https://verynormal.substack.com/p/office-hours-1-simulating-from-mixed; https://aosmith.rbind.io/2018/04/23/simulate-simulate-part-2/ -->
+
+```{r}
+set.seed(19)
+J = 3                # number of tanks
+n_j = 25              # number of observations per tank 
+sigma_b = .15           # variance of the random intercept
+sigma_e = .15           # variance of the random noise
+fixed_effect = -.05      # population-level effect
+fixed_intercept = 5   # population-level intercept
+
+experiment_with_3_tanks <-  data.frame(
+  tank = rep(sample(letters[1:J]),each=n_j), # puts these in random order!
+  b_i = rep(rnorm(J, mean = 0, sd = sigma_b), each=n_j),
+  # Generate predictor 
+  X = rep(c(0,1,2), each= n_j*J/3))
+
+experiment_with_3_tanks$predator_cue <- revalue(as.character(experiment_with_3_tanks$X), c("0" = "none", 
+                                                                             "1" = "low", 
+                                                                             "2"="high"))
+experiment_with_3_tanks$predator_cue <- factor(experiment_with_3_tanks$predator_cue, levels = c("none", "low", "high"))
+
+# Generate outcome from predictor & subject-specific intercept
+experiment_with_3_tanks$growth <- fixed_intercept + experiment_with_3_tanks$b_i + fixed_effect* experiment_with_3_tanks$X + rnorm(n_j*J, mean = 0, sd = sigma_e)
+
+
+
+experiment_with_3_tanks <- experiment_with_3_tanks[order(experiment_with_3_tanks$tank),]
+```
+
+Now the data look like this:
+
+```{r}
+ggplot(experiment_with_3_tanks, aes(x=predator_cue, y=growth, color= predator_cue))+
+  geom_point()+
+  labs(x= "Predator exposure", y= "Growth (mm)")+
+   guides(color = "none")
+```
+
+Now we are stuck with a question. Do I have n=75 (the number of oysters)
+or n=3 (the number of tanks) for the experiment? Ignoring linkages leads
+to pseudopreplication, an issue that has been noted in ecology and other
+fields [@hurlbert1984; @heffner1996; @lazic2010].
 
 There are several ways to deal with this. Here we explore each for our
 oyster example.
@@ -1272,8 +1314,8 @@ One way of doing this focuses on the average for each unit
 
 ```{r}
 library(Rmisc)
-averaged_experiment <- summarySE(experiment, measurevar = "growth",
-                             groupvars = c("predator_cue", "container"))
+averaged_experiment <- summarySE(experiment_with_3_tanks, measurevar = "growth",
+                             groupvars = c("predator_cue", "tank"))
 library(rmarkdown)
 paged_table(averaged_experiment)
 ```
@@ -1287,14 +1329,49 @@ Anova(average_analysis, type = "III")
 
 but that leads to an issue! Since we only get 3 average outcomes and our
 model requires 4 degrees of freedom (consider why), we are left with no
-"noise" to make the denominator for our F ratio! This is partially due to a lack 
-of replication - we'll fix that below after we explore another problem.  
+"noise" to make the denominator for our F ratio! This is partially due
+to a lack of replication - we'll fix that now.
 
-Even when this doesn't
-happen, you have reduced your data to a much smaller number of points
-and are not getting credit for all your work! This is a good example of
-why you should analyze simulated data before you run an experiment, but
-there are other options.
+```{r}
+set.seed(19)
+J = 12                # number of tanks
+n_j = 25              # number of observations per tank 
+sigma_b = .15           # variance of the random intercept
+sigma_e = .15           # variance of the random noise
+fixed_effect = -.05      # population-level effect
+fixed_intercept = 5   # population-level intercept
+
+experiment_with_12_tanks <-  data.frame(
+  tank = rep(sample(letters[1:J]),each=n_j), # puts these in random order!
+  b_i = rep(rnorm(J, mean = 0, sd = sigma_b), each=n_j),
+  # Generate predictor 
+  X = rep(c(0,1,2), each= n_j*J/3))
+
+experiment_with_12_tanks$predator_cue <- revalue(as.character(experiment_with_12_tanks$X), c("0" = "none", 
+                                                                             "1" = "low", 
+                                                                             "2"="high"))
+experiment_with_12_tanks$predator_cue <- factor(experiment_with_12_tanks$predator_cue, levels = c("none", "low", "high"))
+
+# Generate outcome from predictor & subject-specific intercept
+experiment_with_12_tanks$growth <- fixed_intercept + experiment_with_12_tanks$b_i + fixed_effect* experiment_with_12_tanks$X + rnorm(n_j*J, mean = 0, sd = sigma_e)
+
+
+
+experiment_with_12_tanks <- experiment_with_12_tanks[order(experiment_with_12_tanks$tank),]
+```
+
+```{r}
+averaged_experiment <- summarySE(experiment_with_12_tanks, measurevar = "growth",
+                             groupvars = c("predator_cue", "tank"))
+paged_table(averaged_experiment)
+average_analysis <- lm(growth~predator_cue, averaged_experiment)
+Anova(average_analysis, type = "III")
+```
+
+Even when this doesn't happen, you have reduced your data to a much
+smaller number of points and are not getting credit for all your work!
+This is a good example of why you should analyze simulated data before
+you run an experiment, but there are other options.
 
 #### Blocking
 
@@ -1302,94 +1379,41 @@ The blocking approach we've already covered works might seem appropriate
 here.
 
 ```{r, error=T}
-blocking_analysis <- lm(growth~predator_cue+container, experiment)
+blocking_analysis <- lm(growth~predator_cue+tank, experiment_with_12_tanks)
 Anova(blocking_analysis, type = "III")
 ```
 
-but its not? Why? This error means now our model matrix has collinearity
-issues. We can actually see where
+but it doesn't work. Why? This error means our model matrix has
+collinearity issues. We can actually see where
 
 ```{r}
 alias(blocking_analysis)
 ```
 
-though the output is confusing. In general, the issue here is each container only 
-measures one level of predator risk, so risk and container are completely 
-confounded. This is (again) why we need replication in studies!  This was just a bad 
-experiment... let's fix it now....
+though the output is confusing. In general, the issue here is each
+container only measures one level of predator risk, so risk and
+container are completely confounded. It's because the container variable
+can fully "explain" the predation levels - this goes back to the
+singularity issues we discussed in introducing linear models. This is
+because each container only contributes to one level of other traits. If
+instead each unit contributed to multiple levels, like in our [feather
+experiment](../chapters/More_ANOVAs.qmd){target="blank"}) this isn't an
+issue.
 
-
-```{r}
-set.seed(19)
-experiment2 <- data.frame(                      predator_cue = factor(c(rep(c(rep("none",175),
-                                               rep("low",175),
-                                               rep("high",175)),1))),
-                         growth = c(rnorm(175,2),
-                                    rnorm(175, 1.5),
-                                    rnorm(175, .7)),
-                         container = c(rep(letters[4:24],each=25)))
-experiment2[experiment2$growth<0, "growth"] <- 0
-
-experiment_new <- merge (experiment, experiment2, all=T)
-```
-
-```{r, error=T}
-blocking_analysis <- lm(growth~predator_cue+container, experiment_new)
-Anova(blocking_analysis, type = "III")
-```
-
-Even with replicates we still get an issue...why?
-
-```{r}
-alias(blocking_analysis)
-```
-
-It's because the container variable can fully "explain" the predation levels. 
-This is because each container only contributes to one level of other traits.
-If instead each unit contributed to multiple levels, like in our
-[feather experiment](../chapters/More_ANOVAs.qmd){target="blank"}) this
-isn't an issue.
-
-Consider instead if we had truly independent samples - the data might look 
-like this:
-
-```{r}
-set.seed(19)
-experiment3 <- data.frame(                      predator_cue = factor(c(rep(c(rep("none",200),
-                                               rep("low",200),
-                                               rep("high",200)),1))),
-                         growth = c(rnorm(200,2),
-                                    rnorm(200, 1.5),
-                                    rnorm(200, .7)),
-                         container = paste ("cont", 1:600, sep="_"))
-experiment3[experiment3$growth<0, "growth"] <- 0
-```
-
-which is just our data but in unique containers.  Then we could analyze it like
-this...
-
-```{r}
-unique_analysis <- lm(growth~predator_cue, experiment3)
-Anova(unique_analysis, type = "III")
-```
-which is back where we started!  
-
+However, note with replicates we could consider averages...
 
 #### Random effects
 
 Our final option takes a new approach. It considers the units we
-measured as simply a potential samples from a larger population. Using
-that background, we use the information from the units to consider the
-distribution of sample effects we might see. The impact of unit is then
-considered a random effect. For this to work, you probably want 5+
-levels of the unit variable.
+measured as simply a potential samples from a larger population. We use
+the information from the units we measured to consider the distribution
+of sample effects we might see (the variance we would expect among
+containers). For this to work, you probably want 5+ levels of the unit
+variable. This is because we are using the means to estimate variance
+(confusing?). For factors with \<5 levels, random effects likely offer
+no benefit [@gomes2022].
 
-
-
-This is because we are using the means to
-estimate variance (confusing?). For factors with \<5 levels, random
-effects likely offer no benefit [@gomes2022].
-
+The impact of unit is then included in the model as a random effect.
 When models contain fixed (what we've done before) and random effects,
 we call them mixed-effects models. Two common packages for carrying out
 this analysis in R are the **nlme** and **lme4** packages. We will focus
@@ -1400,14 +1424,38 @@ random effects on it's own **as long as you don't repeat unit names**.
 For example, we could note
 
 ```{r}
-mixed_analysis <- lmer(growth~predator_cue*temperature+(1|container), experiment)
+library(lme4)
+mixed_analysis <- lmer(growth~predator_cue+(1|tank), experiment_with_12_tanks)
 ```
 
 Once built, we need to consider assumptions. The main assumption we add
 here is that the random effects are normally distributed. This should be
-checked at each level of grouping. The *check_mixed_model* function
-(provided below) offers an automated approach for one level (also known
-as one-way random effects).
+checked at each level of grouping.
+
+```{r}
+check_model(mixed_analysis)
+```
+
+Another package, *DHARMa* does this for models by considering quantile
+residuals, which should be flat/uniform when a model fits the data.
+
+```{r}
+library(DHARMa)
+simulateResiduals(mixed_analysis, n = 1000, plot = TRUE)
+```
+
+The only warning I would give with this package is that significant
+p-values may be mis-leading for large datasets,so just use a visual
+analysis (the package author has made this exact point in the
+documentation and in discussions [@r-gene] ).
+
+<details>
+
+<summary>The old way</summary>
+
+For simple models like this one, the *check_mixed_model* function
+(provided below) also offered an automated approach. This function was
+used before some of the newer packages used above were demonstrated.
 
 ```{r}
 check_mixed_model <- function (model, model_name = NULL) {
@@ -1432,13 +1480,15 @@ check_mixed_model <- function (model, model_name = NULL) {
 check_mixed_model(mixed_analysis)
 ```
 
-Here we have only 9 levels of units, so the spread is not perfect.
-However, we also know each of these is itself an average,and averages
-should be normally-distributed under the central limit theorem, so we
-can plow ahead.
+This works well in that we can see the random effects and residuals are
+normally distributed.
 
-We can consider the outcome using our *summary* command - note the
-output denotes we have 225 observations and 9 grouping levels.
+</details>
+
+We can now follow our normal protocol and consider the outcome using our
+*summary* command -
+
+note the output denotes we have 225 observations and 9 grouping levels.
 
 ```{r}
 summary(mixed_analysis)
@@ -1457,6 +1507,10 @@ with these tests is not clear. It's somewhere between the "average" and
 
 ```{r}
 Anova(mixed_analysis, type = "III", test="F")
+```
+
+```{r}
+summary(glht(mixed_analysis, linfct = mcp("predator_cue"= "Tukey")))
 ```
 
 Note this approach suggests we do not have enough data to reject the
