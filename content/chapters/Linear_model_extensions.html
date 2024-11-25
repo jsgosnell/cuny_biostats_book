@@ -621,16 +621,19 @@ window.Quarto = {
   </ul></li>
   <li><a href="#in-respect-to-measured-outcomes" id="toc-in-respect-to-measured-outcomes" class="nav-link" data-scroll-target="#in-respect-to-measured-outcomes">In respect to measured outcomes</a>
   <ul>
-  <li><a href="#ignore-it-dont-do-this" id="toc-ignore-it-dont-do-this" class="nav-link" data-scroll-target="#ignore-it-dont-do-this">Ignore it (don’t do this!)</a></li>
+  <li><a href="#include-random-effects" id="toc-include-random-effects" class="nav-link" data-scroll-target="#include-random-effects">Include random effects</a>
+  <ul class="collapse">
   <li><a href="#find-average-for-each-unit" id="toc-find-average-for-each-unit" class="nav-link" data-scroll-target="#find-average-for-each-unit">Find average for each unit</a></li>
   <li><a href="#blocking" id="toc-blocking" class="nav-link" data-scroll-target="#blocking">Blocking</a></li>
   <li><a href="#random-effects" id="toc-random-effects" class="nav-link" data-scroll-target="#random-effects">Random effects</a></li>
+  <li><a href="#more-random-effects" id="toc-more-random-effects" class="nav-link" data-scroll-target="#more-random-effects">More random effects</a></li>
+  </ul></li>
+  <li><a href="#consider-a-correlation-structure-the-bigger-picture" id="toc-consider-a-correlation-structure-the-bigger-picture" class="nav-link" data-scroll-target="#consider-a-correlation-structure-the-bigger-picture">Consider a correlation structure: The bigger picture</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#errors-are-not-equal-among-groups" id="toc-errors-are-not-equal-among-groups" class="nav-link" data-scroll-target="#errors-are-not-equal-among-groups">Errors are not equal among groups</a></li>
   <li><a href="#residuals-are-not-normally-distributed" id="toc-residuals-are-not-normally-distributed" class="nav-link" data-scroll-target="#residuals-are-not-normally-distributed">Residuals are not normally distributed</a></li>
-  <li><a href="#combinining-these" id="toc-combinining-these" class="nav-link" data-scroll-target="#combinining-these">Combinining these</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  <li><a href="#next-steps-combining-these-approaches" id="toc-next-steps-combining-these-approaches" class="nav-link" data-scroll-target="#next-steps-combining-these-approaches">Next steps: Combining these approaches</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/jsgosnell/cuny_biostats_book/edit/main/content/chapters/Linear_model_extensions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/blob/main/content/chapters/Linear_model_extensions.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/jsgosnell/cuny_biostats_book/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -773,7 +776,7 @@ How can residuals be normal when data is not?
 </div>
 </div>
 <p>We would find the residuals to be much better behaved.</p>
-<p>Similary, highly skewed data may arise due to unequal sample sizes (which may pose their own problems, but not outright), but models using this data may meet assumptions.</p>
+<p>Similarly, highly skewed data may arise due to unequal sample sizes (which may pose their own problems, but not outright), but models using this data may meet assumptions.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>example_skewed <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Population=</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"a"</span>,<span class="dv">40</span>),</span>
@@ -1064,12 +1067,12 @@ What’s linear anyway?
 <p>The linear relationship may be inappropriate because our data doesn’t fit it! For example, if we are modeling proportions, estimates less than 0 or below 1 do not make sense, but a linear model doesn’t account for that. The same issues arise for binary outcomes (outcome must be 0 or 1) and count data (where outcomes can’t be non-integer). Along with impacts on the assumption of linearity, data like this may also lead to unequal variances and lack of normality for residuals. While we may be able to transform the response variable to make relationships linear, another option is to translate the <em>link</em> function.</p>
 <p>Although we haven’t fully explained it before, a linear model contains three components. There is always a random component that focuses on the distribution of the data. This typically requires a few parameters (or at least one!). For example, for normally-distributed data, the two parameters that describe the distribution are the mean and the variance. Note these parameters are independent (we covered all this when we <a href="../../content/chapters/Tests_for_continuous_data_from_one_sample.html">introduced normality</a>{target=“_blank”). There is also a systematic component, where a number of covariates and data points produce an estimate. Finally, there is the link function, which connects that estimate to the data distribution (this maintains the linearity of the model). Notice this means the link connects to the distribution of the data, not the data itself (which is what transforming the data is doing).</p>
 <p>So far we have focused on the <em>mean</em> of the data, and the estimate is the mean, so the link has been implied. We can <em>generalize</em> this setup to include other distributions in the exponential family (and now others <span class="citation" data-cites="applied2022">(<a href="#ref-applied2022" role="doc-biblioref"><span>“Applied Regression Analysis and Generalized Linear Models”</span> 2022</a>, ch.&nbsp;15)</span>). While we won’t develop all the math, exponential family distributions all have a canonical parameter (the mean for Gaussian, or normal, data) and a dispersion parameter (the variance for normal data). Different distributions have different relationships between these two parameters. For normal data, there is <em>no</em> relationship, so the variance is constant. This is why we have assumed <em>homoscedasticity</em> of residuals for linear models. This is not true for other families; for example, the variance in binomial data depends on the <em>p</em> parameter (as we noted in the <a href="../../content/chapters/Binomial.html">chapter introducing binomial data</a>{target=“_blank”)), and for the Poisson distribution (used for count data) the variance is the mean. Different families also use different link functions, which can impact how we interpret coefficient values and associated impacts. In general, impacts and outcomes will need to be transformed (based on the link) to the actual scale.</p>
-<p>We can specify other data types using <em>generalized linear models</em> (which are different than general linear models, which is another term used to describe our “regular” linear models). These models are also known as glm or glim (we’ll use the glm jargon here). These models let us consider data that do not fit a normal approximation. <span class="citation" data-cites="bolker2008">Bolker (<a href="#ref-bolker2008" role="doc-biblioref">2008</a>)</span> has an excellent review of when various distributions should be used.</p>
+<p>We can specify other data distributions using <em>generalized linear models</em> (which are different than general linear models, which is another term used to describe our “regular” linear models). These models are also known as glm or glim (we’ll use the glm jargon here). These models let us consider data that do not fit a normal approximation. <span class="citation" data-cites="bolker2008">Bolker (<a href="#ref-bolker2008" role="doc-biblioref">2008</a>)</span> has an excellent review of when various distributions should be used. The table below gives some of the more common distributions and notes on their usage.</p>
 <table class="table">
 <caption>Connections between data distributions and real-world data</caption>
 <colgroup>
-<col style="width: 30%">
-<col style="width: 69%">
+<col style="width: 50%">
+<col style="width: 50%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1107,20 +1110,20 @@ What’s linear anyway?
 <td>data that can be divided into successes and failures</td>
 </tr>
 <tr class="even">
-<td>Beta</td>
-<td>Proportions that do not include 0 or 1</td>
-</tr>
-<tr class="odd">
 <td>Poisson</td>
 <td>Fits count data where all events are independent (random); Count data where low counts and 0’s are common</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Negative binomial</td>
 <td>Number of failures before a set number of successes occur; Poisson-ish where variance is larger than the mean (good for overdispersion!) or where the mean (and thus variance) varies</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Geometric</td>
 <td>Number of trials until you get a single failure</td>
+</tr>
+<tr class="odd">
+<td><em>Combination</em></td>
+<td></td>
 </tr>
 <tr class="even">
 <td>Beta binomial</td>
@@ -1159,6 +1162,7 @@ What are residuals for a GLM?
 1-\frac{D}{D_O}
 \]</span></p>
 <p>This is known as McFadden’s pseudo-R<sup>2</sup> value.</p>
+<p>Another option are quantile residuals. These are the focus of the DHARMa package and should be uniformly distributed for appropriate models.</p>
 </details>
 <p>Once developed, GLMs can use most of the tools we developed for basic linear models. However, a few key differences exist. Estimation of parameters and significance for these models rely on maximum-likelihood methods. It should be noted that solving for coefficients also requires iterative approaches due to non-linearity; common methods (not described here) include the Newton-Raphson or Fisher scoring methods. The key point here for practice is any noted issues with optimization are due to this process. The ratio of likelihood values from various nested tests follow a <span class="math inline">\(\chi^2\)</span> distribution and can thus provide a p-value to compare possible models as noted in <a href="../../content/chapters/Compare_proportions_among_populations.html">introducing G tests</a>{target=“_blank”)).This may be represented as a Z test for single parameters (since a <span class="math inline">\(\chi^2\)</span> distribution is a Z distribution squared - sometimes labelled a Wald test/statistic). F test reappear for distributions where we estimate the dispersion parameter (like the normal), but otherwise we can use the dispersion parameter to check that the right approach was taken.</p>
 <p>There are numerous types of GLMs. Here we outline some of the more common ones. Each of these deserves a much fuller treatment - remember, the intent here is to get you to a place to where you can begin working with them. <span class="citation" data-cites="harrison2018">Harrison et al. (<a href="#ref-harrison2018" role="doc-biblioref">2018</a>)</span> (which also covers mixed models (coming up!)) provides an excellent review of these models, and fuller treatments are provided by <span class="citation" data-cites="zuur2009">A. Zuur et al. (<a href="#ref-zuur2009" role="doc-biblioref">2009</a>)</span> (chapters 8-11) and <span class="citation" data-cites="fox2016">Fox (<a href="#ref-fox2016" role="doc-biblioref">2016</a>)</span> (chapters 14 - 15). For each I provide the most relevant math, an example (or two), and some immediate extensions.</p>
@@ -1986,15 +1990,27 @@ whelk_lm         3.000000 3947.579</code></pre>
 <section id="in-respect-to-measured-outcomes" class="level3">
 <h3 class="anchored" data-anchor-id="in-respect-to-measured-outcomes">In respect to measured outcomes</h3>
 <p>When outcome variables are linked together, a few options exist. Note this issue may be obvious from checks of assumptions, but it also may be due to experimental design.</p>
-<p>Consider this toy example. In order to investigate impacts of climate stress on oysters, specimens are placed in individual tanks and held at normal summer (calculated using recent data) temperature or at temperatures predicted under 2 IPCC — Intergovernmental Panel on Climate Change- scenarios. Oysters were also exposed to predator cues by dropping in water from tanks with 0, low (.25/m2), or high (2/m2) densities of predators. After two months, changes in oyster shell length (growth) was measured. Twenty-five oysters were measured for each treatment combination.</p>
-<p>You hopefully recognize this as a factorial ANOVA experiment that you know how to analyze. If you need a reminder, see the <a href="../../content/chapters/More_ANOVAs.html" target="_blank">chapter on ANOVA extensions</a>. Experiments like this are odd, however, given the space they require. It is far more common to put lots of organisms in a single container given space and costs. However, this means our measurements are connected; remember <a href="../../content/chapters/More_ANOVAs.html" target="_blank">blocking and paired tests</a>)?</p>
-<p>There are several ways to deal with this. Here we explore each for our oyster example.</p>
-<section id="ignore-it-dont-do-this" class="level4">
-<h4 class="anchored" data-anchor-id="ignore-it-dont-do-this">Ignore it (don’t do this!)</h4>
-<p>First, let’s ignore the lack of independence. This is <em>not</em> an option, but it let’s you see the impact.</p>
+<section id="include-random-effects" class="level4">
+<h4 class="anchored" data-anchor-id="include-random-effects">Include random effects</h4>
+<p>We start with an approach that models connections among variables via random effects.</p>
+<p>Consider this toy example. In order to investigate impacts of predator stress on oysters, oysters are exposed to predator cues by dropping in water from tanks with 0, low (.25/m2), or high (2/m2) densities of predators. After two months, changes in oyster shell length (growth) was measured. Here we make the data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>growth_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature, experiment)</span>
-<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(growth_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>experiment <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(                      <span class="at">predator_cue =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"none"</span>,<span class="dv">25</span>),</span>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>                                               <span class="fu">rep</span>(<span class="st">"low"</span>,<span class="dv">25</span>),</span>
+<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a>                                               <span class="fu">rep</span>(<span class="st">"high"</span>,<span class="dv">25</span>)),<span class="dv">1</span>))),</span>
+<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">growth =</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">25</span>,<span class="dv">5</span>,.<span class="dv">15</span>),</span>
+<span id="cb111-6"><a href="#cb111-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="fl">4.7</span>, .<span class="dv">15</span>),</span>
+<span id="cb111-7"><a href="#cb111-7" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="fl">4.4</span>, .<span class="dv">15</span>)))</span>
+<span id="cb111-8"><a href="#cb111-8" aria-hidden="true" tabindex="-1"></a>experiment[experiment<span class="sc">$</span>growth<span class="sc">&lt;</span><span class="dv">0</span>, <span class="st">"growth"</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The data look something like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>experiment<span class="sc">$</span>predator_cue <span class="ot">&lt;-</span> <span class="fu">factor</span>(experiment<span class="sc">$</span>predator_cue, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"none"</span>, <span class="st">"low"</span>, <span class="st">"high"</span>))</span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(experiment, <span class="fu">aes</span>(<span class="at">x=</span>predator_cue, <span class="at">y=</span>growth, <span class="at">color=</span> predator_cue))<span class="sc">+</span></span>
+<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span> <span class="st">"Predator exposure"</span>, <span class="at">y=</span> <span class="st">"Growth (mm)"</span>)<span class="sc">+</span></span>
+<span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a>   <span class="fu">guides</span>(<span class="at">color =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -2002,275 +2018,409 @@ whelk_lm         3.000000 3947.579</code></pre>
 </figure>
 </div>
 </div>
+</div>
+<p>How would you analyze this data? If we assume that each oyster was in its own space (and received cues from a unique predator) and is thus an independent measurement, you hopefully recognize this as a lm/ANOVA that you know how to analyze. If you need a reminder, see the <a href="../../content/chapters/Compare_means_among_populations.html" target="_blank">chapter on ANOVAs.</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>growth_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue, experiment)</span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(growth_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-59-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-59-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-60-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-59-4.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-60-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
-<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(growth_lm, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-60-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(growth_lm, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
 Response: growth
-                          Sum Sq  Df F value    Pr(&gt;F)    
-(Intercept)               15.576   1 16.3673 7.265e-05 ***
-predator_cue              22.085   2 11.6031 1.635e-05 ***
-temperature               70.061   2 36.8090 1.753e-14 ***
-predator_cue:temperature  21.376   4  5.6154 0.0002558 ***
-Residuals                205.563 216                      
+             Sum Sq Df  F value    Pr(&gt;F)    
+(Intercept)  627.97  1 26982.57 &lt; 2.2e-16 ***
+predator_cue   4.84  2   103.99 &lt; 2.2e-16 ***
+Residuals      1.68 72                       
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>We find significant main effects and interactions using this <em>wrong</em> approach.</p>
-</section>
-<section id="find-average-for-each-unit" class="level4">
-<h4 class="anchored" data-anchor-id="find-average-for-each-unit">Find average for each unit</h4>
+<p>This experimental approach takes a lot of space (and time!). If I have a large tank, I may instead decide to put a few more oysters in there. At an extreme, let’s instead use one tank was used for each predator level, with twenty-five oysters measured in each tank.However, this means our measurements are connected; remember <a href="../../content/chapters/More_ANOVAs.html" target="_blank">blocking and paired tests</a>)? So our data may look more like</p>
+<!-- helpful here https://verynormal.substack.com/p/office-hours-1-simulating-from-mixed; https://aosmith.rbind.io/2018/04/23/simulate-simulate-part-2/ -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>n_levels <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a>replicates_each_level <span class="ot">&lt;-</span> <span class="dv">1</span> </span>
+<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a>J <span class="ot">=</span> n_levels <span class="sc">*</span> replicates_each_level             <span class="co"># number of tanks</span></span>
+<span id="cb116-5"><a href="#cb116-5" aria-hidden="true" tabindex="-1"></a>n_j <span class="ot">=</span> <span class="dv">25</span>              <span class="co"># number of observations per tank </span></span>
+<span id="cb116-6"><a href="#cb116-6" aria-hidden="true" tabindex="-1"></a>sigma_b <span class="ot">=</span> .<span class="dv">15</span>           <span class="co"># variance of the random intercept</span></span>
+<span id="cb116-7"><a href="#cb116-7" aria-hidden="true" tabindex="-1"></a>sigma_e <span class="ot">=</span> .<span class="dv">15</span>           <span class="co"># variance of the random noise</span></span>
+<span id="cb116-8"><a href="#cb116-8" aria-hidden="true" tabindex="-1"></a>fixed_effect <span class="ot">=</span> <span class="sc">-</span>.<span class="dv">05</span>      <span class="co"># population-level effect</span></span>
+<span id="cb116-9"><a href="#cb116-9" aria-hidden="true" tabindex="-1"></a>fixed_intercept <span class="ot">=</span> <span class="dv">5</span>   <span class="co"># population-level intercept</span></span>
+<span id="cb116-10"><a href="#cb116-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-11"><a href="#cb116-11" aria-hidden="true" tabindex="-1"></a>experiment_with_3_tanks <span class="ot">&lt;-</span>  <span class="fu">data.frame</span>(</span>
+<span id="cb116-12"><a href="#cb116-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">tank =</span> <span class="fu">rep</span>(<span class="fu">sample</span>(letters[<span class="dv">1</span><span class="sc">:</span>J]),<span class="at">each=</span>n_j), <span class="co"># puts these in random order!</span></span>
+<span id="cb116-13"><a href="#cb116-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">b_i =</span> <span class="fu">rep</span>(<span class="fu">rnorm</span>(J, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma_b), <span class="at">each=</span>n_j),</span>
+<span id="cb116-14"><a href="#cb116-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generate predictor </span></span>
+<span id="cb116-15"><a href="#cb116-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">X =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">each=</span> n_j<span class="sc">*</span>J<span class="sc">/</span><span class="dv">3</span>))</span>
+<span id="cb116-16"><a href="#cb116-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-17"><a href="#cb116-17" aria-hidden="true" tabindex="-1"></a>experiment_with_3_tanks<span class="sc">$</span>predator_cue <span class="ot">&lt;-</span> <span class="fu">revalue</span>(<span class="fu">as.character</span>(experiment_with_3_tanks<span class="sc">$</span>X), <span class="fu">c</span>(<span class="st">"0"</span> <span class="ot">=</span> <span class="st">"none"</span>, </span>
+<span id="cb116-18"><a href="#cb116-18" aria-hidden="true" tabindex="-1"></a>                                                                             <span class="st">"1"</span> <span class="ot">=</span> <span class="st">"low"</span>, </span>
+<span id="cb116-19"><a href="#cb116-19" aria-hidden="true" tabindex="-1"></a>                                                                             <span class="st">"2"</span><span class="ot">=</span><span class="st">"high"</span>))</span>
+<span id="cb116-20"><a href="#cb116-20" aria-hidden="true" tabindex="-1"></a>experiment_with_3_tanks<span class="sc">$</span>predator_cue <span class="ot">&lt;-</span> <span class="fu">factor</span>(experiment_with_3_tanks<span class="sc">$</span>predator_cue, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"none"</span>, <span class="st">"low"</span>, <span class="st">"high"</span>))</span>
+<span id="cb116-21"><a href="#cb116-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-22"><a href="#cb116-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate outcome from predictor &amp; subject-specific intercept</span></span>
+<span id="cb116-23"><a href="#cb116-23" aria-hidden="true" tabindex="-1"></a>experiment_with_3_tanks<span class="sc">$</span>growth <span class="ot">&lt;-</span> fixed_intercept <span class="sc">+</span> experiment_with_3_tanks<span class="sc">$</span>b_i <span class="sc">+</span> fixed_effect<span class="sc">*</span> experiment_with_3_tanks<span class="sc">$</span>X <span class="sc">+</span> <span class="fu">rnorm</span>(n_j<span class="sc">*</span>J, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma_e)</span>
+<span id="cb116-24"><a href="#cb116-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-25"><a href="#cb116-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-26"><a href="#cb116-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-27"><a href="#cb116-27" aria-hidden="true" tabindex="-1"></a>experiment_with_3_tanks <span class="ot">&lt;-</span> experiment_with_3_tanks[<span class="fu">order</span>(experiment_with_3_tanks<span class="sc">$</span>tank),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now the data look like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(experiment_with_3_tanks, <span class="fu">aes</span>(<span class="at">x=</span>predator_cue, <span class="at">y=</span>growth, <span class="at">color=</span> predator_cue))<span class="sc">+</span></span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span> <span class="st">"Predator exposure"</span>, <span class="at">y=</span> <span class="st">"Growth (mm)"</span>)<span class="sc">+</span></span>
+<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">guides</span>(<span class="at">color =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-62-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now we are stuck with a question. Do I have n=75 (the number of oysters) or n=3 (the number of tanks) for the experiment? Ignoring linkages leads to pseudopreplication, an issue that has been noted in ecology and other fields <span class="citation" data-cites="hurlbert1984 heffner1996 lazic2010">(<a href="#ref-hurlbert1984" role="doc-biblioref">Hurlbert 1984</a>; <a href="#ref-heffner1996" role="doc-biblioref">Heffner, Butler, and Reilly 1996</a>; <a href="#ref-lazic2010" role="doc-biblioref">Lazic 2010</a>)</span>.</p>
+<p>There are several ways to deal with this. Here we explore each for our oyster example.</p>
+<section id="find-average-for-each-unit" class="level5">
+<h5 class="anchored" data-anchor-id="find-average-for-each-unit">Find average for each unit</h5>
 <p>One way of doing this focuses on the average for each unit</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span>
-<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a>averaged_experiment <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(experiment, <span class="at">measurevar =</span> <span class="st">"growth"</span>,</span>
-<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"predator_cue"</span>, <span class="st">"temperature"</span>, <span class="st">"container"</span>))</span>
-<span id="cb114-4"><a href="#cb114-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
-<span id="cb114-5"><a href="#cb114-5" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(averaged_experiment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>averaged_experiment_3_tanks <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(experiment_with_3_tanks, <span class="at">measurevar =</span> <span class="st">"growth"</span>,</span>
+<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"predator_cue"</span>, <span class="st">"tank"</span>))</span>
+<span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
+<span id="cb118-5"><a href="#cb118-5" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(averaged_experiment_3_tanks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["predator_cue"],"name":[1],"type":["fct"],"align":["left"]},{"label":["temperature"],"name":[2],"type":["fct"],"align":["left"]},{"label":["container"],"name":[3],"type":["chr"],"align":["left"]},{"label":["N"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["growth"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["se"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["ci"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"high","2":"ambient","3":"c","4":"25","5":"0.7893411","6":"0.7859693","7":"0.1571939","8":"0.3244322"},{"1":"high","2":"elevated_scenario1","3":"f","4":"25","5":"0.8200710","6":"0.6938491","7":"0.1387698","8":"0.2864068"},{"1":"high","2":"elevated_scenario2","3":"i","4":"25","5":"2.8548160","6":"1.0748246","7":"0.2149649","8":"0.4436658"},{"1":"none","2":"ambient","3":"a","4":"25","5":"2.0791580","6":"0.7758511","7":"0.1551702","8":"0.3202556"},{"1":"none","2":"elevated_scenario1","3":"d","4":"25","5":"2.5724463","6":"1.0918574","7":"0.2183715","8":"0.4506966"},{"1":"none","2":"elevated_scenario2","3":"g","4":"25","5":"2.9199695","6":"1.1043899","7":"0.2208780","8":"0.4558697"},{"1":"normal","2":"ambient","3":"b","4":"25","5":"1.7124232","6":"1.1511870","7":"0.2302374","8":"0.4751867"},{"1":"normal","2":"elevated_scenario1","3":"e","4":"25","5":"1.4993876","6":"0.9759186","7":"0.1951837","8":"0.4028394"},{"1":"normal","2":"elevated_scenario2","3":"h","4":"25","5":"3.1388696","6":"1.0096012","7":"0.2019202","8":"0.4167429"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["predator_cue"],"name":[1],"type":["fct"],"align":["left"]},{"label":["tank"],"name":[2],"type":["chr"],"align":["left"]},{"label":["N"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["growth"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["se"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["ci"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"none","2":"a","3":"25","4":"4.819073","5":"0.1201171","6":"0.02402343","7":"0.04958192"},{"1":"low","2":"b","3":"25","4":"4.868584","5":"0.1440173","6":"0.02880347","7":"0.05944744"},{"1":"high","2":"c","3":"25","4":"4.935727","5":"0.1346676","6":"0.02693353","7":"0.05558806"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <p>and use that for your analysis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>average_analysis <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature, averaged_experiment)</span>
-<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(average_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>average_analysis_3_tanks <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue, averaged_experiment_3_tanks)</span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(average_analysis_3_tanks, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
-<pre><code>Error in Anova.lm(average_analysis, type = "III"): residual df = 0</code></pre>
+<pre><code>Error in Anova.lm(average_analysis_3_tanks, type = "III"): residual df = 0</code></pre>
 </div>
 </div>
-<p>but that leads to an issue! Since we only get 9 average outcomes and our model requires 10 degrees of freedom (consider why), we are left with no “noise” to make the denominator for our F ratio! Even when this doesn’t happen, you have reduced your data to a much smaller number of points and are not getting credit for all your work! This is a good example of why you should analyze simulated data before you run an experiment, but there are other options.</p>
-</section>
-<section id="blocking" class="level4">
-<h4 class="anchored" data-anchor-id="blocking">Blocking</h4>
-<p>The blocking approach we’ve already covered works might seem appropriate here.</p>
+<p>but that leads to an issue! Since we only get 3 average outcomes and our model requires 3 degrees of freedom (consider why), we are left with no “noise” to make the denominator for our F ratio! This is partially due to a lack of replication - we’ll fix that now.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>blocking_analysis <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature<span class="sc">+</span>container, experiment)</span>
-<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(blocking_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in Anova_III_lm(mod, error, singular.ok = singular.ok, ...): there are aliased coefficients in the model</code></pre>
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>n_levels <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a>replicates_each_level <span class="ot">&lt;-</span> <span class="dv">4</span> </span>
+<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a>J <span class="ot">=</span> n_levels <span class="sc">*</span> replicates_each_level             <span class="co"># number of tanks</span></span>
+<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>n_j <span class="ot">=</span> <span class="dv">25</span>              <span class="co"># number of observations per tank </span></span>
+<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>sigma_b <span class="ot">=</span> .<span class="dv">15</span>           <span class="co"># variance of the random intercept</span></span>
+<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a>sigma_e <span class="ot">=</span> .<span class="dv">15</span>           <span class="co"># variance of the random noise</span></span>
+<span id="cb121-8"><a href="#cb121-8" aria-hidden="true" tabindex="-1"></a>fixed_effect <span class="ot">=</span> <span class="sc">-</span>.<span class="dv">05</span>      <span class="co"># population-level effect</span></span>
+<span id="cb121-9"><a href="#cb121-9" aria-hidden="true" tabindex="-1"></a>fixed_intercept <span class="ot">=</span> <span class="dv">5</span>   <span class="co"># population-level intercept</span></span>
+<span id="cb121-10"><a href="#cb121-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-11"><a href="#cb121-11" aria-hidden="true" tabindex="-1"></a>experiment_with_12_tanks <span class="ot">&lt;-</span>  <span class="fu">data.frame</span>(</span>
+<span id="cb121-12"><a href="#cb121-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">tank =</span> <span class="fu">rep</span>(<span class="fu">sample</span>(letters[<span class="dv">1</span><span class="sc">:</span>J]),<span class="at">each=</span>n_j), <span class="co"># puts these in random order!</span></span>
+<span id="cb121-13"><a href="#cb121-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">b_i =</span> <span class="fu">rep</span>(<span class="fu">rnorm</span>(J, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma_b), <span class="at">each=</span>n_j),</span>
+<span id="cb121-14"><a href="#cb121-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generate predictor </span></span>
+<span id="cb121-15"><a href="#cb121-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">X =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">each=</span> n_j<span class="sc">*</span>J<span class="sc">/</span><span class="dv">3</span>))</span>
+<span id="cb121-16"><a href="#cb121-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-17"><a href="#cb121-17" aria-hidden="true" tabindex="-1"></a>experiment_with_12_tanks<span class="sc">$</span>predator_cue <span class="ot">&lt;-</span> <span class="fu">revalue</span>(<span class="fu">as.character</span>(experiment_with_12_tanks<span class="sc">$</span>X), <span class="fu">c</span>(<span class="st">"0"</span> <span class="ot">=</span> <span class="st">"none"</span>, </span>
+<span id="cb121-18"><a href="#cb121-18" aria-hidden="true" tabindex="-1"></a>                                                                             <span class="st">"1"</span> <span class="ot">=</span> <span class="st">"low"</span>, </span>
+<span id="cb121-19"><a href="#cb121-19" aria-hidden="true" tabindex="-1"></a>                                                                             <span class="st">"2"</span><span class="ot">=</span><span class="st">"high"</span>))</span>
+<span id="cb121-20"><a href="#cb121-20" aria-hidden="true" tabindex="-1"></a>experiment_with_12_tanks<span class="sc">$</span>predator_cue <span class="ot">&lt;-</span> <span class="fu">factor</span>(experiment_with_12_tanks<span class="sc">$</span>predator_cue, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"none"</span>, <span class="st">"low"</span>, <span class="st">"high"</span>))</span>
+<span id="cb121-21"><a href="#cb121-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-22"><a href="#cb121-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate outcome from predictor &amp; subject-specific intercept</span></span>
+<span id="cb121-23"><a href="#cb121-23" aria-hidden="true" tabindex="-1"></a>experiment_with_12_tanks<span class="sc">$</span>growth <span class="ot">&lt;-</span> fixed_intercept <span class="sc">+</span> experiment_with_12_tanks<span class="sc">$</span>b_i <span class="sc">+</span> fixed_effect<span class="sc">*</span> experiment_with_12_tanks<span class="sc">$</span>X <span class="sc">+</span> <span class="fu">rnorm</span>(n_j<span class="sc">*</span>J, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma_e)</span>
+<span id="cb121-24"><a href="#cb121-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-25"><a href="#cb121-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-26"><a href="#cb121-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-27"><a href="#cb121-27" aria-hidden="true" tabindex="-1"></a>experiment_with_12_tanks <span class="ot">&lt;-</span> experiment_with_12_tanks[<span class="fu">order</span>(experiment_with_12_tanks<span class="sc">$</span>tank),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<p>but its not? Why? This error means now our model matrix has collinearity issues. We can actually see where</p>
+<p>Now we can find the average for each of our 12 tanks.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">alias</span>(blocking_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Model :
-growth ~ predator_cue * temperature + container
-
-Complete :
-                                                 (Intercept) predator_cuenone
-containerf                                        0           0              
-containerg                                       -1           1              
-containerh                                        0           0              
-containeri                                        1          -1              
-predator_cuenone:temperatureelevated_scenario1    0           0              
-predator_cuenormal:temperatureelevated_scenario1  0           0              
-predator_cuenone:temperatureelevated_scenario2   -1           1              
-predator_cuenormal:temperatureelevated_scenario2  0           0              
-                                                 predator_cuenormal
-containerf                                        0                
-containerg                                        0                
-containerh                                        1                
-containeri                                       -1                
-predator_cuenone:temperatureelevated_scenario1    0                
-predator_cuenormal:temperatureelevated_scenario1  0                
-predator_cuenone:temperatureelevated_scenario2    0                
-predator_cuenormal:temperatureelevated_scenario2  1                
-                                                 temperatureelevated_scenario1
-containerf                                        1                           
-containerg                                        1                           
-containerh                                        0                           
-containeri                                       -1                           
-predator_cuenone:temperatureelevated_scenario1    0                           
-predator_cuenormal:temperatureelevated_scenario1  0                           
-predator_cuenone:temperatureelevated_scenario2    1                           
-predator_cuenormal:temperatureelevated_scenario2  0                           
-                                                 temperatureelevated_scenario2
-containerf                                        0                           
-containerg                                        1                           
-containerh                                        0                           
-containeri                                        0                           
-predator_cuenone:temperatureelevated_scenario1    0                           
-predator_cuenormal:temperatureelevated_scenario1  0                           
-predator_cuenone:temperatureelevated_scenario2    1                           
-predator_cuenormal:temperatureelevated_scenario2  0                           
-                                                 containerb containerc
-containerf                                        0          0        
-containerg                                        1          1        
-containerh                                       -1          0        
-containeri                                        0         -1        
-predator_cuenone:temperatureelevated_scenario1    0          0        
-predator_cuenormal:temperatureelevated_scenario1  0          0        
-predator_cuenone:temperatureelevated_scenario2    1          1        
-predator_cuenormal:temperatureelevated_scenario2 -1          0        
-                                                 containerd containere
-containerf                                       -1         -1        
-containerg                                       -1          0        
-containerh                                        0         -1        
-containeri                                        1          1        
-predator_cuenone:temperatureelevated_scenario1    1          0        
-predator_cuenormal:temperatureelevated_scenario1  0          1        
-predator_cuenone:temperatureelevated_scenario2   -1          0        
-predator_cuenormal:temperatureelevated_scenario2  0         -1        </code></pre>
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>averaged_experiment_12_tanks <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(experiment_with_12_tanks, <span class="at">measurevar =</span> <span class="st">"growth"</span>,</span>
+<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"predator_cue"</span>, <span class="st">"tank"</span>))</span>
+<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(averaged_experiment_12_tanks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["predator_cue"],"name":[1],"type":["fct"],"align":["left"]},{"label":["tank"],"name":[2],"type":["chr"],"align":["left"]},{"label":["N"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["growth"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["se"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["ci"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"none","2":"c","3":"25","4":"5.046751","5":"0.1306709","6":"0.02613419","7":"0.05393831"},{"1":"none","2":"e","3":"25","4":"5.133726","5":"0.1562976","6":"0.03125953","7":"0.06451650"},{"1":"none","2":"f","3":"25","4":"5.213888","5":"0.1376685","6":"0.02753371","7":"0.05682678"},{"1":"none","2":"j","3":"25","4":"5.241514","5":"0.1404080","6":"0.02808160","7":"0.05795757"},{"1":"low","2":"a","3":"25","4":"5.091512","5":"0.1847065","6":"0.03694129","7":"0.07624309"},{"1":"low","2":"b","3":"25","4":"5.196151","5":"0.1622862","6":"0.03245724","7":"0.06698845"},{"1":"low","2":"i","3":"25","4":"4.986351","5":"0.1039809","6":"0.02079618","7":"0.04292121"},{"1":"low","2":"l","3":"25","4":"4.961006","5":"0.1320602","6":"0.02641204","7":"0.05451178"},{"1":"high","2":"d","3":"25","4":"4.930482","5":"0.1211679","6":"0.02423358","7":"0.05001564"},{"1":"high","2":"g","3":"25","4":"5.077042","5":"0.1413902","6":"0.02827805","7":"0.05836302"},{"1":"high","2":"h","3":"25","4":"5.010585","5":"0.1517568","6":"0.03035137","7":"0.06264214"},{"1":"high","2":"k","3":"25","4":"4.937518","5":"0.1122247","6":"0.02244495","7":"0.04632409"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
 </div>
-<p>though the output is confusing. In general, the issue here is each unit only contributes to one level of other traits..so if we know the average impact of ambient temperatures, for example, and the impacts in two of the treatments that were held at that temperature, we can predict the other. If instead each unit contributed to multiple levels, like in our <a href="../../content/chapters/More_ANOVAs.html" target="blank">feather experiment</a>) this isn’t an issue.</p>
-</section>
-<section id="random-effects" class="level4">
-<h4 class="anchored" data-anchor-id="random-effects">Random effects</h4>
-<p>Our final option takes a new approach. It considers the units we measured as simply a sample from a larger population. Using that background, we use the information from the units to consider the distribution of sample effects we might see. The impact of unit is then considered a random-effect. For this to work, you probably want 5+ levels of the unit variable. This is because we are using the means to estimate variance (confusing?). For factors with &lt;5 levels, random effects likely offer no benefit <span class="citation" data-cites="gomes2022">(<a href="#ref-gomes2022" role="doc-biblioref">Gomes 2022</a>)</span>.</p>
-<p>When models contain fixed (what we’ve done before) and random effects, we call them mixed-effects models. Two common packages for carrying out this analysis in R are the <strong>nlme</strong> and <strong>lme4</strong> packages. We will focus on the lme4 package here. Random effects can be entered in the <em>lmer</em> (linear mixed-effects regression) function and specified as (1|Grouping Unit). One nice thing about <strong>lme4</strong> is it will handle crossed and random effects on it’s own <strong>as long as you don’t repeat unit names</strong>. For example, we could note</p>
+</div>
+<p>plot …</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>mixed_analysis <span class="ot">&lt;-</span> <span class="fu">lmer</span>(growth<span class="sc">~</span>predator_cue<span class="sc">*</span>temperature<span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>container), experiment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Once built, we need to consider assumptions. The main assumption we add here is that the random effects are normally distributed. This should be checked at each level of grouping. The <em>check_mixed_model</em> function (provided below) offers an automated approach for one level (also known as one-way random effects).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>check_mixed_model <span class="ot">&lt;-</span> <span class="cf">function</span> (model, <span class="at">model_name =</span> <span class="cn">NULL</span>) {</span>
-<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#collection of things you might check for mixed model</span></span>
-<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
-<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(<span class="fu">names</span>(<span class="fu">ranef</span>(model))<span class="sc">&lt;</span><span class="dv">2</span>)){</span>
-<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">ranef</span>(model, <span class="at">drop =</span> T)[[<span class="dv">1</span>]], <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">las =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">1.4</span>, <span class="at">main=</span> <span class="fu">paste</span>(model_name, </span>
-<span id="cb122-6"><a href="#cb122-6" aria-hidden="true" tabindex="-1"></a>                                                                                  <span class="st">"</span><span class="sc">\n</span><span class="st"> Random effects Q-Q plot"</span>))</span>
-<span id="cb122-7"><a href="#cb122-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqline</span>(<span class="fu">ranef</span>(model, <span class="at">drop =</span> T)[[<span class="dv">1</span>]])</span>
-<span id="cb122-8"><a href="#cb122-8" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb122-9"><a href="#cb122-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="fu">fitted</span>(model),<span class="fu">residuals</span>(model), <span class="at">main =</span> <span class="fu">paste</span>(model_name, </span>
-<span id="cb122-10"><a href="#cb122-10" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">"</span><span class="sc">\n</span><span class="st"> residuals vs fitted"</span>))</span>
-<span id="cb122-11"><a href="#cb122-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqnorm</span>(<span class="fu">residuals</span>(model), <span class="at">main =</span><span class="fu">paste</span>(model_name, </span>
-<span id="cb122-12"><a href="#cb122-12" aria-hidden="true" tabindex="-1"></a>                                       <span class="st">"</span><span class="sc">\n</span><span class="st">residuals q-q plot"</span>))</span>
-<span id="cb122-13"><a href="#cb122-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqline</span>(<span class="fu">residuals</span>(model))</span>
-<span id="cb122-14"><a href="#cb122-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(<span class="fu">residuals</span>(model), <span class="at">main =</span> <span class="fu">paste</span>(model_name, </span>
-<span id="cb122-15"><a href="#cb122-15" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"</span><span class="sc">\n</span><span class="st">residual histogram"</span>))</span>
-<span id="cb122-16"><a href="#cb122-16" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_mixed_model</span>(mixed_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(averaged_experiment_12_tanks, <span class="fu">aes</span>(<span class="at">x=</span>predator_cue, <span class="at">y=</span>growth, <span class="at">color=</span> predator_cue))<span class="sc">+</span></span>
+<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb123-3"><a href="#cb123-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span> <span class="st">"Predator exposure"</span>, <span class="at">y=</span> <span class="st">"Growth (mm)"</span>)<span class="sc">+</span></span>
+<span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">guides</span>(<span class="at">color =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-66-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-67-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Here we have only 9 levels of units, so the spread is not perfect. However, we also know each of these is itself an average,and averages should be normally-distributed under the central limit theorem, so we can plow ahead.</p>
-<p>We can consider the outcome using our <em>summary</em> command - note the output denotes we have 225 observations and 9 grouping levels.</p>
+<p>and analyze them.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mixed_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a>average_analysis_12_tanks <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue, averaged_experiment_12_tanks)</span>
+<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(average_analysis_12_tanks, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: growth
+              Sum Sq Df    F value    Pr(&gt;F)    
+(Intercept)  106.460  1 13289.0271 1.412e-15 ***
+predator_cue   0.058  2     3.6485   0.06912 .  
+Residuals      0.072  9                         
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>This is one way to manage dependent data, but you have reduced your data to a much smaller number of points and are not getting credit for all your work!</p>
+</section>
+<section id="blocking" class="level5">
+<h5 class="anchored" data-anchor-id="blocking">Blocking</h5>
+<p>The blocking approach we’ve already covered works might seem appropriate here.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a>blocking_analysis <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue<span class="sc">+</span>tank, experiment_with_12_tanks)</span>
+<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(blocking_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in Anova_III_lm(mod, error, singular.ok = singular.ok, ...): there are aliased coefficients in the model</code></pre>
+</div>
+</div>
+<p>but it doesn’t work. Why? This error means our model matrix has collinearity issues. We can actually see where</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="fu">alias</span>(blocking_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Model :
+growth ~ predator_cue + tank
+
+Complete :
+      (Intercept) predator_cuelow predator_cuehigh tankb tankc tankd tanke
+tankj  1          -1              -1                0    -1     0    -1   
+tankk  0           0               1                0     0    -1     0   
+      tankf tankg tankh tanki tankl
+tankj -1     0     0     0     0   
+tankk  0    -1    -1     0     0   </code></pre>
+</div>
+</div>
+<p>though the output is confusing. In general, the issue here is each container only measures one level of predator risk, so risk and container are completely confounded. It’s because the container variable can fully “explain” the predation levels - this goes back to the singularity issues we discussed in introducing linear models. This is because each container only contributes to one level of other traits. If instead each unit contributed to multiple levels, like in our <a href="../../content/chapters/More_ANOVAs.html" target="blank">feather experiment</a>, as show below) this isn’t an issue.</p>
+</section>
+<section id="random-effects" class="level5">
+<h5 class="anchored" data-anchor-id="random-effects">Random effects</h5>
+<p>Our final option takes a new approach. It considers the units we measured as simply a potential samples from a larger population. We use the information from the units we measured to consider the distribution of sample effects we might see (the variance we would expect among containers). For this to work, you probably want 5+ levels of the unit variable. This is because we are using the means to estimate variance (confusing?). For factors with &lt;5 levels, random effects likely offer no benefit <span class="citation" data-cites="gomes2022">(<a href="#ref-gomes2022" role="doc-biblioref">Gomes 2022</a>)</span>.</p>
+<!--useful here: https://stats.oarc.ucla.edu/other/mult-pkg/introduction-to-linear-mixed-models/-->
+<p>The impact of unit is then included in the model as a random effect<span class="citation" data-cites="introduca">(<a href="#ref-introduca" role="doc-biblioref"><span>“Introduction to Linear Mixed Models,”</span> n.d.</a>)</span>. When models contain fixed (what we’ve done before) and random effects, we call them mixed-effects models. To update our our model, we now have</p>
+<p><span class="math display">\[
+\begin{split}
+Y=X\beta+ Z\mu+\epsilon , \textrm{ where }\\
+\textrm{Y is our observations (an nx1 matrix)}\\
+\textrm{X is a matrix showing our explanatory variables (an nxk matrix)}\\
+\beta \textrm{ is our coefficient matrix(an kx1 matrix)}\\
+Z  \textrm{ is a coefficient matrix that signifies each unit (an n x (n * number or random effects) matrix)}\\
+\mu \textrm{ is our coefficient matrix for each unit (an (n * number of random effects) x 1 matrix) }\\
+\epsilon \textrm{ is a matrix (an nx1) of residuals)}\\
+\end{split}
+\]</span></p>
+<p>Two common packages for carrying out this analysis in R are the <strong>nlme</strong> and <strong>lme4</strong> packages. We will focus on the <strong>lme4</strong> package here. Random effects can be entered in the <em>lmer</em> (linear mixed-effects regression) function and specified as (1|Grouping Unit). One nice thing about <strong>lme4</strong> is it will handle crossed and random effects on it’s own <strong>as long as you don’t repeat unit names</strong>. For example, we could note</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a>mixed_analysis <span class="ot">&lt;-</span> <span class="fu">lmer</span>(growth<span class="sc">~</span>predator_cue<span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>tank), experiment_with_12_tanks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>and we now assume</p>
+<p><span class="math display">\[
+\epsilon \approx i.i.d.\ N(\mu,\sigma)\\
+\mu \approx N(0, \sigma_{\mu})
+\]</span></p>
+<p>The main assumption we add here is that the random effects are normally distributed. This means we can estimate all the random parameters at a single level (we will stick with one level for now) using just one degree of freedom.</p>
+<p>Once we build these models,, we need to consider assumptions.This should be checked at each level of grouping.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mixed_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-72-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Another package, <em>DHARMa</em> does this for models by considering quantile residuals, which should be flat/uniform when a model fits the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DHARMa)</span>
+<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="fu">simulateResiduals</span>(mixed_analysis, <span class="at">n =</span> <span class="dv">1000</span>, <span class="at">plot =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-73-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Object of Class DHARMa with simulated residuals based on 1000 simulations with refit = FALSE . See ?DHARMa::simulateResiduals for help. 
+ 
+Scaled residual values: 0.371 0.707 0.816 0.828 0.046 0.959 0.583 0.261 0.537 0.077 0.348 0.088 0.663 0.874 0.856 0.948 0.433 0.012 0.832 0.429 ...</code></pre>
+</div>
+</div>
+<p>The only warning I would give with this package is that significant p-values may be mis-leading for large datasets,so just use a visual analysis (the package author has made this exact point in the documentation and in discussions <span class="citation" data-cites="r-gene">(<a href="#ref-r-gene" role="doc-biblioref"><span>“R - Generalised Linear Mixed Model Diagnostics Using DHARMa - Cross Validated,”</span> n.d.</a>)</span> ).</p>
+<details>
+<summary>
+The old way
+</summary>
+<p>For simple models like this one, the <em>check_mixed_model</em> function (provided below) also offered an automated approach. This function was used before some of the newer packages used above were demonstrated.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a>check_mixed_model <span class="ot">&lt;-</span> <span class="cf">function</span> (model, <span class="at">model_name =</span> <span class="cn">NULL</span>) {</span>
+<span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#collection of things you might check for mixed model</span></span>
+<span id="cb134-3"><a href="#cb134-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb134-4"><a href="#cb134-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(<span class="fu">names</span>(<span class="fu">ranef</span>(model))<span class="sc">&lt;</span><span class="dv">2</span>)){</span>
+<span id="cb134-5"><a href="#cb134-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">ranef</span>(model, <span class="at">drop =</span> T)[[<span class="dv">1</span>]], <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">las =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">1.4</span>, <span class="at">main=</span> <span class="fu">paste</span>(model_name, </span>
+<span id="cb134-6"><a href="#cb134-6" aria-hidden="true" tabindex="-1"></a>                                                                                  <span class="st">"</span><span class="sc">\n</span><span class="st"> Random effects Q-Q plot"</span>))</span>
+<span id="cb134-7"><a href="#cb134-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqline</span>(<span class="fu">ranef</span>(model, <span class="at">drop =</span> T)[[<span class="dv">1</span>]])</span>
+<span id="cb134-8"><a href="#cb134-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb134-9"><a href="#cb134-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="fu">fitted</span>(model),<span class="fu">residuals</span>(model), <span class="at">main =</span> <span class="fu">paste</span>(model_name, </span>
+<span id="cb134-10"><a href="#cb134-10" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">"</span><span class="sc">\n</span><span class="st"> residuals vs fitted"</span>))</span>
+<span id="cb134-11"><a href="#cb134-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqnorm</span>(<span class="fu">residuals</span>(model), <span class="at">main =</span><span class="fu">paste</span>(model_name, </span>
+<span id="cb134-12"><a href="#cb134-12" aria-hidden="true" tabindex="-1"></a>                                       <span class="st">"</span><span class="sc">\n</span><span class="st">residuals q-q plot"</span>))</span>
+<span id="cb134-13"><a href="#cb134-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqline</span>(<span class="fu">residuals</span>(model))</span>
+<span id="cb134-14"><a href="#cb134-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(<span class="fu">residuals</span>(model), <span class="at">main =</span> <span class="fu">paste</span>(model_name, </span>
+<span id="cb134-15"><a href="#cb134-15" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"</span><span class="sc">\n</span><span class="st">residual histogram"</span>))</span>
+<span id="cb134-16"><a href="#cb134-16" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb135"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_mixed_model</span>(mixed_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-75-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This works well in that we can see the random effects and residuals are normally distributed.</p>
+</details>
+<p>We can now follow our normal protocol and consider the outcome using our <em>summary</em> command -</p>
+<p>note the output denotes we have 225 observations and 9 grouping levels.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mixed_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Linear mixed model fit by REML ['lmerMod']
-Formula: growth ~ predator_cue * temperature + (1 | container)
-   Data: experiment
+Formula: growth ~ predator_cue + (1 | tank)
+   Data: experiment_with_12_tanks
 
-REML criterion at convergence: 631.3
+REML criterion at convergence: -285.5
 
 Scaled residuals: 
      Min       1Q   Median       3Q      Max 
--2.68605 -0.79915 -0.02646  0.70023  2.72393 
+-2.95584 -0.68320 -0.09694  0.73893  2.88985 
 
 Random effects:
- Groups    Name        Variance Std.Dev.
- container (Intercept) 4.6171   2.1487  
- Residual              0.9517   0.9755  
-Number of obs: 225, groups:  container, 9
+ Groups   Name        Variance Std.Dev.
+ tank     (Intercept) 0.007214 0.08493 
+ Residual             0.019931 0.14118 
+Number of obs: 300, groups:  tank, 12
 
 Fixed effects:
-                                                 Estimate Std. Error t value
-(Intercept)                                       0.78934    2.15758   0.366
-predator_cuenone                                  1.28982    3.05129   0.423
-predator_cuenormal                                0.92308    3.05129   0.303
-temperatureelevated_scenario1                     0.03073    3.05129   0.010
-temperatureelevated_scenario2                     2.06547    3.05129   0.677
-predator_cuenone:temperatureelevated_scenario1    0.46256    4.31517   0.107
-predator_cuenormal:temperatureelevated_scenario1 -0.24377    4.31517  -0.056
-predator_cuenone:temperatureelevated_scenario2   -1.22466    4.31517  -0.284
-predator_cuenormal:temperatureelevated_scenario2 -0.63903    4.31517  -0.148
+                 Estimate Std. Error t value
+(Intercept)       5.15897    0.04475 115.278
+predator_cuelow  -0.10021    0.06329  -1.583
+predator_cuehigh -0.17006    0.06329  -2.687
 
 Correlation of Fixed Effects:
-             (Intr) prdtr_cnn prdtr_cnr tmpr_1 tmpr_2 prdtr_cnn:_1 prdtr_cnr:_1
-predatr_cnn  -0.707                                                            
-prdtr_cnrml  -0.707  0.500                                                     
-tmprtrlvt_1  -0.707  0.500     0.500                                           
-tmprtrlvt_2  -0.707  0.500     0.500     0.500                                 
-prdtr_cnn:_1  0.500 -0.707    -0.354    -0.707 -0.354                          
-prdtr_cnr:_1  0.500 -0.354    -0.707    -0.707 -0.354  0.500                   
-prdtr_cnn:_2  0.500 -0.707    -0.354    -0.354 -0.707  0.500        0.250      
-prdtr_cnr:_2  0.500 -0.354    -0.707    -0.354 -0.707  0.250        0.500      
-             prdtr_cnn:_2
-predatr_cnn              
-prdtr_cnrml              
-tmprtrlvt_1              
-tmprtrlvt_2              
-prdtr_cnn:_1             
-prdtr_cnr:_1             
-prdtr_cnn:_2             
-prdtr_cnr:_2  0.500      </code></pre>
+            (Intr) prdtr_cl
+predatr_clw -0.707         
+predtr_chgh -0.707  0.500  </code></pre>
 </div>
 </div>
 <p>We can also still use <em>Anova</em> to get p-values. However, these are now calculated by default using likelihood-associated <span class="math inline">\(\chi^2\)</span> tests.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(mixed_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(mixed_analysis, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table (Type III Wald chisquare tests)
 
 Response: growth
-                          Chisq Df Pr(&gt;Chisq)
-(Intercept)              0.1338  1     0.7145
-predator_cue             0.1898  2     0.9095
-temperature              0.6020  2     0.7401
-predator_cue:temperature 0.1837  4     0.9960</code></pre>
+                 Chisq Df Pr(&gt;Chisq)    
+(Intercept)  13289.026  1    &lt; 2e-16 ***
+predator_cue     7.297  2    0.02603 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>You can also ask for F tests, but note the degrees of freedom associated with these tests is not clear. It’s somewhere between the “average” and “ignore” approach used above.</p>
+<p>You can also ask for F tests, but note the degrees of freedom associated with these tests is not clear. It’s somewhere between the “average” and “ignore” approach used above. You also will see these 2 approaches give different answers.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(mixed_analysis, <span class="at">type =</span> <span class="st">"III"</span>, <span class="at">test=</span><span class="st">"F"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(mixed_analysis, <span class="at">type =</span> <span class="st">"III"</span>, <span class="at">test=</span><span class="st">"F"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table (Type III Wald F tests with Kenward-Roger df)
 
 Response: growth
-                              F Df  Df.res Pr(&gt;F)
-(Intercept)              0.1338  1 3230137 0.7145
-predator_cue             0.0949  2 3230137 0.9095
-temperature              0.3010  2 3230137 0.7401
-predator_cue:temperature 0.0459  4 3230137 0.9960</code></pre>
+                      F Df Df.res    Pr(&gt;F)    
+(Intercept)  13289.0258  1      9 1.412e-15 ***
+predator_cue     3.6485  2      9   0.06912 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>Note this approach suggests we do not have enough data to reject the null hypothesis. Ignoring the linkages among data led to <em>very</em> different results. This issue (pseudopreplication) has been noted in ecology and other fields <span class="citation" data-cites="hurlbert1984 heffner1996 lazic2010">(<a href="#ref-hurlbert1984" role="doc-biblioref">Hurlbert 1984</a>; <a href="#ref-heffner1996" role="doc-biblioref">Heffner, Butler, and Reilly 1996</a>; <a href="#ref-lazic2010" role="doc-biblioref">Lazic 2010</a>)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">glht</span>(mixed_analysis, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="st">"predator_cue"</span><span class="ot">=</span> <span class="st">"Tukey"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = growth ~ predator_cue + (1 | tank), data = experiment_with_12_tanks)
+
+Linear Hypotheses:
+                 Estimate Std. Error z value Pr(&gt;|z|)  
+low - none == 0  -0.10021    0.06329  -1.583   0.2529  
+high - none == 0 -0.17006    0.06329  -2.687   0.0197 *
+high - low == 0  -0.06985    0.06329  -1.104   0.5118  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+(Adjusted p values reported -- single-step method)</code></pre>
+</div>
+</div>
+<p>Note our results indicate we can only see differences between the high and control treatments. This is due to the noise we introduced in the data (which always happens in the real world) in addition to the random effect issues.</p>
 <details>
 <summary>
 Is this really new?
 </summary>
 <p>It should be noted that random effects match up to paired t-tests and blocking approaches for simple experiments.Remember our feather experiment (example and data provided by <span class="citation" data-cites="mcdonald2014">McDonald (<a href="#ref-mcdonald2014" role="doc-biblioref">2014</a>)</span>)?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a>two_way_anova_example <span class="ot">&lt;-</span> <span class="fu">lm</span>(Color_index <span class="sc">~</span> Feather_type <span class="sc">+</span> Bird, <span class="at">data=</span>feather)</span>
-<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(two_way_anova_example, <span class="at">type=</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a>two_way_anova_example <span class="ot">&lt;-</span> <span class="fu">lm</span>(Color_index <span class="sc">~</span> Feather_type <span class="sc">+</span> Bird, <span class="at">data=</span>feather)</span>
+<span id="cb144-2"><a href="#cb144-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(two_way_anova_example, <span class="at">type=</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -2287,9 +2437,9 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>Note we can get the same results using a paired t-test, but (as of early 2024) we need to use a wide dataset.</p>
 <!-- t.test no longer allowing paired in formula method as of early 2024  -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2) </span>
-<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a>feather_wide <span class="ot">&lt;-</span> <span class="fu">dcast</span>(feather, Bird<span class="sc">~</span>Feather_type, <span class="at">value.var=</span><span class="st">"Color_index"</span>)</span>
-<span id="cb132-3"><a href="#cb132-3" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(feather_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2) </span>
+<span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a>feather_wide <span class="ot">&lt;-</span> <span class="fu">dcast</span>(feather, Bird<span class="sc">~</span>Feather_type, <span class="at">value.var=</span><span class="st">"Color_index"</span>)</span>
+<span id="cb146-3"><a href="#cb146-3" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(feather_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -2300,7 +2450,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>Now we have wide data…</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(feather_wide<span class="sc">$</span>Odd, feather_wide<span class="sc">$</span>Typical, <span class="at">data=</span>feather, <span class="at">paired=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(feather_wide<span class="sc">$</span>Odd, feather_wide<span class="sc">$</span>Typical, <span class="at">data=</span>feather, <span class="at">paired=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Paired t-test
@@ -2316,8 +2466,8 @@ mean difference
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb135"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a>two_way_lme_example <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Color_index <span class="sc">~</span> Feather_type <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Bird), <span class="at">data=</span>feather)</span>
-<span id="cb135-2"><a href="#cb135-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(two_way_lme_example, <span class="at">type=</span> <span class="st">"III"</span>, <span class="at">test=</span><span class="st">"F"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a>two_way_lme_example <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Color_index <span class="sc">~</span> Feather_type <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Bird), <span class="at">data=</span>feather)</span>
+<span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(two_way_lme_example, <span class="at">type=</span> <span class="st">"III"</span>, <span class="at">test=</span><span class="st">"F"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table (Type III Wald F tests with Kenward-Roger df)
 
@@ -2332,84 +2482,308 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>All same if we use least-squares approaches (not the default <span class="math inline">\(\chi^2\)</span> tests that match likelihood-based methods).</p>
 </details>
 </section>
+<section id="more-random-effects" class="level5">
+<h5 class="anchored" data-anchor-id="more-random-effects">More random effects</h5>
+<p>What we have demonstrated above is a <em>random intercepts</em> model. This means each group (tank in this case) differs slightly. This approach works well when we are considering impacts of categorical predictors (like an ANOVA). If we are considering slopes, we can also have <em>random slope</em> models, where every group responds slightly differently to the continuous predictor. You can also combine these into models with both random intercepts and random slopes.</p>
+<!-- simulation @ https://verynormal.substack.com/p/office-hours-1-simulating-from-mixed -->
+<p>As an example, consider work by <span class="citation" data-cites="oconnor2007">O’Connor et al. (<a href="#ref-oconnor2007" role="doc-biblioref">2007</a>)</span> on relationship between pelagic larval duration (pld) and temperature (exampled developed in <span class="citation" data-cites="midway">Midway (<a href="#ref-midway" role="doc-biblioref">n.d.</a>)</span>). The group collected data from 214 observations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb151"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb151-1"><a href="#cb151-1" aria-hidden="true" tabindex="-1"></a>pld <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"data/PLD.txt"</span>, <span class="at">stringsAsFactors =</span> T, <span class="at">header =</span> T)</span>
+<span id="cb151-2"><a href="#cb151-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pld, <span class="fu">aes</span>(<span class="at">y =</span> pld, <span class="at">x=</span> temp)) <span class="sc">+</span></span>
+<span id="cb151-3"><a href="#cb151-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb151-4"><a href="#cb151-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">'Temperature (C)'</span>, </span>
+<span id="cb151-5"><a href="#cb151-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">'PLD (days)'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-85-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>but they were all from 72 species. These 72 species could be averaged out …</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a>averaged_species_pld <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(pld, <span class="at">measurevar =</span> <span class="st">"pld"</span>,</span>
+<span id="cb152-2"><a href="#cb152-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"species"</span>))</span>
+<span id="cb152-3"><a href="#cb152-3" aria-hidden="true" tabindex="-1"></a>averaged_species_temp <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(pld, <span class="at">measurevar =</span> <span class="st">"temp"</span>,</span>
+<span id="cb152-4"><a href="#cb152-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"species"</span>))</span>
+<span id="cb152-5"><a href="#cb152-5" aria-hidden="true" tabindex="-1"></a>averaged_species <span class="ot">&lt;-</span> <span class="fu">merge</span>(averaged_species_pld[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>],averaged_species_temp[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">all =</span> T)</span>
+<span id="cb152-6"><a href="#cb152-6" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(averaged_species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["species"],"name":[1],"type":["fct"],"align":["left"]},{"label":["N"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["pld"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["temp"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Amphiprion.melanopus","2":"2","3":"10.650000","4":"26.50000"},{"1":"Armases.miersii","2":"2","3":"15.150000","4":"26.60000"},{"1":"Balanus.amphitrite.","2":"5","3":"11.000000","4":"22.00000"},{"1":"Balanus.eburneus","2":"3","3":"7.700000","4":"25.00000"},{"1":"Balanus.trigonus","2":"4","3":"6.500000","4":"22.75000"},{"1":"Callianassa.tyrrhena","2":"4","3":"8.125000","4":"19.75000"},{"1":"Cancer.gracilis","2":"3","3":"41.533333","4":"15.00000"},{"1":"Cancer.irroratus","2":"5","3":"25.800000","4":"17.60000"},{"1":"Cancer.magister.","2":"2","3":"53.700000","4":"12.50000"},{"1":"Cancer.oregonensis","2":"2","3":"53.250000","4":"12.50000"},{"1":"Cancer.productus","2":"3","3":"40.333333","4":"15.00000"},{"1":"Carcinus.maenas.","2":"4","3":"39.825000","4":"17.50000"},{"1":"Cardium.edule","2":"2","3":"25.000000","4":"17.50000"},{"1":"Chlamys.hastata","2":"2","3":"38.000000","4":"14.00000"},{"1":"Chthamalus.montagui","2":"3","3":"11.666667","4":"19.70000"},{"1":"Chthamalus.stellatus","2":"2","3":"15.500000","4":"20.75000"},{"1":"Circeus.spirillum","2":"3","3":"12.000000","4":"10.00000"},{"1":"Clupea.harengus.pallasi","2":"3","3":"5.000000","4":"8.00000"},{"1":"Crassostrea.virginica","2":"3","3":"15.333333","4":"25.50000"},{"1":"Crepidula.fornicata.","2":"2","3":"33.000000","4":"21.00000"},{"1":"Crepidula.plana","2":"4","3":"37.525000","4":"21.50000"},{"1":"Dendraster.excentricus","2":"3","3":"5.126667","4":"17.00000"},{"1":"Echinaster.type.I.","2":"3","3":"16.000000","4":"25.00000"},{"1":"Echinaster.type.II","2":"3","3":"17.333333","4":"25.00000"},{"1":"Elminius.modestus","2":"4","3":"18.750000","4":"15.00000"},{"1":"Eriocheir.sinensis.","2":"3","3":"66.500000","4":"15.00000"},{"1":"Gadus.morhua","2":"6","3":"34.000000","4":"9.00000"},{"1":"Haliotis.asinina","2":"3","3":"2.133333","4":"28.00000"},{"1":"Haliotis.fulgens","2":"2","3":"3.500000","4":"24.00000"},{"1":"Haliotis.sorenseni.","2":"5","3":"12.800000","4":"16.00000"},{"1":"Hemigrapsus.sanguineus","2":"3","3":"29.800000","4":"20.00000"},{"1":"Homarus.americanus","2":"5","3":"55.600000","4":"15.30000"},{"1":"Hyas.araneus","2":"3","3":"64.833333","4":"12.00000"},{"1":"Hydroides.elegans","2":"4","3":"5.675000","4":"22.50000"},{"1":"Laqueus.californianus","2":"3","3":"7.000000","4":"10.00000"},{"1":"Limulus.polyphemus","2":"3","3":"64.333333","4":"25.00000"},{"1":"Lithodes.santolla","2":"5","3":"56.940000","4":"9.00000"},{"1":"Lysmata.seticaudata","2":"2","3":"25.650000","4":"23.00000"},{"1":"Lytechinus.variegatus.","2":"2","3":"32.000000","4":"20.50000"},{"1":"Mactra.solidissima","2":"2","3":"27.000000","4":"18.00000"},{"1":"Menippe.mercenaria","2":"2","3":"34.500000","4":"27.50000"},{"1":"Mithrax.caribbaeus","2":"3","3":"11.666667","4":"25.00000"},{"1":"Mopalia.muscosa","2":"2","3":"23.250000","4":"13.50000"},{"1":"Mytilus.edulis","2":"2","3":"27.500000","4":"13.50000"},{"1":"Nassarius.obsoletus","2":"3","3":"15.666667","4":"21.90000"},{"1":"Necora.puber.","2":"3","3":"36.033333","4":"20.00000"},{"1":"Nereis.virens","2":"3","3":"9.666667","4":"10.66667"},{"1":"Ostrea.lurida","2":"2","3":"11.500000","4":"21.00000"},{"1":"Pagurus.bernhardus.","2":"3","3":"64.333333","4":"12.00000"},{"1":"Pagurus.criniticornis","2":"3","3":"20.266667","4":"25.00000"},{"1":"Palaemonetes.longirostris","2":"2","3":"19.750000","4":"22.50000"},{"1":"Palaemonetes.pugio","2":"3","3":"21.266667","4":"25.00000"},{"1":"Palaemonetes.varians","2":"3","3":"16.166667","4":"20.00000"},{"1":"Palaemonetes.vulgaris","2":"3","3":"20.833333","4":"25.43333"},{"1":"Pandalus.borealis","2":"2","3":"83.500000","4":"3.40000"},{"1":"Panopeus.herbstii","2":"2","3":"30.000000","4":"22.50000"},{"1":"Paralomis.granulosa","2":"5","3":"53.780000","4":"9.00000"},{"1":"Parthenope.serrata.","2":"2","3":"37.500000","4":"22.50000"},{"1":"Perna.viridis","2":"4","3":"23.775000","4":"27.75000"},{"1":"Pseudopleuronectes.americanus","2":"2","3":"64.500000","4":"6.50000"},{"1":"Rhithropanopeus.harrisii","2":"3","3":"21.333333","4":"25.00000"},{"1":"Scolecolepides.viridis","2":"2","3":"34.000000","4":"15.00000"},{"1":"Scylla.serrata","2":"4","3":"23.250000","4":"24.50000"},{"1":"Semibalanus.balanoides","2":"3","3":"14.000000","4":"12.00000"},{"1":"Sesarma.cinereum.","2":"3","3":"29.666667","4":"25.00000"},{"1":"Spirorbis.spirorbis","2":"3","3":"10.000000","4":"10.00000"},{"1":"Sprattus.sprattus","2":"2","3":"2.000000","4":"9.00000"},{"1":"Strombus.gigas","2":"3","3":"20.666667","4":"28.00000"},{"1":"Tivela.mactroides","2":"3","3":"16.866667","4":"25.00000"},{"1":"Tonicella.lineata","2":"2","3":"3.250000","4":"11.25000"},{"1":"Uca.pugilator","2":"3","3":"17.900000","4":"24.66667"},{"1":"Upeneus.tragula","2":"2","3":"10.600000","4":"27.50000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>and plotted</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb153"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb153-1"><a href="#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(averaged_species, <span class="fu">aes</span>(<span class="at">y =</span> pld, <span class="at">x=</span> temp)) <span class="sc">+</span></span>
+<span id="cb153-2"><a href="#cb153-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb153-3"><a href="#cb153-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">'Temperature (C)'</span>, </span>
+<span id="cb153-4"><a href="#cb153-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">'PLD (days)'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-87-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Models could be built according to both of these approaches. For now we will only consider a random intercept model</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb154"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a>averaged_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(pld <span class="sc">~</span> temp, averaged_species)</span>
+<span id="cb154-2"><a href="#cb154-2" aria-hidden="true" tabindex="-1"></a>mixed_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(pld <span class="sc">~</span> temp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> species), pld)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>and checked</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb155"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb155-1"><a href="#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(averaged_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-89-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-89-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-89-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-89-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mixed_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-89-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The average model looks ok, but the mixed-model is struggling with variances that are increasing over time. To follow the paper’s lead (despite what we wrote above), let’s log-transform the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb157"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb157-1"><a href="#cb157-1" aria-hidden="true" tabindex="-1"></a>averaged_model_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(pld) <span class="sc">~</span> <span class="fu">log</span>(temp), averaged_species)</span>
+<span id="cb157-2"><a href="#cb157-2" aria-hidden="true" tabindex="-1"></a>mixed_model_log_intercept <span class="ot">&lt;-</span> <span class="fu">lmer</span>(<span class="fu">log</span>(pld) <span class="sc">~</span> <span class="fu">log</span>(temp) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> species), pld)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>and check them again</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb158"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(averaged_model_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-91-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-91-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-91-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-91-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb159"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mixed_model_log_intercept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-91-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The mixed model looks better now. But how do these models impact our findings?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb160"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(averaged_model_log, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: log(pld)
+            Sum Sq Df F value    Pr(&gt;F)    
+(Intercept) 25.024  1 36.8304 5.921e-08 ***
+log(temp)    1.918  1  2.8232   0.09737 .  
+Residuals   47.560 70                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb162"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(mixed_model_log_intercept, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: log(pld)
+              Chisq Df Pr(&gt;Chisq)    
+(Intercept) 1247.28  1  &lt; 2.2e-16 ***
+log(temp)    544.98  1  &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Here we see a clear benefit (if we trust p-values…) of including all our data. However, we might also think that each species has a unique relationship to temperature. This would be a random slopes models (notice we no longer have a constant intercept per(line) species, but instead have a 0.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb164"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb164-1"><a href="#cb164-1" aria-hidden="true" tabindex="-1"></a>mixed_model_log_slope <span class="ot">&lt;-</span> <span class="fu">lmer</span>(<span class="fu">log</span>(pld) <span class="sc">~</span> <span class="fu">log</span>(temp) <span class="sc">+</span> (<span class="dv">0</span><span class="sc">+</span>temp <span class="sc">|</span> species), pld)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We could also have both</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb165"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb165-1"><a href="#cb165-1" aria-hidden="true" tabindex="-1"></a>mixed_model_log_both <span class="ot">&lt;-</span> <span class="fu">lmer</span>(<span class="fu">log</span>(pld) <span class="sc">~</span> <span class="fu">log</span>(temp) <span class="sc">+</span> (temp <span class="sc">|</span> species), pld)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Which should we use? <span class="citation" data-cites="zuur2009">A. Zuur et al. (<a href="#ref-zuur2009" role="doc-biblioref">2009</a>)</span> recommends fitting a maximal model (all the fixed effects we might want to include, like starting at top-down approach) to the data and then comparing these using AIC.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb166"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb166-1"><a href="#cb166-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(<span class="fu">AICc</span>(mixed_model_log_both, mixed_model_log_intercept, mixed_model_log_slope))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["df"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["AICc"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"6","2":"198.0361","_rn_":"mixed_model_log_both"},{"1":"4","2":"229.0712","_rn_":"mixed_model_log_intercept"},{"1":"4","2":"418.7678","_rn_":"mixed_model_log_slope"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Here we find fitting both a random slope and intercept fit the data best. We can then analyze the model</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb167"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb167-1"><a href="#cb167-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(mixed_model_log_both, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: log(pld)
+             Chisq Df Pr(&gt;Chisq)    
+(Intercept) 650.19  1  &lt; 2.2e-16 ***
+log(temp)   309.30  1  &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>and note a significant impact of temperature on pelagic larval duration. This is another example of how blocking may have missed this, unless we considered interactions…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb169"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb169-1"><a href="#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(<span class="fu">lm</span>(<span class="fu">log</span>(pld) <span class="sc">~</span> <span class="fu">log</span>(temp)<span class="sc">*</span>species, pld), <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: log(pld)
+                  Sum Sq Df F value    Pr(&gt;F)    
+(Intercept)       0.0775  1  3.8510   0.05369 .  
+log(temp)         0.0488  1  2.4239   0.12401    
+species           8.6095 71  6.0243 7.697e-13 ***
+log(temp):species 4.4996 71  3.1485 1.511e-06 ***
+Residuals         1.4090 70                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>which would have been harder to interpret given our lack of concern about species.</p>
+</section>
+</section>
+<section id="consider-a-correlation-structure-the-bigger-picture" class="level4">
+<h4 class="anchored" data-anchor-id="consider-a-correlation-structure-the-bigger-picture">Consider a correlation structure: The bigger picture</h4>
+<p>Though not developed here (for now), random effects are an example of a correlation structure. We could also consider linkages among our data in different ways. This is common in spatial statistics and where time is involved. When data are connected in this way, various correlation structures can be included in the model.</p>
+</section>
 </section>
 </section>
 <section id="errors-are-not-equal-among-groups" class="level2">
 <h2 class="anchored" data-anchor-id="errors-are-not-equal-among-groups">Errors are not equal among groups</h2>
-<p>Issues with errors not being equal among groups is often tied to other issues, like non-linearity or the nature of the data, which we have addressed above. Another option is to use weighted-least squares regression - this approach specifically helps when residuals are not evenly distributed among groups (or when a funnel/cone appears when you plot the model to check assumptions). For example, we could take the model on below-ground biomass that we developed in the <a href="../../content/chapters/More_ANOVAs.html">More Anovas chapter</a>. As a reminder, <span class="citation" data-cites="valdez2023">Valdez et al. (<a href="#ref-valdez2023" role="doc-biblioref">2023</a>)</span> wanted to consider the impact of top-down (snail grazing) and bottom- up (nutrient availability) on marsh plant (<em>Spartina alterniflora</em>) growth. To do this, they assigned plots to one of 3 grazer treatments and one of 2 nitrogen treatments. We focused on the impact of these treatments on standing dead mass and noted a funnel-shape when reviewing the residuals.</p>
+<p>Issues with errors not being equal among groups is often tied to other issues, like non-linearity or the nature of the data, which we have addressed above. Correlation structures can also be used to address issues with errors are not equal among groups.</p>
+<p>For example (from <span class="citation" data-cites="zuur2009">A. Zuur et al. (<a href="#ref-zuur2009" role="doc-biblioref">2009</a>)</span>), we could consider the relationship between the testis weight and dorsal mantle length of squid. Working!</p>
+<p>Another option is to use weighted-least squares regression - this approach specifically helps when residuals are not evenly distributed among groups (or when a funnel/cone appears when you plot the model to check assumptions). For example, we could take the model on below-ground biomass that we developed in the <a href="../../content/chapters/More_ANOVAs.html">More Anovas chapter</a>. As a reminder, <span class="citation" data-cites="valdez2023">Valdez et al. (<a href="#ref-valdez2023" role="doc-biblioref">2023</a>)</span> wanted to consider the impact of top-down (snail grazing) and bottom- up (nutrient availability) on marsh plant (<em>Spartina alterniflora</em>) growth. To do this, they assigned plots to one of 3 grazer treatments and one of 2 nitrogen treatments. We focused on the impact of these treatments on standing dead mass and noted a funnel-shape when reviewing the residuals.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a>valdez_2023 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Spartina_alterniflora_traits.csv"</span>, <span class="at">stringsAsFactors =</span> T)</span>
-<span id="cb137-2"><a href="#cb137-2" aria-hidden="true" tabindex="-1"></a>sdm_model <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,])</span>
-<span id="cb137-3"><a href="#cb137-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb171"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb171-1"><a href="#cb171-1" aria-hidden="true" tabindex="-1"></a>valdez_2023 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Spartina_alterniflora_traits.csv"</span>, <span class="at">stringsAsFactors =</span> T)</span>
+<span id="cb171-2"><a href="#cb171-2" aria-hidden="true" tabindex="-1"></a>sdm_model <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,])</span>
+<span id="cb171-3"><a href="#cb171-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-75-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-98-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-75-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-98-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-75-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-98-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-75-4.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-98-4.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>To address the, we can use weighted least squares. This approach assume you built the model and then noted an issue with heteroscedasticity. To use, we can calculate a weight for each residual that is based on its variance. Doing this requires an iterative process similar to those used for estimation for generalized linear models (we’ll get to these) - below makes a value that increases with low variance.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a>wt_sdm <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">lm</span>(<span class="fu">abs</span>(sdm_model<span class="sc">$</span>residuals) <span class="sc">~</span> sdm_model<span class="sc">$</span>fitted.values)<span class="sc">$</span>fitted.values<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb172"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb172-1"><a href="#cb172-1" aria-hidden="true" tabindex="-1"></a>wt_sdm <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">lm</span>(<span class="fu">abs</span>(sdm_model<span class="sc">$</span>residuals) <span class="sc">~</span> sdm_model<span class="sc">$</span>fitted.values)<span class="sc">$</span>fitted.values<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can then add a new argument to the <em>lm</em> function to use these weights.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>sdm_model_wls <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,], <span class="at">weights =</span> wt_sdm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb173"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb173-1"><a href="#cb173-1" aria-hidden="true" tabindex="-1"></a>sdm_model_wls <span class="ot">&lt;-</span><span class="fu">lm</span>(Standing.Dead..dry..m2.<span class="sc">~</span>Snail.Level <span class="sc">*</span> Nitrogen.level, valdez_2023[valdez_2023<span class="sc">$</span>Snail.Level <span class="sc">!=</span> <span class="st">"uncaged"</span>,], <span class="at">weights =</span> wt_sdm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can then continue on our normal route:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model_wls) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb174"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb174-1"><a href="#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdm_model_wls) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-78-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-101-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-78-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-101-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-78-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-101-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-78-4.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Linear_model_extensions_files/figure-html/unnamed-chunk-101-4.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model_wls, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb175"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb175-1"><a href="#cb175-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(sdm_model_wls, <span class="at">type=</span><span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
@@ -2426,7 +2800,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>If you compare the two models you notice slight differences - these are minimal here due to lack of differences in variance.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb177"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb177-1"><a href="#cb177-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -2460,7 +2834,7 @@ Residual standard error: 1.788 on 12 degrees of freedom
 Multiple R-squared:  0.9284,    Adjusted R-squared:  0.8986 
 F-statistic: 31.14 on 5 and 12 DF,  p-value: 1.792e-06</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model_wls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb179"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb179-1"><a href="#cb179-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_model_wls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -2501,13 +2875,9 @@ F-statistic: 16.75 on 5 and 12 DF,  p-value: 4.789e-05</code></pre>
 <h2 class="anchored" data-anchor-id="residuals-are-not-normally-distributed">Residuals are not normally distributed</h2>
 <p>A very common concern regarding linear models is normality. I list it last here because this assumption is one of the least important (and the assumption is based on residuals, not data!). However, non-normal residuals are often (not always) connected to other issues, namely linearity, as noted above.</p>
 </section>
-<section id="combinining-these" class="level2">
-<h2 class="anchored" data-anchor-id="combinining-these">Combinining these</h2>
-<p>(<strong>to be added</strong>)</p>
-</section>
-<section id="next-steps" class="level2">
-<h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
-<p>(<strong>to be added</strong>)</p>
+<section id="next-steps-combining-these-approaches" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps-combining-these-approaches">Next steps: Combining these approaches</h2>
+<p>Many of these approaches can be combined. For example, random effects be included in generalized linear models and generalized additive models , or a model could include random effects for measurement unit and a correlation structure given other relationships. Random effects could also be included in a model focused on transformed variables. It can all get really complicated - the key is to focus on making the model fit the data and ensuring assumptions are met before considering results. As noted at the beginning, this module is introducing you to these techniques so you are prepared to explore them further. Suggested reading includes <span class="citation" data-cites="zuur2009">A. Zuur et al. (<a href="#ref-zuur2009" role="doc-biblioref">2009</a>)</span>, <span class="citation" data-cites="harrison2018">Harrison et al. (<a href="#ref-harrison2018" role="doc-biblioref">2018</a>)</span>, <span class="citation" data-cites="corlatti2021">Corlatti (<a href="#ref-corlatti2021" role="doc-biblioref">2021</a>)</span>, and <span class="citation" data-cites="crawley2014">Crawley (<a href="#ref-crawley2014" role="doc-biblioref">2014</a>)</span>.</p>
 
 
 
@@ -2537,6 +2907,9 @@ Bueno, Marilia, Glauco B. O. Machado, and Fosca P. P. Leite. 2020. <span>“Colo
 </div>
 <div id="ref-corlatti2021" class="csl-entry" role="listitem">
 Corlatti, Luca. 2021. <span>“Regression Models, Fantastic Beasts, and Where to Find Them: A Simple Tutorial for Ecologists Using R.”</span> <em>Bioinformatics and Biology Insights</em>, October. <a href="https://doi.org/10.1177/11779322211051522">https://doi.org/10.1177/11779322211051522</a>.
+</div>
+<div id="ref-crawley2014" class="csl-entry" role="listitem">
+Crawley, Michael J. 2014. <em>Statistics: An Introduction Using r</em>. 2nd edition. Chichester, West Sussex, UK: Wiley.
 </div>
 <div id="ref-dornberger2016" class="csl-entry" role="listitem">
 Dornberger, Lindsey, Cameron Ainsworth, Stephen Gosnell, and Felicia Coleman. 2016. <span>“Developing a Polycyclic Aromatic Hydrocarbon Exposure Dose-Response Model for Fish Health and Growth.”</span> <em>Marine Pollution Bulletin</em> 109 (1): 259–66. <a href="https://doi.org/10.1016/j.marpolbul.2016.05.072">https://doi.org/10.1016/j.marpolbul.2016.05.072</a>.
@@ -2574,6 +2947,9 @@ Hunt, Michael. n.d. <span>“QQ-Plots.”</span> <em>RPubs</em>. <a href="https:
 <div id="ref-hurlbert1984" class="csl-entry" role="listitem">
 Hurlbert, Stuart H. 1984. <span>“Pseudoreplication and the Design of Ecological Field Experiments.”</span> <em>Ecological Monographs</em> 54 (2): 187–211. <a href="https://doi.org/10.2307/1942661">https://doi.org/10.2307/1942661</a>.
 </div>
+<div id="ref-introduca" class="csl-entry" role="listitem">
+<span>“Introduction to Linear Mixed Models.”</span> n.d. <a href="https://stats.oarc.ucla.edu/other/mult-pkg/introduction-to-linear-mixed-models/">https://stats.oarc.ucla.edu/other/mult-pkg/introduction-to-linear-mixed-models/</a>.
+</div>
 <div id="ref-knief2021" class="csl-entry" role="listitem">
 Knief, Ulrich, and Wolfgang Forstmeier. 2021. <span>“Violating the Normality Assumption May Be the Lesser of Two Evils.”</span> <em>Behavior Research Methods</em> 53 (6): 2576–90. <a href="https://doi.org/10.3758/s13428-021-01587-5">https://doi.org/10.3758/s13428-021-01587-5</a>.
 </div>
@@ -2589,14 +2965,23 @@ Lindelov, J. K. n.d. <em>Common Statistical Tests Are Linear Models (or: How to 
 <div id="ref-mcdonald2014" class="csl-entry" role="listitem">
 McDonald, J. H. 2014. <em>Handbook of Biological Statistics</em>. 3rd ed. Baltimore, MD: Sparky House Publishing.
 </div>
+<div id="ref-midway" class="csl-entry" role="listitem">
+Midway, Steve. n.d. <em>Data Analysis in r</em>. <a href="https://bookdown.org/steve_midway/DAR/">https://bookdown.org/steve_midway/DAR/</a>.
+</div>
 <div id="ref-molenberghs2012" class="csl-entry" role="listitem">
 Molenberghs, Geert, Geert Verbeke, Samuel Iddi, and Clarice G. B. Demétrio. 2012. <span>“A Combined Beta and Normal Random-Effects Model for Repeated, Overdispersed Binary and Binomial Data.”</span> <em>Journal of Multivariate Analysis</em> 111 (October): 94–109. <a href="https://doi.org/10.1016/j.jmva.2012.05.005">https://doi.org/10.1016/j.jmva.2012.05.005</a>.
 </div>
 <div id="ref-montgomery2012" class="csl-entry" role="listitem">
 Montgomery, Douglas C., Elizabeth A. Peck, and G. Geoffrey Vining. 2012. <em>Introduction to Linear Regression Analysis</em>. 5th edition. Hoboken, NJ: Wiley.
 </div>
+<div id="ref-oconnor2007" class="csl-entry" role="listitem">
+O’Connor, M. I., J. F. Bruno, S. D. Gaines, B. S. Halpern, S. E. Lester, B. P. Kinlan, and J. M. Weiss. 2007. <span>“Temperature Control of Larval Dispersal and the Implications for Marine Ecology, Evolution, and Conservation.”</span> <em>Proceedings of the National Academy of Sciences of the United States of America</em> 104 (4): 1266–71. <a href="internal-pdf://O_Connoretal2007[1]-3537220354/O_Connoretal2007[1].pdf">internal-pdf://O_Connoretal2007[1]-3537220354/O_Connoretal2007[1].pdf</a>.
+</div>
 <div id="ref-payne2017" class="csl-entry" role="listitem">
 Payne, Elizabeth H., James W. Hardin, Leonard E. Egede, Viswanathan Ramakrishnan, Anbesaw Selassie, and Mulugeta Gebregziabher. 2017. <span>“Approaches for dealing with various sources of overdispersion in modeling count data: Scale adjustment versus modeling.”</span> <em>Statistical Methods in Medical Research</em> 26 (4): 1802–23. <a href="https://doi.org/10.1177/0962280215588569">https://doi.org/10.1177/0962280215588569</a>.
+</div>
+<div id="ref-r-gene" class="csl-entry" role="listitem">
+<span>“R - Generalised Linear Mixed Model Diagnostics Using DHARMa - Cross Validated.”</span> n.d. <a href="https://stats.stackexchange.com/questions/478369/generalised-linear-mixed-model-diagnostics-using-dharma">https://stats.stackexchange.com/questions/478369/generalised-linear-mixed-model-diagnostics-using-dharma</a>.
 </div>
 <div id="ref-reitan2016" class="csl-entry" role="listitem">
 Reitan, Trond, and Anders Nielsen. 2016. <span>“Do Not Divide Count Data with Count Data; A Story from Pollination Ecology with Implications Beyond.”</span> <em>PLOS ONE</em> 11 (2): e0149129. <a href="https://doi.org/10.1371/journal.pone.0149129">https://doi.org/10.1371/journal.pone.0149129</a>.
