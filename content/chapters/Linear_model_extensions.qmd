@@ -1169,6 +1169,9 @@ whelk_gam_spline <- gam(Mass ~ s(Shell.Length), data = whelk)
 summary(whelk_gam_spline)
 ```
 
+These models have the same assumptions as linear models [p. 58,
+@zuur2009].
+
 As noted above, this is just meant to introduce these approaches. We can
 compare these (and others, such as loess) using
 
@@ -1793,19 +1796,17 @@ issues, like non-linearity or the nature of the data, which we have
 addressed above. Correlation structures can also be used to address
 issues with errors are not equal among groups.
 
-For example (from @zuur2009), we could consider the relationship between
-the testis weight and dorsal mantle length of squid.
-
-Another option is to use weighted-least squares regression - this
-approach specifically helps when residuals are not evenly distributed
-among groups (or when a funnel/cone appears when you plot the model to
-check assumptions). For example, we could take the model on below-ground
-biomass that we developed in the [More Anovas chapter](More_ANOVAs.qmd).
-As a reminder, @valdez2023 wanted to consider the impact of top-down
-(snail grazing) and bottom- up (nutrient availability) on marsh plant
-(*Spartina alterniflora*) growth. To do this, they assigned plots to one
-of 3 grazer treatments and one of 2 nitrogen treatments. We focused on
-the impact of these treatments on standing dead mass and noted a
+One example of this option is to use weighted-least squares regression
+(also known as generalized least squares) - this approach specifically
+helps when residuals are not evenly distributed among groups (or when a
+funnel/cone appears when you plot the model to check assumptions). For
+example, we could take the model on below-ground biomass that we
+developed in the [More Anovas chapter](More_ANOVAs.qmd). As a reminder,
+@valdez2023 wanted to consider the impact of top-down (snail grazing)
+and bottom- up (nutrient availability) on marsh plant (*Spartina
+alterniflora*) growth. To do this, they assigned plots to one of 3
+grazer treatments and one of 2 nitrogen treatments. We focused on the
+impact of these treatments on standing dead mass and noted a
 funnel-shape when reviewing the residuals.
 
 ```{r}
@@ -1850,6 +1851,19 @@ summary(sdm_model_wls)
 Why not just always do this? Because weighted least squares implicitly
 assumes we *know* the weights. We are actually estimating them, so small
 datasets may lead to bad estimates and outcomes.
+
+For another example (from @zuur2009 from @smith2005 ), we could consider
+the seasonal relationship between the testis weight and dorsal mantle
+length of the squid *Loligo forbesii*.
+
+[![Restored lithograph of Loligo forbesii. Public
+domain.](/images/loligo-forbesii.webp)](https://animalia.bio/loligo-forbesii)
+
+A basic model
+
+```{r}
+
+```
 
 ## Residuals are not normally distributed
 
