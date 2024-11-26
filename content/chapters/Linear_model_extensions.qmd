@@ -1862,7 +1862,59 @@ domain.](/images/loligo-forbesii.webp)](https://animalia.bio/loligo-forbesii)
 A basic model
 
 ```{r}
+squid <- read.table("data/Squid.txt", stringsAsFactors = T, header = T)
+squid$MONTH <- factor(squid$MONTH)
+squid_lm <- lm(Testisweight~DML*MONTH, squid)
+plot(squid_lm)
+```
 
+Shows some issues. We see some over-dispersion,but more importantly
+there is a funnel-shape to the data. This means variance is increasing
+with mean. We can also see this in
+
+```{r}
+check_model(squid_lm)
+simulateResiduals(squid_lm, n = 1000, plot = TRUE)
+```
+
+Unlike when we measured the same organism or unit multiple times, this
+time the reason for variation is clear - some months have more spread
+than other
+
+```{r}
+ggplot(squid, aes(x= MONTH,  y=Testisweight))+
+  geom_boxplot()
+```
+
+and this is seen in residual structure
+
+```{r}
+ggplot(squid_lm, aes(x = MONTH, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0)
+```
+
+Instead of assuming the residuals are identically distributed (we see
+they are not), we can instead specify the variance structure. We have
+numerous options here. A fixed variance sets a formula for the variance
+
+```{r}
+library(nlme)
+squid_fixed <- gls(Testisweight~DML*MONTH, squid, weights = varFixed(~DML))
+```
+
+which allows for it to vary (here, with DML). We can also let variance
+be based on another factor (here, month)
+
+```{r}
+squid_month <- gls(Testisweight~DML*MONTH, squid, weights = varIdent(~1|MONTH))
+```
+
+Other options exist (*varPower*, *varExp*, *varConstPower*, and
+*varComb*. Models can be compared using AIC
+
+```{r}
+AICc(squid_fixed,squid_month, squid_lm)
 ```
 
 ## Residuals are not normally distributed
