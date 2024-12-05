@@ -669,7 +669,7 @@ window.Quarto = {
 <p>Citations to relevant articles papers and books are noted throughout for further exploration.</p>
 <section id="sticking-with-the-linear-model" class="level2">
 <h2 class="anchored" data-anchor-id="sticking-with-the-linear-model">Sticking with the linear model</h2>
-<p>Linear models are useful for a number of reasons. They are a great way to unify most/many tests from classical statistics. In fact, most of the ranked tests we’ve developed can actually be run as linear models when n &gt;15. For example, we can go back to our Wilcox-Mann Whitney U tests (for 2 populations) and Kruskal-Wallis (for 3+) from the <a href="../../content/chapters/Compare_means_among_populations.html" target="_blank">comparing means among groups chapter</a> and note the outcome from a <em>wilcox.test</em></p>
+<p>Linear models are useful for a number of reasons. They are a great way to unify most/many tests from classical statistics. In fact, most of the ranked tests we’ve developed can actually be run as linear models when n &gt;15. For example, we can go back to our Wilcox-Mann Whitney U tests (for 2 populations) and Kruskal-Wallis (for 3+) from the <a href="../../content/chapters/Compare_means_among_populations.html">comparing means among groups chapter</a> and note the outcome from a <em>wilcox.test</em></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>two_species_subset <span class="ot">&lt;-</span> iris[iris<span class="sc">$</span>Species<span class="sc">!=</span><span class="st">"setosa"</span>,]</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Sepal.Length <span class="sc">~</span> Species, two_species_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1071,8 +1071,8 @@ What’s linear anyway?
 <table class="table">
 <caption>Connections between data distributions and real-world data</caption>
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 19%">
+<col style="width: 80%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -2983,8 +2983,8 @@ squid_lm    25 3643.629</code></pre>
 <table class="table">
 <caption>Correlation structure options</caption>
 <colgroup>
-<col style="width: 14%">
-<col style="width: 85%">
+<col style="width: 20%">
+<col style="width: 79%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -3384,6 +3384,26 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/jsgosnell\.github\.io\/cuny_biostats_book\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+          // default icon
+          link.classList.add("external");
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,

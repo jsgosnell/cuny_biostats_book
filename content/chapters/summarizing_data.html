@@ -815,7 +815,7 @@ Getting data into R
 <p>Overwhelming, isn’t it? And this isn’t a huge dataset! There are only 150 rows, yet some datasets have tens of thousands! It’s really hard (or impossible) to just look at these numbers and infer anything about the population. Summary statistics help us get a better mental image of the distribution of the sample data.</p>
 <blockquote class="blockquote">
 <p><strong>Aside</strong>: While summaries can help make sense of data, and eventually we’ll add p-values to think about things like significance, in best case scenarios we don’t need this! We are going to focus on graphing (visual summaries) and numerical summaries in this section, but sometimes the data speaks for itself (or through an easy graph like this one!).</p>
-<div id="fig-XKCD2400" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center" alt="Graph showing a clear difference over time (x-axis) between number of Covid cases (y) in placebo and vaccinated group. Note this not real data (its a comic strip).">
+<div id="fig-XKCD2400" class="quarto-figure quarto-figure-center quarto-float anchored" alt="Graph showing a clear difference over time (x-axis) between number of Covid cases (y) in placebo and vaccinated group. Note this not real data (its a comic strip)." data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-XKCD2400-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <a href="https://xkcd.com/2400/"><img src="https://imgs.xkcd.com/comics/statistics_2x.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Graph showing a clear difference over time (x-axis) between number of Covid cases (y) in placebo and vaccinated group. Note this not real data (its a comic strip)."></a>
@@ -2584,6 +2584,26 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/jsgosnell\.github\.io\/cuny_biostats_book\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+          // default icon
+          link.classList.add("external");
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
