@@ -606,9 +606,9 @@ window.Quarto = {
   <ul>
   <li><a href="#logistic-regression-bernoulli-and-binomial-outcomes" id="toc-logistic-regression-bernoulli-and-binomial-outcomes" class="nav-link" data-scroll-target="#logistic-regression-bernoulli-and-binomial-outcomes">Logistic regression: Bernoulli and binomial outcomes</a></li>
   <li><a href="#poisson-regression" id="toc-poisson-regression" class="nav-link" data-scroll-target="#poisson-regression">Poisson regression</a></li>
+  <li><a href="#negative-binomial-regression" id="toc-negative-binomial-regression" class="nav-link" data-scroll-target="#negative-binomial-regression">Negative binomial regression</a></li>
   <li><a href="#gamma-regression" id="toc-gamma-regression" class="nav-link" data-scroll-target="#gamma-regression">Gamma regression</a></li>
   <li><a href="#beta-regression" id="toc-beta-regression" class="nav-link" data-scroll-target="#beta-regression">Beta regression</a></li>
-  <li><a href="#negative-binomial-regression" id="toc-negative-binomial-regression" class="nav-link" data-scroll-target="#negative-binomial-regression">Negative binomial regression</a></li>
   <li><a href="#non-linear-options" id="toc-non-linear-options" class="nav-link" data-scroll-target="#non-linear-options">Non-linear options</a></li>
   </ul></li>
   </ul></li>
@@ -890,13 +890,13 @@ What’s linear anyway?
 <p>One way to address non-linearity is to transform the data (typically focusing on the dependent variable) so that the resulting variable meets the linear model assumptions (and thus uses the strengths of linear models that we noted above). As shown above, our rank-based approaches are using a similar method (not technically the same, but it works for larger sample sizes). This approach was often used in the past <span class="citation" data-cites="warton2010">(e.g., arc-sin transforms of proportion data, <a href="#ref-warton2010" role="doc-biblioref">D. Warton and Hui 2010</a>)</span> and supported by various approaches. For example, the Box-Cox transformation helped researchers find the best way to transform data to reduce issues with the distribution of residuals; this method also tended to impact linearity and differences in variances.</p>
 <p>Two things should be noted regarding this approach and transformations in general:</p>
 <ul>
-<li><p>The Box-Cox approach requires a model - it still focused on transforming data so that <em>residuals</em> meet assumptions. Datashould not be transformed before model assumptions are analyzed to ensure it is necessary.</p></li>
+<li><p>The Box-Cox approach requires a model - it still focused on transforming data so that <em>residuals</em> meet assumptions. Data should not be transformed before model assumptions are analyzed to ensure it is necessary.</p></li>
 <li><p>Similarly (and already noted!). non-normal data may lead to models with normal residuals. However, normal data (or data transformed to be <em>more</em> normal) does typically lead to normal residuals, so if residuals are not normal transformations may help.</p></li>
 <li><p>The transformed variable is <em>now</em> linear in respect to the predictors. This highlights the actual assumption of the model. Similarly, higher-terms (squares, cubes, etc) may be added to a linear model. The model does not care what the data represent - it only focuses on if linear relationships exist among them.</p></li>
 <li><p>Transformations can make model interpretation and prediction difficult.</p></li>
 </ul>
 <p>If the decision is made to transform the data, several approaches exist. Some are driven by the distribution of the data, and all depend on it. For example, log and related root transformations are useful for right-skewed data, but some can only be carried out for non-negative (e.g., square root) or strictly positive (e.g., log) values. To address this for log transformations, a small value is often added to 0 measurements.</p>
-<p>Let’s use data (not residuals) to show how different distributions of data connect to q-q plots and consider possible fixes (always fit a model first for real analysis!). For example, we can return to our right-skewed blue jay data <a href="../../content/chapters/summarizing_data.html">from the summarizing data chapter</a>(target=“_blank”)(idea from <span class="citation" data-cites="hunt">(<a href="#ref-hunt" role="doc-biblioref">Hunt, n.d.</a>)</span>) .</p>
+<p>Let’s use data (not residuals) to show how different distributions of data connect to q-q plots and consider possible fixes (always fit a model first for real analysis!). For example, we can return to our right-skewed blue jay data <a href="../../content/chapters/summarizing_data.html">from the summarizing data chapter</a>(idea from <span class="citation" data-cites="hunt">(<a href="#ref-hunt" role="doc-biblioref">Hunt, n.d.</a>)</span>) .</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>blue_jays <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rbeta</span>(<span class="dv">10000</span>,<span class="dv">2</span>,<span class="dv">8</span>)<span class="sc">*</span><span class="dv">100</span><span class="sc">+</span><span class="fu">runif</span>(<span class="dv">10000</span>,<span class="dv">60</span>,<span class="dv">80</span>),<span class="dv">3</span>)</span>
@@ -1064,15 +1064,94 @@ What’s linear anyway?
 </section>
 <section id="different-data-require-a-different-approach-introducing-generalized-linear-models" class="level3">
 <h3 class="anchored" data-anchor-id="different-data-require-a-different-approach-introducing-generalized-linear-models">Different data require a different approach: Introducing generalized linear models</h3>
+<p>Note: much of this follows/borrows heavily from the <a href="https://r.qcbs.ca/workshop06/book-en/index.html">QCBS workshop on generalized linear models</a><span class="citation" data-cites="series">(<a href="#ref-series" role="doc-biblioref">Series and QCBS R. Workshop, n.d.</a>)</span>.</p>
 <p>The linear relationship may be inappropriate because our data doesn’t fit it! For example, if we are modeling proportions, estimates less than 0 or below 1 do not make sense, but a linear model doesn’t account for that. The same issues arise for binary outcomes (outcome must be 0 or 1) and count data (where outcomes can’t be non-integer). Along with impacts on the assumption of linearity, data like this may also lead to unequal variances and lack of normality for residuals. While we may be able to transform the response variable to make relationships linear, another option is to translate the <em>link</em> function.</p>
-<p>Although we haven’t fully explained it before, a linear model contains three components. There is always a random component that focuses on the distribution of the data. This typically requires a few parameters (or at least one!). For example, for normally-distributed data, the two parameters that describe the distribution are the mean and the variance. Note these parameters are independent (we covered all this when we <a href="../../content/chapters/Tests_for_continuous_data_from_one_sample.html">introduced normality</a>{target=“_blank”). There is also a systematic component, where a number of covariates and data points produce an estimate. Finally, there is the link function, which connects that estimate to the data distribution (this maintains the linearity of the model). Notice this means the link connects to the distribution of the data, not the data itself (which is what transforming the data is doing).</p>
-<p>So far we have focused on the <em>mean</em> of the data, and the estimate is the mean, so the link has been implied. We can <em>generalize</em> this setup to include other distributions in the exponential family (and now others <span class="citation" data-cites="applied2022">(<a href="#ref-applied2022" role="doc-biblioref"><span>“Applied Regression Analysis and Generalized Linear Models”</span> 2022</a>, ch.&nbsp;15)</span>). While we won’t develop all the math, exponential family distributions all have a canonical parameter (the mean for Gaussian, or normal, data) and a dispersion parameter (the variance for normal data). Different distributions have different relationships between these two parameters. For normal data, there is <em>no</em> relationship, so the variance is constant. This is why we have assumed <em>homoscedasticity</em> of residuals for linear models. This is not true for other families; for example, the variance in binomial data depends on the <em>p</em> parameter (as we noted in the <a href="../../content/chapters/Binomial.html">chapter introducing binomial data</a>{target=“_blank”)), and for the Poisson distribution (used for count data) the variance is the mean. Different families also use different link functions, which can impact how we interpret coefficient values and associated impacts. In general, impacts and outcomes will need to be transformed (based on the link) to the actual scale.</p>
-<p>We can specify other data distributions using <em>generalized linear models</em> (which are different than general linear models, which is another term used to describe our “regular” linear models). These models are also known as glm or glim (we’ll use the glm jargon here). These models let us consider data that do not fit a normal approximation. <span class="citation" data-cites="bolker2008">Bolker (<a href="#ref-bolker2008" role="doc-biblioref">2008</a>)</span> has an excellent review of when various distributions should be used. The table below gives some of the more common distributions and notes on their usage.</p>
+<p>Although we haven’t fully explained it before, a linear model contains three components. There is always a random component that focuses on the distribution of the data. This typically requires a few parameters (or at least one!). For example, for normally-distributed data, the two parameters that describe the distribution are the mean and the variance. Note these parameters are independent (we covered all this when we <a href="../../content/chapters/Tests_for_continuous_data_from_one_sample.html">introduced normality</a>. There is also a systematic component, where a number of covariates relate linearly to a predictor. Finally, there is the link function, which connects that predictor to the data distribution (this maintains the linearity of the model). Notice this means the link connects to the distribution of the data, not the data itself (which is what transforming the data is doing).</p>
+<p>So far we have focused on the <em>mean</em> of the data, and the estimate is the mean. For example, in simple linear regresssion we predict the mean response of <span class="math inline">\(Y\)</span> for each level of <span class="math inline">\(X\)</span>. This is equivalent to predicting <span class="math inline">\(\mu\)</span>, so we can write</p>
+<p><span class="math inline">\(Y\)</span>= <span class="math inline">\(X\beta\)</span></p>
+<p>or</p>
+<p><span class="math inline">\(\mu\)</span>= <span class="math inline">\(X\beta\)</span></p>
+<p>where:</p>
+<ul>
+<li><p><span class="math inline">\(Y\)</span> (or <span class="math inline">\(\mu\)</span> is the predicted value of the response variable</p></li>
+<li><p><span class="math inline">\(X\)</span> is the model matrix (<em>i.e.</em> predictor variables)</p></li>
+<li><p><span class="math inline">\(β\)</span> is the estimated parameters from the data (<em>i.e.</em> intercept and slope). <span class="math inline">\(XB\)</span> is called the <strong>linear predictor</strong></p></li>
+</ul>
+<p>Earlier we also had <span class="math inline">\(E\)</span> , an error term that account for deviations in our data from the expected outcome. We still have error but will not write that for clarity at this point.</p>
+<p>Since <span class="math inline">\(Y = \mu\)</span>, the link has been implied, so we can think of this as</p>
+<p><span class="math display">\[\mu = \underbrace{X\beta}_{Linear~component}\]</span></p>
+<p>owever, we can <em>generalize</em> this setup to include other distributions in the exponential family (and now others <span class="citation" data-cites="applied2022">(<a href="#ref-applied2022" role="doc-biblioref"><span>“Applied Regression Analysis and Generalized Linear Models”</span> 2022</a>, ch.&nbsp;15)</span>). The exponential family is a group of distributions where the probability distribution follows a specific formula. While we won’t develop all the math, exponential family distributions all have a canonical parameter (the mean for Gaussian, or normal, data) and a dispersion parameter (the variance for normal data). In doing that, we predict</p>
+<p><span class="math display">\[\eta_i = \underbrace{X\beta}_{Linear~component}\]</span></p>
+<p>and link <span class="math inline">\(\eta\)</span> to our true parameter of interest using a link function.</p>
+<p><span class="math display">\[g(\mu) = \eta\]</span></p>
+<p>The main idea is we can keep a systematic component with a linear relationship for data that doesn’t really have that relationship and that don’t fit the normal approximation. We call models using this approach <em>generalized linear models</em> (which are different than general linear models, which is another term used to describe our “regular” linear models). These models are also known as GLM or GLIM (we’ll use the GLM jargon here).</p>
+<p>For example, we can consider binomial data where <span class="math inline">\(Y ∼ B(n, p)\)</span>. This type of data has to be between 0 and 1 (and only takes fractional values in between that depend on the sample size!). We introduced this type of data in the <a href="../../content/chapters/Binomial.html">chapter introducing binomial data</a>. If we use a basic linear model, we would predict outcomes that don’t match the data. However, instead of focusing on the <span class="math inline">\(p\)</span> parameter like we did before, let’s consider the odds of something happening. We can estimate</p>
+<p><span class="math display">\[
+\mu = N*p
+\]</span></p>
+<p>(we introduced this normal approximation earlier too), and find the odds as</p>
+<p><span class="math display">\[\text{odds}_i = \frac{\mu_i}{1-\mu_i}\]</span></p>
+<p>this takes us to a <code>0</code> to <code>+Inf</code> scale for our predictor. We can then take the log of this outcome, which we call the logit</p>
+<p><span class="math display">\[\text{logit}(\mu_i) = \log(\frac{\mu_i}{1-\mu_i})\]</span></p>
+<p>which can now takes values from <code>-Inf</code> to <code>+Inf</code> . If we predict this value, so that</p>
+<p><span class="math display">\[g(\mu) = \eta = \text{logit}(\mu_i) = \log(\frac{\mu_i}{1-\mu_i}) = X\beta \]</span></p>
+<p>we have constructed a <em>generalized linear model</em>.</p>
+<p>For this class I don’t expect you to derive the appropriate links. Common links for various types of data are shown below, and in R we can identify these using a <em>family</em> argument in the <em>glm</em> function (introduced below).</p>
+<table class="table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 20%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Distribution of <span class="math inline">\(Y\)</span></th>
+<th>Link function name</th>
+<th>Link function</th>
+<th>Model</th>
+<th><code>R family</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Normal</td>
+<td>Identity</td>
+<td><span class="math inline">\(g(\mu) = \mu\)</span></td>
+<td><span class="math inline">\(\mu = \mathbf{X} \boldsymbol{\beta}\)</span></td>
+<td><code>gaussian(or just run lm)</code></td>
+</tr>
+<tr class="even">
+<td>Bernoulli/Binomial</td>
+<td>Logit</td>
+<td><span class="math inline">\(g(\mu) = \log\left(\dfrac{\mu}{1-\mu}\right)\)</span></td>
+<td><span class="math inline">\(\log\left(\dfrac{\mu}{1-\mu}\right) = \mathbf{X} \boldsymbol{\beta}\)</span></td>
+<td><code>binomial(default link is logit)</code></td>
+</tr>
+<tr class="odd">
+<td>Poisson</td>
+<td>Log</td>
+<td><span class="math inline">\(g(\mu) = \log(\mu)\)</span></td>
+<td><span class="math inline">\(-\mu^{-1} = \mathbf{X} \boldsymbol{\beta}\)</span></td>
+<td><code>poisson</code></td>
+</tr>
+<tr class="even">
+<td>Exponential</td>
+<td>Negative Inverse</td>
+<td><span class="math inline">\(g(\mu) = -\mu^{-1}\)</span></td>
+<td><span class="math inline">\(\log(\mu) = \mathbf{X} \boldsymbol{\beta}\)</span></td>
+<td><code>Gamma</code></td>
+</tr>
+</tbody>
+</table>
+<p>However, the major issue is realizing these links mean interpreting coefficient values requires an additional step to <em>transform</em> them back to impacts on the actual parameter of interest. Examples are provided below.</p>
+<p>When should we use GLMs? These various data types (and some other distributions we’ll demonstrate) match some common real-world scenarios. <span class="citation" data-cites="bolker2008">Bolker (<a href="#ref-bolker2008" role="doc-biblioref">2008</a>)</span> has an excellent review of when various distributions should be used. The table below also lists some of the more common distributions and notes on their usage.</p>
 <table class="table">
 <caption>Connections between data distributions and real-world data</caption>
 <colgroup>
-<col style="width: 19%">
-<col style="width: 80%">
+<col style="width: 25%">
+<col style="width: 74%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1131,7 +1210,8 @@ What’s linear anyway?
 </tr>
 </tbody>
 </table>
-<p>GLM make different assumptions (though everyone does not agree on what they are!). While we still need independence of the residuals (or some extension, see below), they no longer need to be normally distributed <span class="citation" data-cites="zuur2007 zuur2009">(<a href="#ref-zuur2007" role="doc-biblioref">A. Zuur, Ieno, and Smith 2007, 86–87</a>; <a href="#ref-zuur2009" role="doc-biblioref">A. Zuur et al. 2009, sec. 9.8.3</a>)</span> (though normality may hold at large sample sizes for Pearson <span class="citation" data-cites="agresti2007">(<a href="#ref-agresti2007" role="doc-biblioref">Agresti 2007, 87</a>)</span> or deviance <span class="citation" data-cites="montgomery2012">(<a href="#ref-montgomery2012" role="doc-biblioref">Montgomery, Peck, and Vining 2012, sec. 13.4.4</a>)</span> <!-- https://stats.stackexchange.com/questions/92394/checking-residuals-for-normality-in-generalised-linear-models; https://online.stat.psu.edu/stat504/lesson/6/6.1 --> residuals, and some authors argue normality is required for testing <span class="citation" data-cites="feng2020">(<a href="#ref-feng2020" role="doc-biblioref">Feng, Li, and Sadeghpour 2020</a>)</span>) . As noted above, non-Gaussian families don’t assume a constant variance, so homogeneity assumptions would not be appropriate <span class="citation" data-cites="fox2016">(<a href="#ref-fox2016" role="doc-biblioref">Fox 2016</a>)</span>. However, we need to ensure the correct family (and thus mean-variance link) is chosen.</p>
+<p>Different distributions also have different relationships between the variance and mean (or between the canonical and dispersion parameter for distributions in the exponential family). For normal data, there is <em>no</em> relationship, so the variance is constant. This is why we have assumed <em>homoscedasticity</em> of residuals for linear models. This is not true for other families; for example, the variance in binomial data depends on the <em>p</em> parameter (as we noted in the <a href="../../content/chapters/Binomial.html">chapter introducing binomial data</a>), and for the Poisson distribution (used for count data) the variance is the mean.</p>
+<p>These relationships are reflected in the assumptions for a GLM (though everyone does not agree on what they are!). First, we need to ensure the correct family (and thus mean-variance link) is chosen.While we still need independence of the residuals (or some extension, see below), they no longer need to be normally distributed <span class="citation" data-cites="zuur2007 zuur2009 fox2016">(<a href="#ref-zuur2007" role="doc-biblioref">A. Zuur, Ieno, and Smith 2007, 86–87</a>; <a href="#ref-zuur2009" role="doc-biblioref">A. Zuur et al. 2009, sec. 9.8.3</a>; <a href="#ref-fox2016" role="doc-biblioref">Fox 2016</a>)</span> (though normality may hold at large sample sizes for Pearson <span class="citation" data-cites="agresti2007">(<a href="#ref-agresti2007" role="doc-biblioref">Agresti 2007, 87</a>)</span> or deviance <span class="citation" data-cites="montgomery2012">(<a href="#ref-montgomery2012" role="doc-biblioref">Montgomery, Peck, and Vining 2012, sec. 13.4.4</a>)</span> <!-- https://stats.stackexchange.com/questions/92394/checking-residuals-for-normality-in-generalised-linear-models; https://online.stat.psu.edu/stat504/lesson/6/6.1 --> residuals, and some authors argue normality is required for testing <span class="citation" data-cites="feng2020">(<a href="#ref-feng2020" role="doc-biblioref">Feng, Li, and Sadeghpour 2020</a>)</span>) .</p>
 <p>In general, plotting the residuals against <span class="citation" data-cites="zuur2009">(<a href="#ref-zuur2009" role="doc-biblioref">A. Zuur et al. 2009</a>)</span></p>
 <ul>
 <li><p>the predicted values</p>
@@ -1156,7 +1236,7 @@ What’s linear anyway?
 <summary>
 What are residuals for a GLM?
 </summary>
-<p>Residuals for a Gaussian/normal glm (what we’ve been doing) are easy to calculate. We simply subtract the estimate for each data point (which is the average for similar observations!) from the observed. However, though these <em>raw</em> or <em>response</em> residuals exist for GLM, they rarely make sense. Variance may increase with mean for some distributions, for example, or outcomes may be binary (so every residual is 0 or 1!).</p>
+<p>Residuals for a Gaussian/normal GLM (what we’ve been doing) are easy to calculate. We simply subtract the estimate for each data point (which is the average for similar observations!) from the observed. However, though these <em>raw</em> or <em>response</em> residuals exist for GLM, they rarely make sense. Variance may increase with mean for some distributions, for example, or outcomes may be binary (so every residual is 0 or 1!).</p>
 <p>To account for this, we could divide the residuals by the standard deviation of the observations. This normalizes the residuals and leads to <em>Pearson residuals</em>. Another option is based on something called deviance. Deviance is similar to sums of squares but based on likelihood (which we shortly see is what we use to test for significance in GLM); it can also be considered the generalized form of variance or residual sums of squares. It is calculated as the difference of log-likelihoods between the focal model and the saturated model (or a model that has a coefficient for every observation and thus will have perfect fit). Deviance residuals consider how important each point is to the overall deviance. You can also compare the deviance of a model to a perfect fit (no deviance/saturated) model and an intercept-only model (worst fit, D<sub>O</sub>) and generate a pseudo-R<sup>2</sup> measure using the formula</p>
 <p><span class="math display">\[
 1-\frac{D}{D_O}
@@ -1164,19 +1244,43 @@ What are residuals for a GLM?
 <p>This is known as McFadden’s pseudo-R<sup>2</sup> value.</p>
 <p>Another option are quantile residuals. These are the focus of the DHARMa package and should be uniformly distributed for appropriate models.</p>
 </details>
-<p>Once developed, GLMs can use most of the tools we developed for basic linear models. However, a few key differences exist. Estimation of parameters and significance for these models rely on maximum-likelihood methods. It should be noted that solving for coefficients also requires iterative approaches due to non-linearity; common methods (not described here) include the Newton-Raphson or Fisher scoring methods. The key point here for practice is any noted issues with optimization are due to this process. The ratio of likelihood values from various nested tests follow a <span class="math inline">\(\chi^2\)</span> distribution and can thus provide a p-value to compare possible models as noted in <a href="../../content/chapters/Compare_proportions_among_populations.html">introducing G tests</a>{target=“_blank”)).This may be represented as a Z test for single parameters (since a <span class="math inline">\(\chi^2\)</span> distribution is a Z distribution squared - sometimes labelled a Wald test/statistic). F test reappear for distributions where we estimate the dispersion parameter (like the normal), but otherwise we can use the dispersion parameter to check that the right approach was taken.</p>
-<p>There are numerous types of GLMs. Here we outline some of the more common ones. Each of these deserves a much fuller treatment - remember, the intent here is to get you to a place to where you can begin working with them. <span class="citation" data-cites="harrison2018">Harrison et al. (<a href="#ref-harrison2018" role="doc-biblioref">2018</a>)</span> (which also covers mixed models (coming up!)) provides an excellent review of these models, and fuller treatments are provided by <span class="citation" data-cites="zuur2009">A. Zuur et al. (<a href="#ref-zuur2009" role="doc-biblioref">2009</a>)</span> (chapters 8-11) and <span class="citation" data-cites="fox2016">Fox (<a href="#ref-fox2016" role="doc-biblioref">2016</a>)</span> (chapters 14 - 15). For each I provide the most relevant math, an example (or two), and some immediate extensions.</p>
+<p>Once developed, GLMs can use most of the tools we developed for basic linear models. However, a few key differences exist. Estimation of parameters and significance for these models rely on maximum-likelihood methods. It should be noted that solving for coefficients also requires iterative approaches due to non-linearity; common methods (not described here) include the Newton-Raphson or Fisher scoring methods. The key point here for practice is any noted issues with optimization are due to this process. The ratio of likelihood values from various nested tests follow a <span class="math inline">\(\chi^2\)</span> distribution and can thus provide a p-value to compare possible models as noted in <a href="../../content/chapters/Compare_proportions_among_populations.html">introducing G tests</a>.This may be represented as a Z test for single parameters (since a <span class="math inline">\(\chi^2\)</span> distribution is a Z distribution squared - sometimes labelled a Wald test/statistic). F test reappear for distributions where we estimate the dispersion parameter (like the normal), but otherwise we can use the dispersion parameter to check that the right approach was taken.</p>
+<p>As you may infer from the numerous distributions mentioned above, there are a variety of GLMs. Here we outline some of the more common ones. Each of these deserves a much fuller treatment - remember, the intent here is to get you to a place to where you can begin working with them. <span class="citation" data-cites="harrison2018">Harrison et al. (<a href="#ref-harrison2018" role="doc-biblioref">2018</a>)</span> (which also covers mixed models (coming up!)) provides an excellent review of these models, and fuller treatments are provided by <span class="citation" data-cites="zuur2009">A. Zuur et al. (<a href="#ref-zuur2009" role="doc-biblioref">2009</a>)</span> (chapters 8-11) and <span class="citation" data-cites="fox2016">Fox (<a href="#ref-fox2016" role="doc-biblioref">2016</a>)</span> (chapters 14 - 15). For each I provide the most relevant math, an example (or two), and some immediate extensions.</p>
 <section id="logistic-regression-bernoulli-and-binomial-outcomes" class="level4">
 <h4 class="anchored" data-anchor-id="logistic-regression-bernoulli-and-binomial-outcomes">Logistic regression: Bernoulli and binomial outcomes</h4>
-<p>Logistic regression <span class="citation" data-cites="warton2010">(<a href="#ref-warton2010" role="doc-biblioref">D. Warton and Hui 2010</a>)</span> focuses on modelling yes/no or success/failure outcomes (Bernoulli or binomial data) using the <em>logit</em> link (thus logistic regression). The easy-to-understand issue here is that we want to focus on probability (<span class="math inline">\(\pi\)</span>), but that can only vary from 0 to 1. Linear models are thus inappropriate, but the logit link can be used where the systematic component of the model predicts</p>
+<p>Logistic regression <span class="citation" data-cites="warton2010">(<a href="#ref-warton2010" role="doc-biblioref">D. Warton and Hui 2010</a>)</span> focuses on modelling yes/no or success/failure outcomes (Bernoulli or binomial data) using the <em>logit</em> link (thus logistic regression). As noted above, this type of data uses the logit link. This link also allows coefficients to be interpreted as odds and odds ratios (introduced in the <a href="../../content/chapters/Compare_proportions_among_populations.html">comparing proportions among groups</a>- we’ll continue to see connections to this chapter for logistic regression). For a given coefficient <span class="math inline">\(\beta\)</span>, the logit link also means we can say a 1 unit increase in that single variable leads to a change in the odds ratio of <span class="math inline">\(e^{\beta}\)</span>.</p>
+<details>
+<summary>
+Some math if you want/need it
+</summary>
+<p>Assume we have a binary outcome <span class="math inline">\(y\)</span> and one covariates <span class="math inline">\(x_1\)</span>. For this situation, the probability of a successful outcome ( <span class="math inline">\(y = 1\)</span> ) is given by:</p>
+<p><span class="math display">\[Pr(y_i = 1) = p = g^{-1}(X\beta)\]</span></p>
+<p>where <span class="math inline">\(g^{-1}()\)</span> is the <strong>inverse link function</strong>.</p>
+<p>For the identity link, the interpretation of the <span class="math inline">\(\beta_1\)</span> coefficient (remember,</p>
 <p><span class="math display">\[
-logit(\pi) = \ln(\frac{\pi}{1-\pi}), \text{where } \pi \text{ is the probability for a given set of outcomes}
+\beta = \begin{bmatrix}
+\beta_0\\
+\beta_1\
+\end{bmatrix}
 \]</span></p>
-<p>This logit link is useful as it effectively connects the systematic component and real data (the purpose of the link). This link also allows coefficients to be interpreted as odds and odds ratios (introduced in the <a href="../../content/chapters/Compare_proportions_among_populations.html">comparing proportions among groups</a>- we’ll continue to see connections this chapter for logistic regression). Remember, the odds can be written as</p>
-<p><span class="math display">\[
-\frac{\pi}{1-\pi}
-\]</span></p>
-<p>For a given coefficient <span class="math inline">\(\beta\)</span>, the logit link also means we can say a 1 unit increase in that single variable leads to a change in the odds ratio of <span class="math inline">\(e^{\beta}\)</span>. This also means no impact is shown as <span class="math inline">\(\beta = 0\)</span>, with positive and negative numbers implying increases or decreases in odds, which is convenient. Other link options (not discussed here) include the probit and complementary log-log approaches. For a final piece of math, note the dispersion parameter for binomial data is not estimated - it is assumed to be 1.</p>
+<p>is straighforward: For one-unit increase in <span class="math inline">\(x_1\)</span>, <span class="math inline">\(\beta_1\)</span> dictates a constant difference in the outcome.</p>
+<p><span class="math display">\[\Delta{y_i} = (\beta_0 + \beta_1(\color{red}{x_{1i} + 1})) - (\beta_0 + \beta_1x_{1i})\]</span></p>
+<p><span class="math display">\[\Delta{y_i} = \beta_1\]</span></p>
+<p>In a linear logistic model w$, we have:</p>
+<p><span class="math display">\[log({\dfrac{p}{1-p}})=\beta_0 + \beta_1x_{1i}\]</span></p>
+<p>This corresponds to a log odds ratio! We can the use an exponential function to rewrite that model to get the odds ratio:</p>
+<p><span class="math display">\[\dfrac{p}{1-p}=exp(\beta_0 + \beta_1x_{1i} + \beta_2x_{2i})\]</span></p>
+<p>If we want to convert the odds into probability, given a coefficient <span class="math inline">\(\alpha\)</span> we would use the <strong>inverse logit link function</strong> (also known as the logistic function):</p>
+<p><span class="math display">\[ Pr(y_i = 1) = logit^{-1}(\alpha) = \dfrac{1}{1 + exp(-\alpha)} = (\dfrac{1}{1 + exp(-\alpha)}) * (\dfrac{exp(\alpha)}{exp(\alpha)}) = \dfrac{exp(\alpha)}{exp(\alpha) + 1}\]</span></p>
+<p>Now going back to our model, this gives us:</p>
+<p><span class="math display">\[Pr(y_i = 1) = \dfrac{exp(\beta_0 +\beta_1 x_{1i})}{1 + exp{(\beta_0 + \beta_1x_{1i})}}\]</span></p>
+<p>Since the inverse link is nonlinear, it is difficult to interpret the coefficient. However, we can look what happens to the differences for a one-unit change to <span class="math inline">\(x_1\)</span>:</p>
+<p><span class="math display">\[\Delta{y_i} = \dfrac{\exp(\beta_0 + \beta_1(\color{red}{x_{1i} + 1}))}{1 + \exp{(\beta_0 + \beta_1(\color{red}{x_{1i} + 1}) })} - \dfrac{\exp(\beta_0 + \beta_1x_{1i} )}{1 + \exp{(\beta_0 + \beta_1x_{1i}  )}}\]</span></p>
+<p><span class="math display">\[\Delta{y_i} = \exp(\beta_1)\ \]</span></p>
+<p>As <span class="math inline">\(x_1\)</span> increases by one unit, the odds increase by a factor of <span class="math inline">\(\exp(\beta_1)\)</span>. Note that the odds values here are considered when all other parameters are kept constant.</p>
+<p>From <span class="citation" data-cites="workshop"><em>Workshop 6: Generalized Linear Models</em> (<a href="#ref-workshop" role="doc-biblioref">n.d.</a>)</span></p>
+</details>
+<p>This also means no impact is shown as <span class="math inline">\(\beta = 0\)</span>, with positive and negative numbers implying increases or decreases in odds, which is convenient. Other link options (not discussed here) include the probit and complementary log-log approaches. For a final piece of math, note the dispersion parameter for binomial data is not estimated - it is assumed to be 1.</p>
 <p>For example, <span class="citation" data-cites="blais2023">Blais, Johnson, and Koprowski (<a href="#ref-blais2023" role="doc-biblioref">2023</a>)</span> investigated how various factors impacted behavior in garter snakes (<em>Thamnophis cyrtopsis</em>).</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1219,7 +1323,7 @@ data:  behavior_table
 X-squared = 0.087924, df = 1, p-value = 0.7668</code></pre>
 </div>
 </div>
-<p>we find an answer that we can replicate using glm (since the outcome is a 0 or 1 here!). We do this using the <em>glm</em> function in base R, which is very similar to the <em>lm</em> function; the only difference is we now note the distribution we are exploring using the “family” argument. Note Bernoulli data is considered a subset of binomial data and thus classified as “binomial”.</p>
+<p>we find an answer that we can replicate using GLM (since the outcome is a 0 or 1 here!). We do this using the <em>glm</em> function in base R, which is very similar to the <em>lm</em> function; the only difference is we now note the distribution we are exploring using the “family” argument. Note Bernoulli data is considered a subset of binomial data and thus classified as “binomial”.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>as_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(movement<span class="sc">~</span>ageclass, behavior, <span class="at">family =</span> <span class="st">"binomial"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1628,6 +1732,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>Similar to a binomial model, we can exponentiate parameter values to aid interpretation, but this time it means how increasing the measured value by 1 leads to a multiplicative change in the outcome. Again, a coefficient value of 0 means no impact.</p>
 <p>So which is right? Here I might argue that “losing” data in the Poisson approach justifies the binomial (or quasi-binomial) approach.</p>
+<p>The Poission distribution also assumes a dispersion parameter of 1. When this is not true, options include using a quasi- approach (quasipossion) or a negative binomial GLM.</p>
+</section>
+<section id="negative-binomial-regression" class="level4">
+<h4 class="anchored" data-anchor-id="negative-binomial-regression">Negative binomial regression</h4>
+<p>Similar to poisson, but an additional parameter allows the mean to not be equal to the variance. Packages to build these models include <em>MASS</em>(glm.nb function).</p>
 </section>
 <section id="gamma-regression" class="level4">
 <h4 class="anchored" data-anchor-id="gamma-regression">Gamma regression</h4>
@@ -1867,10 +1976,6 @@ Number of Fisher Scoring iterations: 4</code></pre>
 <h4 class="anchored" data-anchor-id="beta-regression">Beta regression</h4>
 <p>Beta regression <span class="citation" data-cites="geissinger2022">(<a href="#ref-geissinger2022" role="doc-biblioref">Geissinger et al. 2022</a>)</span> is similar to logistic/binomial regression, but it focuses on true proportion data. In other words, whereas binomial regression focuses on modeling the number of successes in a given number of trials, beta regression focuses on the distribution of the probability parameter itself. If we are exploring this, it means we know the value can’t really be 0 or 1 (or we would have no variation), so responses may not be 0 or 1 (they must be in this range). Since “accidents” do happen and may lead to zeroes or ones in the data, there are options for adjusting the data to account for these issues <span class="citation" data-cites="corlatti2021">(p. 11, <a href="#ref-corlatti2021" role="doc-biblioref">Corlatti 2021</a>)</span>. This is useful if the outcome is between 0 and 1 (e.g.&nbsp;% cover, % nitrogen). Packages that can do beta analysis in R include <em>betareg</em> and <em>glmmTMB</em>.</p>
 </section>
-<section id="negative-binomial-regression" class="level4">
-<h4 class="anchored" data-anchor-id="negative-binomial-regression">Negative binomial regression</h4>
-<p>Similar to poisson, but an additional parameter allows the mean to not be equal to the variance. Packages to build these models include <em>MASS</em>(glm.nb function).</p>
-</section>
 <section id="non-linear-options" class="level4">
 <h4 class="anchored" data-anchor-id="non-linear-options">Non-linear options</h4>
 <p>All the options above still rely on a linear-link property: the systematic component of the model has a linear relationship to a predictor (in glm, we just transformed this back to the raw data as needed). However, we may instead actually want a non-linear relationship between our predictors and outcome. In fact, we may actually want to compare various linear and non-linear fits <span class="citation" data-cites="dornberger2016">(e.g., <a href="#ref-dornberger2016" role="doc-biblioref">Dornberger et al. 2016</a>)</span>or determine parameter values for a specified relationship.</p>
@@ -1981,7 +2086,7 @@ whelk_lm         3.000000 3947.579</code></pre>
 <p>Even partial collinearity will lead to an increase in Type II errors <span class="citation" data-cites="zuur2010">(<a href="#ref-zuur2010" role="doc-biblioref">A. F. Zuur, Ieno, and Elphick 2010</a>)</span>. To put it simply, partitioning variance among related predictors is hard. For this reason, a few approaches may be used.</p>
 <section id="check-for-issues" class="level4">
 <h4 class="anchored" data-anchor-id="check-for-issues">Check for issues</h4>
-<p>The first step is identifying issues. From the outset, relationships among predictor variables can be assessed using the <em>pairs</em> function in R. If two variables are highly correlated (r<sup>2</sup> &gt; .8 is a general limit), only one should be included in the model. Similarly, variance inflation factors (vif) can be assessed for the final and other models to consider this issues (all this is covered in the <a href="../../content/chapters/Combining_numerical_and_categorical_predictors.html" target="_blank">previous chapter that introduces multiple regression</a>. If this occurs, some variables may need to be removed from consideration.</p>
+<p>The first step is identifying issues. From the outset, relationships among predictor variables can be assessed using the <em>pairs</em> function in R. If two variables are highly correlated (r<sup>2</sup> &gt; .8 is a general limit), only one should be included in the model. Similarly, variance inflation factors (vif) can be assessed for the final and other models to consider this issues (all this is covered in the <a href="../../content/chapters/Combining_numerical_and_categorical_predictors.html">previous chapter that introduces multiple regression</a>. If this occurs, some variables may need to be removed from consideration.</p>
 </section>
 <section id="multivariate-methods" class="level4">
 <h4 class="anchored" data-anchor-id="multivariate-methods">Multivariate methods</h4>
@@ -2020,7 +2125,7 @@ whelk_lm         3.000000 3947.579</code></pre>
 </div>
 </div>
 </div>
-<p>How would you analyze this data? If we assume that each oyster was in its own space (and received cues from a unique predator) and is thus an independent measurement, you hopefully recognize this as a lm/ANOVA that you know how to analyze. If you need a reminder, see the <a href="../../content/chapters/Compare_means_among_populations.html" target="_blank">chapter on ANOVAs.</a></p>
+<p>How would you analyze this data? If we assume that each oyster was in its own space (and received cues from a unique predator) and is thus an independent measurement, you hopefully recognize this as a lm/ANOVA that you know how to analyze. If you need a reminder, see the <a href="../../content/chapters/Compare_means_among_populations.html">chapter on ANOVAs.</a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>growth_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(growth<span class="sc">~</span>predator_cue, experiment)</span>
 <span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(growth_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2065,7 +2170,7 @@ Residuals      1.68 72
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>This experimental approach takes a lot of space (and time!). If I have a large tank, I may instead decide to put a few more oysters in there. At an extreme, let’s instead use one tank was used for each predator level, with twenty-five oysters measured in each tank.However, this means our measurements are connected; remember <a href="../../content/chapters/More_ANOVAs.html" target="_blank">blocking and paired tests</a>)? So our data may look more like</p>
+<p>This experimental approach takes a lot of space (and time!). If I have a large tank, I may instead decide to put a few more oysters in there. At an extreme, let’s instead use one tank was used for each predator level, with twenty-five oysters measured in each tank.However, this means our measurements are connected; remember <a href="../../content/chapters/More_ANOVAs.html">blocking and paired tests</a>? So our data may look more like</p>
 <!-- helpful here https://verynormal.substack.com/p/office-hours-1-simulating-from-mixed; https://aosmith.rbind.io/2018/04/23/simulate-simulate-part-2/ -->
 <div class="cell">
 <div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
@@ -2238,7 +2343,7 @@ tankj -1     0     0     0     0
 tankk  0    -1    -1     0     0   </code></pre>
 </div>
 </div>
-<p>though the output is confusing. In general, the issue here is each container only measures one level of predator risk, so risk and container are completely confounded. It’s because the container variable can fully “explain” the predation levels - this goes back to the singularity issues we discussed in introducing linear models. This is because each container only contributes to one level of other traits. If instead each unit contributed to multiple levels, like in our <a href="../../content/chapters/More_ANOVAs.html" target="blank">feather experiment</a>, as show below) this isn’t an issue.</p>
+<p>though the output is confusing. In general, the issue here is each container only measures one level of predator risk, so risk and container are completely confounded. It’s because the container variable can fully “explain” the predation levels - this goes back to the singularity issues we discussed in introducing linear models. This is because each container only contributes to one level of other traits. If instead each unit contributed to multiple levels, like in our <a href="../../content/chapters/More_ANOVAs.html">feather experiment</a>, as show below) this isn’t an issue.</p>
 </section>
 <section id="random-effects" class="level5">
 <h5 class="anchored" data-anchor-id="random-effects">Random effects</h5>
@@ -2983,8 +3088,8 @@ squid_lm    25 3643.629</code></pre>
 <table class="table">
 <caption>Correlation structure options</caption>
 <colgroup>
-<col style="width: 20%">
-<col style="width: 79%">
+<col style="width: 25%">
+<col style="width: 75%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -3136,6 +3241,9 @@ Payne, Elizabeth H., James W. Hardin, Leonard E. Egede, Viswanathan Ramakrishnan
 <div id="ref-reitan2016" class="csl-entry" role="listitem">
 Reitan, Trond, and Anders Nielsen. 2016. <span>“Do Not Divide Count Data with Count Data; A Story from Pollination Ecology with Implications Beyond.”</span> <em>PLOS ONE</em> 11 (2): e0149129. <a href="https://doi.org/10.1371/journal.pone.0149129">https://doi.org/10.1371/journal.pone.0149129</a>.
 </div>
+<div id="ref-series" class="csl-entry" role="listitem">
+Series, Developed, and maintained by the contributors of the QCBS R. Workshop. n.d. <em>Workshop 6: Generalized Linear Models</em>. <a href="https://r.qcbs.ca/workshop06/book-en/index.html">https://r.qcbs.ca/workshop06/book-en/index.html</a>.
+</div>
 <div id="ref-shatz2023" class="csl-entry" role="listitem">
 Shatz, Itamar. 2023. <span>“Assumption-Checking Rather Than (Just) Testing: The Importance of Visualization and Effect Size in Statistical Diagnostics.”</span> <em>Behavior Research Methods</em>, March. <a href="https://doi.org/10.3758/s13428-023-02072-x">https://doi.org/10.3758/s13428-023-02072-x</a>.
 </div>
@@ -3150,6 +3258,9 @@ Warton, David I., Mitchell Lyons, Jakub Stoklosa, and Anthony R. Ives. 2016. <sp
 </div>
 <div id="ref-warton2010" class="csl-entry" role="listitem">
 Warton, David, and Francis Hui. 2010. <span>“The Arcsine Is Asinine: The Analysis of Proportions in Ecology.”</span> <em>Ecology</em> 92 (1): 3–10. <a href="https://doi.org/10.1890/10-0340.1">https://doi.org/10.1890/10-0340.1</a>.
+</div>
+<div id="ref-workshop" class="csl-entry" role="listitem">
+<em>Workshop 6: Generalized Linear Models</em>. n.d. <a href="https://r.qcbs.ca/workshop06/book-en/index.html">https://r.qcbs.ca/workshop06/book-en/index.html</a>.
 </div>
 <div id="ref-zuur2010" class="csl-entry" role="listitem">
 Zuur, Alain F., Elena N. Ieno, and Chris S. Elphick. 2010. <span>“A Protocol for Data Exploration to Avoid Common Statistical Problems.”</span> <em>Methods in Ecology and Evolution</em> 1 (1): 3–14. https://doi.org/<a href="https://doi.org/10.1111/j.2041-210X.2009.00001.x">https://doi.org/10.1111/j.2041-210X.2009.00001.x</a>.
