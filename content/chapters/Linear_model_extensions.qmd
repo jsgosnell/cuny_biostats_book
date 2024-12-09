@@ -34,9 +34,8 @@ to unify most/many tests from classical statistics. In fact, most of the
 ranked tests we've developed can actually be run as linear models when n
 \>15. For example, we can go back to our Wilcox-Mann Whitney U tests
 (for 2 populations) and Kruskal-Wallis (for 3+) from the [comparing
-means among groups
-chapter](Compare_means_among_populations.qmd){target="_blank"} and note
-the outcome from a *wilcox.test*
+means among groups chapter](Compare_means_among_populations.qmd) and
+note the outcome from a *wilcox.test*
 
 ```{r}
 two_species_subset <- iris[iris$Species!="setosa",]
@@ -294,7 +293,7 @@ Two things should be noted regarding this approach and transformations
 in general:
 
 -   The Box-Cox approach requires a model - it still focused on
-    transforming data so that *residuals* meet assumptions. Datashould
+    transforming data so that *residuals* meet assumptions. Data should
     not be transformed before model assumptions are analyzed to ensure
     it is necessary.
 
@@ -324,7 +323,7 @@ Let's use data (not residuals) to show how different distributions of
 data connect to q-q plots and consider possible fixes (always fit a
 model first for real analysis!). For example, we can return to our
 right-skewed blue jay data [from the summarizing data
-chapter](summarizing_data.qmd)(target="\_blank")(idea from [@hunt]) .
+chapter](summarizing_data.qmd)(idea from [@hunt]) .
 
 ```{r, message=F}
 set.seed(19)
@@ -451,6 +450,10 @@ linear relationship.
 
 ### Different data require a different approach: Introducing generalized linear models
 
+Note: much of this follows/borrows heavily from the [QCBS workshop on
+generalized linear
+models](https://r.qcbs.ca/workshop06/book-en/index.html)[@series].
+
 The linear relationship may be inappropriate because our data doesn't
 fit it! For example, if we are modeling proportions, estimates less than
 0 or below 1 do not make sense, but a linear model doesn't account for
@@ -467,45 +470,118 @@ distribution of the data. This typically requires a few parameters (or
 at least one!). For example, for normally-distributed data, the two
 parameters that describe the distribution are the mean and the variance.
 Note these parameters are independent (we covered all this when we
-[introduced
-normality](Tests_for_continuous_data_from_one_sample.qmd){target="\_blank").
-There is also a systematic component, where a number of covariates and
-data points produce an estimate. Finally, there is the link function,
-which connects that estimate to the data distribution (this maintains
+[introduced normality](Tests_for_continuous_data_from_one_sample.qmd).
+There is also a systematic component, where a number of covariates
+relate linearly to a predictor. Finally, there is the link function,
+which connects that predictor to the data distribution (this maintains
 the linearity of the model). Notice this means the link connects to the
 distribution of the data, not the data itself (which is what
 transforming the data is doing).
 
 So far we have focused on the *mean* of the data, and the estimate is
-the mean, so the link has been implied. We can *generalize* this setup
-to include other distributions in the exponential family (and now others
-[@applied2022, ch. 15]). While we won't develop all the math,
-exponential family distributions all have a canonical parameter (the
-mean for Gaussian, or normal, data) and a dispersion parameter (the
-variance for normal data). Different distributions have different
-relationships between these two parameters. For normal data, there is
-*no* relationship, so the variance is constant. This is why we have
-assumed *homoscedasticity* of residuals for linear models. This is not
-true for other families; for example, the variance in binomial data
-depends on the *p* parameter (as we noted in the [chapter introducing
-binomial data](Binomial.qmd){target="\_blank")), and for the Poisson
-distribution (used for count data) the variance is the mean. Different
-families also use different link functions, which can impact how we
-interpret coefficient values and associated impacts. In general, impacts
-and outcomes will need to be transformed (based on the link) to the
-actual scale.
+the mean. For example, in simple linear regresssion we predict the mean
+response of $Y$ for each level of $X$. This is equivalent to predicting
+$\mu$, so we can write
 
-We can specify other data distributions using *generalized linear
-models* (which are different than general linear models, which is
-another term used to describe our "regular" linear models). These models
-are also known as glm or glim (we'll use the glm jargon here). These
-models let us consider data that do not fit a normal approximation.
+$Y$= $X\beta$
+
+or
+
+$\mu$= $X\beta$
+
+where:
+
+-   $Y$ (or $\mu$ is the predicted value of the response variable
+
+-    $X$ is the model matrix (*i.e.* predictor variables)
+
+-   $β$ is the estimated parameters from the data (*i.e.* intercept and
+    slope). $XB$ is called the **linear predictor**
+
+Earlier we also had $E$ , an error term that account for deviations in
+our data from the expected outcome. We still have error but will not
+write that for clarity at this point.
+
+Since $Y = \mu$, the link has been implied, so we can think of this as
+
+$$\mu = \underbrace{X\beta}_{Linear~component}$$
+
+owever, we can *generalize* this setup to include other distributions in
+the exponential family (and now others [@applied2022, ch. 15]). The
+exponential family is a group of distributions where the probability
+distribution follows a specific formula. While we won't develop all the
+math, exponential family distributions all have a canonical parameter
+(the mean for Gaussian, or normal, data) and a dispersion parameter (the
+variance for normal data). In doing that, we predict
+
+$$\eta_i = \underbrace{X\beta}_{Linear~component}$$
+
+and link $\eta$ to our true parameter of interest using a link function.
+
+$$g(\mu) = \eta$$
+
+The main idea is we can keep a systematic component with a linear
+relationship for data that doesn't really have that relationship and
+that don't fit the normal approximation. We call models using this
+approach *generalized linear models* (which are different than general
+linear models, which is another term used to describe our "regular"
+linear models). These models are also known as GLM or GLIM (we'll use
+the GLM jargon here).
+
+For example, we can consider binomial data where $Y ∼ B(n, p)$. This
+type of data has to be between 0 and 1 (and only takes fractional values
+in between that depend on the sample size!). We introduced this type of
+data in the [chapter introducing binomial data](Binomial.qmd). If we use
+a basic linear model, we would predict outcomes that don't match the
+data. However, instead of focusing on the $p$ parameter like we did
+before, let's consider the odds of something happening. We can estimate
+
+$$
+\mu = N*p 
+$$
+
+(we introduced this normal approximation earlier too), and find the odds
+as
+
+$$\text{odds}_i = \frac{\mu_i}{1-\mu_i}$$
+
+this takes us to a `0` to `+Inf` scale for our predictor. We can then
+take the log of this outcome, which we call the logit
+
+$$\text{logit}(\mu_i) = \log(\frac{\mu_i}{1-\mu_i})$$
+
+which can now takes values from `-Inf` to `+Inf` . If we predict this
+value, so that
+
+$$g(\mu) = \eta = \text{logit}(\mu_i) = \log(\frac{\mu_i}{1-\mu_i}) = X\beta $$
+
+we have constructed a *generalized linear model*.
+
+For this class I don't expect you to derive the appropriate links.
+Common links for various types of data are shown below, and in R we can
+identify these using a *family* argument in the *glm* function
+(introduced below).
+
+| Distribution of $Y$ | Link function name | Link function                                  | Model                                                                 | `R family`                        |
+|----------------|---------------|--------------|--------------|--------------|
+| Normal              | Identity           | $g(\mu) = \mu$                                 | $\mu = \mathbf{X} \boldsymbol{\beta}$                                 | `gaussian(or just run lm)`        |
+| Bernoulli/Binomial  | Logit              | $g(\mu) = \log\left(\dfrac{\mu}{1-\mu}\right)$ | $\log\left(\dfrac{\mu}{1-\mu}\right) = \mathbf{X} \boldsymbol{\beta}$ | `binomial(default link is logit)` |
+| Poisson             | Log                | $g(\mu) = \log(\mu)$                           | $-\mu^{-1} = \mathbf{X} \boldsymbol{\beta}$                           | `poisson`                         |
+| Exponential         | Negative Inverse   | $g(\mu) = -\mu^{-1}$                           | $\log(\mu) = \mathbf{X} \boldsymbol{\beta}$                           | `Gamma`                           |
+
+However, the major issue is realizing these links mean interpreting
+coefficient values requires an additional step to *transform* them back
+to impacts on the actual parameter of interest. Examples are provided
+below.
+
+When should we use GLMs? These various data types (and some other
+distributions we'll demonstrate) match some common real-world scenarios.
 @bolker2008 has an excellent review of when various distributions should
-be used. The table below gives some of the more common distributions and
-notes on their usage.
+be used. The table below also lists some of the more common
+distributions and notes on their usage.
 
 | Distribution       | Typical usage, notes, and examples                                                                                                                                                    |
-|------------------------------------|------------------------------------|
+|------------------|-----------------------------------------------------|
 | ***Continuous***   |                                                                                                                                                                                       |
 | Gaussian/normal    | continuous variables, or variables connected to large sample sizes and not extreme values (remember the z-test approximation for $\chi^2$ tests?)                                     |
 | Gamma              | Amount of time until a certain number of events takes place (how long do you wait for a parking spot?); variance changes with mean; related to negative binomial                      |
@@ -521,18 +597,27 @@ notes on their usage.
 
 : Connections between data distributions and real-world data
 
-GLM make different assumptions (though everyone does not agree on what
-they are!). While we still need independence of the residuals (or some
-extension, see below), they no longer need to be normally distributed
-[@zuur2007, p. 86-87; @zuur2009, section 9.8.3] (though normality may
-hold at large sample sizes for Pearson [@agresti2007, p. 87] or deviance
+Different distributions also have different relationships between the
+variance and mean (or between the canonical and dispersion parameter for
+distributions in the exponential family). For normal data, there is *no*
+relationship, so the variance is constant. This is why we have assumed
+*homoscedasticity* of residuals for linear models. This is not true for
+other families; for example, the variance in binomial data depends on
+the *p* parameter (as we noted in the [chapter introducing binomial
+data](Binomial.qmd)), and for the Poisson distribution (used for count
+data) the variance is the mean.
+
+These relationships are reflected in the assumptions for a GLM (though
+everyone does not agree on what they are!). First, we need to ensure the
+correct family (and thus mean-variance link) is chosen.While we still
+need independence of the residuals (or some extension, see below), they
+no longer need to be normally distributed [@zuur2007, p. 86-87;
+@zuur2009, section 9.8.3; @fox2016] (though normality may hold at large
+sample sizes for Pearson [@agresti2007, p. 87] or deviance
 [@montgomery2012, section 13.4.4]
 <!-- https://stats.stackexchange.com/questions/92394/checking-residuals-for-normality-in-generalised-linear-models; https://online.stat.psu.edu/stat504/lesson/6/6.1 -->
 residuals, and some authors argue normality is required for testing
-[@feng2020]) . As noted above, non-Gaussian families don't assume a
-constant variance, so homogeneity assumptions would not be appropriate
-[@fox2016]. However, we need to ensure the correct family (and thus
-mean-variance link) is chosen.
+[@feng2020]) .
 
 In general, plotting the residuals against [@zuur2009]
 
@@ -563,7 +648,7 @@ diagnostic.
 
 <summary>What are residuals for a GLM?</summary>
 
-Residuals for a Gaussian/normal glm (what we've been doing) are easy to
+Residuals for a Gaussian/normal GLM (what we've been doing) are easy to
 calculate. We simply subtract the estimate for each data point (which is
 the average for similar observations!) from the observed. However,
 though these *raw* or *response* residuals exist for GLM, they rarely
@@ -605,55 +690,106 @@ point here for practice is any noted issues with optimization are due to
 this process. The ratio of likelihood values from various nested tests
 follow a $\chi^2$ distribution and can thus provide a p-value to compare
 possible models as noted in [introducing G
-tests](Compare_proportions_among_populations.qmd){target="\_blank")).This
-may be represented as a Z test for single parameters (since a $\chi^2$
+tests](Compare_proportions_among_populations.qmd).This may be
+represented as a Z test for single parameters (since a $\chi^2$
 distribution is a Z distribution squared - sometimes labelled a Wald
 test/statistic). F test reappear for distributions where we estimate the
 dispersion parameter (like the normal), but otherwise we can use the
 dispersion parameter to check that the right approach was taken.
 
-There are numerous types of GLMs. Here we outline some of the more
-common ones. Each of these deserves a much fuller treatment - remember,
-the intent here is to get you to a place to where you can begin working
-with them. @harrison2018 (which also covers mixed models (coming up!))
-provides an excellent review of these models, and fuller treatments are
-provided by @zuur2009 (chapters 8-11) and @fox2016 (chapters 14 - 15).
-For each I provide the most relevant math, an example (or two), and some
-immediate extensions.
+As you may infer from the numerous distributions mentioned above, there
+are a variety of GLMs. Here we outline some of the more common ones.
+Each of these deserves a much fuller treatment - remember, the intent
+here is to get you to a place to where you can begin working with them.
+@harrison2018 (which also covers mixed models (coming up!)) provides an
+excellent review of these models, and fuller treatments are provided by
+@zuur2009 (chapters 8-11) and @fox2016 (chapters 14 - 15). For each I
+provide the most relevant math, an example (or two), and some immediate
+extensions.
 
 #### Logistic regression: Bernoulli and binomial outcomes
 
 Logistic regression [@warton2010] focuses on modelling yes/no or
 success/failure outcomes (Bernoulli or binomial data) using the *logit*
-link (thus logistic regression). The easy-to-understand issue here is
-that we want to focus on probability ($\pi$), but that can only vary
-from 0 to 1. Linear models are thus inappropriate, but the logit link
-can be used where the systematic component of the model predicts
-
-$$
-logit(\pi) = \ln(\frac{\pi}{1-\pi}), \text{where } \pi \text{ is the probability for a given set of outcomes}
-$$
-
-This logit link is useful as it effectively connects the systematic
-component and real data (the purpose of the link). This link also allows
-coefficients to be interpreted as odds and odds ratios (introduced in
-the [comparing proportions among
+link (thus logistic regression). As noted above, this type of data uses
+the logit link. This link also allows coefficients to be interpreted as
+odds and odds ratios (introduced in the [comparing proportions among
 groups](Compare_proportions_among_populations.qmd)- we'll continue to
-see connections this chapter for logistic regression). Remember, the
-odds can be written as
+see connections to this chapter for logistic regression). For a given
+coefficient $\beta$, the logit link also means we can say a 1 unit
+increase in that single variable leads to a change in the odds ratio of
+$e^{\beta}$.
+
+<details>
+
+<summary>Some math if you want/need it</summary>
+
+Assume we have a binary outcome $y$ and one covariates $x_1$. For this
+situation, the probability of a successful outcome ( $y = 1$ ) is given
+by:
+
+$$Pr(y_i = 1) = p = g^{-1}(X\beta)$$
+
+where $g^{-1}()$ is the **inverse link function**.
+
+For the identity link, the interpretation of the $\beta_1$ coefficient
+(remember,
 
 $$
-\frac{\pi}{1-\pi}
+\beta = \begin{bmatrix}
+\beta_0\\
+\beta_1\
+\end{bmatrix}
 $$
 
-For a given coefficient $\beta$, the logit link also means we can say a
-1 unit increase in that single variable leads to a change in the odds
-ratio of $e^{\beta}$. This also means no impact is shown as $\beta = 0$,
-with positive and negative numbers implying increases or decreases in
-odds, which is convenient. Other link options (not discussed here)
-include the probit and complementary log-log approaches. For a final
-piece of math, note the dispersion parameter for binomial data is not
-estimated - it is assumed to be 1.
+is straighforward: For one-unit increase in $x_1$, $\beta_1$ dictates a
+constant difference in the outcome.
+
+$$\Delta{y_i} = (\beta_0 + \beta_1(\color{red}{x_{1i} + 1})) - (\beta_0 + \beta_1x_{1i})$$
+
+$$\Delta{y_i} = \beta_1$$
+
+In a linear logistic model w\$, we have:
+
+$$log({\dfrac{p}{1-p}})=\beta_0 + \beta_1x_{1i}$$
+
+This corresponds to a log odds ratio! We can the use an exponential
+function to rewrite that model to get the odds ratio:
+
+$$\dfrac{p}{1-p}=exp(\beta_0 + \beta_1x_{1i} + \beta_2x_{2i})$$
+
+If we want to convert the odds into probability, given a coefficient
+$\alpha$ we would use the **inverse logit link function** (also known as
+the logistic function):
+
+$$ Pr(y_i = 1) = logit^{-1}(\alpha) = \dfrac{1}{1 + exp(-\alpha)} = (\dfrac{1}{1 + exp(-\alpha)}) * (\dfrac{exp(\alpha)}{exp(\alpha)}) = \dfrac{exp(\alpha)}{exp(\alpha) + 1}$$
+
+Now going back to our model, this gives us:
+
+$$Pr(y_i = 1) = \dfrac{exp(\beta_0 +\beta_1 x_{1i})}{1 + exp{(\beta_0 + \beta_1x_{1i})}}$$
+
+Since the inverse link is nonlinear, it is difficult to interpret the
+coefficient. However, we can look what happens to the differences for a
+one-unit change to $x_1$:
+
+$$\Delta{y_i} = \dfrac{\exp(\beta_0 + \beta_1(\color{red}{x_{1i} + 1}))}{1 + \exp{(\beta_0 + \beta_1(\color{red}{x_{1i} + 1}) })} - \dfrac{\exp(\beta_0 + \beta_1x_{1i} )}{1 + \exp{(\beta_0 + \beta_1x_{1i}  )}}$$
+
+$$\Delta{y_i} = \exp(\beta_1)\ $$
+
+As $x_1$ increases by one unit, the odds increase by a factor of
+$\exp(\beta_1)$. Note that the odds values here are considered when all
+other parameters are kept constant.
+
+From @workshop
+
+</details>
+
+This also means no impact is shown as $\beta = 0$, with positive and
+negative numbers implying increases or decreases in odds, which is
+convenient. Other link options (not discussed here) include the probit
+and complementary log-log approaches. For a final piece of math, note
+the dispersion parameter for binomial data is not estimated - it is
+assumed to be 1.
 
 For example, @blais2023 investigated how various factors impacted
 behavior in garter snakes (*Thamnophis cyrtopsis*).
@@ -691,7 +827,7 @@ chisq.test(behavior_table, correct = F)
 
 ```
 
-we find an answer that we can replicate using glm (since the outcome is
+we find an answer that we can replicate using GLM (since the outcome is
 a 0 or 1 here!). We do this using the *glm* function in base R, which is
 very similar to the *lm* function; the only difference is we now note
 the distribution we are exploring using the "family" argument. Note
@@ -941,6 +1077,16 @@ coefficient value of 0 means no impact.
 So which is right? Here I might argue that "losing" data in the Poisson
 approach justifies the binomial (or quasi-binomial) approach.
 
+The Poission distribution also assumes a dispersion parameter of 1. When
+this is not true, options include using a quasi- approach (quasipossion)
+or a negative binomial GLM.
+
+#### Negative binomial regression
+
+Similar to poisson, but an additional parameter allows the mean to not
+be equal to the variance. Packages to build these models include
+*MASS*(glm.nb function).
+
 #### Gamma regression
 
 For an example of continuous data using glms, consider the work by
@@ -1066,8 +1212,9 @@ Here we see that the highest heat stress level is associated with a
 longer wasp development time. Why do the results seem contradictory?
 
 Again, this is due to the link function. For gamma models, the link is
-the inverse, so to determine the impact of a given coefficient on the
-raw data we would combine the intercept and coefficients in this way.
+the negative inverse, so to determine the impact of a given coefficient
+on the raw data we would combine the intercept and coefficients in this
+way.
 
 ```{r}
 1/(.05-.007)
@@ -1092,12 +1239,6 @@ there are options for adjusting the data to account for these issues [p.
 11, @corlatti2021]. This is useful if the outcome is between 0 and 1
 (e.g. % cover, % nitrogen). Packages that can do beta analysis in R
 include *betareg* and *glmmTMB*.
-
-#### Negative binomial regression
-
-Similar to poisson, but an additional parameter allows the mean to not
-be equal to the variance. Packages to build these models include
-*MASS*(glm.nb function).
 
 #### Non-linear options
 
@@ -1203,9 +1344,8 @@ limit), only one should be included in the model. Similarly, variance
 inflation factors (vif) can be assessed for the final and other models
 to consider this issues (all this is covered in the [previous chapter
 that introduces multiple
-regression](Combining_numerical_and_categorical_predictors.qmd){target="_blank"}.
-If this occurs, some variables may need to be removed from
-consideration.
+regression](Combining_numerical_and_categorical_predictors.qmd). If this
+occurs, some variables may need to be removed from consideration.
 
 #### Multivariate methods
 
@@ -1255,7 +1395,7 @@ How would you analyze this data? If we assume that each oyster was in
 its own space (and received cues from a unique predator) and is thus an
 independent measurement, you hopefully recognize this as a lm/ANOVA that
 you know how to analyze. If you need a reminder, see the [chapter on
-ANOVAs.](../chapters/Compare_means_among_populations.qmd){target="_blank"}
+ANOVAs.](../chapters/Compare_means_among_populations.qmd)
 
 ```{r}
 growth_lm <- lm(growth~predator_cue, experiment)
@@ -1268,8 +1408,7 @@ large tank, I may instead decide to put a few more oysters in there. At
 an extreme, let's instead use one tank was used for each predator level,
 with twenty-five oysters measured in each tank.However, this means our
 measurements are connected; remember [blocking and paired
-tests](../chapters/More_ANOVAs.qmd){target="_blank"})? So our data may
-look more like
+tests](../chapters/More_ANOVAs.qmd)? So our data may look more like
 
 <!-- helpful here https://verynormal.substack.com/p/office-hours-1-simulating-from-mixed; https://aosmith.rbind.io/2018/04/23/simulate-simulate-part-2/ -->
 
@@ -1427,8 +1566,8 @@ can fully "explain" the predation levels - this goes back to the
 singularity issues we discussed in introducing linear models. This is
 because each container only contributes to one level of other traits. If
 instead each unit contributed to multiple levels, like in our [feather
-experiment](../chapters/More_ANOVAs.qmd){target="blank"}, as show below)
-this isn't an issue.
+experiment](../chapters/More_ANOVAs.qmd), as show below) this isn't an
+issue.
 
 ##### Random effects
 
@@ -1918,13 +2057,13 @@ AICc(squid_fixed,squid_month, squid_lm)
 ```
 
 | Function      | Use                                                                                  |
-|---------------|--------------------------------------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | VarFixed      | Fixed variance - constant or multiplier/equation option                              |
 | VarIdent      | Variance differs across levels of some factor                                        |
 | VarPower      | Variance relates to some power (estimated) of another variable (similar to VarFixed) |
 | VarExp        | Variance proportional to e^variable^                                                 |
 | VarConstPower | Variance relates to a constant plus some variable ^constant^                         |
-| VarComb       | Variance proportional to e^variable\ \*\ constant^ (combines VarIdent and varExp)    |
+| VarComb       | Variance proportional to e^variable \* constant^ (combines VarIdent and varExp)      |
 
 : Correlation structure options
 
