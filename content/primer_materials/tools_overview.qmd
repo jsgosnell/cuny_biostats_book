@@ -52,8 +52,8 @@ and @bryan also supply excellent extended introduction and notes.
 ### Cloning a repository
 
 Video at [Accepting a github classroom assignment, cloning to posit
-cloud, working with rmarkdown, rendering, commit, and pushing](https://youtu.be/XWzyFDlpNlQ){target="_blank"}
-
+cloud, working with rmarkdown, rendering, commit, and
+pushing](https://youtu.be/XWzyFDlpNlQ){target="_blank"}
 
 After you join the github classroom, you'll make a clone of the
 assignment repository. You can do this on Positcloud or an installed
@@ -294,18 +294,19 @@ arrow!](/images/green_arrow.png){fig-alt="Image of commit pop-up window and git 
 ##### Potential error (very likely!)
 
 As of Fall 2021, Github no longer accepts usernames and passwords for
-authentication. However, posit Cloud may still ask for those since they
-once worked, so don't be surprised if you enter your password correctly
-but your attempt to create a repository (or push commits to it) still
-fails with a message like this.
+authentication. Github now requires a personal access token (PAT)
+instead. However, posit Cloud still asks for a password, not a PAT. If
+you enter your password or the incorrect PAT,your attempt to create a
+repository (or push commits to it) will fail with a message like this.
 
 ![If you see this, it means you need to setup or reauthorize a github
 token](/images/token_error.jpg){fig-alt="Image of common git error. Pop-up is labelled Git Pull.  States \"remote: Support for password authentication was removed on August 13, 2021. Please use a personal access token instead.\" Following lines offer instructions that are detailed below."}
 
-Github requires you to use a token to verify you have permission to make
-changes to repositories that you store there. To create and use a token,
-we will use two packages. To install them, first select Tools \> Install
-Packages.
+To create and use a token, we will use the *usethis* package. Here we
+also install a *gitcreds* package that can store the token on your
+machine (another option, and one that works very well if you install
+Rstudio on your own machine). To install them, first select Tools \>
+Install Packages.
 
 ![Install packages using the Tools\>Install packages
 option](/images/install_packages.png){fig-alt="Image of Rstudio/posit Cloud screen with Tools selected in top menu, then Install Packages circled."}
@@ -357,7 +358,13 @@ generate token. A new screen will appear
 ![A token will appear. Save it somewhere!](/images/token.png)
 
 Save the token somewhere (you'll never see it again once you close the
-window). Then go back to posit Cloud/Rstudio and run this code.
+window). This is your PAT. If you press commit again now, you can enter
+your github username and this token; the commit process should then
+work.
+
+You can also save the token to Rstudio, though this is less useful in
+positcloud (since every repository is like a new computer). To do this,
+go back to posit Cloud/Rstudio and run this code.
 
 ```{r, eval=FALSE}
 library(gitcreds)
