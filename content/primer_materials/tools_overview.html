@@ -781,14 +781,14 @@ What’s the difference between clone and fork? Click on the grey triangle
 </div>
 <section id="potential-error-very-likely" class="level5">
 <h5 class="anchored" data-anchor-id="potential-error-very-likely">Potential error (very likely!)</h5>
-<p>As of Fall 2021, Github no longer accepts usernames and passwords for authentication. However, posit Cloud may still ask for those since they once worked, so don’t be surprised if you enter your password correctly but your attempt to create a repository (or push commits to it) still fails with a message like this.</p>
+<p>As of Fall 2021, Github no longer accepts usernames and passwords for authentication. Github now requires a personal access token (PAT) instead. However, posit Cloud still asks for a password, not a PAT. If you enter your password or the incorrect PAT,your attempt to create a repository (or push commits to it) will fail with a message like this.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../..\images/token_error.jpg" class="img-fluid figure-img" alt="Image of common git error. Pop-up is labelled Git Pull.  States &quot;remote: Support for password authentication was removed on August 13, 2021. Please use a personal access token instead.&quot; Following lines offer instructions that are detailed below."></p>
 <figcaption>If you see this, it means you need to setup or reauthorize a github token</figcaption>
 </figure>
 </div>
-<p>Github requires you to use a token to verify you have permission to make changes to repositories that you store there. To create and use a token, we will use two packages. To install them, first select Tools &gt; Install Packages.</p>
+<p>To create and use a token, we will use the <em>usethis</em> package. Here we also install a <em>gitcreds</em> package that can store the token on your machine (another option, and one that works very well if you install Rstudio on your own machine). To install them, first select Tools &gt; Install Packages.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../..\images/install_packages.png" class="img-fluid figure-img" alt="Image of Rstudio/posit Cloud screen with Tools selected in top menu, then Install Packages circled."></p>
@@ -829,7 +829,8 @@ What’s the difference between clone and fork? Click on the grey triangle
 <figcaption>A token will appear. Save it somewhere!</figcaption>
 </figure>
 </div>
-<p>Save the token somewhere (you’ll never see it again once you close the window). Then go back to posit Cloud/Rstudio and run this code.</p>
+<p>Save the token somewhere (you’ll never see it again once you close the window). This is your PAT. If you press commit again now, you can enter your github username and this token; the commit process should then work.</p>
+<p>You can also save the token to Rstudio, though this is less useful in positcloud (since every repository is like a new computer). To do this, go back to posit Cloud/Rstudio and run this code.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gitcreds)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gitcreds_set</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
