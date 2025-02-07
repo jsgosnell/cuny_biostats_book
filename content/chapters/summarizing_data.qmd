@@ -666,7 +666,7 @@ ggplot(iris, aes(y=Sepal.Length, x=Species, fill=Species)) +
   geom_bar(stat = "summary", fun = "mean") +
   labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
        y= "Sepal length (cm)",
-       x= "Species")
+       x= "Species")+guides(fill=F)
 ```
 
 or the distribution using stacked histograms...
@@ -674,7 +674,7 @@ or the distribution using stacked histograms...
 ```{r, message=F}
 #| label: fig-stacked_histograms_all species 
 #| #| fig-cap: "Individual bars use colors to denote how many of each group fall in a given bin"  
-ggplot(iris, aes(x=Sepal.Length)) +     geom_histogram(aes(fill=Species))+    labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),        y= "Sepal length (cm)",        x= "Species")
+ggplot(iris, aes(x=Sepal.Length)) +     geom_histogram(aes(fill=Species))+    labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),        x= "Sepal length (cm)",        y= "Frequency")
 ```
 
 or box-and-whisker plots.
@@ -684,7 +684,7 @@ or box-and-whisker plots.
 #| #| fig-cap: "These display five-number summaries for each group"  
 ggplot(iris, aes(y=Sepal.Length, x=Species, fill=Species)) +
   geom_boxplot(aes(fill=Species))+
-  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),        y= "Sepal length (cm)", x= "Species")
+  labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),        y= "Sepal length (cm)", x= "Species")+guides(fill=F)
 ```
 
 We can also still just display the data for each group...
@@ -696,7 +696,8 @@ ggplot(iris, aes(y=Sepal.Length, x=Species, color=Species)) +
   geom_jitter() +
   labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
        y= "Sepal length (cm)",
-       x= "Species")
+       x= "Species")+
+  guides(color=F)
 ```
 
 We also need to ensure the different groups are visible when
@@ -712,9 +713,10 @@ This makes it easier to compare the groups.
  ggplot(iris, aes(x=Sepal.Length)) + 
    geom_histogram(aes(fill=Species))+ 
   labs(title=expression(paste("Sepal lengths of ",italic("I. species"))),
-       y= "Sepal length (cm)",
-       x= "Species")+
-   facet_wrap(~Species, ncol = 1)
+       x= "Sepal length (cm)",
+       y= "Frequency")+
+   facet_wrap(~Species, ncol = 1)+
+   guides(fill=F)
 ```
 
 Another option is to show the cumulative frequency distribution for each
@@ -743,8 +745,7 @@ ggplot(iris,aes(x=Species)) +
   labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
        x= "Species",
        y= "Frequency")+
-  scale_fill_manual("legend", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))+
-  guides(fill = "none")
+  scale_fill_manual("Flower Color", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))
 ```
 
 or not...
@@ -757,9 +758,7 @@ ggplot(iris,aes(x=Species)) +
   labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
        x= "Species",
        y= "Frequency")+
-  scale_fill_manual("legend", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))+
-  guides(fill = "none")
-
+  scale_fill_manual("Flower color", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))
 ```
 
 Other options include divergent plots, but those are best for 2 groups
@@ -796,7 +795,7 @@ ggplot(iris_summary,aes(x=Species, y=Frequency)) +
   labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
        x= "Species",
        y= "Frequency")+
-  scale_fill_manual("legend", values = c("blue" = "blue", "not blue" = "orange", "purple" = "purple"))
+  scale_fill_manual("Flower color", values = c("blue" = "blue", "not blue" = "orange", "purple" = "purple"))
 ```
 
 which we could flip by reversing all x/y arguments..
@@ -809,7 +808,7 @@ ggplot(iris_summary,aes(y=Species, x=Frequency)) +
   labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
        y= "Species",
        x= "Frequency")+
-  scale_fill_manual("legend", values = c("blue" = "blue", "not blue" = "orange", "purple" = "purple"))
+  scale_fill_manual("Flower color", values = c("blue" = "blue", "not blue" = "orange", "purple" = "purple"))
 ```
 
 or using an additional argument (**remember, a lot of this is for later
@@ -823,7 +822,7 @@ ggplot(iris_summary,aes(x=Species, y=Frequency)) +
   labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
        x= "Species",
        y= "Frequency")+
-  scale_fill_manual("legend", values = c("blue" = "blue", "not blue" = "orange", "purple" = "purple")) +
+  scale_fill_manual("Flower color", values = c("blue" = "blue", "not blue" = "orange", "purple" = "purple")) +
   coord_flip()
 ```
 
@@ -855,8 +854,7 @@ ggplot(iris,aes(x=Species)) +
   labs(title=expression(paste("Color of ",italic("I. virginica "), "flowers")),
        x= "Species",
        y= "Proportion")+
-  scale_fill_manual("legend", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))+
-  guides(fill = "none")
+  scale_fill_manual("Flower color", values = c("blue" = "blue", "orange" = "orange", "purple" = "purple"))
 ```
 
 Note we could also facet this data if we had other variables. For
