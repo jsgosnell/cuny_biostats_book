@@ -723,9 +723,9 @@ Fit: lm(formula = Sepal.Length ~ Species, data = iris)
 
 Linear Hypotheses:
                             Estimate Std. Error t value Pr(&gt;|t|)    
-versicolor - setosa == 0       0.930      0.103   9.033   &lt;1e-07 ***
-virginica - setosa == 0        1.582      0.103  15.366   &lt;1e-07 ***
-virginica - versicolor == 0    0.652      0.103   6.333   &lt;1e-07 ***
+versicolor - setosa == 0       0.930      0.103   9.033   &lt;1e-06 ***
+virginica - setosa == 0        1.582      0.103  15.366   &lt;1e-06 ***
+virginica - versicolor == 0    0.652      0.103   6.333   &lt;1e-06 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)</code></pre>
@@ -849,9 +849,9 @@ Effect size: 0.846 </code></pre>
 data:  Sepal.Length by Species
 number of bootstrap samples:  9999
 bootstrap p-value &lt; 1e-04 
-bootstrap difference of means (SE) = -1.581158 (0.1016544) 
+bootstrap difference of means (SE) = -1.580476 (0.1015809) 
 95 percent bootstrap percentile confidence interval:
- -1.78 -1.38
+ -1.780 -1.378
 
 Results without bootstrap:
 t = -15.386, df = 76.516, p-value &lt; 2.2e-16
@@ -1354,23 +1354,23 @@ Effect size: 0.176 </code></pre>
 <pre><code>Call:
 mcppb20(formula = Tonn.Hect ~ DistrictPosition, data = cane)
 
-           psihat  ci.lower  ci.upper p-value
-S vs. N -56.10126 -95.57366 -15.06998 0.00000
-S vs. E -12.51609 -49.38223  23.21721 0.36060
-S vs. W  39.25821   7.18592  75.25176 0.00000
-S vs. C  -0.97532 -31.23978  29.60029 0.88481
-N vs. E  43.58517   5.58878  81.41359 0.00000
-N vs. W  95.35948  61.04390 132.30973 0.00000
-N vs. C  55.12595  21.03712  88.58597 0.00000
-E vs. W  51.77430  18.50276  88.39299 0.00000
-E vs. C  11.54077 -15.51850  44.41528 0.27379
-W vs. C -40.23353 -60.79458 -16.73726 0.00000</code></pre>
+           psihat   ci.lower  ci.upper p-value
+S vs. N -56.10126 -101.32760 -19.93531 0.00000
+S vs. E -12.51609  -53.57533  27.15126 0.36060
+S vs. W  39.25821    8.47557  75.65685 0.00000
+S vs. C  -0.97532  -29.52372  37.27262 0.91152
+N vs. E  43.58517   -1.67920  84.96583 0.00668
+N vs. W  95.35948   57.90225 126.86419 0.00000
+N vs. C  55.12595   26.56963  87.69468 0.00000
+E vs. W  51.77430   19.31849  84.70255 0.00000
+E vs. C  11.54077  -18.14863  40.14506 0.27713
+W vs. C -40.23353  -60.27731 -19.57647 0.00000</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">mcppb20</span>(Tonn.Hect <span class="sc">~</span> DistrictPosition, cane)</span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(<span class="fu">as.numeric</span>(p<span class="sc">$</span>comp[,<span class="dv">6</span>]), <span class="st">"holm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.00000000 0.96160267 0.00000000 0.96160267 0.04006678 0.00000000
- [7] 0.00000000 0.00000000 0.96160267 0.00000000</code></pre>
+<pre><code> [1] 0.0000000 0.8013356 0.0000000 0.9649416 0.0000000 0.0000000 0.0000000
+ [8] 0.0000000 0.8013356 0.0000000</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co">#compare to lm apporach</span></span>
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(car)</span>
@@ -1402,14 +1402,14 @@ Linear Hypotheses:
            Estimate Std. Error t value Pr(&gt;|t|)    
 E - C == 0   39.360     14.249   2.762  0.04405 *  
 N - C == 0   20.252     14.487   1.398  0.62077    
-S - C == 0  -42.955     13.777  -3.118  0.01522 *  
+S - C == 0  -42.955     13.777  -3.118  0.01526 *  
 W - C == 0   -7.317     11.298  -0.648  0.96582    
-N - E == 0  -19.108     14.601  -1.309  0.67821    
+N - E == 0  -19.108     14.601  -1.309  0.67823    
 S - E == 0  -82.315     13.896  -5.924  &lt; 0.001 ***
 W - E == 0  -46.677     11.444  -4.079  &lt; 0.001 ***
 S - N == 0  -63.207     14.141  -4.470  &lt; 0.001 ***
-W - N == 0  -27.569     11.739  -2.348  0.12593    
-W - S == 0   35.638     10.850   3.285  0.00872 ** 
+W - N == 0  -27.569     11.739  -2.348  0.12601    
+W - S == 0   35.638     10.850   3.285  0.00874 ** 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)</code></pre>
@@ -1733,10 +1733,10 @@ alternative hypothesis: two.sided</code></pre>
 
 data:  drug_b and drug_g
 number of bootstrap samples:  9999
-bootstrap p-value = 0.0206 
-bootstrap difference of means (SE) = -0.9932915 (0.3532628) 
+bootstrap p-value = 0.019 
+bootstrap difference of means (SE) = -0.9927412 (0.353871) 
 95 percent bootstrap percentile confidence interval:
- -1.7120238 -0.3095238
+ -1.719048 -0.300000
 
 Results without bootstrap:
 t = -2.5454, df = 10.701, p-value = 0.02774
@@ -1940,10 +1940,10 @@ Upper Achieved CI     0.9787 -0.2410 -0.0140</code></pre>
 
 data:  Color_index by Feather
 number of bootstrap samples:  9999
-bootstrap p-value = 0.0046 
-bootstrap difference of means (SE) = -0.1368876 (0.03717213) 
+bootstrap p-value = 0.0026 
+bootstrap difference of means (SE) = -0.137064 (0.03707333) 
 95 percent bootstrap percentile confidence interval:
- -0.2080656 -0.0627500
+ -0.21012500 -0.06280938
 
 Results without bootstrap:
 t = -3.56, df = 29.971, p-value = 0.00126
@@ -1964,10 +1964,10 @@ sample estimates:
 
 data:  Color_index by Feather
 number of bootstrap samples:  9999
-bootstrap p-value = 0.0008001 
-bootstrap mean of the differences (SE) = -0.1369048 (0.0322993) 
+bootstrap p-value = 0.001 
+bootstrap mean of the differences (SE) = -0.1375529 (0.03237547) 
 95 percent bootstrap percentile confidence interval:
- -0.20437500 -0.07462188
+ -0.20319375 -0.07543438
 
 Results without bootstrap:
 t = -4.0647, df = 15, p-value = 0.001017
@@ -1984,7 +1984,7 @@ mean of the differences
 </section>
 <section id="section-6" class="level3">
 <h3 class="anchored" data-anchor-id="section-6">7</h3>
-<p>Find an example of a one-way ANOVA from a paper that is related to your research or a field of interest (hint: use Google Scholar or another search engine to search for a keyword of interest plus ANOVA). Make sure you understand the connections between the methods, results, and graphs. Briefly answer the following questions</p>
+<p>Find an example of a one-way ANOVA from a research article that is related to your research or a field of interest (hint: use Google Scholar or another search engine to search for a keyword of interest plus ANOVA). Make sure you understand the connections between the methods, results, and graphs. Briefly answer the following questions</p>
 <ul>
 <li>What was the dependent variable?</li>
 <li>What were the independent variables?</li>
