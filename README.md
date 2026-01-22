@@ -28,7 +28,7 @@ associated material
   * originally at https://sites.google.com/view/biostats/home
 * tutorials for many lessons using Swirl (https://swirlstats.com/) housed at https://github.com/jsgosnell/JSG_swirl_lessons
     * developed with support of a QUBES working group (https://qubeshub.org/community/groups/teaching_r_fmn)
-* this book!
+* this book https://jsgosnell.github.io/cuny_biostats_book/!
    * Original .R and .rmd files from are were migrated into a new book using quarto  
 
 
