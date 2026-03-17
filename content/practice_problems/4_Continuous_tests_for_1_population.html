@@ -612,7 +612,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>From lecture! Consider if average height of males training at the Australian Institute of Sport is different than average of human population.</p>
 <p>These are all one sample tests, but they differ in what we know. If we know the variance of our population, we use a z test (function in BSDA package).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/oz/ais.txt"</span>, <span class="at">header =</span> T)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://docs.google.com/spreadsheets/d/e/2PACX-1vTFssjfGZ9w8Ng1qWVO4tRSZ4Cp2LpMeTVmler4_mcRhSk6932yLXi2b1a0V1b1tJlZ7rYpIhlgJ15f/pub?gid=1591196674&amp;single=true&amp;output=csv"</span>, <span class="at">header =</span> T, <span class="at">stringsAsFactors =</span> T)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BSDA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: lattice</code></pre>
@@ -744,7 +744,7 @@ probability of success
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(boostrap_outcomes<span class="sc">$</span>mean, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-183.9968 186.9917 </code></pre>
+183.9596 187.0065 </code></pre>
 </div>
 </div>
 <p>or using functions in the <em>boot</em> library</p>
@@ -779,7 +779,7 @@ Attaching package: 'boot'</code></pre>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>( results<span class="sc">$</span>t, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>) ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    2.5%    97.5% 
-184.0492 187.0179 </code></pre>
+184.0283 187.0350 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(results)     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -798,7 +798,7 @@ Level      Normal              Basic
 95%   (184.0, 187.0 )   (183.9, 187.0 )  
 
 Level     Percentile            BCa          
-95%   (184.0, 187.1 )   (184.1, 187.1 )  
+95%   (184.0, 187.1 )   (184.0, 187.1 )  
 Calculations and Intervals on Original Scale</code></pre>
 </div>
 </div>
@@ -812,9 +812,9 @@ Calculations and Intervals on Original Scale</code></pre>
 data:  sport[sport$Sex == "male", "Ht"]
 number of bootstrap samples:  9999
 bootstrap p-value &lt; 1e-04 
-bootstrap mean of x (SE) = 185.5021 (0.7769843) 
+bootstrap mean of x (SE) = 185.4956 (0.7775328) 
 95 percent bootstrap percentile confidence interval:
- 183.9735 187.0345
+ 183.9539 187.0226
 
 Results without bootstrap:
 t = 12.658, df = 101, p-value &lt; 2.2e-16
@@ -1008,8 +1008,7 @@ Attaching package: 'VGAM'</code></pre>
 <h4 class="anchored" data-anchor-id="section-6">7</h4>
 <p>Using data from Australian athletes (http://www.statsci.org/data/oz/ais.html for details), determine if the average male training at the Australian Institute of Sport differs in weight from the average Australian male (85.9 kg) using bootstrapping techniques. Data at</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/oz/ais.txt"</span>, <span class="at">header =</span> T, </span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://docs.google.com/spreadsheets/d/e/2PACX-1vTFssjfGZ9w8Ng1qWVO4tRSZ4Cp2LpMeTVmler4_mcRhSk6932yLXi2b1a0V1b1tJlZ7rYpIhlgJ15f/pub?gid=1591196674&amp;single=true&amp;output=csv"</span>, <span class="at">header =</span> T, <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
