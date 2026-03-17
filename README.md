@@ -3,8 +3,8 @@
 
 [viewable](https://jsgosnell.github.io/cuny_biostats_book/)
 
-This site is a work in progress! Original .R and .rmd files from are
-being migrated into a new book using quarto.
+This site is a work in progress! 
+
 Developed with support from Baruch College's Center for Teaching and Learning 
 in conjunction with other BIO 2100 OER materials 
 https://sites.google.com/view/biostats/home
@@ -23,11 +23,13 @@ Teaching and Learning have supported the continued development of the class.
 
 The class now includes 
 
-* website (https://sites.google.com/view/biostats/home) housing slides and 
+* website (https://jsgosnell.github.io/cuny_biostats_website/) housing slides and 
 associated material
-* tutorials for many lessons using Swirl (https://swirlstats.com/)
+  * originally at https://sites.google.com/view/biostats/home
+* tutorials for many lessons using Swirl (https://swirlstats.com/) housed at https://github.com/jsgosnell/JSG_swirl_lessons
     * developed with support of a QUBES working group (https://qubeshub.org/community/groups/teaching_r_fmn)
-* this book!
+* this book https://jsgosnell.github.io/cuny_biostats_book/!
+   * Original .R and .rmd files from are were migrated into a new book using quarto  
 
 
 Template from https://github.com/nmfs-opensci/NOAA-quarto-simple.  
