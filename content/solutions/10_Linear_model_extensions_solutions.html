@@ -727,8 +727,8 @@ Fit: lmer(formula = FL ~ Treatment_new + (1 | Container), data = snail)
 
 Linear Hypotheses:
                                      Estimate Std. Error z value Pr(&gt;|z|)   
-Single predator - Control == 0        -2.2159     0.7295  -3.037  0.00675 **
-Two predators - Control == 0          -1.8844     0.7353  -2.563  0.02808 * 
+Single predator - Control == 0        -2.2159     0.7295  -3.037  0.00676 **
+Two predators - Control == 0          -1.8844     0.7353  -2.563  0.02796 * 
 Two predators - Single predator == 0   0.3315     0.7326   0.453  0.89328   
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -776,30 +776,30 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <h3 class="anchored" data-anchor-id="section-1">2</h3>
 <p>(From OZDasl) The data give the ambient temperature and the number of primary O-rings damaged for 23 of the 24 space shuttle launches before the launch of the space shuttle Challenger on January 20, 1986. (Challenger was the 25th shuttle. One engine was lost at sea and could not be examined.) Each space shuttle contains 6 primary O-rings.</p>
 <p>Note these are counts. We can analyze this data using a Poisson distribution or binomial. Make sure you understand why each one is possible, which one is better, and carry out the analysis. Data is available @</p>
-<p>http://www.statsci.org/data/general/challenger.txt</p>
+<p>https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/challenger.txt</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>rings <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/general/challenger.txt"</span>, </span>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>rings <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/challenger.txt"</span>, </span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">header =</span> T)</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#can do as poisson</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>rings_poisson <span class="ot">&lt;-</span> <span class="fu">glm</span>(Damaged <span class="sc">~</span> Temp, rings, <span class="at">family =</span> <span class="st">"poisson"</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>rings_poisson <span class="ot">&lt;-</span> <span class="fu">glm</span>(damaged <span class="sc">~</span> temperature, rings, <span class="at">family =</span> <span class="st">"poisson"</span>)</span>
 <span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rings_poisson)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-glm(formula = Damaged ~ Temp, family = "poisson", data = rings)
+glm(formula = damaged ~ temperature, family = "poisson", data = rings)
 
 Coefficients:
-            Estimate Std. Error z value Pr(&gt;|z|)  
-(Intercept)   5.9691     2.7628   2.161   0.0307 *
-Temp         -0.1034     0.0430  -2.405   0.0162 *
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) 10.56717    2.60944   4.050 5.13e-05 ***
+temperature -0.17466    0.04333  -4.031 5.55e-05 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 (Dispersion parameter for poisson family taken to be 1)
 
-    Null deviance: 22.434  on 22  degrees of freedom
-Residual deviance: 16.834  on 21  degrees of freedom
-AIC: 36.061
+    Null deviance: 32.322  on 22  degrees of freedom
+Residual deviance: 13.475  on 21  degrees of freedom
+AIC: 32.956
 
 Number of Fisher Scoring iterations: 6</code></pre>
 </div>
@@ -809,80 +809,80 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table (Type III tests)
 
-Response: Damaged
-     LR Chisq Df Pr(&gt;Chisq)  
-Temp   5.6004  1    0.01796 *
+Response: damaged
+            LR Chisq Df Pr(&gt;Chisq)    
+temperature   18.846  1  1.417e-05 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#or binomial (preffered as we can add info (number damaged and not!))</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>rings_binomial <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Damaged, <span class="dv">6</span> <span class="sc">-</span> Damaged) <span class="sc">~</span> Temp, rings, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>rings_binomial <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(damaged, <span class="dv">6</span> <span class="sc">-</span> damaged) <span class="sc">~</span> temperature, rings, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rings_binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-glm(formula = cbind(Damaged, 6 - Damaged) ~ Temp, family = "binomial", 
+glm(formula = cbind(damaged, 6 - damaged) ~ temperature, family = "binomial", 
     data = rings)
 
 Coefficients:
-            Estimate Std. Error z value Pr(&gt;|z|)  
-(Intercept)  5.08498    3.05247   1.666   0.0957 .
-Temp        -0.11560    0.04702  -2.458   0.0140 *
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) 11.66299    3.29626   3.538 0.000403 ***
+temperature -0.21623    0.05318  -4.066 4.78e-05 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 (Dispersion parameter for binomial family taken to be 1)
 
-    Null deviance: 24.230  on 22  degrees of freedom
-Residual deviance: 18.086  on 21  degrees of freedom
-AIC: 35.647
+    Null deviance: 38.898  on 22  degrees of freedom
+Residual deviance: 16.912  on 21  degrees of freedom
+AIC: 33.675
 
-Number of Fisher Scoring iterations: 5</code></pre>
+Number of Fisher Scoring iterations: 6</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#note dispersion is ok</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(rings_binomial, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table (Type III tests)
 
-Response: cbind(Damaged, 6 - Damaged)
-     LR Chisq Df Pr(&gt;Chisq)  
-Temp    6.144  1    0.01319 *
+Response: cbind(damaged, 6 - damaged)
+            LR Chisq Df Pr(&gt;Chisq)    
+temperature   21.985  1  2.747e-06 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#compare to lm</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>rings_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(Damaged <span class="sc">~</span> Temp, rings)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>rings_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(damaged <span class="sc">~</span> temperature, rings)</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rings_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-lm(formula = Damaged ~ Temp, data = rings)
+lm(formula = damaged ~ temperature, data = rings)
 
 Residuals:
     Min      1Q  Median      3Q     Max 
--0.5608 -0.3944 -0.0854  0.1056  1.8671 
+-0.8271 -0.6207 -0.1421  0.3961  2.9007 
 
 Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)   
-(Intercept)  3.69841    1.21951   3.033  0.00633 **
-Temp        -0.04754    0.01744  -2.725  0.01268 * 
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  7.28571    1.79956   4.049 0.000578 ***
+temperature -0.09786    0.02574  -3.801 0.001043 ** 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 0.5774 on 21 degrees of freedom
-Multiple R-squared:  0.2613,    Adjusted R-squared:  0.2261 
-F-statistic: 7.426 on 1 and 21 DF,  p-value: 0.01268</code></pre>
+Residual standard error: 0.8521 on 21 degrees of freedom
+Multiple R-squared:  0.4076,    Adjusted R-squared:  0.3794 
+F-statistic: 14.45 on 1 and 21 DF,  p-value: 0.001043</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#note dispersion is ok</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(rings_lm, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Anova Table (Type III tests)
 
-Response: Damaged
-            Sum Sq Df F value  Pr(&gt;F)   
-(Intercept) 3.0667  1  9.1973 0.00633 **
-Temp        2.4762  1  7.4264 0.01268 * 
-Residuals   7.0021 21                   
+Response: damaged
+            Sum Sq Df F value    Pr(&gt;F)    
+(Intercept) 11.901  1  16.391 0.0005785 ***
+temperature 10.492  1  14.451 0.0010435 ** 
+Residuals   15.247 21                      
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -930,8 +930,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x  =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>), </span>
 <span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>),</span>
 <span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">20</span>, <span class="at">face=</span><span class="st">"bold"</span>),</span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">32</span>))</span>
-<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>whelk_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face=</span><span class="st">"bold"</span>, <span class="at">size=</span><span class="dv">32</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
+ℹ Please use tidy evaluation idioms with `aes()`.
+ℹ See also `vignette("ggplot2-in-packages")` for more information.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>whelk_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 61 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
@@ -943,35 +948,35 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">#power fit</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>whelk_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mass <span class="sc">~</span> Shell.Length, whelk, <span class="at">na.action =</span> na.omit)</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>whelk_power <span class="ot">&lt;-</span> <span class="fu">nls</span>(Mass <span class="sc">~</span> b0 <span class="sc">*</span> Shell.Length<span class="sc">^</span>b1, whelk, </span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">start =</span> <span class="fu">list</span>(<span class="at">b0 =</span> <span class="dv">1</span>, <span class="at">b1=</span><span class="dv">3</span>), <span class="at">na.action =</span> na.omit)</span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>whelk_exponential <span class="ot">&lt;-</span> <span class="fu">nls</span>(Mass <span class="sc">~</span> <span class="fu">exp</span>(b0 <span class="sc">+</span> b1 <span class="sc">*</span> Shell.Length), whelk, </span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">start =</span> <span class="fu">list</span>(<span class="at">b0 =</span><span class="dv">1</span>, <span class="at">b1=</span><span class="dv">0</span>), <span class="at">na.action =</span> na.omit)</span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn)</span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="fu">AICc</span>(whelk_lm, whelk_power, whelk_exponential)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">#power fit</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>whelk_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mass <span class="sc">~</span> Shell.Length, whelk, <span class="at">na.action =</span> na.omit)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>whelk_power <span class="ot">&lt;-</span> <span class="fu">nls</span>(Mass <span class="sc">~</span> b0 <span class="sc">*</span> Shell.Length<span class="sc">^</span>b1, whelk, </span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">start =</span> <span class="fu">list</span>(<span class="at">b0 =</span> <span class="dv">1</span>, <span class="at">b1=</span><span class="dv">3</span>), <span class="at">na.action =</span> na.omit)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>whelk_exponential <span class="ot">&lt;-</span> <span class="fu">nls</span>(Mass <span class="sc">~</span> <span class="fu">exp</span>(b0 <span class="sc">+</span> b1 <span class="sc">*</span> Shell.Length), whelk, </span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">start =</span> <span class="fu">list</span>(<span class="at">b0 =</span><span class="dv">1</span>, <span class="at">b1=</span><span class="dv">0</span>), <span class="at">na.action =</span> na.omit)</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn)</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="fu">AICc</span>(whelk_lm, whelk_power, whelk_exponential)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  df     AICc
 whelk_lm           3 3947.579
 whelk_power        3 3800.106
 whelk_exponential  3 3841.422</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>whelk_plot <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">color =</span> <span class="st">"orange"</span>)<span class="sc">+</span> </span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"nls"</span>, </span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>              <span class="co"># look at whelk_power$call</span></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> b0 <span class="sc">*</span> x<span class="sc">^</span>b1, </span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">start =</span> <span class="fu">list</span>(<span class="at">b0 =</span> <span class="dv">1</span>, </span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">b1 =</span> <span class="dv">3</span>)), </span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">se=</span><span class="cn">FALSE</span>, <span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"nls"</span>, </span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>              <span class="co"># look at whelk_exponential$call</span></span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">exp</span>(b0 <span class="sc">+</span> b1 <span class="sc">*</span> x), </span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">start =</span> <span class="fu">list</span>(<span class="at">b0 =</span> <span class="dv">1</span>, </span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">b1 =</span> <span class="dv">0</span>)), </span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">se=</span><span class="cn">FALSE</span>, <span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">color =</span> <span class="st">"green"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>whelk_plot <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">color =</span> <span class="st">"orange"</span>)<span class="sc">+</span> </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"nls"</span>, </span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>              <span class="co"># look at whelk_power$call</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> b0 <span class="sc">*</span> x<span class="sc">^</span>b1, </span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">start =</span> <span class="fu">list</span>(<span class="at">b0 =</span> <span class="dv">1</span>, </span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">b1 =</span> <span class="dv">3</span>)), </span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">se=</span><span class="cn">FALSE</span>, <span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"nls"</span>, </span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>              <span class="co"># look at whelk_exponential$call</span></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">exp</span>(b0 <span class="sc">+</span> b1 <span class="sc">*</span> x), </span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">start =</span> <span class="fu">list</span>(<span class="at">b0 =</span> <span class="dv">1</span>, </span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">b1 =</span> <span class="dv">0</span>)), </span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">se=</span><span class="cn">FALSE</span>, <span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">color =</span> <span class="st">"green"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 ℹ Please use `linewidth` instead.</code></pre>
@@ -1007,13 +1012,13 @@ Removed 61 rows containing non-finite outside the scale range
 <h3 class="anchored" data-anchor-id="section-3">4</h3>
 <p>Going back to the TEAM dataset, remember we found that elevation had no impact on carbon storage. But that was a linear fit. Use a gam (generalized additive model) to see if elevation can be related to carbon storage in an additive model. Note we can use the gamm (generalized additive mixed model) function in the mgcv package to denote mixed effects. For example (from help file)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>b2 <span class="ot">&lt;-</span> <span class="fu">gamm</span>(y<span class="sc">~</span><span class="fu">s</span>(x0)<span class="sc">+</span><span class="fu">s</span>(x1)<span class="sc">+</span><span class="fu">s</span>(x2),<span class="at">family=</span>poisson,</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data=</span>dat,<span class="at">random=</span><span class="fu">list</span>(<span class="at">fac=</span><span class="sc">~</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>b2 <span class="ot">&lt;-</span> <span class="fu">gamm</span>(y<span class="sc">~</span><span class="fu">s</span>(x0)<span class="sc">+</span><span class="fu">s</span>(x1)<span class="sc">+</span><span class="fu">s</span>(x2),<span class="at">family=</span>poisson,</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data=</span>dat,<span class="at">random=</span><span class="fu">list</span>(<span class="at">fac=</span><span class="sc">~</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Team data is available @</p>
 <p>https://github.com/jsgosnell/CUNY-BioStats/blob/master/datasets/team_data_no_spaces.csv</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: nlme</code></pre>
 </div>
@@ -1029,12 +1034,12 @@ Attaching package: 'nlme'</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>This is mgcv 1.9-1. For overview type 'help("mgcv-package")'.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn) <span class="co">#for AICc</span></span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>team <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/team_data_no_spaces.csv"</span>, <span class="at">stringsAsFactors =</span> T)</span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>elevation_linear <span class="ot">&lt;-</span> <span class="fu">gam</span>(PlotCarbon.tonnes <span class="sc">~</span> Elevation, <span class="at">data =</span> team)</span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>elevation_gam <span class="ot">&lt;-</span> <span class="fu">gam</span>(PlotCarbon.tonnes <span class="sc">~</span> <span class="fu">s</span>(Elevation), <span class="at">data =</span> team)</span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>elevation_gamm <span class="ot">&lt;-</span> <span class="fu">gamm</span>(PlotCarbon.tonnes <span class="sc">~</span><span class="fu">s</span>(Elevation), <span class="at">random =</span> <span class="fu">list</span>(<span class="at">Site.Name =</span> <span class="sc">~</span> <span class="dv">1</span>), <span class="at">data =</span> team)</span>
-<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a><span class="fu">AICc</span>(elevation_gam, elevation_gamm, elevation_linear)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn) <span class="co">#for AICc</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>team <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/datasets/team_data_no_spaces.csv"</span>, <span class="at">stringsAsFactors =</span> T)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>elevation_linear <span class="ot">&lt;-</span> <span class="fu">gam</span>(PlotCarbon.tonnes <span class="sc">~</span> Elevation, <span class="at">data =</span> team)</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>elevation_gam <span class="ot">&lt;-</span> <span class="fu">gam</span>(PlotCarbon.tonnes <span class="sc">~</span> <span class="fu">s</span>(Elevation), <span class="at">data =</span> team)</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>elevation_gamm <span class="ot">&lt;-</span> <span class="fu">gamm</span>(PlotCarbon.tonnes <span class="sc">~</span><span class="fu">s</span>(Elevation), <span class="at">random =</span> <span class="fu">list</span>(<span class="at">Site.Name =</span> <span class="sc">~</span> <span class="dv">1</span>), <span class="at">data =</span> team)</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a><span class="fu">AICc</span>(elevation_gam, elevation_gamm, elevation_linear)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                 df     AICc
 elevation_gam     3 648.2139

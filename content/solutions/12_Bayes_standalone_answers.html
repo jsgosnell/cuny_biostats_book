@@ -192,11 +192,11 @@ on github. For this question, its easiest to just source the main file and see w
 </div>
 <p><em>This is the “big picture” of Bayesian analysis. We combined our prior beliefs and data to update our beliefs (the posterior). We sample/describe the posterior for our answer. Everything else is “how do we do that?”.</em></p>
 <ol start="6" type="1">
-<li>Using data from Australian athletes (http://www.statsci.org/data/oz/ais.html for details), determine if the average male training at the Australian Institute of Sport differs in weight from the average Australian male (85.9 kg) using bootstrapping techniques and a Bayesian approach. For the Bayesian approach, compare approaches that give the null more and less weight.</li>
+<li>Using data from Australian athletes (https://gksmyth.github.io/ozdasl/oz/ais.html for details), determine if the average male training at the Australian Institute of Sport differs in weight from the average Australian male (85.9 kg) using bootstrapping techniques and a Bayesian approach. For the Bayesian approach, compare approaches that give the null more and less weight.</li>
 </ol>
 <p>Data at</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/oz/ais.txt"</span>, <span class="at">header =</span> T, </span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/ais.txt"</span>, <span class="at">header =</span> T, </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can source the bootstrapjsg function using</p>
@@ -205,7 +205,7 @@ on github. For this question, its easiest to just source the main file and see w
 </div>
 <p><em>Answer</em></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"http://www.statsci.org/data/oz/ais.txt"</span>, <span class="at">header =</span> T)</span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sport <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/ais.txt"</span>, <span class="at">header =</span> T)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/master/code_examples/bootstrapjsg.R"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">bootstrapjsg</span>(<span class="at">data1=</span>sport[sport<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Wt"</span>], <span class="at">null=</span><span class="fl">85.9</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#to get estimates!</span></span>
