@@ -128,22 +128,21 @@ available \@
 https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/challenger.txt
 
 ```{r}
-rings <- read.table("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/challenger.txt
-", 
+rings <- read.table("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/challenger.txt", 
                     header = T)
 #can do as poisson
-rings_poisson <- glm(Damaged ~ Temp, rings, family = "poisson")
+rings_poisson <- glm(damaged ~ temperature, rings, family = "poisson")
 summary(rings_poisson)
 #note dispersion is ok
 library(car)
 Anova(rings_poisson, type = "III")
 #or binomial (preffered as we can add info (number damaged and not!))
-rings_binomial <- glm(cbind(Damaged, 6 - Damaged) ~ Temp, rings, family = "binomial")
+rings_binomial <- glm(cbind(damaged, 6 - damaged) ~ temperature, rings, family = "binomial")
 summary(rings_binomial)
 #note dispersion is ok
 Anova(rings_binomial, type = "III")
 #compare to lm
-rings_lm <- lm(Damaged ~ Temp, rings)
+rings_lm <- lm(damaged ~ temperature, rings)
 summary(rings_lm)
 #note dispersion is ok
 Anova(rings_lm, type = "III")
