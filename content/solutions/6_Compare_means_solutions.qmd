@@ -296,16 +296,16 @@ its not listed!).*
 
 Data on sugar cane yield for multiple fields is available using
 
-read.table("<https://docs.google.com/spreadsheets/d/e/2PACX-1vRjstKreIM6UknyKFQCtw2_Q6itY9iOAVWO1hUNZkBFL8mwVssvTevqgzV22YDKCUeJq0HBDrsBrf5O/pub?gid=971470377&single=true&output=tsv>",
+read.table("<https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/cane.txt>",
 header = T, stringsAsFactors = T)
 
 More info on the data can be found at
-<http://www.statsci.org/data/oz/cane.html>. Is there evidence that
+<https://gksmyth.github.io/ozdasl/oz/cane.html>. Is there evidence that
 location (DistrictPosition column) impacts yield (Tonn.Hect column)? If
 so, which areas are driving this distance?
 
 ```{r}
-cane <- read.table("https://docs.google.com/spreadsheets/d/e/2PACX-1vRjstKreIM6UknyKFQCtw2_Q6itY9iOAVWO1hUNZkBFL8mwVssvTevqgzV22YDKCUeJq0HBDrsBrf5O/pub?gid=971470377&single=true&output=tsv", header = T, stringsAsFactors = T)
+cane <- read.table("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/cane.txt", header = T, stringsAsFactors = T)
 summary(cane)
 cane_summary <- summarySE(cane, measurevar="Tonn.Hect", groupvars =
                                c("DistrictPosition"))
@@ -361,17 +361,17 @@ regarding which districts differ from which others.*
 Data on FEV (forced expiratory volume), a measure of lung function, can
 be found at
 
-<http://www.statsci.org/data/general/fev.txt>
+<https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/fev.txt>
 
 More information on the dataset is available at
 
-<http://www.statsci.org/data/general/fev.html>.
+<https://perso.univ-rennes1.fr/bernard.delyon/tp/fev.html>.
 
 Is there evidence that FEV depends on gender? If so, which gender has
 the higher FEV score? How much variance does gender explain?
 
 ```{r}
-fev <- read.table("http://www.statsci.org/data/general/fev.txt", header = T,
+fev <- read.table("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/fev.txt", header = T,
                   stringsAsFactors = T)
 fev_summary <- summarySE(fev, measurevar="FEV", groupvars =
                                c("Sex"))

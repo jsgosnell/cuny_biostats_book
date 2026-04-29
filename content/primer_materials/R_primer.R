@@ -254,7 +254,7 @@ my_dataset <- read.csv(file, stringsAsFactors = T)
 # (what we typically want)
 
 #you can also read in data from a website holding a csv (we'll do this often in class)
-australia_athlete_data <- read.table("http://www.statsci.org/data/oz/ais.txt", header = T,
+australia_athlete_data <- read.table("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/ais.txt", header = T,
                                      stringsAsFactors = T)
 
 # and thats it.  however, this is not a great way to grab data (or automate code).

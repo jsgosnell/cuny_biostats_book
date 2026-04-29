@@ -162,16 +162,16 @@ SESSIONS, THOUGH YOU CAN!**
 1.  A professor carried out a long-term study to see how various factors impacted
 pulse rate before and after exercise.  Data can be found at 
 
-http://www.statsci.org/data/oz/ms212.txt
+https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/ms212.txt
 
 With more info at 
 
-http://www.statsci.org/data/oz/ms212.html.
+http://gksmyth.github.io/ozdasl/oz/ms212.html.
 
 Is there evidence that age, height, or weight impact change in pulse rate for students who ran (Ran column = 1)?  For each of these, how much variation in pulse rate do they explain?
 
 ```{r}
-pulse <- read.table("http://www.statsci.org/data/oz/ms212.txt", header = T, stringsAsFactors = T)
+pulse <- read.table("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/ms212.txt", header = T, stringsAsFactors = T)
 pulse$change <- pulse$Pulse2 - pulse$Pulse1
 #need to make columns entered as numeral change to factor, although it doesn't 
 #really matter when only 2 groups (why?)
@@ -230,7 +230,7 @@ also note that age only explains 2.5% of the variation in change in pulse rate
 
 ### 2 
 
-2. (from OZDASL repository, http://www.statsci.org/data/general/stature.html; reference for more information)
+2. (from OZDASL repository,https://gksmyth.github.io/ozdasl/general/stature.html; reference for more information)
 
 When anthropologists analyze human skeletal remains, an important piece of
 information is living stature. Since skeletons are commonly based on
@@ -239,7 +239,7 @@ data was presented in a paper in the American Journal of Physical
 Anthropology to validate one such method.
 Data is available @
 
-http://www.statsci.org/data/general/stature.txt
+https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/stature.txt
 
 as a tab-delimted file (need to use read.table!)
 Is there evidence that metacarpal bone length is a good predictor of
@@ -247,7 +247,8 @@ stature? If so, how much variation does it account for in the response
 variable?
 
 ```{r}
-height <- read.table("http://www.statsci.org/data/general/stature.txt", 
+height <- read.table("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/stature.txt
+", 
                      header = T, stringsAsFactors = T)
 head(height)
 metacarp_relationship <- lm(Stature ~ MetaCarp, height)
@@ -267,17 +268,18 @@ indicate that stature increases with increasing metacarpal length.*
 3. Data on medals won by various countries in the 1992 and 1994 Olympics is
 available in a tab-delimited file at 
 
-http://www.statsci.org/data/oz/medals.txt
+https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/medals.txt
 
 More information on the data can be found at: 
 
-http://www.statsci.org/data/oz/medals.html
+https://gksmyth.github.io/ozdasl/oz/medals.html
 
 Is there any relationship between a country’s population and the total
 number of medals they win?
 
 ```{r}
-medals <- read.table(header = T, "http://www.statsci.org/data/oz/medals.txt", 
+medals <- read.table(header = T, "https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/medals.txt
+", 
                      stringsAsFactors = T)
 head(medals)
 medals$total <- medals$Summer + medals$Winter
@@ -324,17 +326,17 @@ count and ~8% of the data in summer medal count.*
 5. Data on FEV (forced expiratory volume), a measure of lung function, can
 be found at 
 
-http://www.statsci.org/data/general/fev.txt
+<https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/fev.txt>
 
 More information on the dataset is available at 
 
-http://www.statsci.org/data/general/fev.html.
+<https://perso.univ-rennes1.fr/bernard.delyon/tp/fev.html>
 
 Is there evidence that FEV depends on age or height? If so, how do these
 factors impact FEV, and how much variance does each explain? 
 
 ```{r}
-fev <- read.table("http://www.statsci.org/data/general/fev.txt", header = T, 
+fev <- read.table("https://raw.githubusercontent.com/jsgosnell/CUNY-BioStats/refs/heads/master/datasets/fev.txt", header = T, 
                   stringsAsFactors = T)
 head(fev)
 fev_height <- lm(FEV ~ Height, fev)
