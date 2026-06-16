@@ -30,7 +30,7 @@ and the use of ggplots (lots of ggplot2 example code in the [Summarizing
 data
 lecture](https://jsgosnell.github.io/cuny_biostats_book/content/chapters/summarizing_data.html){target="_blank"}
 
-## ggplot2 basics
+### ggplot2 basics
 
 ggplot2 is a great plotting package that allows a lot of control over
 your output. Let's do some examples using the sleep dataset that we left
@@ -194,32 +194,34 @@ ggplot(sleep, aes(x=TotalSleep, y = Dreaming)) +
         legend.background = element_rect(fill="gray"))
 ```
 
+A few options exist to simplify this.  The **labs** function allows you to 
+input all the labels (axes, title, etc) at one time, and preset theme options
+make a lot of decisions for you (that you can then update). The example below 
+uses the theme_bw.  For more, 
+see https://ggplot2.tidyverse.org/reference/ggtheme.html.You can also save and name a
+theme so you don't have to do all this everytime (if, for example, you want the 
+same approach for a given article or presentation).
+
+```{r}
+ggplot(sleep, aes(x=TotalSleep, y = Dreaming)) +
+  geom_point(aes(colour=Taxa), size = 4) +
+  labs(x="Average hours spent dreaming daily",
+       y="Average hours spent sleeping daily",
+       title = "Time spent dreaming increases with total sleeping time")+
+  theme_bw()
+```
+
+
 You can also directly change legend title and colours with the scale\_
 commands
 
 ```{r}
 ggplot(sleep, aes(x=TotalSleep, y = Dreaming)) +
-  geom_point(aes(colour=Taxa), size = 4) +
-  #below here is ylabel, xlabel, and main title
-  ylab("Average hours spent dreaming daily") +
-  xlab("Average hours spent sleeping daily") +
-  ggtitle("Time spent dreaming increases with total sleeping time") +
-  #scale commands help with legends
-  scale_colour_manual(name="Type of mammal",values = c("#FFA373","#50486D")) +
-  #theme sets sizes, text, etc
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32),
-        # change plot background, grid lines, etc (just examples so you can see)
-        panel.background = element_rect(fill="white"),
-        panel.grid.minor.y = element_line(size=3),
-        panel.grid.major = element_line(colour = "black"),
-        plot.background = element_rect(fill="gray"),
-        legend.background = element_rect(fill="gray"))
+   geom_point(aes(colour=Taxa), size = 4) +
+  labs(x="Average hours spent dreaming daily",
+       y="Average hours spent sleeping daily",
+       title = "Time spent dreaming increases with total sleeping time")+
+  scale_colour_manual(name="Type of mammal",values = c("#FFA373","#50486D"))
 ```
 
 In general scale\_\[whatever you had aes commands\]\_manual lets you set
@@ -231,27 +233,11 @@ the graph I already made by Taxa
 
 ```{r}
 ggplot(sleep, aes(x=TotalSleep, y = Dreaming)) +
-  geom_point(aes(colour=Taxa), size = 4) +
-  #below here is ylabel, xlabel, and main title
-  ylab("Average hours spent dreaming daily") +
-  xlab("Average hours spent sleeping daily") +
-  ggtitle("Time spent dreaming increases with total sleeping time") +
-  #scale commands help with legends
-  scale_colour_manual(name="Type of mammal",values = c("#FFA373","#50486D")) +
-  #theme sets sizes, text, etc
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32),
-        # change plot background, grid lines, etc (just examples so you can see)
-        panel.background = element_rect(fill="white"),
-        panel.grid.minor.y = element_line(size=3),
-        panel.grid.major = element_line(colour = "black"),
-        plot.background = element_rect(fill="gray"),
-        legend.background = element_rect(fill="gray")) +
+   geom_point(aes(colour=Taxa), size = 4) +
+  labs(x="Average hours spent dreaming daily",
+       y="Average hours spent sleeping daily",
+       title = "Time spent dreaming increases with total sleeping time")+
+  scale_colour_manual(name="Type of mammal",values = c("#FFA373","#50486D"))
   facet_wrap(~Taxa, ncol = 1)
 ```
 
@@ -260,28 +246,11 @@ the legend
 
 ```{r}
 ggplot(sleep, aes(x=TotalSleep, y = Dreaming)) +
-  geom_point(aes(colour=Taxa), size = 4) +
-  #below here is ylabel, xlabel, and main title
-  ylab("Average hours spent dreaming daily") +
-  xlab("Average hours spent sleeping daily") +
-  ggtitle("Time spent dreaming increases with total sleeping time") +
-  #scale commands help with legends
-  scale_colour_manual(name="Type of mammal",values = c("#FFA373","#50486D")) +
-  #theme sets sizes, text, etc
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32),
-        # change plot background, grid lines, etc (just examples so you can see)
-        panel.background = element_rect(fill="white"),
-        panel.grid.minor.y = element_line(size=3),
-        panel.grid.major = element_line(colour = "black"),
-        plot.background = element_rect(fill="gray"),
-        legend.background = element_rect(fill="gray"),
-        strip.text.x = element_text(size = 18, colour = "purple")) +
+   geom_point(aes(colour=Taxa), size = 4) +
+  labs(x="Average hours spent dreaming daily",
+       y="Average hours spent sleeping daily",
+       title = "Time spent dreaming increases with total sleeping time")+
+  scale_colour_manual(name="Type of mammal",values = c("#FFA373","#50486D"))+
   facet_wrap(~Taxa, ncol = 1) +
   guides(colour=FALSE)
 ```
@@ -315,32 +284,14 @@ ggplot(sleep, aes(x=Dreaming)) +
   geom_histogram()
 ```
 
-Note we can just copy our theme info from above and modify as needed (or
-ggplot2 will largely skip un-needed info). You can also save and name a
-theme so you don't have to do all this everytime.
+Note we can also add extra information like titles just like we did before.
 
 ```{r}
 ggplot(sleep, aes(x=Dreaming)) +
   geom_histogram() + 
-  #below here is ylabel, xlabel, and main title
-  ylab("Frequency") +
-  xlab("Average hours spent dreaming daily") +
-  ggtitle("Distribution of hours spent dreaming") +
-  #theme sets sizes, text, etc
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32),
-        # change plot background, grid lines, etc (just examples so you can see)
-        panel.background = element_rect(fill="white"),
-        panel.grid.minor.y = element_line(size=3),
-        panel.grid.major = element_line(colour = "black"),
-        plot.background = element_rect(fill="gray"),
-        legend.background = element_rect(fill="gray"),
-        strip.text.x = element_text(size = 18, colour = "purple"))
+  labs( y="Frequency",
+        x= "Average hours spent dreaming daily",
+        title = "Distribution of hours spent dreaming")
 ```
 
 Finally, remember you can subset the dataframes you feed to the ggplot
@@ -350,25 +301,9 @@ just do a histogram of just primate sleep.
 ```{r}
 ggplot(sleep[sleep$Taxa == "Primate",], aes(x=Dreaming)) +
   geom_histogram() + 
-  #below here is ylabel, xlabel, and main title
-  ylab("Frequency") +
-  xlab("Average hours spent dreaming daily") +
-  ggtitle("Distribution of hours spent dreaming") +
-  #theme sets sizes, text, etc
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32),
-        # change plot background, grid lines, etc (just examples so you can see)
-        panel.background = element_rect(fill="white"),
-        panel.grid.minor.y = element_line(size=3),
-        panel.grid.major = element_line(colour = "black"),
-        plot.background = element_rect(fill="gray"),
-        legend.background = element_rect(fill="gray"),
-        strip.text.x = element_text(size = 18, colour = "purple"))
+  labs( y="Frequency",
+        x= "Average hours spent dreaming daily",
+        title = "Distribution of hours spent dreaming")
 ```
 
 Not interesting, but you get the idea.
@@ -458,15 +393,8 @@ uncertainty (95% confidence intervals)
 ggplot(sleep_by_exposure
        , aes(x=Exposure, y=TotalSleep)) +
   geom_col(size = 3) +
-  geom_errorbar(aes(ymin=TotalSleep-ci, ymax=TotalSleep+ci), size=1.5) +
-  ylab("Total sleep (hours per day")+ggtitle("Sleep across different taxa")+
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32))
+  labs( y="Total sleep (hours per day)",
+        title = "Sleep across different taxa")
 ```
 
 Now to show why barplots waste ink. Note we can show the same
@@ -477,14 +405,8 @@ ggplot(sleep_by_exposure
        , aes(x=Exposure, y=TotalSleep)) +
   geom_point(size = 3) +
   geom_errorbar(aes(ymin=TotalSleep-ci, ymax=TotalSleep+ci), size=1.5) +
-  ylab("Total sleep (hours per day")+ggtitle("Sleep across different taxa")+
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32))
+  labs( y="Total sleep (hours per day)",
+        title = "Sleep across different taxa")
 ```
 
 All the exta color is nice, but its not really adding anything!
