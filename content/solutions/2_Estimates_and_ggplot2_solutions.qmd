@@ -197,8 +197,8 @@ ggplot(sleep, aes(x=TotalSleep, y = Dreaming)) +
 A few options exist to simplify this.  The **labs** function allows you to 
 input all the labels (axes, title, etc) at one time, and preset theme options
 make a lot of decisions for you (that you can then update). The example below 
-uses the theme_bw.  For more, 
-see https://ggplot2.tidyverse.org/reference/ggtheme.html.You can also save and name a
+uses the theme_bw.  For more, see
+<https://ggplot2.tidyverse.org/reference/ggtheme.html>{target="_blank"}.  You can also save and name a
 theme so you don't have to do all this everytime (if, for example, you want the 
 same approach for a given article or presentation).
 
@@ -435,24 +435,9 @@ with the data). Use ggplot2 to plot the relationship.
 library(ggplot2)
 ggplot(sleep[sleep$BrainWt <1000, ], aes(x=BrainWt, y = TotalSleep)) +
   geom_point(size = 4) +
-  #below here is ylabel, xlabel, and main title
-  ylab("Average hours spent \n sleeping daily") +
-  xlab("Brain weight (g)") +
-  ggtitle("Time spent sleeping \n decreases with brain \n weight") +
-  #theme sets sizes, text, etc
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32),
-        # change plot background, grid lines, etc (just examples so you can see)
-        panel.background = element_rect(fill="white"),
-        panel.grid.minor.y = element_line(size=3),
-        panel.grid.major = element_line(colour = "black"),
-        plot.background = element_rect(fill="gray"),
-        legend.background = element_rect(fill="gray"))
+  labs(x= "Average hours spent \n sleeping daily", 
+       y= "Brain weight (g)",
+       title = "Time spent sleeping \n decreases with brain \n weight")
 ```
 
 
@@ -469,27 +454,10 @@ sleep$Taxa <- revalue(sleep$Primate, c(Y = "Primate", N = "Non-primate"))
 sleep$Taxa <- relevel(sleep$Taxa, "Primate")
 
 ggplot(sleep[sleep$BrainWt <1000, ], aes(x=BrainWt, y = TotalSleep)) +
-  geom_point(aes(colour=Taxa), size = 4) +
-  #below here is ylabel, xlabel, and main title
-  ylab("Average hours spent \n sleeping daily") +
-  xlab("Brain weight (g)") +
-  ggtitle("Time spent sleeping \n decreases with brain \n weight") +
-  #scale commands help with legends
-  scale_colour_manual(name="Type of mammal",values = c("#FFA373","#50486D")) +
-  #theme sets sizes, text, etc
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32),
-        # change plot background, grid lines, etc (just examples so you can see)
-        panel.background = element_rect(fill="white"),
-        panel.grid.minor.y = element_line(size=3),
-        panel.grid.major = element_line(colour = "black"),
-        plot.background = element_rect(fill="gray"),
-        legend.background = element_rect(fill="gray"))
+  geom_point(size = 4) +
+  labs(x= "Average hours spent \n sleeping daily", 
+       y= "Brain weight (g)",
+       title = "Time spent sleeping \n decreases with brain \n weight")
 ```
 
 ### 3
@@ -503,14 +471,8 @@ Let’s work with histograms.
 ggplot(sleep
        , aes(x=TotalSleep)) +
   geom_histogram() +
-  xlab("Total sleep (hours per day")+ggtitle("Variation in sleep levels")+
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32))
+  labs (x ="Total sleep (hours per day",
+        title = "Variation in sleep levels")
 ```
 
 -   Facet the graph you created based on whether or not the animal is a
@@ -520,14 +482,8 @@ ggplot(sleep
 ggplot(sleep
        , aes(x=TotalSleep)) +
   geom_histogram() +
-  xlab("Total sleep (hours per day")+ggtitle("Variation in sleep levels")+
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32))+ 
+  labs (x ="Total sleep (hours per day",
+        title = "Variation in sleep levels")+ 
   facet_wrap(~Taxa)
 ```
 
@@ -537,14 +493,8 @@ ggplot(sleep
 ggplot(sleep[sleep$Taxa == "Primate",]
        , aes(x=TotalSleep)) +
   geom_histogram() +
-  xlab("Total sleep (hours per day")+ggtitle("Variation in sleep levels")+
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32))
+  labs (x ="Total sleep (hours per day",
+        title = "Variation in sleep levels")
 ```
 
 
@@ -571,16 +521,9 @@ ggplot(sleep_by_primate
        , aes(x=Primate, y=TotalSleep)) +
   geom_col(size = 3) +
   geom_errorbar(aes(ymin=TotalSleep-ci, ymax=TotalSleep+ci), size=1.5) +
-  ylab("Total sleep \n (hours per day")+ 
-  xlab("Primate?")+ 
-  ggtitle("Sleep across different taxa")+
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32)) 
+  labs(x="Primate?",
+       y="Total sleep \n (hours per day", 
+       title="Sleep across different taxa")
 
 ```
 
@@ -598,15 +541,8 @@ ggplot(sleep_by_predation
        , aes(x=Predation, y=TotalSleep)) +
   geom_col(size = 3) +
   geom_errorbar(aes(ymin=TotalSleep-se, ymax=TotalSleep+se), size=1.5) +
-  ylab("Total sleep \n (hours per day)") + 
-  ggtitle("Sleep across different \n predation levels")+
-  theme(axis.title.x = element_text(face="bold", size=28), 
-        axis.title.y = element_text(face="bold", size=28), 
-        axis.text.y  = element_text(size=20),
-        axis.text.x  = element_text(size=20), 
-        legend.text =element_text(size=20),
-        legend.title = element_text(size=20, face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold", size=32))
+  labs(y="Total sleep \n (hours per day", 
+       title="Sleep across different predation levels")
 
 ```
 
